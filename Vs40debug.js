@@ -37,7 +37,7 @@ function initMap() {
 }
 
 function fetchMarkersData() {
-    fetch('https://raw.githubusercontent.com/checomoandas/noblenomad/main/BsAsPinsGroups.csv')
+    fetch('https://raw.githubusercontent.com/mapabuena/BA/main/BsAsPinsGroups.csv')
         .then(response => response.text())
         .then(processCSVData)
         .catch(error => console.error('Error fetching or parsing CSV data:', error));
