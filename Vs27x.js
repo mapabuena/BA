@@ -11,7 +11,7 @@ let activeFilters = { category: [], category2: [], category3: [], complex: [] };
 
 function loadGoogleMapsScript() {
     const script = document.createElement('script');
-    script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyCAK_oC-2iPESygmTO20tMTBJ5Eyu5_3Rw&libraries=places&callback=onGoogleMapsScriptLoad';
+   async defer src='https://maps.googleapis.com/maps/api/js?key=AIzaSyCAK_oC-2iPESygmTO20tMTBJ5Eyu5_3Rw&callback=initMap&v=3.56&libraries=marker,places'
     script.async = true;
     script.defer = true;
     document.head.appendChild(script);
@@ -24,8 +24,10 @@ function onGoogleMapsScriptLoad() {
 
 loadGoogleMapsScript();
 
-function initMap() {
-    map = new google.maps.Map(document.getElementById('map'), { center: { lat: -34.58, lng: -58.42 }, zoom: 13, mapTypeControl: false });
+async function initMap() {
+    const { Map } = await google.maps.importLibrary("maps");
+  const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+    map = new google.maps.Map(document.getElementById('map'), { center: { lat: -34.58, lng: -58.42 }, zoom: 13, mapId: "befcb04c6fcb9633" });
     directionsService = new google.maps.DirectionsService();
     directionsRenderer = new google.maps.DirectionsRenderer();
     directionsRenderer.setMap(map);
@@ -161,7 +163,7 @@ function toggleKMLLayer(index) {
     }
 }
 
-function createMarker(data) {
+async function createMarker(data) {
     let markerOptions = {
         position: { lat: data.lat, lng: data.lng },
         map: map,
@@ -170,7 +172,7 @@ function createMarker(data) {
     if (data.icon_url && data.icon_url.startsWith('http')) {
         markerOptions.icon = { url: data.icon_url, scaledSize: new google.maps.Size(32, 32) };
     }
-    let marker = new google.maps.Marker(markerOptions);
+ let marker = new AdvancedMarkerElement(markerOptions);
     marker.category = data.category;
     marker.category2 = data.category2;
     marker.category3 = data.category3;
