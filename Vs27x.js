@@ -11,7 +11,7 @@ let activeFilters = { category: [], category2: [], category3: [], complex: [] };
 
 function loadGoogleMapsScript() {
     const script = document.createElement('script');
-   async defer src='https://maps.googleapis.com/maps/api/js?key=AIzaSyCAK_oC-2iPESygmTO20tMTBJ5Eyu5_3Rw&callback=initMap&v=3.56&libraries=marker,places'
+  script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyCAK_oC-2iPESygmTO20tMTBJ5Eyu5_3Rw&callback=initMap&v=3.56&libraries=marker,places';
     script.async = true;
     script.defer = true;
     document.head.appendChild(script);
