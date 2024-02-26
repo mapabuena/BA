@@ -140,30 +140,30 @@ function initKMLLayers() {
 
 function applyFilters() {
     markers.forEach(marker => {
-        let isVisible = true; // Assume the marker is visible initially.
-
-        // Filter by 'complex' category
-        if (activeFilters.complex && activeFilters.complex.length > 0) {
-            isVisible &= activeFilters.complex.some(value => marker.category && marker.category.includes(value));
+        let isComplexVisible = false; // Start assuming the marker is not visible for complex category
+        if (activeFilters.complex.length > 0) {
+            // Marker is visible if it matches any of the active complex filters
+            isComplexVisible = activeFilters.complex.some(complex => marker.category.includes(complex));
+        } else {
+            // If no complex filters are active, consider all markers as passing the complex filter test
+            isComplexVisible = true;
         }
 
-        // Filter by 'category2' (e.g., days of the week)
-        if (activeFilters.category2 && activeFilters.category2.length > 0) {
-            isVisible &= activeFilters.category2.some(value => marker.category2 && marker.category2.includes(value));
+        let isCategory2Visible = false; // Similarly, start assuming not visible for category2
+        if (activeFilters.category2.length > 0) {
+            // Marker is visible if it matches any of the active category2 filters
+            isCategory2Visible = activeFilters.category2.some(cat2 => marker.category2.includes(cat2));
+        } else {
+            // If no category2 filters are active, consider all markers as passing the category2 filter test
+            isCategory2Visible = true;
         }
 
-        // Assuming 'category3' might be another filter criterion (e.g., types of places)
-        if (activeFilters.category3 && activeFilters.category3.length > 0) {
-            isVisible &= activeFilters.category3.some(value => marker.category3 && marker.category3.includes(value));
-        }
+        // Combine the visibility flags for final visibility outcome
+        let isVisible = isComplexVisible && isCategory2Visible;
 
-        // Additional category filters can be added here following the same pattern.
-
-        // Control the visibility based on the 'isVisible' flag.
-        // Note: This assumes AdvancedMarkerElement's visibility can be toggled by setting its map property.
+        // Apply the calculated visibility
         marker.map = isVisible ? map : null;
     });
-}
 
 function toggleKMLLayer(index) {
     if (kmlLayers[index] && kmlLayers[index].setMap) {
