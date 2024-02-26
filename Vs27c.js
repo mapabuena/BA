@@ -131,21 +131,34 @@ function initKMLLayers() {
 
 function applyFilters() {
     markers.forEach(marker => {
-        let isComplexVisible = activeFilters.complex.length === 0; // Default to true if no complex filters are active.
-        let isCategory2Visible = activeFilters.category2.length === 0; // Default to true if no category2 filters are active.
+        // Determine if the marker should be visible based on the active filters.
+        let isVisible = true; // Assume visible until checked against filters.
 
-        // Check complex category
-        if (activeFilters.complex.length > 0 && marker.category) {
-            isComplexVisible = activeFilters.complex.some(value => marker.category.includes(value));
+        // Check against 'complex' category filter, as an example.
+        if (activeFilters.complex.length > 0 && !activeFilters.complex.some(value => marker.category.includes(value))) {
+            isVisible = false; // Marker doesn't match the 'complex' filter.
         }
 
-        // Check category2
-        if (activeFilters.category2.length > 0 && marker.category2) {
-            isCategory2Visible = activeFilters.category2.some(value => marker.category2.includes(value));
+        // Repeat the process for other categories as necessary.
+        if (activeFilters.category.length > 0 && !activeFilters.category.some(value => marker.category2.includes(value))) {
+            isVisible = false; // Adjust this line to match your category logic.
         }
 
-        let isVisible = isComplexVisible && isCategory2Visible;
-        marker.setMap(isVisible ? map : null);
+        if (activeFilters.category2.length > 0 && !activeFilters.category2.some(value => marker.category3.includes(value))) {
+            isVisible = false; // Adjust this line to match your category logic.
+        }
+
+        // Apply visibility. If visible, set to original content; if not, set content to an empty string.
+        if (isVisible) {
+            // Ensure the original content is an HTMLElement before setting it.
+            if (marker._originalContent instanceof HTMLElement) {
+                marker.setContent(marker._originalContent.outerHTML);
+            } else {
+                console.error('Marker original content is not an HTMLElement.', marker);
+            }
+        } else {
+            marker.setContent(''); // Effectively hides the marker.
+        }
     });
 }
 
