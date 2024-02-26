@@ -88,31 +88,23 @@ function attachCategoryButtonsEventListeners() {
 
 function handleCategoryButtonClick(button) {
     let categoryType = button.getAttribute('data-category');
-    if (!categoryType) {
-        console.error('Button does not have a data-category attribute', button);
-        return; // Exit the function if categoryType is null or undefined.
-    }
+    // Since buttons use "data-value", we'll directly use this attribute.
+    let categoryValue = button.getAttribute('data-value');
 
-    let categoryValues;
-    if (button.hasAttribute('data-values')) {
-        categoryValues = button.getAttribute('data-values').split(',');
-    } else if (button.hasAttribute('data-value')) {
-        categoryValues = [button.getAttribute('data-value')];
-    } else {
-        console.error('Button does not have data-values or data-value attributes', button);
-        return; // Exit the function if neither attribute is present.
-    }
+    button.classList.toggle('active'); // Toggle 'active' class visually
 
-    button.classList.toggle('active');
-
+    // Update active filters based on button state
     if (button.classList.contains('active')) {
-        activeFilters[categoryType] = [...new Set([...activeFilters[categoryType], ...categoryValues])];
+        // Add the categoryValue to the activeFilters array if not already present
+        if (!activeFilters[categoryType].includes(categoryValue)) {
+            activeFilters[categoryType].push(categoryValue);
+        }
     } else {
-        activeFilters[categoryType] = activeFilters[categoryType].filter(val => !categoryValues.includes(val));
+        // Remove the categoryValue from the activeFilters array
+        activeFilters[categoryType] = activeFilters[categoryType].filter(val => val !== categoryValue);
     }
 
-    applyFilters();
-}
+    applyFilters(); // Re-apply filters after adjustment
 
 function updateComplexFilters(categoryValue, isActive) {
     let index = activeFilters.complex.indexOf(categoryValue);
@@ -140,28 +132,14 @@ function initKMLLayers() {
 
 function applyFilters() {
     markers.forEach(marker => {
-        let isComplexVisible = false; // Start assuming the marker is not visible for complex category
-        if (activeFilters.complex.length > 0) {
-            // Marker is visible if it matches any of the active complex filters
-            isComplexVisible = activeFilters.complex.some(complex => marker.category.includes(complex));
-        } else {
-            // If no complex filters are active, consider all markers as passing the complex filter test
-            isComplexVisible = true;
-        }
+        // Determine visibility based on 'category'
+        let isCategoryVisible = activeFilters.category.length === 0 || activeFilters.category.some(cat => marker.category.includes(cat));
 
-        let isCategory2Visible = false; // Similarly, start assuming not visible for category2
-        if (activeFilters.category2.length > 0) {
-            // Marker is visible if it matches any of the active category2 filters
-            isCategory2Visible = activeFilters.category2.some(cat2 => marker.category2.includes(cat2));
-        } else {
-            // If no category2 filters are active, consider all markers as passing the category2 filter test
-            isCategory2Visible = true;
-        }
+        // Determine visibility based on 'category2'
+        let isCategory2Visible = activeFilters.category2.length === 0 || activeFilters.category2.some(cat2 => marker.category2.includes(cat2));
 
-        // Combine the visibility flags for final visibility outcome
-        let isVisible = isComplexVisible && isCategory2Visible;
-
-        // Apply the calculated visibility
+        // Apply combined visibility logic
+        let isVisible = isCategoryVisible && isCategory2Visible;
         marker.map = isVisible ? map : null;
     });
 }
@@ -203,9 +181,9 @@ function createMarker(data) {
     marker._originalContent = contentElement.cloneNode(true); // Use cloneNode to ensure a separate instance
   
     // Store additional data directly on the marker if needed for filtering or reference
-    marker.category = data.category;
-    marker.category2 = data.category2;
-    marker.category3 = data.category3;
+    marker.category = data.category.split('|')
+    marker.category2 = data.category2.split('|');
+    marker.category3 = data.category3.split('|');
 
     // Store the marker for potential filtering or other operations
     markers.push(marker);
