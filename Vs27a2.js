@@ -130,30 +130,32 @@ function initKMLLayers() {
 }
 
 function applyFilters() {
-    markers.forEach(marker => {
-        let isVisible = true; // Assume the marker is visible initially.
+  markers.forEach(marker => {
+    let isVisible = true; // Assume the marker is visible initially
 
-        // Filter by 'complex' category
-        if (activeFilters.complex && activeFilters.complex.length > 0) {
-            isVisible &= activeFilters.complex.some(value => marker.category && marker.category.includes(value));
-        }
+    // Adjusted filter logic for 'complex' category
+    if (activeFilters.complex && activeFilters.complex.length > 0) {
+        isVisible = isVisible && activeFilters.complex.some(value => 
+            (marker.category && marker.category.includes(value)) ||
+            (marker.category2 && marker.category2.includes(value)) ||
+            (marker.category3 && marker.category3.includes(value))
+        );
+    }
 
-        // Filter by 'category2' (e.g., days of the week)
-        if (activeFilters.category2 && activeFilters.category2.length > 0) {
-            isVisible &= activeFilters.category2.some(value => marker.category2 && marker.category2.includes(value));
-        }
+    // Filter by 'category2'
+    if (activeFilters.category2 && activeFilters.category2.length > 0) {
+        isVisible = isVisible && activeFilters.category2.some(value => marker.category2 && marker.category2.includes(value));
+    }
 
-        // Assuming 'category3' might be another filter criterion (e.g., types of places)
-        if (activeFilters.category3 && activeFilters.category3.length > 0) {
-            isVisible &= activeFilters.category3.some(value => marker.category3 && marker.category3.includes(value));
-        }
+    // Filter by 'category3'
+    if (activeFilters.category3 && activeFilters.category3.length > 0) {
+        isVisible = isVisible && activeFilters.category3.some(value => marker.category3 && marker.category3.includes(value));
+    }
 
-        // Additional category filters can be added here following the same pattern.
-
-        // Control the visibility based on the 'isVisible' flag.
-        // Note: This assumes AdvancedMarkerElement's visibility can be toggled by setting its map property.
-        marker.map = isVisible ? map : null;
-    });
+    // Set marker visibility based on the evaluated `isVisible` boolean
+    // For Advanced Markers, you explicitly set the map to `null` to hide them, or to `map` to show them
+    marker.map = isVisible ? map : null; // Assuming `map` is the Google Maps instance
+  });
 }
 
 function toggleKMLLayer(index) {
