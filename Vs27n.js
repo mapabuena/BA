@@ -132,17 +132,14 @@ function initKMLLayers() {
 
 function applyFilters() {
     markers.forEach(marker => {
-        // Determine visibility based on 'category'
         let isCategoryVisible = activeFilters.category.length === 0 || activeFilters.category.some(cat => marker.category.includes(cat));
-
-        // Determine visibility based on 'category2'
         let isCategory2Visible = activeFilters.category2.length === 0 || activeFilters.category2.some(cat2 => marker.category2.includes(cat2));
 
-        // Apply combined visibility logic
         let isVisible = isCategoryVisible && isCategory2Visible;
         marker.map = isVisible ? map : null;
     });
 }
+
 function toggleKMLLayer(index) {
     if (kmlLayers[index] && kmlLayers[index].setMap) {
         if (kmlLayers[index].getMap()) {
@@ -181,9 +178,9 @@ function createMarker(data) {
     marker._originalContent = contentElement.cloneNode(true); // Use cloneNode to ensure a separate instance
   
     // Store additional data directly on the marker if needed for filtering or reference
-    marker.category = data.category.split('|')
-    marker.category2 = data.category2.split('|');
-    marker.category3 = data.category3.split('|');
+    marker.category = typeof data.category === 'string' ? data.category.split('|') : [];
+    marker.category2 = typeof data.category2 === 'string' ? data.category2.split('|') : [];
+    marker.category3 = typeof data.category3 === 'string' ? data.category3.split('|') : [];
 
     // Store the marker for potential filtering or other operations
     markers.push(marker);
