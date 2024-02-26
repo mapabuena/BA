@@ -162,20 +162,35 @@ function toggleKMLLayer(index) {
 }
 
 function createMarker(data) {
-    let markerOptions = {
-        position: { lat: data.lat, lng: data.lng },
-        map: map,
-        title: data.name
-    };
+    // Create an <img> element for the marker icon if the icon URL is provided and starts with 'http'
+    let contentElement;
     if (data.icon_url && data.icon_url.startsWith('http')) {
-        markerOptions.icon = { url: data.icon_url, scaledSize: new google.maps.Size(32, 32) };
+        contentElement = document.createElement("img");
+        contentElement.src = data.icon_url; // URL to the custom icon
+        contentElement.style.width = "32px"; // Adjust size as needed
+        contentElement.style.height = "32px"; // Adjust size as needed
+    } else {
+        // If no icon_url or it doesn't start with 'http', you can default to an SVG or any placeholder element
+        // Here's a simple placeholder approach, adjust as per your requirements
+        contentElement = document.createElement("div");
+        contentElement.innerHTML = '<svg width="32" height="32" ...></svg>'; // Placeholder SVG or HTML content
     }
-    let marker = new google.maps.marker.AdvancedMarkerElement(markerOptions);
+
+    // Create the advanced marker with the custom icon or SVG
+    const marker = new google.maps.marker.AdvancedMarkerElement({
+        map: map,
+        position: { lat: data.lat, lng: data.lng },
+        content: contentElement, // Use the created element as content
+        title: data.name,
+    });
+
+    // Store additional data directly on the marker if needed for filtering or reference
     marker.category = data.category;
     marker.category2 = data.category2;
     marker.category3 = data.category3;
-    markers.push(marker);
 
+    // Store the marker for potential filtering or other operations
+    markers.push(marker);
     let infowindowContent = `
 <div style="width:250px; word-wrap:break-word;">
     <div style="font-size:20px; font-weight:bold; color:black; font-family:'Gill Sans MT', Arial; margin-bottom:8px;">
