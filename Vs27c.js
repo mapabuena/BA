@@ -183,7 +183,9 @@ function createMarker(data) {
         content: contentElement, // Use the created element as content
         title: data.name,
     });
-
+  // Store the original content on the marker for later reference
+    marker._originalContent = contentElement.cloneNode(true); // Use cloneNode to ensure a separate instance
+  
     // Store additional data directly on the marker if needed for filtering or reference
     marker.category = data.category;
     marker.category2 = data.category2;
