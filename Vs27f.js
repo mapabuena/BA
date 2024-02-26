@@ -131,25 +131,27 @@ function initKMLLayers() {
 
 function applyFilters() {
     markers.forEach(marker => {
-        // Assume the marker should be visible unless a filter condition is met.
-        let isVisible = true;
+        let isVisible = true; // Assume the marker is visible initially.
 
-        // Check against 'complex' category filter, as an example.
-        if (activeFilters.complex.length > 0 && !activeFilters.complex.some(value => marker.category && marker.category.includes(value))) {
-            isVisible = false; // Marker doesn't match the 'complex' filter.
+        // Filter by 'complex' category
+        if (activeFilters.complex && activeFilters.complex.length > 0) {
+            isVisible &= activeFilters.complex.some(value => marker.category && marker.category.includes(value));
         }
 
-        // Check against other category filters. Adjust the logic to match your specific filtering needs.
-        if (activeFilters.category.length > 0 && !activeFilters.category.some(value => marker.category2 && marker.category2.includes(value))) {
-            isVisible = false;
+        // Filter by 'category2' (e.g., days of the week)
+        if (activeFilters.category2 && activeFilters.category2.length > 0) {
+            isVisible &= activeFilters.category2.some(value => marker.category2 && marker.category2.includes(value));
         }
 
-        if (activeFilters.category2.length > 0 && !activeFilters.category2.some(value => marker.category3 && marker.category3.includes(value))) {
-            isVisible = false;
+        // Assuming 'category3' might be another filter criterion (e.g., types of places)
+        if (activeFilters.category3 && activeFilters.category3.length > 0) {
+            isVisible &= activeFilters.category3.some(value => marker.category3 && marker.category3.includes(value));
         }
 
-        // Control the visibility of the marker based on the filter results.
-        // Directly set the marker's map property to either the map instance or null.
+        // Additional category filters can be added here following the same pattern.
+
+        // Control the visibility based on the 'isVisible' flag.
+        // Note: This assumes AdvancedMarkerElement's visibility can be toggled by setting its map property.
         marker.map = isVisible ? map : null;
     });
 }
