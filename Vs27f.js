@@ -131,34 +131,26 @@ function initKMLLayers() {
 
 function applyFilters() {
     markers.forEach(marker => {
-        // Determine if the marker should be visible based on the active filters.
-        let isVisible = true; // Assume visible until checked against filters.
+        // Assume the marker should be visible unless a filter condition is met.
+        let isVisible = true;
 
         // Check against 'complex' category filter, as an example.
-        if (activeFilters.complex.length > 0 && !activeFilters.complex.some(value => marker.category.includes(value))) {
+        if (activeFilters.complex.length > 0 && !activeFilters.complex.some(value => marker.category && marker.category.includes(value))) {
             isVisible = false; // Marker doesn't match the 'complex' filter.
         }
 
-        // Repeat the process for other categories as necessary.
-        if (activeFilters.category.length > 0 && !activeFilters.category.some(value => marker.category2.includes(value))) {
-            isVisible = false; // Adjust this line to match your category logic.
+        // Check against other category filters. Adjust the logic to match your specific filtering needs.
+        if (activeFilters.category.length > 0 && !activeFilters.category.some(value => marker.category2 && marker.category2.includes(value))) {
+            isVisible = false;
         }
 
-        if (activeFilters.category2.length > 0 && !activeFilters.category2.some(value => marker.category3.includes(value))) {
-            isVisible = false; // Adjust this line to match your category logic.
+        if (activeFilters.category2.length > 0 && !activeFilters.category2.some(value => marker.category3 && marker.category3.includes(value))) {
+            isVisible = false;
         }
 
-        // Apply visibility. If visible, set to original content; if not, set content to an empty string.
-        if (isVisible) {
-            // Ensure the original content is an HTMLElement before setting it.
-            if (marker._originalContent instanceof HTMLElement) {
-                marker.setContent(marker._originalContent.outerHTML);
-            } else {
-                console.error('Marker original content is not an HTMLElement.', marker);
-            }
-        } else {
-            marker.setContent(''); // Effectively hides the marker.
-        }
+        // Control the visibility of the marker based on the filter results.
+        // Directly set the marker's map property to either the map instance or null.
+        marker.map = isVisible ? map : null;
     });
 }
 
