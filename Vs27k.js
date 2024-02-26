@@ -164,7 +164,7 @@ function applyFilters() {
         // Apply the calculated visibility
         marker.map = isVisible ? map : null;
     });
-
+}
 function toggleKMLLayer(index) {
     if (kmlLayers[index] && kmlLayers[index].setMap) {
         if (kmlLayers[index].getMap()) {
