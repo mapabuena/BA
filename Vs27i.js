@@ -26,6 +26,15 @@ loadGoogleMapsScript();
 
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), { center: { lat: -34.58, lng: -58.42 }, zoom: 13, mapId: "befcb04c6fcb9633", mapTypeControl: false });
+   
+    // Correctly referencing the input for Autocomplete
+    const inputElement = document.getElementById('startLocation');
+    if (inputElement instanceof HTMLInputElement) {
+        new google.maps.places.Autocomplete(inputElement);
+    } else {
+        console.error('startLocation element is not found or not an input');
+    }
+
     directionsService = new google.maps.DirectionsService();
     directionsRenderer = new google.maps.DirectionsRenderer();
     directionsRenderer.setMap(map);
