@@ -38,7 +38,12 @@ function initMap() {
     directionsService = new google.maps.DirectionsService();
     directionsRenderer = new google.maps.DirectionsRenderer();
     directionsRenderer.setMap(map);
-    new google.maps.places.Autocomplete(document.getElementById('startLocation'));
+    const startLocationInput = document.getElementById('startLocation');
+    if (startLocationInput) {
+        new google.maps.places.Autocomplete(startLocationInput);
+    } else {
+        console.error('startLocation element is not found or not an input');
+    }
 
     fetchMarkersData();
 
@@ -132,8 +137,15 @@ function initKMLLayers() {
 
 function applyFilters() {
     markers.forEach(marker => {
-        let isCategoryVisible = activeFilters.category.length === 0 || activeFilters.category.some(cat => marker.category.includes(cat));
-        let isCategory2Visible = activeFilters.category2.length === 0 || activeFilters.category2.some(cat2 => marker.category2.includes(cat2));
+        let isCategoryVisible = true;
+        if (activeFilters.category.length > 0) {
+            isCategoryVisible = activeFilters.category.some(cat => marker.category.includes(cat));
+        }
+
+        let isCategory2Visible = true;
+        if (activeFilters.category2.length > 0) {
+            isCategory2Visible = activeFilters.category2.some(cat2 => marker.category2.includes(cat2));
+        }
 
         let isVisible = isCategoryVisible && isCategory2Visible;
         marker.map = isVisible ? map : null;
