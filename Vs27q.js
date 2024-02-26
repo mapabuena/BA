@@ -137,12 +137,23 @@ function initKMLLayers() {
 
 function applyFilters() {
     markers.forEach(marker => {
-        // Default visibility to true if no filters are set
-        let isCategoryVisible = activeFilters.category.length === 0 || marker.category.some(cat => activeFilters.category.includes(cat));
-        let isCategory2Visible = activeFilters.category2.length === 0 || marker.category2.some(cat2 => activeFilters.category2.includes(cat2));
+        let isCategoryVisible = true; // Assume visibility
+        let isCategory2Visible = true; // Assume visibility
 
-        // Apply combined visibility logic
+        // If there are active category filters, check if the marker's category matches any
+        if (activeFilters.category.length > 0) {
+            isCategoryVisible = marker.category.some(cat => activeFilters.category.includes(cat));
+        }
+
+        // If there are active category2 filters, check if the marker's category2 matches any
+        if (activeFilters.category2.length > 0) {
+            isCategory2Visible = marker.category2.some(cat2 => activeFilters.category2.includes(cat2));
+        }
+
+        // Combine visibility checks; a marker must pass both to be visible
         let isVisible = isCategoryVisible && isCategory2Visible;
+
+        // Apply visibility
         marker.map = isVisible ? map : null;
     });
 }
