@@ -105,7 +105,7 @@ function handleCategoryButtonClick(button) {
     }
 
     applyFilters(); // Re-apply filters after adjustment
-
+}
 function updateComplexFilters(categoryValue, isActive) {
     let index = activeFilters.complex.indexOf(categoryValue);
     if (index > -1 && !isActive) {
