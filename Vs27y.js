@@ -3,9 +3,9 @@ let map, directionsService, directionsRenderer;
 let markers = [];
 let kmlLayers = [null, null, null],
     kmlUrls = [
-        'https://raw.githubusercontent.com/checomoandas/noblenomad/main/Safest%20and%20most%20walkable.kml',
-        'https://raw.githubusercontent.com/checomoandas/noblenomad/main/Safe%20but%20less%20walkable.kml',
-        'https://raw.githubusercontent.com/checomoandas/noblenomad/main/Feels%20sketchy%20at%20night.kml'
+       'https://raw.githubusercontent.com/mapabuena/BA/main/Safest%20and%20most%20walkable.kml',
+        'https://raw.githubusercontent.com/mapabuena/BA/main/Safe%20but%20less%20walkable.kml',
+        'https://raw.githubusercontent.com/mapabuena/BA/main/Feels%20sketchy%20at%20night.kml'
     ];
 let activeFilters = { category: [], category2: [], category3: [], complex: [] };
 
