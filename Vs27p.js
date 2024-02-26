@@ -137,16 +137,11 @@ function initKMLLayers() {
 
 function applyFilters() {
     markers.forEach(marker => {
-        let isCategoryVisible = true;
-        if (activeFilters.category.length > 0) {
-            isCategoryVisible = activeFilters.category.some(cat => marker.category.includes(cat));
-        }
+        // Default visibility to true if no filters are set
+        let isCategoryVisible = activeFilters.category.length === 0 || marker.category.some(cat => activeFilters.category.includes(cat));
+        let isCategory2Visible = activeFilters.category2.length === 0 || marker.category2.some(cat2 => activeFilters.category2.includes(cat2));
 
-        let isCategory2Visible = true;
-        if (activeFilters.category2.length > 0) {
-            isCategory2Visible = activeFilters.category2.some(cat2 => marker.category2.includes(cat2));
-        }
-
+        // Apply combined visibility logic
         let isVisible = isCategoryVisible && isCategory2Visible;
         marker.map = isVisible ? map : null;
     });
