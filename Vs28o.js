@@ -58,9 +58,9 @@ function initMap() {
     directionsRenderer.setMap(map);
     new google.maps.places.Autocomplete(document.getElementById('startLocation'));
 
-    fetchMarkersData();
-
-    updateFilters();
+     fetchMarkersData();
+     updateFilters();
+     initKMLLayers(); // Ensure KML layers are initialized after the map is ready
 }
 
 function fetchMarkersData() {
@@ -126,7 +126,11 @@ function handleCategoryButtonClick(button) {
 
 function initKMLLayers() {
     kmlUrls.forEach((url, index) => {
-        kmlLayers[index] = new google.maps.KmlLayer({ url: url, map: null });
+        // Initialize each KML layer and store it in the kmlLayers array
+        kmlLayers[index] = new google.maps.KmlLayer({
+            url: url,
+            map: null // Start with the layer not displayed
+        });
     });
 }
 
