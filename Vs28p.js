@@ -160,11 +160,10 @@ function applyFilters() {
 // Make sure to replace 'map' with your actual map instance variable
 
 
-
 function toggleKMLLayer(index) {
     if (kmlLayers[index]) {
-        var layer = kmlLayers[index];
-        layer.setMap(layer.getMap() ? null : map); // Toggle the layer
+        // Toggle the display of the KML layer
+        kmlLayers[index].setMap(kmlLayers[index].getMap() ? null : map);
     } else {
         console.error('KML Layer at index', index, 'is not initialized.');
     }
