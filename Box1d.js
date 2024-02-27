@@ -51,15 +51,15 @@ function createMarker(data) {
     const el = document.createElement('div');
     el.className = 'marker';
     el.style.backgroundImage = `url(${data.icon_url})`;
-    el.style.width = '50px';
-    el.style.height = '50px';
+    el.style.width = '20px';
+    el.style.height = '31px';
     el.style.backgroundSize = '100%';
 
     const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(
         `<h3>${data.popup_header}</h3><p>${data.description}</p>`
     );
 
-    const marker = new mapboxgl.Marker(el,{ anchor: 'bottom' })
+    const marker = new mapboxgl.Marker(el, { anchor: 'bottom' })
         .setLngLat([data.lng, data.lat])
         .setPopup(popup)
         .addTo(map);
