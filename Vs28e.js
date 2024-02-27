@@ -160,7 +160,7 @@ function applyFilters() {
 
 
   }
-}
+
 
 // Make sure to replace 'map' with your actual map instance variable
 
