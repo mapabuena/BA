@@ -7,8 +7,35 @@ let kmlLayers = [null, null, null],
         'https://raw.githubusercontent.com/mapabuena/BA/main/Safe%20but%20less%20walkable.kml',
         'https://raw.githubusercontent.com/mapabuena/BA/main/Feels%20sketchy%20at%20night.kml'
     ];
-let activeFilters = { category: [], category2: [], category3: [], complex: [] };
+let activeFilters = {
+    category: [],
+    category2: []
+};
 
+// Function to update active filters based on button clicks
+function updateFilters() {
+    document.querySelectorAll('.button-container button').forEach(button => {
+        button.addEventListener('click', function() {
+            const category = this.getAttribute('data-category');
+            const value = this.getAttribute('data-value');
+
+            // Toggle active state for button
+            this.classList.toggle('active');
+
+            // Update filter arrays based on button state
+            if (this.classList.contains('active')) {
+                if (!activeFilters[category].includes(value)) {
+                    activeFilters[category].push(value);
+                }
+            } else {
+                activeFilters[category] = activeFilters[category].filter(item => item !== value);
+            }
+
+            // Apply filters to markers
+            applyFilters();
+        });
+    });
+}
 function loadGoogleMapsScript() {
     const script = document.createElement('script');
     script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyCAK_oC-2iPESygmTO20tMTBJ5Eyu5_3Rw&callback=initMap&v=3.56&libraries=marker,places';
@@ -33,7 +60,7 @@ function initMap() {
 
     fetchMarkersData();
 
-    attachCategoryButtonsEventListeners();
+    updateFilters();
 }
 
 function fetchMarkersData() {
@@ -69,14 +96,6 @@ function processCSVData(csvData) {
 }
 
 
-function attachCategoryButtonsEventListeners() {
-    document.querySelectorAll('button[data-category]').forEach(button => {
-        button.addEventListener('click', function() {
-            handleCategoryButtonClick(this);
-        });
-    });
-}
-
 function handleCategoryButtonClick(button) {
     let categoryType = button.getAttribute('data-category');
     if (!categoryType) {
@@ -105,58 +124,35 @@ function handleCategoryButtonClick(button) {
     applyFilters();
 }
 
-function updateComplexFilters(categoryValue, isActive) {
-    let index = activeFilters.complex.indexOf(categoryValue);
-    if (index > -1 && !isActive) {
-        activeFilters.complex.splice(index, 1);
-    } else if (isActive && index === -1) {
-        activeFilters.complex.push(categoryValue);
-    }
-}
-
-function updateActiveFilters(categoryType, categoryValue, isActive) {
-    let index = activeFilters[categoryType].indexOf(categoryValue);
-    if (index > -1 && !isActive) {
-        activeFilters[categoryType].splice(index, 1);
-    } else if (isActive && index === -1) {
-        activeFilters[categoryType].push(categoryValue);
-    }
-}
-
 function initKMLLayers() {
     kmlUrls.forEach((url, index) => {
         kmlLayers[index] = new google.maps.KmlLayer({ url: url, map: null });
     });
 }
 
+// Function to apply filters to markers
 function applyFilters() {
-  markers.forEach(marker => {
-    let isVisible = true; // Assume the marker is visible initially
+    markers.forEach(marker => {
+        let isVisible = true; // Assume the marker is visible initially
 
-    // Adjusted filter logic for 'complex' category
-    if (activeFilters.complex && activeFilters.complex.length > 0) {
-        isVisible = isVisible && activeFilters.complex.some(value => 
-            (marker.category && marker.category.includes(value)) ||
-            (marker.category2 && marker.category2.includes(value)) ||
-            (marker.category3 && marker.category3.includes(value))
-        );
-    }
+        // Filter by 'category'
+        if (activeFilters.category.length > 0) {
+            isVisible = isVisible && activeFilters.category.includes(marker.category);
+        }
 
-    // Filter by 'category2'
-    if (activeFilters.category2 && activeFilters.category2.length > 0) {
-        isVisible = isVisible && activeFilters.category2.some(value => marker.category2 && marker.category2.includes(value));
-    }
+        // Filter by 'category2'
+        if (activeFilters.category2.length > 0) {
+            isVisible = isVisible && activeFilters.category2.includes(marker.category2);
+        }
 
-    // Filter by 'category3'
-    if (activeFilters.category3 && activeFilters.category3.length > 0) {
-        isVisible = isVisible && activeFilters.category3.some(value => marker.category3 && marker.category3.includes(value));
-    }
-
-    // Set marker visibility based on the evaluated `isVisible` boolean
-    // For Advanced Markers, you explicitly set the map to `null` to hide them, or to `map` to show them
-    marker.map = isVisible ? map : null; // Assuming `map` is the Google Maps instance
-  });
+        // Set marker visibility based on filters by setting map to null or to the map instance
+        marker.setMap(isVisible ? map : null);
+    });
 }
+
+// Make sure to replace 'map' with your actual map instance variable
+
+
 
 function toggleKMLLayer(index) {
     if (kmlLayers[index] && kmlLayers[index].setMap) {
