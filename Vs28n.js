@@ -14,7 +14,7 @@ let activeFilters = {
 
 // Function to update active filters based on button clicks
 function updateFilters() {
-    document.querySelectorAll('.button-container button').forEach(button => {
+    document.querySelectorAll('.button-container .filter-button').forEach(button => {
         button.addEventListener('click', function() {
             const category = this.getAttribute('data-category');
             const value = this.getAttribute('data-value');
