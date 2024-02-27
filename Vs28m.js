@@ -158,14 +158,11 @@ function applyFilters() {
 
 
 function toggleKMLLayer(index) {
-    if (kmlLayers[index] && kmlLayers[index].setMap) {
-        if (kmlLayers[index].getMap()) {
-            kmlLayers[index].setMap(null);
-            document.getElementById(`kml${index + 1}Button`).classList.remove('active');
-        } else {
-            kmlLayers[index].setMap(map);
-            document.getElementById(`kml${index + 1}Button`).classList.add('active');
-        }
+    if (kmlLayers[index]) {
+        var layer = kmlLayers[index];
+        layer.setMap(layer.getMap() ? null : map); // Toggle the layer
+    } else {
+        console.error('KML Layer at index', index, 'is not initialized.');
     }
 }
 
