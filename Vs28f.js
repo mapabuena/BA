@@ -130,36 +130,30 @@ function initKMLLayers() {
     });
 }
 
-// Function to apply filters to markers
 function applyFilters() {
-  // Assume markers is an array of marker objects where each marker has category and category2 properties.
-  // Also assuming we have an array of currently active category buttons and category2 buttons.
-  const activeCategoryButtons = ['categoryValue1', 'categoryValue2']; // Example values, replace with dynamic values based on active buttons
-  const activeCategory2Buttons = ['category2Value1', 'category2Value2']; // Example values, replace with dynamic values based on active buttons
+    markers.forEach(marker => {
+        // Assuming marker.category and marker.category2 are arrays of categories for each marker
+        const matchesCategory = activeFilters.category.length === 0 || marker.category.some(cat => activeFilters.category.includes(cat));
+        const matchesCategory2 = activeFilters.category2.length === 0 || marker.category2.some(cat2 => activeFilters.category2.includes(cat2));
 
-  markers.forEach(marker => {
-    // Determine if the marker matches the active categories
-    const matchesCategory = activeCategoryButtons.length === 0 || activeCategoryButtons.includes(marker.category);
-    const matchesCategory2 = activeCategory2Buttons.length === 0 || activeCategory2Buttons.includes(marker.category2);
+        let shouldBeShown = false;
+        if (activeFilters.category.length > 0 && activeFilters.category2.length > 0) {
+            shouldBeShown = matchesCategory && matchesCategory2;
+        } else if (activeFilters.category.length > 0 || activeFilters.category2.length > 0) {
+            shouldBeShown = matchesCategory || matchesCategory2;
+        } else {
+            shouldBeShown = true;
+        }
 
-    // Logic to determine if a marker should be displayed
-    if (activeCategoryButtons.length > 0 && activeCategory2Buttons.length > 0) {
-      // Both category types have active buttons, marker must match at least one from both
-      marker.position = (matchesCategory && matchesCategory2) ? marker.originalPosition : null;
-    } else if (activeCategoryButtons.length > 0 || activeCategory2Buttons.length > 0) {
-      // Only one category type has active buttons, marker must match at least one active button
-      marker.position = (matchesCategory || matchesCategory2) ? marker.originalPosition : null;
-    } else {
-      // No buttons are pressed, all markers should be removed
-      marker.position = null;
-    }
-
-    // Update marker visibility on the map based on the position property
-    marker.map = marker.position ? map : null;
-  });
-
-
-  }
+        // Here, adjusting the visibility based on your instructions
+        if (shouldBeShown) {
+            marker.map = map; // This line assumes you have a way to re-assign the map to the marker, which is not standard
+        } else {
+            marker.position = null; // Attempting to hide the marker by setting position to null as per your instructions
+            // Note: The standard Google Maps JavaScript API does not support removing markers by setting position to null.
+        }
+    });
+}
 
 
 // Make sure to replace 'map' with your actual map instance variable
