@@ -1,7 +1,7 @@
 mapboxgl.accessToken = 'pk.eyJ1IjoibjMxbGQiLCJhIjoiY2x0NG9kZnZkMDBteTJscGw5N21maHp6MiJ9.i2Ki-NaLFzRtFe38gVbzvg'; // Replace with your actual access token
 let map = new mapboxgl.Map({
     container: 'map',
-    style: 'mapbox://styles/mapbox/streets-v11',
+    style: 'mapbox://styles/n31ld/clt4onrza001401pcc1j9he1u',
     center: [-58.42, -34.58],
     zoom: 13
 });
@@ -59,7 +59,7 @@ function createMarker(data) {
         `<h3>${data.popup_header}</h3><p>${data.description}</p>`
     );
 
-    const marker = new mapboxgl.Marker(el)
+    const marker = new mapboxgl.Marker(el,{ anchor: 'bottom' })
         .setLngLat([data.lng, data.lat])
         .setPopup(popup)
         .addTo(map);
