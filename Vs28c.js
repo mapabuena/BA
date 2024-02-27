@@ -132,22 +132,38 @@ function initKMLLayers() {
 
 // Function to apply filters to markers
 function applyFilters() {
+  // Assume markers is an array of marker objects where each marker has category and category2 properties.
+  // Also assuming we have an array of currently active category buttons and category2 buttons.
+  const activeCategoryButtons = ['categoryValue1', 'categoryValue2']; // Example values, replace with dynamic values based on active buttons
+  const activeCategory2Buttons = ['category2Value1', 'category2Value2']; // Example values, replace with dynamic values based on active buttons
+
+  markers.forEach(marker => {
+    // Determine if the marker matches the active categories
+    const matchesCategory = activeCategoryButtons.length === 0 || activeCategoryButtons.includes(marker.category);
+    const matchesCategory2 = activeCategory2Buttons.length === 0 || activeCategory2Buttons.includes(marker.category2);
+
+    // Logic to determine if a marker should be displayed
+    if (activeCategoryButtons.length > 0 && activeCategory2Buttons.length > 0) {
+      // Both category types have active buttons, marker must match at least one from both
+      marker.position = (matchesCategory && matchesCategory2) ? marker.originalPosition : null;
+    } else if (activeCategoryButtons.length > 0 || activeCategory2Buttons.length > 0) {
+      // Only one category type has active buttons, marker must match at least one active button
+      marker.position = (matchesCategory || matchesCategory2) ? marker.originalPosition : null;
+    } else {
+      // No buttons are pressed, all markers should be removed
+      marker.position = null;
+    }
+
+    // Update marker visibility on the map based on the position property
+    marker.map = marker.position ? map : null;
+  });
+
+  // Example: If all buttons are pressed, assuming here you would have logic to detect this and act accordingly
+  if (allButtonsPressed) {
     markers.forEach(marker => {
-        let isVisible = true; // Assume the marker is visible initially
-
-        // Filter by 'category'
-        if (activeFilters.category.length > 0) {
-            isVisible = isVisible && activeFilters.category.includes(marker.category);
-        }
-
-        // Filter by 'category2'
-        if (activeFilters.category2.length > 0) {
-            isVisible = isVisible && activeFilters.category2.includes(marker.category2);
-        }
-
-        // Set marker visibility based on filters by setting map to null or to the map instance
-        marker.setMap(isVisible ? map : null);
+      marker.map = map; // Attach all markers to the map
     });
+  }
 }
 
 // Make sure to replace 'map' with your actual map instance variable
