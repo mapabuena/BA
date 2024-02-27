@@ -132,7 +132,6 @@ function initKMLLayers() {
 
 function applyFilters() {
     markers.forEach(marker => {
-        // Assuming marker.category and marker.category2 are arrays of categories for each marker
         const matchesCategory = activeFilters.category.length === 0 || marker.category.some(cat => activeFilters.category.includes(cat));
         const matchesCategory2 = activeFilters.category2.length === 0 || marker.category2.some(cat2 => activeFilters.category2.includes(cat2));
 
@@ -145,12 +144,13 @@ function applyFilters() {
             shouldBeShown = true;
         }
 
-        // Here, adjusting the visibility based on your instructions
+        // Adjust marker visibility
         if (shouldBeShown) {
-            marker.map = map; // This line assumes you have a way to re-assign the map to the marker, which is not standard
+            // Assuming a method to reset the marker's position to its original value
+            marker.setPosition(marker.originalPosition);
         } else {
-            marker.position = null; // Attempting to hide the marker by setting position to null as per your instructions
-            // Note: The standard Google Maps JavaScript API does not support removing markers by setting position to null.
+            // Setting position to null to hide the marker
+            marker.setPosition(null);
         }
     });
 }
