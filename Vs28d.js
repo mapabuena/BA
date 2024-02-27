@@ -158,11 +158,7 @@ function applyFilters() {
     marker.map = marker.position ? map : null;
   });
 
-  // Example: If all buttons are pressed, assuming here you would have logic to detect this and act accordingly
-  if (allButtonsPressed) {
-    markers.forEach(marker => {
-      marker.map = map; // Attach all markers to the map
-    });
+
   }
 }
 
