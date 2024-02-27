@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Google Map</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center the content */
+        }
+        #map-container {
+            display: flex;
+            width: 100%; /* Adjust based on your layout needs */
+        }
+        #map {
+            height: 480px;
+            width: 60%; /* Adjust based on your layout needs */
+        }
+        #sidebar {
+            height: 480px;
+            width: 40%; /* Adjust based on your layout needs */
+            background-color: #f3f3f3; /* Light grey background */
+            overflow-y: auto; /* Enable vertical scroll */
+            padding-top: 20px; /* Padding from the top */
+            box-shadow: 0 0 5px rgba(0,0,0,0.2); /* Shadow for depth */
+        }
+        #directionsPanel {
+            width: 300px;
+            padding: 10px;
+            background-color: white;
+            overflow: auto;
+            display: none; /* Hide by default */
+        }
+        .button-container {
+            width: 100%; /* Full width */
+            text-align: center; /* Center buttons */
+            margin-top: 20px; /* Space from the map */
+        }
+        button {
+            background-color: #FFF;
+            color: black;
+            font-family: 'Gill Sans MT', sans-serif;
+            margin: 2px;
+        }
+        button.active {
+            background-color: #000000;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<div id="map-container">
+    <div id="map"></div>
+    <div id="sidebar">
+      <!-- Sidebar content will be dynamically loaded here -->
+    </div>
+</div>
+<div class="button-container">
+    <button class="filter-button" data-category="category" data-value="group1">GROUP 1</button>
+    <button class="filter-button" data-category="category" data-value="group2">GROUP 2</button>
+    <button class="filter-button" data-category="category" data-value="group3">GROUP 3</button>
+    <button class="filter-button" data-category="category" data-value="group4">GROUP 4</button>
+    <button class="filter-button" data-category="category" data-value="group5">GROUP 5</button>
+    <button class="filter-button" data-category="category" data-value="group6">GROUP 6</button> <br>
+   <button class="filter-button" data-category="category2" data-value="mon">MON</button>
+    <button class="filter-button" data-category="category2" data-value="tue">TUE</button>
+    <button class="filter-button" data-category="category2" data-value="wed">WED</button>
+    <button class="filter-button" data-category="category2" data-value="thu">THU</button>
+    <button class="filter-button" data-category="category2" data-value="fri">FRI</button>
+    <button class="filter-button" data-category="category2" data-value="sat">SAT</button>
+    <button class="filter-button" data-category="category2" data-value="sun">SUN</button><br>
+    <button id="kml1Button" onclick="toggleKMLLayer(0)">Barrio 1</button>
+    <button id="kml2Button" onclick="toggleKMLLayer(1)">Barrio 2</button>
+    <button id="kml3Button" onclick="toggleKMLLayer(2)">Barrio 3</button>
+</div>
+<div id="directionsPanel">
+    <!-- Directions panel content -->
+</div>
+<script src="https://cdn.jsdelivr.net/gh/mapabuena/BA@main/Vs28p.js"></script>
+</body>
+</html>
