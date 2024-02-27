@@ -55,9 +55,19 @@ function createMarker(data) {
     el.style.height = '31px';
     el.style.backgroundSize = '100%';
 
-    const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(
-        `<h3>${data.popup_header}</h3><p>${data.description}</p>`
-    );
+    // Updated popup HTML to match Google Maps style
+    const popupHTML = `
+<div style="width:250px; word-wrap:break-word;">
+    <div style="font-size:20px; font-weight:bold; color:black; font-family:'Gill Sans MT', Arial; margin-bottom:8px;">
+        ${data.popup_header}
+        <a href="#" class="copy-address-link" style="font-size:14px; font-family:'Gill Sans MT', Arial; margin-left:16px;" onclick="copyToClipboard('${data.name}')">COPY ADDRESS</a>
+    </div>
+    <img src="${data.popupimage_url}" style="width:100%; height:auto; margin-bottom:8px;">
+    <div style="font-size:16px; color:black; font-family:'Gill Sans MT', Arial;">${data.description}</div>
+</div>
+`;
+
+    const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(popupHTML);
 
     const marker = new mapboxgl.Marker(el, { anchor: 'bottom' })
         .setLngLat([data.lng, data.lat])
