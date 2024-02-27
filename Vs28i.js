@@ -143,7 +143,7 @@ function applyFilters() {
         } else {
             shouldBeShown = true;
         }
-
+console.log(`Marker ${index} matchesCategory: ${matchesCategory}, matchesCategory2: ${matchesCategory2}, shouldBeShown: ${shouldBeShown}`);
         // Adjust marker visibility by directly setting its position
         if (shouldBeShown) {
           marker.position = marker.originalPosition;
