@@ -144,13 +144,12 @@ function applyFilters() {
             shouldBeShown = true;
         }
 
-        // Adjust marker visibility
+        // Adjust marker visibility by directly setting its position
         if (shouldBeShown) {
-            // Assuming a method to reset the marker's position to its original value
-            marker.setPosition(marker.originalPosition);
+          marker.position = marker.originalPosition;
         } else {
-            // Setting position to null to hide the marker
-            marker.setPosition(null);
+            // Directly setting the marker's position to null to hide it
+            marker.position = null;
         }
     });
 }
@@ -194,6 +193,8 @@ function createMarker(data) {
         content: contentElement, // Use the created element as content
         title: data.name,
     });
+      // Store the original position on the marker for later reference
+    marker.originalPosition = { lat: data.lat, lng: data.lng };
   // Store the original content on the marker for later reference
     marker._originalContent = contentElement.cloneNode(true); // Use cloneNode to ensure a separate instance
   
