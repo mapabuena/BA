@@ -133,29 +133,21 @@ function initKMLLayers() {
 function applyFilters() {
     console.log("Active filters:", activeFilters);
 
-    markers.forEach((marker, index) => {
-        // Log the categories for the first few markers for inspection
-        if (index < 5) { // Adjust this number based on how many markers you want to log
-            console.log(`Marker ${index} categories:`, marker.category, marker.category2);
-        }
+    markers.forEach(marker => {
         const matchesCategory = activeFilters.category.length === 0 || marker.category.some(cat => activeFilters.category.includes(cat));
         const matchesCategory2 = activeFilters.category2.length === 0 || marker.category2.some(cat2 => activeFilters.category2.includes(cat2));
 
-        let shouldBeShown = false;
-        if (activeFilters.category.length > 0 && activeFilters.category2.length > 0) {
-            shouldBeShown = matchesCategory && matchesCategory2;
-        } else if (activeFilters.category.length > 0 || activeFilters.category2.length > 0) {
-            shouldBeShown = matchesCategory || matchesCategory2;
-        } else {
-            shouldBeShown = true;
-        }
-console.log(`Marker ${index} matchesCategory: ${matchesCategory}, matchesCategory2: ${matchesCategory2}, shouldBeShown: ${shouldBeShown}`);
-        // Adjust marker visibility by directly setting its position
+        // A marker should be shown only if it matches both category and category2 filters
+        // or if there are no filters selected for that category.
+        let shouldBeShown = matchesCategory && matchesCategory2;
+
+        console.log(`Marker categories: ${marker.category}, matchesCategory: ${matchesCategory}, matchesCategory2: ${matchesCategory2}, shouldBeShown: ${shouldBeShown}`);
+
         if (shouldBeShown) {
-          marker.position = marker.originalPosition;
+           marker.position = marker.originalPosition; 
         } else {
             // Directly setting the marker's position to null to hide it
-            marker.position = null;
+            marker.position = null; // Confirm this is correct for AdvancedMarkerElement
         }
     });
 }
