@@ -131,7 +131,13 @@ function initKMLLayers() {
 }
 
 function applyFilters() {
-    markers.forEach(marker => {
+    console.log("Active filters:", activeFilters);
+
+    markers.forEach((marker, index) => {
+        // Log the categories for the first few markers for inspection
+        if (index < 5) { // Adjust this number based on how many markers you want to log
+            console.log(`Marker ${index} categories:`, marker.category, marker.category2);
+        }
         const matchesCategory = activeFilters.category.length === 0 || marker.category.some(cat => activeFilters.category.includes(cat));
         const matchesCategory2 = activeFilters.category2.length === 0 || marker.category2.some(cat2 => activeFilters.category2.includes(cat2));
 
