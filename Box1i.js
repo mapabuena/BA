@@ -14,8 +14,9 @@ let activeFilters = {
 
 // Example GeoJSON layer URLs
 let geojsonLayers = {
-    'layer1': 'URL_TO_YOUR_FIRST_GEOJSON_FILE',
-    'layer2': 'URL_TO_YOUR_SECOND_GEOJSON_FILE',
+    'layer1': 'https://raw.githubusercontent.com/mapabuena/BA/main/Safest%20and%20most%20walkable.geojson',
+    'layer2': 'https://raw.githubusercontent.com/mapabuena/BA/main/Safe%20but%20less%20walkable.geojson',
+    'layer3': https://raw.githubusercontent.com/mapabuena/BA/main/Feels%20sketchy%20at%20night.geojson',
     // Add more layers as needed
     };
 
