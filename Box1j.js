@@ -16,7 +16,7 @@ let activeFilters = {
 let geojsonLayers = {
     'layer1': 'https://raw.githubusercontent.com/mapabuena/BA/main/Safest%20and%20most%20walkable.geojson',
     'layer2': 'https://raw.githubusercontent.com/mapabuena/BA/main/Safe%20but%20less%20walkable.geojson',
-    'layer3': https://raw.githubusercontent.com/mapabuena/BA/main/Feels%20sketchy%20at%20night.geojson',
+    'layer3': 'https://raw.githubusercontent.com/mapabuena/BA/main/Feels%20sketchy%20at%20night.geojson',
     // Add more layers as needed
     };
 
