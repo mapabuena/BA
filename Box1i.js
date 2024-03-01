@@ -12,10 +12,44 @@ let activeFilters = {
     category2: []
 };
 
+// Example GeoJSON layer URLs
+let geojsonLayers = {
+    'layer1': 'URL_TO_YOUR_FIRST_GEOJSON_FILE',
+    'layer2': 'URL_TO_YOUR_SECOND_GEOJSON_FILE',
+    // Add more layers as needed
+    };
+
 map.on('load', function() {
+    // Load and add GeoJSON layers to the map initially as invisible
+    for (let id in geojsonLayers) {
+        map.addSource(id, { type: 'geojson', data: geojsonLayers[id] });
+        map.addLayer({
+            'id': id,
+            'type': 'fill', // Change 'fill' to 'line' or 'symbol' as per your GeoJSON data
+            'source': id,
+            'layout': {},
+            'paint': {
+                'fill-color': '#888', // Example fill color, change as needed
+                'fill-opacity': 0.4 // Example fill opacity, change as needed
+            }
+        });
+        map.setLayoutProperty(id, 'visibility', 'none'); // Start with the layer hidden
+    }
+
+    // Add other initializations such as fetching marker data
     fetchMarkersData();
     updateFilters();
 });
+
+// Function to toggle GeoJSON layer visibility
+function toggleLayer(id) {
+    let visibility = map.getLayoutProperty(id, 'visibility');
+    if (visibility === 'visible') {
+        map.setLayoutProperty(id, 'visibility', 'none');
+    } else {
+        map.setLayoutProperty(id, 'visibility', 'visible');
+    }
+}
 
 function fetchMarkersData() {
     fetch('https://raw.githubusercontent.com/mapabuena/BA/main/BsAsPinsGroups.csv')
