@@ -30,27 +30,22 @@ document.getElementById('myToggleButton1b').addEventListener('click', function()
 });
 
 // Function to toggle GeoJSON layer visibility
+// Simplified toggle function that also corrects button appearance
 function toggleLayers(layerIds, buttonId) {
     const button = document.getElementById(buttonId);
-    let isVisible = button.classList.contains('active'); // Check if the layer is currently considered visible
+    let isVisible = map.getLayoutProperty(layerIds[0], 'visibility') === 'visible';
 
-    layerIds.forEach(function(layerId) {
-        // Set layer visibility based on the opposite of the current button's state
+    layerIds.forEach(layerId => {
         map.setLayoutProperty(layerId, 'visibility', isVisible ? 'none' : 'visible');
     });
 
-    // Toggle button's appearance based on the new visibility state
+    // Toggle button appearance based on the updated visibility
     if (isVisible) {
-        button.classList.remove('active'); // If was visible (and thus active), remove active class to hide layer
-        button.style.backgroundColor = "#FFF"; // White background
-        button.style.color = "#000"; // Black text
+        button.classList.remove('active'); // Layer is now off, remove 'active' class
     } else {
-        button.classList.add('active'); // If was hidden, add active class to show layer
-        button.style.backgroundColor = "#000"; // Black background
-        button.style.color = "#FFF"; // White text
+        button.classList.add('active'); // Layer is now on, add 'active' class
     }
 }
-
 function fetchMarkersData() {
     fetch('https://raw.githubusercontent.com/mapabuena/BA/main/BsAsPinsGroups.csv')
         .then(response => response.text())
@@ -163,13 +158,10 @@ function updateFilters() {
 
 function applyFilters() {
     markers.forEach(({marker, data}) => {
-        const matchesCategory = activeFilters.category.length === 0 || activeFilters.category.some(cat => data.category.includes(cat));
-        const matchesCategory2 = activeFilters.category2.length === 0 || activeFilters.category2.some(cat2 => data.category2.includes(cat2));
+        // Ensure categories exist in activeFilters before proceeding
+        const matchesCategory = !activeFilters.category || activeFilters.category.length === 0 || activeFilters.category.some(cat => data.category && data.category.includes(cat));
+        const matchesCategory2 = !activeFilters.category2 || activeFilters.category2.length === 0 || activeFilters.category2.some(cat2 => data.category2 && data.category2.includes(cat2));
 
-        if (matchesCategory && matchesCategory2) {
-            marker.getElement().style.display = '';
-        } else {
-            marker.getElement().style.display = 'none';
-        }
+        marker.getElement().style.display = (matchesCategory && matchesCategory2) ? '' : 'none';
     });
 }
