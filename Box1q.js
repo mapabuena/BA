@@ -32,21 +32,22 @@ document.getElementById('myToggleButton1b').addEventListener('click', function()
 // Function to toggle GeoJSON layer visibility
 function toggleLayers(layerIds, buttonId) {
     const button = document.getElementById(buttonId);
-    let allVisible = true;
+    let isVisible = button.classList.contains('active'); // Check if the layer is currently considered visible
 
     layerIds.forEach(function(layerId) {
-        var visibility = map.getLayoutProperty(layerId, 'visibility');
-        if (visibility === 'none') {
-            allVisible = false;
-        }
-        map.setLayoutProperty(layerId, 'visibility', visibility === 'visible' ? 'none' : 'visible');
+        // Set layer visibility based on the opposite of the current button's state
+        map.setLayoutProperty(layerId, 'visibility', isVisible ? 'none' : 'visible');
     });
 
-    // Toggle button appearance
-    if (allVisible) {
-        button.classList.remove('active'); // Remove active class if all layers were initially visible
+    // Toggle button's appearance based on the new visibility state
+    if (isVisible) {
+        button.classList.remove('active'); // If was visible (and thus active), remove active class to hide layer
+        button.style.backgroundColor = "#FFF"; // White background
+        button.style.color = "#000"; // Black text
     } else {
-        button.classList.add('active'); // Add active class if any layer was not visible
+        button.classList.add('active'); // If was hidden, add active class to show layer
+        button.style.backgroundColor = "#000"; // Black background
+        button.style.color = "#FFF"; // White text
     }
 }
 
