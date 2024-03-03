@@ -33,17 +33,30 @@ document.getElementById('myToggleButton1b').addEventListener('click', function()
 // Simplified toggle function that also corrects button appearance
 function toggleLayers(layerIds, buttonId) {
     const button = document.getElementById(buttonId);
-    let anyLayerVisible = layerIds.some(layerId => map.getLayoutProperty(layerId, 'visibility') === 'visible');
+    // Assume all layers are initially visible (Mapbox styles usually default layers to visible)
+    let anyLayerWasVisible = false;
 
     layerIds.forEach(layerId => {
-        map.setLayoutProperty(layerId, 'visibility', anyLayerVisible ? 'none' : 'visible');
+        let visibility = map.getLayoutProperty(layerId, 'visibility');
+        // If any layer is currently visible, we'll turn all off, and vice versa.
+        if (visibility !== 'none') {
+            anyLayerWasVisible = true;
+        }
     });
 
-    // Update button class based on the new visibility state
-    if (anyLayerVisible) {
+    layerIds.forEach(layerId => {
+        map.setLayoutProperty(layerId, 'visibility', anyLayerWasVisible ? 'none' : 'visible');
+    });
+
+    // Update the button state based on the action taken
+    if (anyLayerWasVisible) {
         button.classList.remove('active');
+        button.style.backgroundColor = "#FFF";
+        button.style.color = "#000";
     } else {
         button.classList.add('active');
+        button.style.backgroundColor = "#000";
+        button.style.color = "#FFF";
     }
 }
 
