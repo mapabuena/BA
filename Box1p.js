@@ -21,24 +21,33 @@ map.on('load', function() {
 var Tier1aIds = ['palermosoho-palermohollywood']; // Example layer IDs
 var Tier1bIds = ['barrionorte-lascanitas-palermoviejo']; // Example layer IDs
 
+// Adjust event listeners to pass the button ID
 document.getElementById('myToggleButton1a').addEventListener('click', function() {
-    toggleLayers(Tier1aIds);
+    toggleLayers(Tier1aIds, 'myToggleButton1a');
 });
-
 document.getElementById('myToggleButton1b').addEventListener('click', function() {
-    toggleLayers(Tier1bIds);
+    toggleLayers(Tier1bIds, 'myToggleButton1b');
 });
 
 // Function to toggle GeoJSON layer visibility
-function toggleLayers(layerIds) {
+function toggleLayers(layerIds, buttonId) {
+    const button = document.getElementById(buttonId);
+    let allVisible = true;
+
     layerIds.forEach(function(layerId) {
         var visibility = map.getLayoutProperty(layerId, 'visibility');
-        if (visibility === 'visible') {
-            map.setLayoutProperty(layerId, 'visibility', 'none');
-        } else {
-            map.setLayoutProperty(layerId, 'visibility', 'visible');
+        if (visibility === 'none') {
+            allVisible = false;
         }
+        map.setLayoutProperty(layerId, 'visibility', visibility === 'visible' ? 'none' : 'visible');
     });
+
+    // Toggle button appearance
+    if (allVisible) {
+        button.classList.remove('active'); // Remove active class if all layers were initially visible
+    } else {
+        button.classList.add('active'); // Add active class if any layer was not visible
+    }
 }
 
 function fetchMarkersData() {
