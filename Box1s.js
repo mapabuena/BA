@@ -29,23 +29,24 @@ document.getElementById('myToggleButton1b').addEventListener('click', function()
     toggleLayers(Tier1bIds, 'myToggleButton1b');
 });
 
-// Function to toggle GeoJSON layer visibility
+
 // Simplified toggle function that also corrects button appearance
 function toggleLayers(layerIds, buttonId) {
     const button = document.getElementById(buttonId);
-    let isVisible = map.getLayoutProperty(layerIds[0], 'visibility') === 'visible';
+    let anyLayerVisible = layerIds.some(layerId => map.getLayoutProperty(layerId, 'visibility') === 'visible');
 
     layerIds.forEach(layerId => {
-        map.setLayoutProperty(layerId, 'visibility', isVisible ? 'none' : 'visible');
+        map.setLayoutProperty(layerId, 'visibility', anyLayerVisible ? 'none' : 'visible');
     });
 
-    // Toggle button appearance based on the updated visibility
-    if (isVisible) {
-        button.classList.remove('active'); // Layer is now off, remove 'active' class
+    // Update button class based on the new visibility state
+    if (anyLayerVisible) {
+        button.classList.remove('active');
     } else {
-        button.classList.add('active'); // Layer is now on, add 'active' class
+        button.classList.add('active');
     }
 }
+
 function fetchMarkersData() {
     fetch('https://raw.githubusercontent.com/mapabuena/BA/main/BsAsPinsGroups.csv')
         .then(response => response.text())
