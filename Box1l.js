@@ -12,13 +12,6 @@ let activeFilters = {
     category2: []
 };
 
-// Example GeoJSON layer URLs
-let geojsonLayers = {
-    'layer1': 'https://raw.githubusercontent.com/mapabuena/BA/main/Safest%20and%20most%20walkable.geojson',
-    'layer2': 'https://raw.githubusercontent.com/mapabuena/BA/main/Safe%20but%20less%20walkable.geojson',
-    'layer3': 'https://raw.githubusercontent.com/mapabuena/BA/main/Feels%20sketchy%20at%20night.geojson',
-    // Add more layers as needed
-    };
 
 map.on('load', function() {
     // Load and add GeoJSON layers to the map initially as invisible
@@ -42,14 +35,27 @@ map.on('load', function() {
     updateFilters();
 });
 
+var Tier1aIds = ['palermosoho-palermohollywood']; // Example layer IDs
+var Tier1bIds = ['barrionorte-lascanitas-palermoviejo']; // Example layer IDs
+
+document.getElementById('myToggleButton1a').addEventListener('click', function() {
+    toggleLayers(Tier1aIds);
+});
+
+document.getElementById('myToggleButton1b').addEventListener('click', function() {
+    toggleLayers(Tier1bIds);
+});
+
 // Function to toggle GeoJSON layer visibility
-function toggleLayer(id) {
-    let visibility = map.getLayoutProperty(id, 'visibility');
-    if (visibility === 'visible') {
-        map.setLayoutProperty(id, 'visibility', 'none');
-    } else {
-        map.setLayoutProperty(id, 'visibility', 'visible');
-    }
+function toggleLayers(layerIds) {
+    layerIds.forEach(function(layerId) {
+        var visibility = map.getLayoutProperty(layerId, 'visibility');
+        if (visibility === 'visible') {
+            map.setLayoutProperty(layerId, 'visibility', 'none');
+        } else {
+            map.setLayoutProperty(layerId, 'visibility', 'visible');
+        }
+    });
 }
 
 function fetchMarkersData() {
