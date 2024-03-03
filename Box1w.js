@@ -31,13 +31,13 @@ document.getElementById('myToggleButton1a').addEventListener('click', function()
 document.getElementById('myToggleButton1b').addEventListener('click', function() {
     toggleLayers(Tier1bIds, 'myToggleButton1b');
 });
-document.getElementById('myToggleButton1b').addEventListener('click', function() {
+document.getElementById('myToggleButton2').addEventListener('click', function() {
     toggleLayers(Tier2Ids, 'myToggleButton2');
 });
-document.getElementById('myToggleButton1b').addEventListener('click', function() {
+document.getElementById('myToggleButton3').addEventListener('click', function() {
     toggleLayers(Tier3Ids, 'myToggleButton3');
 });
-document.getElementById('myToggleButton1b').addEventListener('click', function() {
+document.getElementById('myToggleButton4').addEventListener('click', function() {
     toggleLayers(Tier4Ids, 'myToggleButton4');
 });
 
