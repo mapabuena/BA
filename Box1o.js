@@ -14,11 +14,8 @@ let activeFilters = {
 
 
 map.on('load', function() {
-    const layers = map.getStyle().layers;
-    
-    layers.forEach((layer) => {
-        console.log(layer.id);
-    });
+    fetchMarkersData();
+    updateFilters();
 });
 
 var Tier1aIds = ['palermosoho-palermohollywood']; // Example layer IDs
