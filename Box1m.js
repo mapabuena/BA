@@ -14,23 +14,6 @@ let activeFilters = {
 
 
 map.on('load', function() {
-    // Load and add GeoJSON layers to the map initially as invisible
-    for (let id in geojsonLayers) {
-        map.addSource(id, { type: 'geojson', data: geojsonLayers[id] });
-        map.addLayer({
-            'id': id,
-            'type': 'fill', // Change 'fill' to 'line' or 'symbol' as per your GeoJSON data
-            'source': id,
-            'layout': {},
-            'paint': {
-                'fill-color': '#888', // Example fill color, change as needed
-                'fill-opacity': 0.4 // Example fill opacity, change as needed
-            }
-        });
-        map.setLayoutProperty(id, 'visibility', 'none'); // Start with the layer hidden
-    }
-
-    // Add other initializations such as fetching marker data
     fetchMarkersData();
     updateFilters();
 });
