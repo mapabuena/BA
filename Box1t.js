@@ -142,16 +142,25 @@ function updateFilters() {
         button.addEventListener('click', function() {
             const category = this.getAttribute('data-category');
             const value = this.getAttribute('data-value');
+
+            // Ensure the category array is initialized before attempting to use it
+            if (!activeFilters[category]) {
+                activeFilters[category] = [];
+            }
+
             this.classList.toggle('active');
 
             if (this.classList.contains('active')) {
+                // Now safely add the value to the category's filter array
                 if (!activeFilters[category].includes(value)) {
                     activeFilters[category].push(value);
                 }
             } else {
+                // Safely remove the value from the category's filter array
                 activeFilters[category] = activeFilters[category].filter(item => item !== value);
             }
 
+            // Function to reapply filters based on updated activeFilters
             applyFilters();
         });
     });
