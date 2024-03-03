@@ -20,6 +20,9 @@ map.on('load', function() {
 
 var Tier1aIds = ['palermosoho-palermohollywood']; // Example layer IDs
 var Tier1bIds = ['barrionorte-lascanitas-palermoviejo']; // Example layer IDs
+var Tier2Ids = ['recoleta']; // Example layer IDs
+var Tier3Ids = ['santelmo']; // Example layer IDs
+var Tier4Ids = ['laboca']; // Example layer IDs
 
 // Adjust event listeners to pass the button ID
 document.getElementById('myToggleButton1a').addEventListener('click', function() {
@@ -28,7 +31,15 @@ document.getElementById('myToggleButton1a').addEventListener('click', function()
 document.getElementById('myToggleButton1b').addEventListener('click', function() {
     toggleLayers(Tier1bIds, 'myToggleButton1b');
 });
-
+document.getElementById('myToggleButton1b').addEventListener('click', function() {
+    toggleLayers(Tier2Ids, 'myToggleButton2');
+});
+document.getElementById('myToggleButton1b').addEventListener('click', function() {
+    toggleLayers(Tier3Ids, 'myToggleButton3');
+});
+document.getElementById('myToggleButton1b').addEventListener('click', function() {
+    toggleLayers(Tier4Ids, 'myToggleButton4');
+});
 
 // Simplified toggle function that also corrects button appearance
 function toggleLayers(layerIds, buttonId) {
