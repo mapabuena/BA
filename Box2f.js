@@ -144,9 +144,9 @@ function createMarker(data) {
     // Define the popup HTML with the "popup-content" class wrapping your content
     const popupHTML = `
 <div class="popup-content">
-    <div style="font-size:20px; font-weight:bold; color:black; font-family:'Gill Sans MT', Arial; margin-bottom:8px;">
+    <div style="font-size:15px; font-weight:bold; color:black; font-family:'Gill Sans MT', Arial; margin-bottom:8px;">
         ${data.popup_header}
-        <a href="#" class="copy-address-link" style="font-size:14px; font-family:'Gill Sans MT', Arial; margin-left:16px;">COPY ADDRESS</a>
+        <a href="#" class="copy-address-link" style="font-size:10px; font-family:'Gill Sans MT', Arial; margin-left:16px;">COPY ADDRESS</a>
     </div>
     <img src="${data.popupimage_url}" alt="Popup Image" style="max-width:100%; height:auto; margin-bottom:8px;">
     <div style="font-size:16px; color:black; font-family:'Gill Sans MT', Arial;">${data.description}</div>
