@@ -224,7 +224,7 @@ function recenterMap(lng, lat) {
     const mapHeight = mapContainer.offsetHeight;
 
     // Offset to position the marker at the bottom 10% of the map
-    const offsetY = (mapHeight * 0.1);
+    const offsetY = (mapHeight * 0.4);
 
     map.flyTo({
         center: [lng, lat],
