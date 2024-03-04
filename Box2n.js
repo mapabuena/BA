@@ -14,27 +14,20 @@ let activeFilters = {
 
 map.on('load', function() {
     fetchMarkersData();
-    updateFilters();
-});
+    // Wait for data to be fetched and markers to be created
+    .then(() => {
+        updateFilters();
 
-// List of group values to activate
-    const groupValues = ['group1', 'group2', 'group3', 'group4', 'group5', 'group6'];
+        // List of group values to activate
+        const groupValues = ['group1', 'group2', 'group3', 'group4', 'group5', 'group6'];
 
-   // Activate buttons for specified groups
-    groupValues.forEach(value => {
-        let button = document.querySelector(`.filter-button[data-category="category"][data-value="${value}"]`);
-        if (button) {
-            button.classList.add('active');
-            // Simulate a button click if necessary to apply specific filter logic
-            // button.click();
-        }
-    });
-
-    // Apply filters based on the newly activated buttons
-    applyFilters();
-    
-    // Update the info window content based on active filters
-    updateInfoWindowContent();
+        // Simulate clicks for specified groups
+        groupValues.forEach(value => {
+            let button = document.querySelector(`.filter-button[data-category="category"][data-value="${value}"]`);
+            if (button) {
+                button.click(); // Simulate click
+            }
+        });
 
 
 var Tier1aIds = ['palermosoho-palermohollywood']; // Example layer IDs
