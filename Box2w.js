@@ -120,14 +120,23 @@ function updateInfoWindowContent() {
         }
     });
 
-    // Add click event listeners to info items
-    document.querySelectorAll('.info-item').forEach(item => {
+  document.querySelectorAll('.info-item').forEach(item => {
         item.addEventListener('click', () => {
             const markerId = item.getAttribute('data-marker-id');
-            simulateMarkerClick(markerId);
+             simulateMarkerClick(markerId);
+            const { marker, data } = markers[markerId];
+
+            // Ensure the popup opens if it was not already open
+            marker.togglePopup();
+
+            // Recenter the map to the marker with an offset to place it at the bottom 10%
+            recenterMap(data.lng, data.lat);
         });
     });
 }
+           
+
+
 
 function simulateMarkerClick(markerId) {
     // Assuming markerId is the index in the markers array
