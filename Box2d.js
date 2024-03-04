@@ -91,7 +91,7 @@ function updateInfoWindowContent() {
         <div class="marker-info">
           <h4>${data.popup_header}</h4>
           <img src="${data.popupimage_url}" alt="${data.popup_header}">
-        //  <!-- <p>${data.description}</p> --> // Commented out or remove this line
+        //  <!-- <p>${data.description}</p> --> Commented out or remove this line
         </div>
       `;
       infoContent.innerHTML += markerContent;
