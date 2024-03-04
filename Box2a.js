@@ -70,13 +70,14 @@ function toggleLayers(layerIds, buttonId) {
         button.style.color = "#FFF";
     }
 }
+
 function toggleInfoWindow() {
   const infoWindow = document.getElementById('info-window');
-  if (infoWindow.style.right === '0px' || infoWindow.style.right === '') {
-    infoWindow.style.right = '-33%'; // Hide
+  if (infoWindow.style.top === '0px' || infoWindow.style.top === '') {
+    infoWindow.style.top = '-100%'; // Hide by moving it above the viewport
   } else {
-    infoWindow.style.right = '0px'; // Show
-    updateInfoWindowContent();
+    infoWindow.style.top = '0px'; // Show by moving it into the viewport
+    updateInfoWindowContent(); // Make sure to update the content if needed
   }
 }
 
