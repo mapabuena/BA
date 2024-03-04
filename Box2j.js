@@ -12,7 +12,6 @@ let activeFilters = {
     category2: []
 };
 
-
 map.on('load', function() {
     fetchMarkersData();
     updateFilters();
@@ -104,17 +103,15 @@ document.getElementById('toggle-info-window').addEventListener('click', function
   toggleInfoWindow();
 });
 
-function fetchMarkersData() {
-    fetch('https://raw.githubusercontent.com/mapabuena/BA/main/BsAsPinsGroups.csv')
-        .then(response => response.text())
-        .then(csvData => {
-            processCSVData(csvData);
-        })
-        .then(() => {
-            // This will be executed after processCSVData completes
-            updateInfoWindowContent();
-        })
-        .catch(error => console.error('Error fetching or parsing CSV data:', error));
+async function fetchMarkersData() {
+    try {
+        const response = await fetch('https://raw.githubusercontent.com/mapabuena/BA/main/BsAsPinsGroups.csv');
+        const csvData = await response.text();
+        await processCSVData(csvData); // Ensure processCSVData is adjusted to be async or returns a Promise
+        updateInfoWindowContent(); // Update info window content after all markers are added
+    } catch (error) {
+        console.error('Error fetching or parsing CSV data:', error);
+    }
 }
 
 function processCSVData(csvData) {
