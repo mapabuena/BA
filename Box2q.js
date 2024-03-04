@@ -187,11 +187,10 @@ function createMarker(data) {
 
     // Attach an event listener to the popup after it opens
     popup.on('open', () => {
-        // Use a more specific selector if multiple popups can be open to target the correct link
         const copyLink = document.querySelector('.mapboxgl-popup .copy-address-link');
         if (copyLink) {
             copyLink.onclick = (event) => {
-                event.preventDefault(); // Prevent the default link behavior
+                event.preventDefault();
                 navigator.clipboard.writeText(data.name).then(() => {
                     alert('Address copied to clipboard!');
                 }).catch(err => {
@@ -201,16 +200,36 @@ function createMarker(data) {
         }
     });
 
-    // Create and add the marker to the map
+    // Create the marker and add it to the map
     const marker = new mapboxgl.Marker(el, { anchor: 'bottom' })
         .setLngLat([data.lng, data.lat])
         .setPopup(popup)
         .addTo(map);
 
+    // Add click event listener to marker for recentering
+    marker.getElement().addEventListener('click', () => {
+        recenterMap(data.lng, data.lat);
+    });
+
     // Store the marker for later use
     markers.push({
         marker: marker,
         data: data
+    });
+}
+
+// Function to recenter map on marker click
+function recenterMap(lng, lat) {
+    const mapContainer = map.getContainer();
+    const mapHeight = mapContainer.offsetHeight;
+
+    // Offset to position the marker at the bottom 10% of the map
+    const offsetY = (mapHeight * 0.45) * -1;
+
+    map.flyTo({
+        center: [lng, lat],
+        offset: [0, offsetY],
+        essential: true
     });
 }
 
