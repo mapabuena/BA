@@ -137,7 +137,7 @@ function simulateMarkerClick(markerId) {
     if (!marker.getPopup().isOpen()) {
         marker.togglePopup();
     }
-
+}
 
 async function fetchMarkersData() {
     try {
