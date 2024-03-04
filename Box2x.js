@@ -123,7 +123,6 @@ function updateInfoWindowContent() {
   document.querySelectorAll('.info-item').forEach(item => {
         item.addEventListener('click', () => {
             const markerId = item.getAttribute('data-marker-id');
-             simulateMarkerClick(markerId);
             const { marker, data } = markers[markerId];
 
             // Ensure the popup opens if it was not already open
