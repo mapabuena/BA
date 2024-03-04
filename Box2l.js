@@ -73,11 +73,11 @@ function toggleLayers(layerIds, buttonId) {
 
 function toggleInfoWindow() {
   const infoWindow = document.getElementById('info-window');
-  if (infoWindow.style.top === '0px' || infoWindow.style.top === '') {
-    infoWindow.style.top = '-100%'; // Hide by moving it above the viewport
+  // Adjust the check according to the initial off-screen position
+  if (infoWindow.style.top === '-30%' || infoWindow.style.top === '') {
+    infoWindow.style.top = '0'; // Slide into view
   } else {
-    infoWindow.style.top = '0px'; // Show by moving it into the viewport
-    updateInfoWindowContent(); // Make sure to update the content if needed
+    infoWindow.style.top = '-30%'; // Slide out of view
   }
 }
 
