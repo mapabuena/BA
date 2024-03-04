@@ -17,6 +17,10 @@ map.on('load', function() {
     updateFilters();
 });
 
+map.on('idle', function() {
+    updateInfoWindowContent();
+});
+
 var Tier1aIds = ['palermosoho-palermohollywood']; // Example layer IDs
 var Tier1bIds = ['barrionorte-lascanitas-palermoviejo']; // Example layer IDs
 var Tier2Ids = ['recoleta']; // Example layer IDs
