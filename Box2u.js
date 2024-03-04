@@ -105,27 +105,39 @@ function toggleInfoWindow() {
 }
 
 function updateInfoWindowContent() {
-  const infoContent = document.getElementById('info-content');
-  infoContent.innerHTML = ''; // Clear current content
+    const infoContent = document.getElementById('info-content');
+    infoContent.innerHTML = ''; // Clear current content
 
-  markers.forEach(({ marker, data }) => {
-    if (marker.getElement().style.display !== 'none') { // Check if marker is visible
-      const markerContent = `
-        <div class="marker-info">
-          <h4>${data.popup_header}</h4>
-          <img src="${data.popupimage_url}" alt="${data.popup_header}">
-        //  <!-- <p>${data.description}</p> -->
-        </div>
-      `;
-      infoContent.innerHTML += markerContent;
-    }
-  });
+    markers.forEach(({ marker, data }, index) => {
+        if (marker.getElement().style.display !== 'none') { // Check if marker is visible
+            const markerContent = `
+                <div class="info-item" data-marker-id="${index}">
+                    <h4>${data.popup_header}</h4>
+                    <img src="${data.popupimage_url}" alt="${data.popup_header}">
+                </div>
+            `;
+            infoContent.innerHTML += markerContent;
+        }
+    });
+
+    // Add click event listeners to info items
+    document.querySelectorAll('.info-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const markerId = item.getAttribute('data-marker-id');
+            simulateMarkerClick(markerId);
+        });
+    });
 }
 
-// Example usage
-document.getElementById('toggle-info-window').addEventListener('click', function() {
-  toggleInfoWindow();
-});
+function simulateMarkerClick(markerId) {
+    // Assuming markerId is the index in the markers array
+    const { marker } = markers[markerId];
+
+    // Directly open the popup if it's not already open
+    if (!marker.getPopup().isOpen()) {
+        marker.togglePopup();
+    }
+
 
 async function fetchMarkersData() {
     try {
