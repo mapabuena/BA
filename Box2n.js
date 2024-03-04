@@ -35,7 +35,7 @@ map.on('load', function() {
     
     // Update the info window content based on active filters
     updateInfoWindowContent();
-});
+
 
 var Tier1aIds = ['palermosoho-palermohollywood']; // Example layer IDs
 var Tier1bIds = ['barrionorte-lascanitas-palermoviejo']; // Example layer IDs
