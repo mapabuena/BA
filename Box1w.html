@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Mapbox Map</title>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v3.1.2/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center the content */
+        }
+        #map-container {
+            display: flex;
+            width: 100%; /* Adjust based on your layout needs */
+        }
+        #map {
+            height: 480px;
+            width: 100%; /* Adjust based on your layout needs */
+        }
+
+        .button-container {
+            width: 100%; /* Full width */
+            text-align: center; /* Center buttons */
+            margin-top: 20px; /* Space from the map */
+        }
+        button {
+            background-color: #FFF;
+            color: black;
+            font-family: 'Gill Sans MT', sans-serif;
+            margin: 2px;
+        }
+        button.active {
+            background-color: #000000;
+            color: white;
+        }
+              .popup-content {
+            max-width: 250px; /* Adjust based on your preference */
+            max-height: 300px; /* Optional: Adjust based on your preference */
+            overflow-y: auto; /* Enables vertical scrollbar when content overflows */
+        }
+        .popup-content img {
+            max-width: 100%; /* Ensures images do not exceed the popup's width */
+            height: auto; /* Maintains aspect ratio */
+        }
+    </style>
+</head>
+<body>
+<div id="map-container">
+    <div id="map"></div>
+   <div id="info-window" class="info-window">
+  <div id="info-content" class="info-content"></div>
+</div>
+</div>
+<div class="button-container">
+    <button class="filter-button" data-category="category" data-value="group1">GROUP 1</button>
+    <button class="filter-button" data-category="category" data-value="group2">GROUP 2</button>
+    <button class="filter-button" data-category="category" data-value="group3">GROUP 3</button>
+    <button class="filter-button" data-category="category" data-value="group4">GROUP 4</button>
+    <button class="filter-button" data-category="category" data-value="group5">GROUP 5</button>
+    <button class="filter-button" data-category="category" data-value="group6">GROUP 6</button><br>
+    <button class="filter-button" data-category="category2" data-value="mon">MON</button>
+    <button class="filter-button" data-category="category2" data-value="tue">TUE</button>
+    <button class="filter-button" data-category="category2" data-value="wed">WED</button>
+    <button class="filter-button" data-category="category2" data-value="thu">THU</button>
+    <button class="filter-button" data-category="category2" data-value="fri">FRI</button>
+    <button class="filter-button" data-category="category2" data-value="sat">SAT</button>
+    <button class="filter-button" data-category="category2" data-value="sun">SUN</button><br>
+    <!-- Initial button state reflects the layer being "on" -->
+<button id="myToggleButton1a" class="filter-button active" style="background-color: #000; color: #FFF;">Tier 1a</button>
+<button id="myToggleButton1b" class="filter-button active" style="background-color: #000; color: #FFF;">Tier 1b</button>
+<button id="myToggleButton2" class="filter-button active" style="background-color: #000; color: #FFF;">Tier 2</button>
+<button id="myToggleButton3" class="filter-button active" style="background-color: #000; color: #FFF;">Tier 3</button>
+<button id="myToggleButton4" class="filter-button active" style="background-color: #000; color: #FFF;">Tier 4</button>
+    <!-- KML buttons removed as Mapbox uses different layering techniques -->
+</div>
+<script src='https://api.mapbox.com/mapbox-gl-js/v3.1.2/mapbox-gl.js'></script>
+<script src="https://cdn.jsdelivr.net/gh/mapabuena/BA@main/Box1w.js">
+</script>
+</body>
+</html>
