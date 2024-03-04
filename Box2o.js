@@ -28,8 +28,8 @@ map.on('load', function() {
                 button.click(); // Simulate click
             }
         });
-
-
+   });
+});
 var Tier1aIds = ['palermosoho-palermohollywood']; // Example layer IDs
 var Tier1bIds = ['barrionorte-lascanitas-palermoviejo']; // Example layer IDs
 var Tier2Ids = ['recoleta']; // Example layer IDs
