@@ -103,10 +103,17 @@ function updateInfoWindowContent() {
 document.getElementById('toggle-info-window').addEventListener('click', function() {
   toggleInfoWindow();
 });
+
 function fetchMarkersData() {
     fetch('https://raw.githubusercontent.com/mapabuena/BA/main/BsAsPinsGroups.csv')
         .then(response => response.text())
-        .then(processCSVData)
+        .then(csvData => {
+            processCSVData(csvData);
+        })
+        .then(() => {
+            // This will be executed after processCSVData completes
+            updateInfoWindowContent();
+        })
         .catch(error => console.error('Error fetching or parsing CSV data:', error));
 }
 
