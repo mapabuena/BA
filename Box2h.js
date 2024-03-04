@@ -131,6 +131,7 @@ function processCSVData(csvData) {
 
         createMarker(data);
     });
+      updateInfoWindowContent();
 }
 
 function createMarker(data) {
