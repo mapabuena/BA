@@ -70,7 +70,38 @@ function toggleLayers(layerIds, buttonId) {
         button.style.color = "#FFF";
     }
 }
+function toggleInfoWindow() {
+  const infoWindow = document.getElementById('info-window');
+  if (infoWindow.style.right === '0px' || infoWindow.style.right === '') {
+    infoWindow.style.right = '-33%'; // Hide
+  } else {
+    infoWindow.style.right = '0px'; // Show
+    updateInfoWindowContent();
+  }
+}
 
+function updateInfoWindowContent() {
+  const infoContent = document.getElementById('info-content');
+  infoContent.innerHTML = ''; // Clear current content
+
+  markers.forEach(({ marker, data }) => {
+    if (marker.getElement().style.display !== 'none') { // Check if marker is visible
+      const markerContent = `
+        <div class="marker-info">
+          <h4>${data.popup_header}</h4>
+          <img src="${data.popupimage_url}" alt="${data.popup_header}" style="max-width:100%; height:auto;">
+          <p>${data.description}</p>
+        </div>
+      `;
+      infoContent.innerHTML += markerContent;
+    }
+  });
+}
+
+// Example usage
+document.getElementById('toggle-info-window').addEventListener('click', function() {
+  toggleInfoWindow();
+});
 function fetchMarkersData() {
     fetch('https://raw.githubusercontent.com/mapabuena/BA/main/BsAsPinsGroups.csv')
         .then(response => response.text())
@@ -198,4 +229,6 @@ function applyFilters() {
 
         marker.getElement().style.display = (matchesCategory && matchesCategory2) ? '' : 'none';
     });
+    updateInfoWindowContent(); // Refresh the info window content after applying filters
 }
+
