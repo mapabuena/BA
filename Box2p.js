@@ -12,10 +12,16 @@ let activeFilters = {
     category2: []
 };
 
+// Example for async fetchMarkersData, modify according to your data fetching logic
+async function fetchMarkersData() {
+    const response = await fetch('https://raw.githubusercontent.com/mapabuena/BA/main/BsAsPinsGroups.csv');
+    const csvData = await response.text();
+    processCSVData(csvData);
+}
+
 map.on('load', function() {
-    fetchMarkersData();
-    // Wait for data to be fetched and markers to be created
-    .then(() => {
+    // Call fetchMarkersData and use .then() for the promise it returns
+    fetchMarkersData().then(() => {
         updateFilters();
 
         // List of group values to activate
@@ -28,8 +34,13 @@ map.on('load', function() {
                 button.click(); // Simulate click
             }
         });
-   });
+
+        // Additional logic to be executed after markers data is fetched and buttons are "clicked"
+    }).catch(error => {
+        console.error("Error fetching marker data: ", error);
+    });
 });
+
 var Tier1aIds = ['palermosoho-palermohollywood']; // Example layer IDs
 var Tier1bIds = ['barrionorte-lascanitas-palermoviejo']; // Example layer IDs
 var Tier2Ids = ['recoleta']; // Example layer IDs
