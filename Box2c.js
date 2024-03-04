@@ -90,7 +90,7 @@ function updateInfoWindowContent() {
       const markerContent = `
         <div class="marker-info">
           <h4>${data.popup_header}</h4>
-          <img src="${data.popupimage_url}" alt="${data.popup_header}" style="max-width:100%; height:auto;">
+          <img src="${data.popupimage_url}" alt="${data.popup_header}">
           <p>${data.description}</p>
         </div>
       `;
