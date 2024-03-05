@@ -20,7 +20,10 @@ async function fetchMarkersData() {
 }
 
 map.on('load', function() {
-    map.resize(); // This triggers the map to update its size
+    setTimeout(function() {
+        map.resize();
+        // other code
+    }, 500); // Adjust delay as needed
     // Call fetchMarkersData and use .then() for the promise it returns
     fetchMarkersData().then(() => {
         updateFilters();
