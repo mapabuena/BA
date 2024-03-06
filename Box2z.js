@@ -23,7 +23,7 @@ map.on('load', function() {
     setTimeout(function() {
         map.resize();
         // other code
-    }, 500); // Adjust delay as needed
+    }, 250); // Adjust delay as needed
     // Call fetchMarkersData and use .then() for the promise it returns
     fetchMarkersData().then(() => {
         updateFilters();
