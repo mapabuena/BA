@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Mapbox Map</title>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v3.1.2/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center the content */
+        }
+        body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+     #map-container {
+  position: relative; /* Add this line */
+  display: flex;
+  width: 100%;
+  height: 530px; /* Ensure this is set or adjust accordingly */
+}
+        #map {
+            height: 530px;
+            width: 100%; /* Adjust based on your layout needs */
+        }
+
+        .button-container {
+            width: 100%; /* Full width */
+            text-align: center; /* Center buttons */
+            margin-top: 0px; /* Space from the map */
+           justify-content: center;
+           gap: 2px; /* Adjust this value to manage spacing between buttons */
+        }
+        button {
+            background-color: #FFF;
+            color: black;
+            font-family: 'Gill Sans MT', sans-serif;
+            margin: .5px 0px; /* Reduced vertical margin and horizontal margin */
+            padding: 2px 6px; /* Adjust padding inside the buttons if necessary */
+        }
+        button.active {
+            background-color: #000000;
+            color: white;
+        }
+              .popup-content {
+            max-width: 280px; /* Adjust based on your preference */
+            max-height: 260px; /* Optional: Adjust based on your preference */
+            overflow-y: auto; /* Enables vertical scrollbar when content overflows */
+        }
+        .popup-content img {
+            max-width: 100%; /* Ensures images do not exceed the popup's width */
+            height: auto; /* Maintains aspect ratio */
+        }
+.info-window {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 31%; /* Cover 25% of the map height */
+ background: rgba(255, 255, 255, 0.8);
+  overflow-x: auto; /* Enable horizontal scrolling */
+  overflow-y: hidden; /* Hide vertical scrollbar */
+  white-space: nowrap; /* Keep items in a single line for horizontal scrolling */
+  box-sizing: border-box;
+  z-index: 999; /* Adjust if needed */
+  padding: 0px 0px;
+}
+
+/* Custom scrollbar styling */
+.info-window::-webkit-scrollbar {
+    height: 8px; /* Adjust the height of horizontal scrollbar */
+}
+
+.info-window::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.info-window::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+.info-window::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.info-content {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap; /* Prevents items from wrapping to a new line */
+    padding: 10px 0;
+}
+
+ .info-item {
+    display: inline-block;
+    width: 160px; /* Fixed width */
+    text-align: center;
+    vertical-align: top;
+    margin-right: 5px; /* Adjust or remove margin as needed for your layout */
+}
+.info-item img {
+    width: 160px; /* Force the image to be exactly 160px wide */
+    height: auto; /* Maintain aspect ratio */
+}
+.info-item h4 {
+    font-size: 11px; /* Adjust font size as needed */
+    margin-top: 0; /* Minimize margin */
+    margin-bottom: 2px; /* Ensure no padding is adding extra space */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap; /* Ensures text does not wrap */
+    width: 160px; /* Fixed width to match the container */
+    line-height: 1.3; /* Adjust line height to control spacing within the h4 element */
+    font-family: 'Gill Sans MT', 'Gill Sans', Calibri, 'Trebuchet MS', sans-serif; /* Set font-family */
+}
+  /* Hide description to maintain fixed sizing */
+    .info-item p {
+        display: none;
+    }
+.toggle-info-btn {
+  cursor: pointer;
+  background-color: #FFF; /* Button background */
+  color: black; /* Button text color */
+  padding: 8px 16px; /* Button padding */
+  margin: 2px; /* Consistent with other buttons */
+  border: none; /* Remove border */
+  border-radius: 4px; /* Optional: Rounded corners */
+  display: inline-block; /* Align with other buttons if needed */
+}
+    </style>
+</head>
+<body>
+<div id="map-container">
+    <div id="map"></div>
+   <div id="info-window" class="info-window">
+  <div id="info-content" class="info-content"></div>
+</div>
+</div>
+<div class="button-container">
+   <button id="showFavoritesBtn">FAVORITES</button>
+   <button class="filter-button" data-category="category" data-value="group1">GROUP 1</button>
+    <button class="filter-button" data-category="category" data-value="group2">GROUP 2</button>
+    <button class="filter-button" data-category="category" data-value="group3">GROUP 3</button>
+    <button class="filter-button" data-category="category" data-value="group4">GROUP 4</button>
+    <button class="filter-button" data-category="category" data-value="group5">GROUP 5</button>
+    <button class="filter-button" data-category="category" data-value="group6">GROUP 6</button>
+       <button id="toggle-info-window" class="toggle-info-btn">tab</button><br>
+    <button class="filter-button" data-category="category2" data-value="mon">MON</button>
+    <button class="filter-button" data-category="category2" data-value="tue">TUE</button>
+    <button class="filter-button" data-category="category2" data-value="wed">WED</button>
+    <button class="filter-button" data-category="category2" data-value="thu">THU</button>
+    <button class="filter-button" data-category="category2" data-value="fri">FRI</button>
+    <button class="filter-button" data-category="category2" data-value="sat">SAT</button>
+    <button class="filter-button" data-category="category2" data-value="sun">SUN</button><br>
+    <!-- Initial button state reflects the layer being "on" -->
+<button id="myToggleButton1a" class="filter-button active" style="background-color: #000; color: #FFF;">Tier 1a</button>
+<button id="myToggleButton1b" class="filter-button active" style="background-color: #000; color: #FFF;">Tier 1b</button>
+<button id="myToggleButton2" class="filter-button active" style="background-color: #000; color: #FFF;">Tier 2</button>
+<button id="myToggleButton3" class="filter-button active" style="background-color: #000; color: #FFF;">Tier 3</button>
+<button id="myToggleButton4" class="filter-button active" style="background-color: #000; color: #FFF;">Tier 4</button>
+    <!-- KML buttons removed as Mapbox uses different layering techniques -->
+</div>
+<script src='https://api.mapbox.com/mapbox-gl-js/v3.1.2/mapbox-gl.js'></script>
+<script src="https://cdn.jsdelivr.net/gh/mapabuena/BA@main/Box3a.js">
+</script>
+</body>
+</html>
