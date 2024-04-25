@@ -11,28 +11,30 @@ let activeFilters = {
     category: [],
     category2: []
 };
+
 function updateInfoWindowContent() {
     const center = map.getCenter();
-    console.log("Map Center:", center);  // Debug: Output the current center
-
     const visibleMarkers = markers.filter(({ marker }) => {
-        const isInBounds = map.getBounds().contains(marker.getLngLat());
-        const isVisible = marker.getElement().style.display !== 'none';
-        console.log(`Marker ${marker.getLngLat()}: In bounds = ${isInBounds}, Visible = ${isVisible}`); // Debug each marker's visibility and bounds status
-        return isInBounds && isVisible;
+        return map.getBounds().contains(marker.getLngLat()) && marker.getElement().style.display !== 'none';
     });
 
-    console.log("Visible markers count:", visibleMarkers.length);
-    if (visibleMarkers.length === 0) {
-        console.log("No markers are visible or within bounds");
-    }
+    const infoWindow = document.getElementById('info-window');
+    infoWindow.innerHTML = '';  // Clear the content first
 
-    // Sort by distance from center
     visibleMarkers.sort((a, b) => {
         const distA = calculateDistance(center.lat, center.lng, a.data.lat, a.data.lng);
         const distB = calculateDistance(center.lat, center.lng, b.data.lat, b.data.lng);
         return distA - distB;
     });
+
+    visibleMarkers.forEach(({ data }) => {
+        const item = document.createElement('div');
+        item.className = 'info-item';
+        item.innerHTML = `<h4>${data.name}</h4><img src="${data.popupimage_url}" alt="${data.popup_header}" style="width:100%;">`; 
+        infoWindow.appendChild(item);
+        console.log(`Added to info window: ${data.name}`);
+    });
+}
 
     const infoWindow = document.getElementById('info-window');
     infoWindow.innerHTML = ''; // Clear existing content
