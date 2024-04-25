@@ -20,9 +20,11 @@ function updateInfoWindowContent() {
     const visibleMarkers = markers.filter(({ marker }) => {
         const isInBounds = map.getBounds().contains(marker.getLngLat());
         const isVisible = marker.getElement().style.display !== 'none';
+        console.log(`Checking marker at ${marker.getLngLat()}: isInBounds=${isInBounds}, isVisible=${isVisible}`);
         return isInBounds && isVisible;
     });
 
+    console.log(`Total visible markers: ${visibleMarkers.length}`);
     if (visibleMarkers.length === 0) {
         console.log("No visible markers within bounds to display in the info window.");
         return; // Early return if no markers to display
@@ -36,7 +38,7 @@ function updateInfoWindowContent() {
     });
 
     const infoWindow = document.getElementById('info-window');
-    infoWindow.innerHTML = ''; // Clear the info window before adding new content
+    infoWindow.innerHTML = ''; // Clear existing content before adding new content
 
     visibleMarkers.forEach(({ data }) => {
         const item = document.createElement('div');
@@ -48,7 +50,10 @@ function updateInfoWindowContent() {
 }
 
 // Ensure the updateInfoWindowContent function is triggered after map movements
-map.on('moveend', updateInfoWindowContent);
+map.on('moveend', () => {
+    console.log("Map moved, updating info window...");
+    updateInfoWindowContent();
+});
 
 // Utility functions for date handling
 function formatDateForFilter(date) {
