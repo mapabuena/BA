@@ -18,41 +18,22 @@ function updateInfoWindowContent() {
         return map.getBounds().contains(marker.getLngLat()) && marker.getElement().style.display !== 'none';
     });
 
-    const infoWindow = document.getElementById('info-window');
-    infoWindow.innerHTML = '';  // Clear the content first
-
+    // Sort markers by distance from the center before adding them to the info window
     visibleMarkers.sort((a, b) => {
         const distA = calculateDistance(center.lat, center.lng, a.data.lat, a.data.lng);
         const distB = calculateDistance(center.lat, center.lng, b.data.lat, b.data.lng);
         return distA - distB;
     });
 
+    const infoWindow = document.getElementById('info-window');
+    infoWindow.innerHTML = ''; // Clear existing content before adding new content
+
     visibleMarkers.forEach(({ data }) => {
         const item = document.createElement('div');
         item.className = 'info-item';
-        item.innerHTML = `<h4>${data.name}</h4><img src="${data.popupimage_url}" alt="${data.popup_header}" style="width:100%;">`; 
+        item.innerHTML = `<h4>${data.name}</h4><img src="${data.popupimage_url}" alt="${data.popup_header}" style="width:100%;">`;
         infoWindow.appendChild(item);
         console.log(`Added to info window: ${data.name}`);
-    });
-
-    const infoWindow = document.getElementById('info-window');
-    infoWindow.innerHTML = ''; // Clear existing content
-    visibleMarkers.forEach(({ data }) => {
-        const item = document.createElement('div');
-        item.className = 'info-item';
-        item.innerHTML = `<h4>${data.name}</h4><img src="${data.popupimage_url}" alt="${data.popup_header}" style="width:100%;">`; // Include image and header in the display
-        infoWindow.appendChild(item);
-        console.log(`Added to info window: ${data.name}`); // Debug: Output added marker names
-    });
-}
-
-
-    visibleMarkers.forEach(({ data }) => {
-        const item = document.createElement('div');
-        item.className = 'info-item';
-        item.innerHTML = `<h4>${data.name}</h4><img src="${data.popupimage_url}" alt="${data.popup_header}" style="width:100%;">`; // Include image and header in the display
-        infoWindow.appendChild(item);
-        console.log(`Added to info window: ${data.name}`); // Debug: Output added marker names
     });
 }
 
