@@ -115,6 +115,19 @@ map.on('load', function() {
         fetchMarkersData().then(() => {
             updateFilters();
             updateTopBar(); // Initial top bar setup
+
+            // List of group values to activate
+            const groupValues = ['group1', 'group2', 'group3', 'group4', 'group5', 'group6'];
+
+            // Simulate clicks for specified groups
+            groupValues.forEach(value => {
+                let button = document.querySelector(`.filter-button[data-category="category"][data-value="${value}"]`);
+                if (button) {
+                    button.click(); // Simulate click
+                }
+            });
+
+            // Additional logic to be executed after markers data is fetched and buttons are "clicked"
         }).catch(error => {
             console.error("Error fetching marker data: ", error);
         });
@@ -122,24 +135,6 @@ map.on('load', function() {
 
     // Listen for moveend event to update top bar based on map center change
     map.on('moveend', updateTopBar);
-});
-
-
-        // List of group values to activate
-        const groupValues = ['group1', 'group2', 'group3', 'group4', 'group5', 'group6'];
-
-        // Simulate clicks for specified groups
-        groupValues.forEach(value => {
-            let button = document.querySelector(`.filter-button[data-category="category"][data-value="${value}"]`);
-            if (button) {
-                button.click(); // Simulate click
-            }
-        });
-
-        // Additional logic to be executed after markers data is fetched and buttons are "clicked"
-    }).catch(error => {
-        console.error("Error fetching marker data: ", error);
-    });
 });
 
 var Tier1aIds = ['palermosoho-palermohollywood']; // Example layer IDs
