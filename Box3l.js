@@ -130,28 +130,31 @@ async function fetchMarkersData() {
 }
 
 map.on('load', function() {
-    map.resize();
-    fetchMarkersData().then(() => {
-        updateFilters();
-        updateInfoWindowContent();
+    setTimeout(function() {
+        map.resize();
+        fetchMarkersData().then(() => {
+            updateFilters();
+            updateInfoWindowContent(); // Updated function call
 
-        const groupValues = ['group1', 'group2', 'group3', 'group4', 'group5', 'group6'];
-        groupValues.forEach(value => {
-            let button = document.querySelector(`.filter-button[data-category="category"][data-value="${value}"]`);
-            if (button) {
-                button.click(); // Simulate click
-            }
+            const groupValues = ['group1', 'group2', 'group3', 'group4', 'group5', 'group6'];
+            groupValues.forEach(value => {
+                let button = document.querySelector(`.filter-button[data-category="category"][data-value="${value}"]`);
+                if (button) {
+                    button.click(); // Simulate click
+                }
+            });
+
+        }).catch(error => {
+            console.error("Error fetching marker data: ", error);
         });
-    }).catch(error => {
-        console.error("Error fetching marker data: ", error);
-    });
+    }, 250);
 
     // Ensure updateInfoWindowContent is called on map move
     map.on('moveend', () => {
         console.log("Map moved, updating info window...");
         updateInfoWindowContent();
     });
-});
+}); // This closing brace ends the map.on('load', ...) function
 
 var Tier1aIds = ['palermosoho-palermohollywood']; // Example layer IDs
 var Tier1bIds = ['barrionorte-lascanitas-palermoviejo']; // Example layer IDs
