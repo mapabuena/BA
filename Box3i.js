@@ -34,7 +34,7 @@ function updateInfoWindowContent() {
     const infoWindow = document.getElementById('info-window');
     infoWindow.innerHTML = ''; // Clear existing content
 
-    visibleMarkers.forEach(({ data }, index) => {
+    visibleMarkers.forEach(({ data }) => {
         const item = document.createElement('div');
         item.className = 'info-item';
         item.innerHTML = `<h4>${data.name}</h4><img src="${data.popupimage_url}" alt="${data.popup_header}" style="width:100%;">`; // Include image and header in the display
@@ -118,29 +118,27 @@ async function fetchMarkersData() {
 }
 
 map.on('load', function() {
-    setTimeout(function() {
-        map.resize();
-        fetchMarkersData().then(() => {
-            updateFilters();
-            updateInfoWindowContent(); // Updated function call
+    map.resize();
+    fetchMarkersData().then(() => {
+        updateFilters();
+        updateInfoWindowContent();
 
-            const groupValues = ['group1', 'group2', 'group3', 'group4', 'group5', 'group6'];
-            groupValues.forEach(value => {
-                let button = document.querySelector(`.filter-button[data-category="category"][data-value="${value}"]`);
-                if (button) {
-                    button.click(); // Simulate click
-                }
-            });
-
-        }).catch(error => {
-            console.error("Error fetching marker data: ", error);
+        const groupValues = ['group1', 'group2', 'group3', 'group4', 'group5', 'group6'];
+        groupValues.forEach(value => {
+            let button = document.querySelector(`.filter-button[data-category="category"][data-value="${value}"]`);
+            if (button) {
+                button.click(); // Simulate click
+            }
         });
-    }, 250);
+    }).catch(error => {
+        console.error("Error fetching marker data: ", error);
+    });
 
-// Ensure updateInfoWindowContent is called on map move
-map.on('moveend', () => {
-    console.log("Map moved, updating info window...");
-    updateInfoWindowContent();
+    // Ensure updateInfoWindowContent is called on map move
+    map.on('moveend', () => {
+        console.log("Map moved, updating info window...");
+        updateInfoWindowContent();
+    });
 });
 
 var Tier1aIds = ['palermosoho-palermohollywood']; // Example layer IDs
