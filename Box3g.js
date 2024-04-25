@@ -13,10 +13,16 @@ let activeFilters = {
 };
 function updateInfoWindowContent() {
     const center = map.getCenter();
-    const visibleMarkers = markers.filter(({ marker }) => 
-        map.getBounds().contains(marker.getLngLat()) &&
-        marker.getElement().style.display !== 'none'
-    );
+    console.log("Center:", center);
+
+    const visibleMarkers = markers.filter(({ marker }) => {
+        const visible = map.getBounds().contains(marker.getLngLat()) &&
+                        marker.getElement().style.display !== 'none';
+        console.log("Marker visible:", visible, marker.getLngLat());
+        return visible;
+    });
+
+    console.log("Visible markers count:", visibleMarkers.length);
 
     visibleMarkers.sort((a, b) => {
         const distA = calculateDistance(center.lat, center.lng, a.data.lat, a.data.lng);
@@ -29,7 +35,7 @@ function updateInfoWindowContent() {
     visibleMarkers.forEach(({ data }) => {
         const item = document.createElement('div');
         item.className = 'info-item';
-        item.textContent = data.name; // Adjust content as needed
+        item.textContent = data.name;
         infoWindow.appendChild(item);
     });
 }
