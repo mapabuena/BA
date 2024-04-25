@@ -337,7 +337,6 @@ function createMarker(data) {
     // Store the marker for later use
  markers.push({ marker, data }); // Ensure this array stores all marker objects correctly
     console.log(`Marker created at ${data.lng}, ${data.lat}`);
-    });
 }
 
 // Function to recenter map on marker click
