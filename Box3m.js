@@ -39,7 +39,7 @@ function updateInfoWindowContent() {
     visibleMarkers.forEach(({ data }) => {
         const item = document.createElement('div');
         item.className = 'info-item';
-        item.textContent = data.name;  // Simplified for debugging
+        item.innerHTML = `<h4>${data.name}</h4><img src="${data.popupimage_url}" alt="${data.popup_header}" style="width:100%;">`; // Include image and header in the display
         infoWindow.appendChild(item);
         console.log(`Added to info window: ${data.name}`); // Debug: Output added marker names
     });
