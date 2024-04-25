@@ -34,7 +34,6 @@ function updateInfoWindowContent() {
         infoWindow.appendChild(item);
         console.log(`Added to info window: ${data.name}`);
     });
-}
 
     const infoWindow = document.getElementById('info-window');
     infoWindow.innerHTML = ''; // Clear existing content
