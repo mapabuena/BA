@@ -12,6 +12,30 @@ let activeFilters = {
     category2: []
 };
 
+async function initialSetup() {
+    await fetchAndCreateMarkers();
+    attachEventHandlers();
+    updateInfoWindowContent();  // Initial call to populate the info window.
+}
+
+async function fetchAndCreateMarkers() {
+    const response = await fetch('https://raw.githubusercontent.com/mapabuena/BA/main/BsAsPinsGroups.csv');
+    const csvData = await response.text();
+    processCSVData(csvData);
+}
+
+function attachEventHandlers() {
+    map.on('load', function() {
+        console.log("Map loaded and resized.");
+        map.resize();  // Ensuring the map is correctly sized.
+    });
+
+    map.on('moveend', () => {
+        console.log("Map moved, updating info window...");
+        updateInfoWindowContent();
+    });
+}
+
 function updateInfoWindowContent() {
     const center = map.getCenter();
     const bounds = map.getBounds();
