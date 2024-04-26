@@ -58,7 +58,7 @@ visibleMarkers.forEach(({ data }) => {
     infoWindow.appendChild(item);
 });
 }
-
+initialSetup();
 // Utility functions for date handling
 function formatDateForFilter(date) {
     let d = new Date(date),
