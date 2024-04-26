@@ -36,16 +36,18 @@ function updateInfoWindowContent() {
     const bounds = map.getBounds();
     console.log("Updating info window. Map Center:", center);
 
+    // Filter markers that are within the current map bounds and are visible
     const visibleMarkers = markers.filter(({ marker }) => {
         const position = marker.getLngLat();
         const isInBounds = bounds.contains(position);
-        const isVisible = marker.getElement().style.display !== 'none';
+        const isVisible = marker.getElement().style.display !== 'none'; // Ensure the marker is not hidden
+        console.log(`Marker at ${position.lng}, ${position.lat}: isInBounds=${isInBounds}, isVisible=${isVisible}`);
         return isInBounds && isVisible;
     });
 
     console.log(`Visible markers count: ${visibleMarkers.length}`);
-     if (visibleMarkers.length === 0) {
-        document.getElementById('info-window').innerHTML = 'No visible markers.';
+    if (visibleMarkers.length === 0) {
+        document.getElementById('info-window').innerHTML = 'No visible markers within bounds.';
         return;
     }
   visibleMarkers.sort((a, b) => calculateDistance(center, a.data) - calculateDistance(center, b.data));
