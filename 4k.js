@@ -34,7 +34,7 @@ function attachEventHandlers() {
 function updateInfoWindowContent() {
     const center = map.getCenter();
     const bounds = map.getBounds();
-    console.log("Map Center:", center);
+    console.log("Updating info window. Map Center:", center);
     console.log("Map Bounds:", bounds);
 
     // Filter markers that are within the current map bounds and are visible
