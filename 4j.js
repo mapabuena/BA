@@ -34,7 +34,8 @@ function attachEventHandlers() {
 function updateInfoWindowContent() {
     const center = map.getCenter();
     const bounds = map.getBounds();
-    console.log("Updating info window. Map Center:", center);
+    console.log("Map Center:", center);
+    console.log("Map Bounds:", bounds);
 
     // Filter markers that are within the current map bounds and are visible
     const visibleMarkers = markers.filter(({ marker }) => {
@@ -50,8 +51,10 @@ function updateInfoWindowContent() {
         document.getElementById('info-window').innerHTML = 'No visible markers within bounds.';
         return;
     }
-  visibleMarkers.sort((a, b) => calculateDistance(center, a.data) - calculateDistance(center, b.data));
 
+    // Sort visible markers by proximity to the center of the current map view
+    visibleMarkers.sort((a, b) => calculateDistance(center, a.data) - calculateDistance(center, b.data));
+    
    const infoWindow = document.getElementById('info-window');
     infoWindow.innerHTML = '';
     visibleMarkers.forEach(({ data }) => {
