@@ -211,7 +211,7 @@ function updateInfoWindowContent() {
     visibleMarkers.forEach(({ marker, data }) => {
         const item = document.createElement('div');
         item.className = 'info-item';
-        item.innerHTML = `<h4>${data.name}</h4><img src="${data.popupimage_url}" alt="${data.name}" style="width:100%;">`;
+        item.innerHTML = `<h4>${data.popup_header}</h4><img src="${data.popupimage_url}" alt="${data.name}" style="width:100%;">`;
         infoWindow.appendChild(item);
 
         item.addEventListener('click', () => {
