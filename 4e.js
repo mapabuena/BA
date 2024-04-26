@@ -11,6 +11,8 @@ let activeFilters = {
     category: [],
     category2: []
 };
+// Start the initial setup after the map is loaded
+map.on('load', initialSetup);
 
 async function initialSetup() {
     await fetchAndCreateMarkers();
@@ -25,11 +27,6 @@ async function fetchAndCreateMarkers() {
 }
 
 function attachEventHandlers() {
-    map.on('load', function() {
-        console.log("Map loaded and resized.");
-        map.resize();  // Ensuring the map is correctly sized.
-    });
-
     map.on('moveend', () => {
         console.log("Map moved, updating info window...");
         updateInfoWindowContent();
@@ -61,8 +58,6 @@ visibleMarkers.forEach(({ data }) => {
     infoWindow.appendChild(item);
 });
 }
-
-map.on('moveend', updateInfoWindowContent);
 
 // Utility functions for date handling
 function formatDateForFilter(date) {
