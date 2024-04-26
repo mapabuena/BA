@@ -94,9 +94,11 @@ map.on('load', function() {
         });
     }, 250);
 
-    // Set up the 'moveend' event listener to update the info window every time the map stops moving
+    // Throttle 'moveend' event to update info window with some delay after map movements
+    let updateTimeout;
     map.on('moveend', function() {
-        updateInfoWindowContent();
+        clearTimeout(updateTimeout);
+        updateTimeout = setTimeout(updateInfoWindowContent, 100); // Only update after 100 ms of inactivity
     });
 });
 
