@@ -61,7 +61,12 @@ function applyDateFilter() {
         return;
     }
 
-    activeFilters.category2 = generateDateRange(startDate, endDate); // Update active filters for category2
+    console.log("Selected Start Date: ", startDate);
+    console.log("Selected End Date: ", endDate);
+
+    activeFilters.category2 = generateDateRange(startDate, endDate);
+    console.log("Generated Date Range for Filters: ", activeFilters.category2);
+
     applyFilters(); // Apply all filters again
 }
 // Ensure the end date cannot be before the start date
@@ -427,11 +432,14 @@ function updateFilters() {
     });
 }
 
-// Function to apply filters based on the activeFilters state
+// Function to apply all active filters
 function applyFilters() {
     markers.forEach(({ marker, data }) => {
         const isVisible = activeFilters.category.length === 0 || activeFilters.category.some(category => data.category.includes(category));
-        marker.getElement().style.display = isVisible ? '' : 'none';
+        const matchesDates = activeFilters.category2.length === 0 || activeFilters.category2.includes(formatDateForFilter(new Date(data.date)));
+
+        // Marker visibility is determined by both category and date filters
+        marker.getElement().style.display = (isVisible && matchesDates) ? '' : 'none';
     });
 
     updateInfoWindowContent(); // Refresh the info window content after applying filters
