@@ -25,28 +25,26 @@ function toggleGroup(group) {
 
 // Utility functions for date handling
 function formatDateForFilter(date) {
-    let d = new Date(date),
-        month = '' + (d.getMonth() + 1),  // Month from 1-12
-        day = '' + d.getDate(),           // Correct day of the month
-        year = d.getFullYear();
+    let d = new Date(date);
+    let month = '' + (d.getUTCMonth() + 1);  // Get month from Date object (0-indexed)
+    let day = '' + d.getUTCDate();           // Get day from Date object
+    let year = d.getUTCFullYear();           // Get full year from Date object
 
-    if (month.length < 2) month = '0' + month;
-    if (day.length < 2) day = '0' + day;
+    if (month.length < 2) month = '0' + month; // Ensure month is two digits
+    if (day.length < 2) day = '0' + day;       // Ensure day is two digits
 
-    return [day, month, year.toString().slice(-2)].join('');
+    return [day, month, year.toString().slice(-2)].join('');  // Format to ddmmyy
 }
 
 function generateDateRange(startDate, endDate) {
-    var start = new Date(startDate);
-    var end = new Date(endDate);
+    var start = new Date(Date.UTC(startDate.slice(0,4), startDate.slice(5,7)-1, startDate.slice(8,10)));
+    var end = new Date(Date.UTC(endDate.slice(0,4), endDate.slice(5,7)-1, endDate.slice(8,10)));
     var loop = new Date(start);
     var dateList = [];
 
-    // Loop from start date to end date, inclusive
     while (loop <= end) {
         dateList.push(formatDateForFilter(loop));
-        // Increment the date by one day
-        loop.setDate(loop.getDate() + 1);
+        loop.setUTCDate(loop.getUTCDate() + 1);  // Increment date by one day in UTC
     }
 
     return dateList;
