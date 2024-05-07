@@ -200,7 +200,7 @@ document.addEventListener('DOMContentLoaded', function() {
             endDateInput.value = startDateInput.value;
         }
     });
-
+   });
 document.addEventListener('DOMContentLoaded', function() {
     const dropbtn = document.querySelector('.dropdown-menu .dropbtn');
     const dropdownContent = document.querySelector('.dropdown-content');
