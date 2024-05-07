@@ -52,32 +52,28 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-  searchButton.addEventListener('click', function() {
-        applyDateFilter();
-    });
-
-  dropbtn.addEventListener('click', function(event) {
+ // Set up event listeners
+    searchButton.addEventListener('click', applyDateFilter);
+    dropbtn.addEventListener('click', function(event) {
         dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
         event.stopPropagation();
     });
-
-  closeButton.addEventListener('click', function(event) {
+    closeButton.addEventListener('click', function(event) {
         dropdownContent.style.display = 'none';
         event.stopPropagation();
     });
-
- document.addEventListener('click', function(event) {
+    document.addEventListener('click', function(event) {
         if (!dropdownContent.contains(event.target) && !dropbtn.contains(event.target)) {
             dropdownContent.style.display = 'none';
         }
     });
-
-  checkboxes.forEach(checkbox => {
+    checkboxes.forEach(checkbox => {
         checkbox.checked = true;
         checkbox.addEventListener('change', function() {
-            toggleGroup(this.getAttribute('onclick').match(/'([^']+)'/)[1]);
+            toggleGroup(this.getAttribute('data-category'));
         });
     });
+});
   
     function applyDateFilter() {
         var startDateTime = document.getElementById('startDateTime').value;
