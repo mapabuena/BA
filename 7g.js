@@ -200,40 +200,34 @@ document.addEventListener('DOMContentLoaded', function() {
             endDateInput.value = startDateInput.value;
         }
     });
-   });
-document.addEventListener('DOMContentLoaded', function() {
+
     const dropbtn = document.querySelector('.dropdown-menu .dropbtn');
     const dropdownContent = document.querySelector('.dropdown-content');
     const closeButton = document.querySelector('.dropdown-content .close-btn');
 
-    if (dropbtn && dropdownContent) {
-        // Handle dropdown interactions
-        dropbtn.onclick = function(event) {
-            dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
-            event.stopPropagation(); // Prevent event from propagating to document
-        };
+    // Handle dropdown interactions
+    dropbtn.onclick = function(event) {
+        dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
+        event.stopPropagation(); // Prevent event from propagating to document
+    };
 
-        document.addEventListener('click', function(event) {
-            if (!dropdownContent.contains(event.target) && !dropbtn.contains(event.target)) {
-                dropdownContent.style.display = 'none';
-            }
-        }, true); // Use capture phase for the event
-    }
+    closeButton.onclick = function(event) {
+        dropdownContent.style.display = 'none';
+        event.stopPropagation(); // Prevent event from propagating to document
+    };
 
-    if (closeButton && dropdownContent) {
-        closeButton.onclick = function(event) {
+    // Click outside to close dropdown
+    document.addEventListener('click', function(event) {
+        if (!dropdownContent.contains(event.target) && !dropbtn.contains(event.target)) {
             dropdownContent.style.display = 'none';
-            event.stopPropagation(); // Prevent event from propagating to document
-        };
-    }
+        }
+    }, true); // Use capture phase for the event
 
     // Initialize checkboxes and apply initial filters
     const checkboxes = document.querySelectorAll('.dropdown-content input[type="checkbox"]');
     checkboxes.forEach(checkbox => {
         checkbox.checked = true;
-        if (checkbox.getAttribute('onclick')) {
-            toggleGroup(checkbox.getAttribute('onclick').match(/'([^']+)'/)[1]); // Trigger filter toggle
-        }
+        toggleGroup(checkbox.getAttribute('onclick').match(/'([^']+)'/)[1]); // Trigger filter toggle
     });
 });
 // Example for async fetchMarkersData, modify according to your data fetching logic
