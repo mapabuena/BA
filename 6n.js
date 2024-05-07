@@ -23,8 +23,62 @@ function toggleGroup(group) {
     applyFilters();  // Apply all filters again
 }
 
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize DOM elements
+ const searchButton = document.getElementById('searchDatesButton');
+    if (!searchButton) {
+        console.error('Search button not found on the page.');
+        return; // Exit if button is not found
+    }
+    const dropbtn = document.querySelector('.dropdown-menu .dropbtn');
+    const dropdownContent = document.querySelector('.dropdown-content');
+    const closeButton = document.querySelector('.dropdown-content .close-btn');
+    const checkboxes = document.querySelectorAll('.dropdown-content input[type="checkbox"]');
+  
+    // Initialize Flatpickr with references to start and end date inputs
+    var startDatePicker = flatpickr("#startDateTime", {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+        onChange: function(selectedDates, dateStr, instance) {
+            endDatePicker.set('minDate', dateStr);
+        }
+    });
 
-// Function to apply date filter based on selected range
+    var endDatePicker = flatpickr("#endDateTime", {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+        onChange: function(selectedDates, dateStr, instance) {
+            startDatePicker.set('maxDate', dateStr);
+        }
+    });
+    
+  searchButton.addEventListener('click', function() {
+        applyDateFilter();
+    });
+
+  dropbtn.addEventListener('click', function(event) {
+        dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
+        event.stopPropagation();
+    });
+
+  closeButton.addEventListener('click', function(event) {
+        dropdownContent.style.display = 'none';
+        event.stopPropagation();
+    });
+
+ document.addEventListener('click', function(event) {
+        if (!dropdownContent.contains(event.target) && !dropbtn.contains(event.target)) {
+            dropdownContent.style.display = 'none';
+        }
+    });
+
+  checkboxes.forEach(checkbox => {
+        checkbox.checked = true;
+        checkbox.addEventListener('change', function() {
+            toggleGroup(this.getAttribute('onclick').match(/'([^']+)'/)[1]);
+        });
+    });
+  
     function applyDateFilter() {
         var startDateTime = document.getElementById('startDateTime').value;
         var endDateTime = document.getElementById('endDateTime').value;
@@ -41,72 +95,12 @@ function toggleGroup(group) {
 
         console.log("Selected Start Date and Time: ", startDateTime);
         console.log("Selected End Date and Time: ", endDateTime);
-
-        // Assuming a placeholder for actual filter logic
         console.log("Filters applied with dates: Start = " + startDateTime + ", End = " + endDateTime);
-  applyFilters();
     }
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize DOM elements
-    const searchButton = document.getElementById('searchDatesButton');
-    const dropbtn = document.querySelector('.dropdown-menu .dropbtn');
-    const dropdownContent = document.querySelector('.dropdown-content');
-    const closeButton = document.querySelector('.dropdown-content .close-btn');
-    const checkboxes = document.querySelectorAll('.dropdown-content input[type="checkbox"]');
-  
-    // Initialize Flatpickr with references to start and end date inputs
-    var startDatePicker = flatpickr("#startDateTime", {
-        enableTime: true,
-        dateFormat: "Y-m-d H:i",
-        onReady: function(selectedDates, dateStr, instance) {
-            endDatePicker.set('minDate', dateStr);
-        }
-    });
-
-    var endDatePicker = flatpickr("#endDateTime", {
-        enableTime: true,
-        dateFormat: "Y-m-d H:i",
-        onReady: function(selectedDates, dateStr, instance) {
-            startDatePicker.set('maxDate', dateStr);
-        }
-    });
-    // Event Listeners for UI interactions
-    if (searchButton) {
-        searchButton.addEventListener('click', function() {
-            applyDateFilter();
-        });
-    } else {
-        console.error('Search button not found on the page.');
-    }
-
-    dropbtn.addEventListener('click', function(event) {
-        dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
-        event.stopPropagation();
-    });
-
-    closeButton.addEventListener('click', function(event) {
-        dropdownContent.style.display = 'none';
-        event.stopPropagation();
-    });
-
-    document.addEventListener('click', function(event) {
-        if (!dropdownContent.contains(event.target) && !dropbtn.contains(event.target)) {
-            dropdownContent.style.display = 'none';
-        }
-    });
-
-    checkboxes.forEach(checkbox => {
-        checkbox.checked = true;
-        toggleGroup(checkbox.getAttribute('onclick').match(/'([^']+)'/)[1]);
-    });
-
     // Other initializations and function calls
     initMap();
     setupDatePickers();
 });
-
-
 
  function checkDateSelection() {
         if (document.getElementById('startDateTime').value && document.getElementById('endDateTime').value) {
