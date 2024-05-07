@@ -53,8 +53,13 @@ document.addEventListener('DOMContentLoaded', function() {
         enableTime: true,
         dateFormat: "Y-m-d H:i",
         onChange: function(selectedDates, dateStr, instance) {
+            // Set the minimum date of the end date picker to the selected start date
             endDatePicker.set('minDate', dateStr);
-            applyDateFilter(); // Check and apply filter if both dates are set
+
+            // Additional logic to apply date filter when conditions are met
+            if (instance.input.id === "startDateTime" && document.getElementById('endDateTime').value) {
+                applyDateFilter();
+            }
         }
     });
 
@@ -62,18 +67,17 @@ document.addEventListener('DOMContentLoaded', function() {
         enableTime: true,
         dateFormat: "Y-m-d H:i",
         onChange: function(selectedDates, dateStr, instance) {
+            // Set the maximum date of the start date picker to the selected end date
             startDatePicker.set('maxDate', dateStr);
-            applyDateFilter(); // Check and apply filter if both dates are set
+
+            // Additional logic to apply date filter when conditions are met
+            if (instance.input.id === "endDateTime" && document.getElementById('startDateTime').value) {
+                applyDateFilter();
+            }
         }
     });
+});
 
-onChange: function(selectedDates, dateStr, instance) {
-    if (instance.input.id === "startDateTime" && document.getElementById('endDateTime').value) {
-        applyDateFilter();
-    } else if (instance.input.id === "endDateTime" && document.getElementById('startDateTime').value) {
-        applyDateFilter();
-    }
-}
     // Set up dropdown interactions
     const dropbtn = document.querySelector('.dropdown-menu .dropbtn');
     const dropdownContent = document.querySelector('.dropdown-content');
