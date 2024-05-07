@@ -24,83 +24,86 @@ function toggleGroup(group) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Retrieve essential elements from the DOM
     const searchButton = document.getElementById('searchDatesButton');
     const dropbtn = document.querySelector('.dropdown-menu .dropbtn');
     const dropdownContent = document.querySelector('.dropdown-content');
     const closeButton = document.querySelector('.dropdown-content .close-btn');
     const checkboxes = document.querySelectorAll('.dropdown-content input[type="checkbox"]');
 
-   if (!searchButton || !dropbtn || !dropdownContent || !closeButton) {
-        console.error('One or more essential elements are missing:');
+    // Check if all essential elements are present
+    if (!searchButton || !dropbtn || !dropdownContent || !closeButton) {
+        console.error('One or more essential elements are missing.');
         console.error({
             searchButton: !!searchButton,
             dropbtn: !!dropbtn,
             dropdownContent: !!dropdownContent,
             closeButton: !!closeButton
         });
-        return;
+        return; // Stop execution if any essential element is missing
     }
-        // If all elements are present, set up event listeners and other logic
-    searchButton.addEventListener('click', function() {
-        console.log('Search button was clicked!');
-        
-  // Set up Flatpickr
+
+    // Set up Flatpickr for the start and end date inputs
     var startDatePicker = flatpickr("#startDateTime", {
         enableTime: true,
         dateFormat: "Y-m-d H:i",
-        onChange: (selectedDates, dateStr) => {
+        onChange: (selectedDates, dateStr, instance) => {
             endDatePicker.set('minDate', dateStr);
         }
     });
 
-   var endDatePicker = flatpickr("#endDateTime", {
+    var endDatePicker = flatpickr("#endDateTime", {
         enableTime: true,
         dateFormat: "Y-m-d H:i",
-        onChange: (selectedDates, dateStr) => {
+        onChange: (selectedDates, dateStr, instance) => {
             startDatePicker.set('maxDate', dateStr);
         }
     });
-    
-   searchButton.addEventListener('click', applyDateFilter);
-    dropbtn.addEventListener('click', (event) => {
+
+    // Set up event listeners for UI interactions
+    searchButton.addEventListener('click', applyDateFilter);
+
+    dropbtn.addEventListener('click', function(event) {
         dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
         event.stopPropagation();
     });
 
-    closeButton.addEventListener('click', (event) => {
+    closeButton.addEventListener('click', function(event) {
         dropdownContent.style.display = 'none';
         event.stopPropagation();
     });
 
-    document.addEventListener('click', (event) => {
+    document.addEventListener('click', function(event) {
         if (!dropdownContent.contains(event.target) && !dropbtn.contains(event.target)) {
             dropdownContent.style.display = 'none';
         }
     });
 
     checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', () => {
-            toggleGroup(checkbox.value);
+        checkbox.checked = true;
+        checkbox.addEventListener('change', function() {
+            toggleGroup(this.getAttribute('data-category'));
         });
     });
 });
-  });
 
 function applyDateFilter() {
     var startDateTime = document.getElementById('startDateTime').value;
     var endDateTime = document.getElementById('endDateTime').value;
+
     if (!startDateTime || !endDateTime) {
-        alert("Please select both start and end dates.");
+        alert("Please select both start and end dates and times.");
         return;
     }
+
     if (new Date(endDateTime) < new Date(startDateTime)) {
         alert("End date must be after start date.");
         return;
     }
-    console.log("Dates Selected: Start = " + startDateTime + ", End = " + endDateTime);
+
+    console.log("Selected Start Date and Time: ", startDateTime);
+    console.log("Selected End Date and Time: ", endDateTime);
 }
-
-
 
 
  function checkDateSelection() {
