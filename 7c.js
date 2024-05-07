@@ -66,6 +66,7 @@ function applyDateFilter() {
 
     applyFilters(); // Apply all filters again
 }
+
 document.addEventListener('DOMContentLoaded', function() {
     // Ensure elements for date selection exist
     const startDateInput = document.getElementById('startDate');
@@ -96,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         console.log("Date inputs not found.");
     }
-
+}
 
 document.addEventListener('DOMContentLoaded', function() {
     const dropbtn = document.querySelector('.dropdown-menu .dropbtn');
