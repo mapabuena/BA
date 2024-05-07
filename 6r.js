@@ -90,10 +90,7 @@ function applyDateFilter() {
     console.log("Dates Selected: Start = " + startDateTime + ", End = " + endDateTime);
 }
 
-        console.log("Selected Start Date and Time: ", startDateTime);
-        console.log("Selected End Date and Time: ", endDateTime);
-        console.log("Filters applied with dates: Start = " + startDateTime + ", End = " + endDateTime);
-    }
+
 
 
  function checkDateSelection() {
