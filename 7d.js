@@ -111,6 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
             event.stopPropagation(); // Prevent event from propagating to document
         };
 
+        // Add event listener to close the dropdown when clicking outside
         document.addEventListener('click', function(event) {
             if (!dropdownContent.contains(event.target) && !dropbtn.contains(event.target)) {
                 dropdownContent.style.display = 'none';
@@ -130,10 +131,15 @@ document.addEventListener('DOMContentLoaded', function() {
     checkboxes.forEach(checkbox => {
         checkbox.checked = true;
         if (checkbox.getAttribute('onclick')) {
-            toggleGroup(checkbox.getAttribute('onclick').match(/'([^']+)'/)[1]); // Trigger filter toggle
+            // Attempt to extract group name and toggle group
+            const match = checkbox.getAttribute('onclick').match(/'([^']+)'/);
+            if (match && match[1]) {
+                toggleGroup(match[1]); // Trigger filter toggle
+            }
         }
     });
 });
+
 // Example for async fetchMarkersData, modify according to your data fetching logic
 async function fetchMarkersData() {
     const response = await fetch('https://raw.githubusercontent.com/mapabuena/BA/main/BsAsPinsGroups.csv');
