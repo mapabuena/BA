@@ -30,11 +30,20 @@ document.addEventListener('DOMContentLoaded', function() {
     const closeButton = document.querySelector('.dropdown-content .close-btn');
     const checkboxes = document.querySelectorAll('.dropdown-content input[type="checkbox"]');
 
-    if (!searchButton || !dropbtn || !dropdownContent || !closeButton) {
-        console.error('One or more essential elements are missing.');
+   if (!searchButton || !dropbtn || !dropdownContent || !closeButton) {
+        console.error('One or more essential elements are missing:');
+        console.error({
+            searchButton: !!searchButton,
+            dropbtn: !!dropbtn,
+            dropdownContent: !!dropdownContent,
+            closeButton: !!closeButton
+        });
         return;
     }
-  
+        // If all elements are present, set up event listeners and other logic
+    searchButton.addEventListener('click', function() {
+        console.log('Search button was clicked!');
+        
   // Set up Flatpickr
     var startDatePicker = flatpickr("#startDateTime", {
         enableTime: true,
@@ -75,6 +84,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+  });
 
 function applyDateFilter() {
     var startDateTime = document.getElementById('startDateTime').value;
