@@ -34,7 +34,6 @@ function applyDateFilter() {
         return;
     }
 
-    // Ensure that the end date is after the start date
     if (new Date(endDateTime) < new Date(startDateTime)) {
         alert("End date must be after start date.");
         return;
@@ -43,7 +42,6 @@ function applyDateFilter() {
     console.log("Selected Start Date and Time: ", startDateTime);
     console.log("Selected End Date and Time: ", endDateTime);
 
-    // This assumes your filtering logic can handle these date strings directly
     activeFilters.category2 = [startDateTime, endDateTime];
     console.log("Date Range for Filters: ", activeFilters.category2);
 
@@ -55,8 +53,8 @@ document.addEventListener('DOMContentLoaded', function() {
         enableTime: true,
         dateFormat: "Y-m-d H:i",
         onChange: function(selectedDates, dateStr, instance) {
-            // Set the minimum date of the end date picker to the selected start date
             endDatePicker.set('minDate', dateStr);
+            applyDateFilter(); // Check and apply filter if both dates are set
         }
     });
 
@@ -64,11 +62,10 @@ document.addEventListener('DOMContentLoaded', function() {
         enableTime: true,
         dateFormat: "Y-m-d H:i",
         onChange: function(selectedDates, dateStr, instance) {
-            // Set the maximum date of the start date picker to the selected end date
             startDatePicker.set('maxDate', dateStr);
+            applyDateFilter(); // Check and apply filter if both dates are set
         }
     });
-});
 
 onChange: function(selectedDates, dateStr, instance) {
     if (instance.input.id === "startDateTime" && document.getElementById('endDateTime').value) {
@@ -77,28 +74,27 @@ onChange: function(selectedDates, dateStr, instance) {
         applyDateFilter();
     }
 }
+    // Set up dropdown interactions
     const dropbtn = document.querySelector('.dropdown-menu .dropbtn');
     const dropdownContent = document.querySelector('.dropdown-content');
     const closeButton = document.querySelector('.dropdown-content .close-btn');
 
-    // Handle dropdown interactions
-    dropbtn.onclick = function(event) {
+    dropbtn.addEventListener('click', function(event) {
         dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
         event.stopPropagation(); // Prevent event from propagating to document
-    };
+    });
 
-    closeButton.onclick = function(event) {
+    closeButton.addEventListener('click', function(event) {
         dropdownContent.style.display = 'none';
         event.stopPropagation(); // Prevent event from propagating to document
-    };
+    });
 
-    // Click outside to close dropdown
     document.addEventListener('click', function(event) {
         if (!dropdownContent.contains(event.target) && !dropbtn.contains(event.target)) {
             dropdownContent.style.display = 'none';
         }
     }, true); // Use capture phase for the event
-
+    
     // Initialize checkboxes and apply initial filters
     const checkboxes = document.querySelectorAll('.dropdown-content input[type="checkbox"]');
     checkboxes.forEach(checkbox => {
@@ -106,6 +102,7 @@ onChange: function(selectedDates, dateStr, instance) {
         toggleGroup(checkbox.getAttribute('onclick').match(/'([^']+)'/)[1]); // Trigger filter toggle
     });
 });
+
 // Example for async fetchMarkersData, modify according to your data fetching logic
 async function fetchMarkersData() {
     const response = await fetch('https://raw.githubusercontent.com/mapabuena/BA/main/BsAsPinsGroups.csv');
