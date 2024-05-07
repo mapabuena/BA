@@ -105,7 +105,6 @@ document.addEventListener('DOMContentLoaded', function() {
         checkbox.checked = true;
         toggleGroup(checkbox.getAttribute('onclick').match(/'([^']+)'/)[1]); // Trigger filter toggle
     });
-});
 
 // Example for async fetchMarkersData, modify according to your data fetching logic
 async function fetchMarkersData() {
