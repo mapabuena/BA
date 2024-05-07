@@ -93,10 +93,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log("Selected End Date and Time: ", endDateTime);
         console.log("Filters applied with dates: Start = " + startDateTime + ", End = " + endDateTime);
     }
-    // Other initializations and function calls
-    initMap();
-    setupDatePickers();
-});
+
 
  function checkDateSelection() {
         if (document.getElementById('startDateTime').value && document.getElementById('endDateTime').value) {
