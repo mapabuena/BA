@@ -25,43 +25,45 @@ function toggleGroup(group) {
 
 
 // Function to apply date filter based on selected range
-function applyDateFilter() {
-    var startDateTime = document.getElementById('startDateTime').value;
-    var endDateTime = document.getElementById('endDateTime').value;
+    function applyDateFilter() {
+        var startDateTime = document.getElementById('startDateTime').value;
+        var endDateTime = document.getElementById('endDateTime').value;
 
-    if (!startDateTime || !endDateTime) {
-        alert("Please select both start and end dates and times.");
-        return;
+        if (!startDateTime || !endDateTime) {
+            alert("Please select both start and end dates and times.");
+            return;
+        }
+
+        if (new Date(endDateTime) < new Date(startDateTime)) {
+            alert("End date must be after start date.");
+            return;
+        }
+
+        console.log("Selected Start Date and Time: ", startDateTime);
+        console.log("Selected End Date and Time: ", endDateTime);
+
+        // Assuming a placeholder for actual filter logic
+        console.log("Filters applied with dates: Start = " + startDateTime + ", End = " + endDateTime);
+  applyFilters();
     }
 
-    if (new Date(endDateTime) < new Date(startDateTime)) {
-        alert("End date must be after start date.");
-        return;
-    }
-
-    console.log("Selected Start Date and Time: ", startDateTime);
-    console.log("Selected End Date and Time: ", endDateTime);
-
-    activeFilters.category2 = [startDateTime, endDateTime];
-    console.log("Date Range for Filters: ", activeFilters.category2);
-
-    applyFilters();
-}
 
 document.addEventListener('DOMContentLoaded', function() {
     const searchButton = document.getElementById('searchDatesButton');
 
+    // Ensure the button exists in the DOM
     if (!searchButton) {
         console.error('Search button not found on the page.');
         return; // Exit if button is not found
     }
 
+    // Flatpickr instances setup
     var startDatePicker = flatpickr("#startDateTime", {
         enableTime: true,
         dateFormat: "Y-m-d H:i",
         onChange: function(selectedDates, dateStr, instance) {
             endDatePicker.set('minDate', dateStr);
-            checkDateSelection(); // Ensure this is able to reference searchButton
+            checkDateSelection(); // Call to check if both dates are selected
         }
     });
 
@@ -70,29 +72,24 @@ document.addEventListener('DOMContentLoaded', function() {
         dateFormat: "Y-m-d H:i",
         onChange: function(selectedDates, dateStr, instance) {
             startDatePicker.set('maxDate', dateStr);
-            checkDateSelection(); // Ensure this is able to reference searchButton
+            checkDateSelection(); // Call to check if both dates are selected
         }
     });
 
-    function checkDateSelection() {
-        // Since this function is defined inside the DOMContentLoaded listener, it can access searchButton
+
+ function checkDateSelection() {
         if (document.getElementById('startDateTime').value && document.getElementById('endDateTime').value) {
             searchButton.disabled = false;  // Enable the button if both dates are selected
         } else {
-            searchButton.disabled = true;  // Keep the button disabled if dates are incomplete
+            searchButton.disabled = true;  // Disable the button if dates are incomplete
         }
     }
 
     // Add an event listener to the search button
     searchButton.addEventListener('click', function() {
-        applyDateFilter();  // Call the function that processes the date filter
+        applyDateFilter();  // Function that processes the date filter
     });
-});
 
-    // Add an event listener to the search button
-    searchButton.addEventListener('click', function() {
-        applyDateFilter();  // Call the function that processes the date filter
-    });
 
 
     // Set up dropdown interactions
