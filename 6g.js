@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function() {
     searchButton.addEventListener('click', function() {
         applyDateFilter();  // Call the function that processes the date filter
     });
-});
+
 
     // Set up dropdown interactions
     const dropbtn = document.querySelector('.dropdown-menu .dropbtn');
