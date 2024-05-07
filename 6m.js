@@ -120,7 +120,6 @@ document.addEventListener('DOMContentLoaded', function() {
     searchButton.addEventListener('click', function() {
         applyDateFilter();  // Function that processes the date filter
     });
- });
 
 
 // Example for async fetchMarkersData, modify according to your data fetching logic
