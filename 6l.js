@@ -47,41 +47,65 @@ function toggleGroup(group) {
   applyFilters();
     }
 
-
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize DOM elements
     const searchButton = document.getElementById('searchDatesButton');
-    console.log(searchButton); // This should log the element, not null
-
-    if (!searchButton) {
-        console.error('Search button not found on the page.');
-        return; // Exit if the button is not found
-    }
-
-    // Add the event listener if the button exists
-    searchButton.addEventListener('click', function() {
-        console.log('Button was clicked');
-        applyDateFilter();
-    });
-});
-
-    // Flatpickr instances setup
+    const dropbtn = document.querySelector('.dropdown-menu .dropbtn');
+    const dropdownContent = document.querySelector('.dropdown-content');
+    const closeButton = document.querySelector('.dropdown-content .close-btn');
+    const checkboxes = document.querySelectorAll('.dropdown-content input[type="checkbox"]');
+  
+    // Initialize Flatpickr with references to start and end date inputs
     var startDatePicker = flatpickr("#startDateTime", {
         enableTime: true,
         dateFormat: "Y-m-d H:i",
-        onChange: function(selectedDates, dateStr, instance) {
+        onReady: function(selectedDates, dateStr, instance) {
             endDatePicker.set('minDate', dateStr);
-            checkDateSelection(); // Call to check if both dates are selected
         }
     });
 
     var endDatePicker = flatpickr("#endDateTime", {
         enableTime: true,
         dateFormat: "Y-m-d H:i",
-        onChange: function(selectedDates, dateStr, instance) {
+        onReady: function(selectedDates, dateStr, instance) {
             startDatePicker.set('maxDate', dateStr);
-            checkDateSelection(); // Call to check if both dates are selected
         }
     });
+    // Event Listeners for UI interactions
+    if (searchButton) {
+        searchButton.addEventListener('click', function() {
+            applyDateFilter();
+        });
+    } else {
+        console.error('Search button not found on the page.');
+    }
+
+    dropbtn.addEventListener('click', function(event) {
+        dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
+        event.stopPropagation();
+    });
+
+    closeButton.addEventListener('click', function(event) {
+        dropdownContent.style.display = 'none';
+        event.stopPropagation();
+    });
+
+    document.addEventListener('click', function(event) {
+        if (!dropdownContent.contains(event.target) && !dropbtn.contains(event.target)) {
+            dropdownContent.style.display = 'none';
+        }
+    });
+
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = true;
+        toggleGroup(checkbox.getAttribute('onclick').match(/'([^']+)'/)[1]);
+    });
+
+    // Other initializations and function calls
+    initMap();
+    setupDatePickers();
+});
+
 
 
  function checkDateSelection() {
@@ -98,34 +122,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
  });
 
-
-    // Set up dropdown interactions
-    const dropbtn = document.querySelector('.dropdown-menu .dropbtn');
-    const dropdownContent = document.querySelector('.dropdown-content');
-    const closeButton = document.querySelector('.dropdown-content .close-btn');
-
-    dropbtn.addEventListener('click', function(event) {
-        dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
-        event.stopPropagation(); // Prevent event from propagating to document
-    });
-
-    closeButton.addEventListener('click', function(event) {
-        dropdownContent.style.display = 'none';
-        event.stopPropagation(); // Prevent event from propagating to document
-    });
-
-    document.addEventListener('click', function(event) {
-        if (!dropdownContent.contains(event.target) && !dropbtn.contains(event.target)) {
-            dropdownContent.style.display = 'none';
-        }
-    }, true); // Use capture phase for the event
-    
-    // Initialize checkboxes and apply initial filters
-    const checkboxes = document.querySelectorAll('.dropdown-content input[type="checkbox"]');
-    checkboxes.forEach(checkbox => {
-        checkbox.checked = true;
-        toggleGroup(checkbox.getAttribute('onclick').match(/'([^']+)'/)[1]); // Trigger filter toggle
-    });
 
 // Example for async fetchMarkersData, modify according to your data fetching logic
 async function fetchMarkersData() {
