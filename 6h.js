@@ -50,25 +50,18 @@ function applyDateFilter() {
 
 document.addEventListener('DOMContentLoaded', function() {
     const searchButton = document.getElementById('searchDatesButton');
-    console.log(searchButton); // Check what this logs. It should not be null.
 
-    if (searchButton) {
-        searchButton.addEventListener('click', function() {
-            applyDateFilter();  // Call the function that processes the date filter
-        });
-        searchButton.disabled = true;  // Disable the button initially
-    } else {
-        console.error('Search button not found');
+    if (!searchButton) {
+        console.error('Search button not found on the page.');
+        return; // Exit if button is not found
     }
-
-});
 
     var startDatePicker = flatpickr("#startDateTime", {
         enableTime: true,
         dateFormat: "Y-m-d H:i",
         onChange: function(selectedDates, dateStr, instance) {
             endDatePicker.set('minDate', dateStr);
-            checkDateSelection();
+            checkDateSelection(); // Ensure this is able to reference searchButton
         }
     });
 
@@ -77,17 +70,24 @@ document.addEventListener('DOMContentLoaded', function() {
         dateFormat: "Y-m-d H:i",
         onChange: function(selectedDates, dateStr, instance) {
             startDatePicker.set('maxDate', dateStr);
-            checkDateSelection();
+            checkDateSelection(); // Ensure this is able to reference searchButton
         }
     });
 
     function checkDateSelection() {
+        // Since this function is defined inside the DOMContentLoaded listener, it can access searchButton
         if (document.getElementById('startDateTime').value && document.getElementById('endDateTime').value) {
             searchButton.disabled = false;  // Enable the button if both dates are selected
         } else {
             searchButton.disabled = true;  // Keep the button disabled if dates are incomplete
         }
     }
+
+    // Add an event listener to the search button
+    searchButton.addEventListener('click', function() {
+        applyDateFilter();  // Call the function that processes the date filter
+    });
+});
 
     // Add an event listener to the search button
     searchButton.addEventListener('click', function() {
