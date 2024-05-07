@@ -50,12 +50,19 @@ function toggleGroup(group) {
 
 document.addEventListener('DOMContentLoaded', function() {
     const searchButton = document.getElementById('searchDatesButton');
+    console.log(searchButton); // This should log the element, not null
 
-    // Ensure the button exists in the DOM
     if (!searchButton) {
         console.error('Search button not found on the page.');
-        return; // Exit if button is not found
+        return; // Exit if the button is not found
     }
+
+    // Add the event listener if the button exists
+    searchButton.addEventListener('click', function() {
+        console.log('Button was clicked');
+        applyDateFilter();
+    });
+});
 
     // Flatpickr instances setup
     var startDatePicker = flatpickr("#startDateTime", {
