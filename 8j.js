@@ -381,12 +381,14 @@ function processCSVData(csvData) {
             icon_url: columns[6],
             category: columns[7] ? columns[7].split('|') : [],
             category2: columns[8] ? columns[8].split('|') : [],
-            category3: columns[9] ? columns[9].split('|') : []
+            category3: columns[9] ? columns[9].split('|') : [],
             starts: columns[10] ? columns[10].split('|') : [], // Parse 'starts' dates
             ends: columns[11] ? columns[11].split('|') : [] // Parse 'ends' dates
-    }
-         });
-        });
+        };
+
+        // Further processing, such as creating markers, could be done here
+    });
+}
    
 
      // Convert starts and ends lists into pairs of date ranges
