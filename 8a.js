@@ -482,4 +482,4 @@ function applyFilters() {
     });
 
     updateInfoWindowContent(); // Optionally update info display based on visible markers
-}"
+}
