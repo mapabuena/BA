@@ -386,19 +386,18 @@ function processCSVData(csvData) {
             ends: columns[11] ? columns[11].split('|') : [] // Parse 'ends' dates
         };
 
-        // Further processing, such as creating markers, could be done here
-    });
-}
-   
-
-     // Convert starts and ends lists into pairs of date ranges
+        // Convert starts and ends lists into pairs of date ranges
         data.dateRanges = data.starts.map((start, index) => ({
             start: start,
             end: data.ends[index]
         }));
+
+        // Assuming createMarker and updateInfoWindowContent are defined elsewhere
         createMarker(data);
     });
-      updateInfoWindowContent();
+
+    // It's likely that you want to update the window content once after all markers are processed
+    updateInfoWindowContent();
 }
 
 function createMarker(data) {
