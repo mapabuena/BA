@@ -352,8 +352,8 @@ function processCSVData(csvData) {
             description: columns[5],
             icon_url: columns[6],
             category: columns[7] ? columns[7].split('|') : [],
-            starts: columns[10] ? columns[10].split('|') : [],
-            ends: columns[11] ? columns[11].split('|') : []
+            starts: columns[11] ? columns[10].split('|') : [],
+            ends: columns[12] ? columns[11].split('|') : []
         };
 
         // Ensure that starts and ends arrays are paired correctly
