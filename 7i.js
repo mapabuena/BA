@@ -60,7 +60,7 @@ initializeDatePicker(); // Initialize date picker
                     minuteSelect.addEventListener('change', () => updateDateTime(this, hourSelect, minuteSelect));
                 }
             };
-        })();
+        });
 
         function updateDateTime(pikadayInstance, hourSelect, minuteSelect) {
             var selectedHour = hourSelect.value;
@@ -200,8 +200,8 @@ document.addEventListener('DOMContentLoaded', function() {
             endDateInput.value = startDateInput.value;
         }
     });
+ });
 
-    
 // Example for async fetchMarkersData, modify according to your data fetching logic
 async function fetchMarkersData() {
     const response = await fetch('https://raw.githubusercontent.com/mapabuena/BA/main/BsAsPinsGroups.csv');
