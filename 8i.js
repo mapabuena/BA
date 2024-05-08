@@ -384,8 +384,10 @@ function processCSVData(csvData) {
             category3: columns[9] ? columns[9].split('|') : []
             starts: columns[10] ? columns[10].split('|') : [], // Parse 'starts' dates
             ends: columns[11] ? columns[11].split('|') : [] // Parse 'ends' dates
-        };
-    };
+    }
+         });
+        });
+   
 
      // Convert starts and ends lists into pairs of date ranges
         data.dateRanges = data.starts.map((start, index) => ({
