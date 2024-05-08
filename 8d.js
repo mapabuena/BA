@@ -117,7 +117,8 @@ function applyDateFilter() {
     var startDateTime = document.getElementById('startDateTime').value;
     var endDateTime = document.getElementById('endDateTime').value;
 
-    if (!startDate || !endDate) {
+    // Corrected variable names from startDate and endDate to startDateTime and endDateTime
+    if (!startDateTime || !endDateTime) {
         alert("Please select both start and end dates.");
         return;
     }
@@ -125,15 +126,21 @@ function applyDateFilter() {
     console.log("Selected Start Date: ", startDateTime);
     console.log("Selected End Date: ", endDateTime);
 
+    // Assuming generateDateRange and applyFilters are defined elsewhere in your code correctly
     activeFilters.category2 = generateDateRange(startDateTime, endDateTime);
     console.log("Generated Date Range for Filters: ", activeFilters.category2);
 
     applyFilters(); // Apply all filters again
 }
-// Ensure the end date cannot be before the start date
+
 document.addEventListener('DOMContentLoaded', function() {
     const startDateInput = document.getElementById('startDateTime');
     const endDateInput = document.getElementById('endDateTime');
+
+    if (!startDateInput || !endDateInput) {
+        console.error("Date inputs are not found on the page.");
+        return; // Exit if inputs are not found
+    }
 
     // Function to check and apply date filters if both dates are set
     function checkAndApplyFilter() {
@@ -148,7 +155,7 @@ document.addEventListener('DOMContentLoaded', function() {
         checkAndApplyFilter(); // Apply filter if end date is already set
         // Ensure the start date does not exceed an already set end date
         if (endDateInput.value && startDateInput.value > endDateInput.value) {
-            startDateInput.value = endDateInput.value;
+            startDateInput.value = endDateInput.value; // Correct this line to maintain logical consistency
         }
     });
 
@@ -158,9 +165,11 @@ document.addEventListener('DOMContentLoaded', function() {
         checkAndApplyFilter(); // Apply filter if start date is already set
         // Ensure the end date is not before an already set start date
         if (startDateInput.value && endDateInput.value < startDateInput.value) {
-            endDateInput.value = startDateInput.value;
+            endDateInput.value = startDateInput.value; // Correct this line to maintain logical consistency
         }
     });
+});
+
 
 
 // Example for async fetchMarkersData, modify according to your data fetching logic
