@@ -500,7 +500,7 @@ function applyFilters() {
         const isVisibleByDate = data.dateRanges.some(range => {
             const rangeStart = new Date(range.start);
             const rangeEnd = new Date(range.end);
-            const isInDateRange = rangeStart >= startDateTime && rangeEnd <= endDateTime;
+            const isInDateRange = rangeStart >= startDateTime && rangeStart <= endDateTime;
             console.log(`Checking range ${range.start} to ${range.end} for ${data.name}: ${isInDateRange}`);
             return isInDateRange;
         });
