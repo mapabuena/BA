@@ -485,12 +485,12 @@ function applyFilters() {
 
     markers.forEach(({ marker, data }) => {
         const isVisibleByCategory = activeFilters.category.length === 0 || data.category.some(cat => activeFilters.category.includes(cat));
-        
-        // Check if any event date range falls within the selected dates
+
+        // Check if any event date range falls within the selected dates (inclusive)
         const isVisibleByDate = data.dateRanges.some(range => {
             const startDate = new Date(range.start);
             const endDate = new Date(range.end);
-            return startDate >= startDateTime && endDate <= endDateTime;
+            return (startDate.getTime() >= startDateTime.getTime() && endDate.getTime() <= endDateTime.getTime());
         });
 
         // Marker visibility is true if visible by both category and date
@@ -499,3 +499,4 @@ function applyFilters() {
 
     updateInfoWindowContent(); // Optionally update info display based on visible markers
 }
+
