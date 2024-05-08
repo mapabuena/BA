@@ -201,35 +201,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    const dropbtn = document.querySelector('.dropdown-menu .dropbtn');
-    const dropdownContent = document.querySelector('.dropdown-content');
-    const closeButton = document.querySelector('.dropdown-content .close-btn');
-
-    // Handle dropdown interactions
-    dropbtn.onclick = function(event) {
-        dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
-        event.stopPropagation(); // Prevent event from propagating to document
-    };
-
-    closeButton.onclick = function(event) {
-        dropdownContent.style.display = 'none';
-        event.stopPropagation(); // Prevent event from propagating to document
-    };
-
-    // Click outside to close dropdown
-    document.addEventListener('click', function(event) {
-        if (!dropdownContent.contains(event.target) && !dropbtn.contains(event.target)) {
-            dropdownContent.style.display = 'none';
-        }
-    }, true); // Use capture phase for the event
-
-    // Initialize checkboxes and apply initial filters
-    const checkboxes = document.querySelectorAll('.dropdown-content input[type="checkbox"]');
-    checkboxes.forEach(checkbox => {
-        checkbox.checked = true;
-        toggleGroup(checkbox.getAttribute('onclick').match(/'([^']+)'/)[1]); // Trigger filter toggle
-    });
-});
+    
 // Example for async fetchMarkersData, modify according to your data fetching logic
 async function fetchMarkersData() {
     const response = await fetch('https://raw.githubusercontent.com/mapabuena/BA/main/BsAsPinsGroups.csv');
@@ -397,9 +369,6 @@ function recenterMap(lng, lat) {
         essential: true
     });
 }
-
-
-           
 
 function simulateMarkerClick(markerId) {
     // Assuming markerId is the index in the markers array
