@@ -21,7 +21,7 @@ function toggleGroup(group) {
     }
     applyFilters();  // Apply all filters again
 }
-document.getElementById('browse-world').addEventListener('click', function() {
+document.getElementById('browse-map').addEventListener('click', function() {
     // Zoom out to see the whole earth
     map.flyTo({
         center: [0, 0], // Center of the map coordinates
