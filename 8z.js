@@ -496,7 +496,7 @@ function updateFilters() {
 function applyFilters() {
     // Retrieve date input values
     var startDateTimeInput = document.getElementById('startDateTime').value;
-    var endDateTimeInput = document.getElementById('endDateTValueme').value;
+    var endDateTimeInput = document.getElementById('endDateTime').value;
     var startDateTime = new Date(startDateTimeInput);
     var endDateTime = new Date(endDateTimeInput);
 
