@@ -172,7 +172,7 @@ map.on('load', function() {
             updateFilters();
 
             // List of group values to activate
-            const groupValues = ['group1', 'group2', 'group3', 'group4', 'group5', 'group6'];
+            const groupValues = ['group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'city'];
 
             // Simulate clicks for specified groups
             groupValues.forEach(value => {
