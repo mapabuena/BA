@@ -494,41 +494,35 @@ function updateFilters() {
 }
 
 function applyFilters() {
-    // Ensure the DOM is fully loaded before attempting to access the elements
-    document.addEventListener('DOMContentLoaded', function() {
-        var startDateTimeInput = document.getElementById('startDateTime');
-        var endDateTimeInput = document.getElementById('endDateTime');
+    var startDateTimeInput = document.getElementById('startDateTime').value;
+    var endDateTimeInput = document.getElementById('endDateTime').value;
+    var startDateTime = new Date(startDateTimeInput);
+    var endDateTime = new Date(endDateTimeInput);
 
-        // Check if both date input elements are available
-        if (!startDateTimeInput || !endDateTimeInput) {
-            console.error("Date input elements are missing.");
-            return; // Exit the function if elements are not found
-        }
+    console.log("Applying Filters...");
+    console.log("Filter range:", startDateTimeInput, "to", endDateTimeInput);
 
-        var startDateTime = new Date(startDateTimeInput.value);
-        var endDateTime = new Date(endDateTimeInput.value);
+    markers.forEach(({ marker, data }) => {
+        console.log(`Checking visibility for ${data.name}`);
+        
+        const isVisibleByCategory = activeFilters.category.length === 0 || 
+                                    data.category.some(cat => activeFilters.category.includes(cat));
+        console.log(`Category Visibility for ${data.name}: ${isVisibleByCategory}`);
 
-        console.log("Applying Filters...");
-        console.log("Filter range:", startDateTimeInput.value, "to", endDateTimeInput.value);
-
-        markers.forEach(({ marker, data }) => {
-            console.log(`Checking visibility for ${data.name}`);
-            
-            const isVisibleByCategory = activeFilters.category.length === 0 || 
-                                        data.category.some(cat => activeFilters.category.includes(cat));
-            console.log(`Category Visibility for ${data.name}: ${isVisibleByCategory}`);
-
-            const isVisibleByDate = data.dateRanges.some(range => {
-                const rangeStart = new Date(range.start);
-                const rangeEnd = new Date(range.end);
-                return rangeStart <= endDateTime && rangeEnd >= startDateTime;
-            });
-
-            console.log(`Date Visibility for ${data.name}: ${isVisibleByDate}`);
-
-            marker.getElement().style.display = (isVisibleByCategory && isVisibleByDate) ? '' : 'none';
+        const isVisibleByDate = data.dateRanges.some(range => {
+            const rangeStart = new Date(range.start);
+            const rangeEnd = new Date(range.end);
+            const isInDateRange = rangeStart <= endDateTime && rangeEnd >= startDateTime;
+            console.log(`Checking date range ${range.start} to ${range.end} for ${data.name}: ${isInDateRange}`);
+            return isInDateRange;
         });
 
-        updateInfoWindowContent(); // Ensure this function exists and is properly defined
+        console.log(`Date Visibility for ${data.name}: ${isVisibleByDate}`);
+
+        // Update marker display based on combined visibility results
+        marker.getElement().style.display = (isVisibleByCategory && isVisibleByDate) ? '' : 'none';
     });
+
+    updateInfoWindowContent(); // Make sure this function is defined and functioning
 }
+
