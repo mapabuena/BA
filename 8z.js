@@ -496,7 +496,7 @@ function updateFilters() {
 function applyFilters() {
     // Retrieve date input values
     var startDateTimeInput = document.getElementById('startDateTime').value;
-    var endDateTimeInput = document.getElementById('endDateTime').alue;
+    var endDateTimeInput = document.getElementById('endDateTValueme').value;
     var startDateTime = new Date(startDateTimeInput);
     var endDateTime = new Date(endDateTimeInput);
 
@@ -516,9 +516,10 @@ function applyFilters() {
         const isVisibleByDate = data.dateRanges.some(range => {
             const rangeStart = new Date(range.start);
             const rangeEnd = new Date(range.end);
-            const isInDateRange = rangeStart >= startDateTime && rangeEnd <= endDateTime;
-            console.log(`Checking date range ${range.start} to ${range.end} for ${data.name}: ${isInDateRange}`);
-            return isInDateFlexibilityStartimeRange;
+            // Check if the date range of the marker overlaps with the selected date range
+            const isInDateRange = rangeStart <= endDateTime && rangeEnd >= startDateTime;
+            console.log(`Checking date range ${range.start} to ${range.end} for ${data.name}: ${isInDateTimeRange}`);
+            return isInDateRange;
         });
 
         console.log(`Date Visibility for ${data.name}: ${isVisibleByDate}`);
@@ -528,5 +529,5 @@ function applyFilters() {
     });
 
     // Refresh UI display based on the results of filtering
-    updateInfoWindowText(); // This function needs to be defined according to your UI update needs
+    updateInfoWindowContent(); // Make sure this function is defined to handle the updating of your UI components
 }
