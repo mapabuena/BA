@@ -45,8 +45,11 @@ startDatePicker = flatpickr("#startDateTime", {
     altInput: true,           // Enable alternative input
     altFormat: "F j H:i",     // Human-friendly format
     onChange: function(selectedDates, dateStr, instance) {
-        // Access endDatePicker which is defined within the same scope
         endDatePicker.set('minDate', dateStr);
+        // Adjust endDate if it is before the new startDate
+        if (endDatePicker.selectedDates[0] && endDatePicker.selectedDates[0] < selectedDates[0]) {
+            endDatePicker.setDate(selectedDates[0]);
+        }
     }
 });
 
@@ -56,26 +59,28 @@ endDatePicker = flatpickr("#endDateTime", {
     altInput: true,           // Enable alternative input
     altFormat: "F j H:i",     // Human-friendly format
     onChange: function(selectedDates, dateStr, instance) {
-        // Access startDatePicker which is defined within the same scope
         startDatePicker.set('maxDate', dateStr);
+        // Adjust startDate if it is after the new endDate
+        if (startDatePicker.selectedDates[0] && startDatePicker.selectedDates[0] > selectedDates[0]) {
+            startDatePicker.setDate(selectedDates[0]);
+        }
     }
 });
 
-  startDateInput.addEventListener('change', function() {
-    endDateInput.min = startDateInput.value;
-    checkAndApplyFilter(); // Apply filter if end date is already set
-    // Ensure the start date does not exceed an already set end date
+startDateInput.addEventListener('change', function() {
+    endDatePicker.set('minDate', startDateInput.value);
+    // Ensure the end date does not exceed an already set start date
     if (endDateInput.value && startDateInput.value > endDateInput.value) {
-        startDateInput.value = endDateInput.value; // Correct this line to maintain logical consistency
+        endDateInput.value = startDateInput.value;
     }
 });
-  endDateInput.addEventListener('change', function() {
-    startDateInput.max = endDateInput.value;
-    checkAndApplyFilter(); // Apply filter if start date is already set
-    // Ensure the end date is not before an already set start date
+endDateInput.addEventListener('change', function() {
+    startDatePicker.set('maxDate', endDateInput.value);
+    // Ensure the start date does not exceed an already set end date
     if (startDateInput.value && endDateInput.value < startDateInput.value) {
-        endDateInput.value = startDateInput.value; // Correct this line to maintain logical consistency
+        startDateInput.value = endDateInput.value;
     }
+});
 });
     const searchButton = document.getElementById('searchButton');
     const dropbtn = document.querySelector('.dropdown-menu .dropbtn');
