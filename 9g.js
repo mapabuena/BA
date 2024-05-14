@@ -81,7 +81,6 @@ endDateInput.addEventListener('change', function() {
         startDateInput.value = endDateInput.value;
     }
 });
-});
     const searchButton = document.getElementById('searchButton');
     const dropbtn = document.querySelector('.dropdown-menu .dropbtn');
     const dropdownContent = document.querySelector('.dropdown-content');
