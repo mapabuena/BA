@@ -465,11 +465,11 @@ function recenterMap(lng, lat) {
 
     // Offset to position the marker at the bottom 10% of the map
     const offsetY = (mapHeight * 0.1);
-    const offsetX = (mapWidth * 0.1);
+
 
     map.flyTo({
         center: [lng, lat],
-        offset: [offsetX, offsetY],
+        offset: [0, offsetY],
         essential: true
     });
 }
