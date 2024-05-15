@@ -473,14 +473,17 @@ function createMarker(data) {
 function recenterMap(lng, lat) {
     const mapContainer = map.getContainer();
     const mapHeight = mapContainer.offsetHeight;
+    const mapWidth = mapContainer.offsetWidth;
 
     // Offset to position the marker at the bottom 10% of the map
-    const offsetY = (mapHeight * 0.1);
+    const offsetY = mapHeight * 0.1;
 
+    // Offset to position the marker at the left 20% of the map
+    const offsetX = mapWidth * 0.2;
 
     map.flyTo({
         center: [lng, lat],
-        offset: [0, offsetY],
+        offset: [offsetX, offsetY],
         essential: true
     });
 }
