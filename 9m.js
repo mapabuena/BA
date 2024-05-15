@@ -377,7 +377,7 @@ async function fetchMarkersData() {
 
 function processCSVData(csvData) {
     console.log("Processing CSV Data...");
-    
+
     Papa.parse(csvData, {
         header: true,
         skipEmptyLines: true,
@@ -385,40 +385,46 @@ function processCSVData(csvData) {
             results.data.forEach((data, rowIndex) => {
                 console.log(`Processing row ${rowIndex + 1}:`, data);
 
-                // Parse latitude and longitude as floats
-                data.lat = parseFloat(data.lat);
-                data.lng = parseFloat(data.lng);
+                // Check if lat and lng are valid numbers
+                const lat = parseFloat(data.Latitude);
+                const lng = parseFloat(data.Longitude);
+                if (isNaN(lat) || isNaN(lng)) {
+                    console.error(`Invalid coordinates at row ${rowIndex + 1}: lat=${data.Latitude}, lng=${data.Longitude}`);
+                    return; // Skip this row if coordinates are invalid
+                }
 
                 // Split categories, starts, and ends into arrays
-                data.category = data.category ? data.category.split('|') : [];
-                data.starts = data.starts ? data.starts.split('|') : [];
-                data.ends = data.ends ? data.ends.split('|') : [];
+                const category = data.category ? data.category.split('|') : [];
+                const starts = data.starts ? data.starts.split('|') : [];
+                const ends = data.ends ? data.ends.split('|') : [];
 
                 // Ensure that starts and ends arrays are paired correctly
-                data.dateRanges = [];
-                if (data.starts.length === data.ends.length) {
-                    data.dateRanges = data.starts.map((start, index) => ({
-                        start: start,
-                        end: data.ends[index]
-                    }));
+                const dateRanges = [];
+                if (starts.length === ends.length) {
+                    starts.forEach((start, index) => {
+                        dateRanges.push({
+                            start: start,
+                            end: ends[index]
+                        });
+                    });
                 } else {
                     console.error(`Mismatch in starts and ends lengths at row ${rowIndex + 1}`);
                 }
 
                 // Store other relevant data fields
                 const markerData = {
-                    name: data.name,
-                    lat: data.lat,
-                    lng: data.lng,
+                    name: data.Name,
+                    lat: lat,
+                    lng: lng,
                     popup_header: data.popup_header,
                     popupimage_url: data.popupimage_url,
-                    description: data.description,
+                    description: data.Description,
                     icon_url: data.icon_url,
-                    category: data.category,
-                    dateRanges: data.dateRanges
+                    category: category,
+                    dateRanges: dateRanges
                 };
 
-                console.log(`Marker Data for ${data.name}:`, markerData);
+                console.log(`Marker Data for ${data.Name}:`, markerData);
                 createMarker(markerData);
             });
 
