@@ -94,44 +94,46 @@ document.addEventListener('DOMContentLoaded', function() {
     const dropdownItems = document.querySelectorAll('.dropdown-link');
     const placeholderText = 'Search...';
 
-    // Function to set or remove placeholder
-    function updatePlaceholder() {
+    // Update or remove placeholder based on content
+    function managePlaceholder() {
         if (!searchBox.textContent.trim() && !searchBox.isFocused) {
             searchBox.textContent = placeholderText;
-            searchBox.classList.add('placeholder');  // Use a class to style the placeholder
-        } else if (searchBox.textContent === placeholderText) {
+            searchBox.classList.add('placeholder');
+        } else if (searchBox.textContent === placeholderText && searchBox.isFocused) {
             searchBox.textContent = '';
             searchBox.classList.remove('placeholder');
         }
     }
 
-    // Initial check
-    updatePlaceholder();
+    // Initial placeholder setup
+    managePlaceholder();
 
     searchBox.addEventListener('focus', function() {
-        searchBox.isFocused = true;  // Custom property to track focus
+        searchBox.isFocused = true;
         if (searchBox.textContent === placeholderText) {
             searchBox.textContent = '';
             searchBox.classList.remove('placeholder');
         }
-        searchBox.style.color = '#000';  // Normal text color
+        searchBox.style.color = '#000'; // Ensure text color changes
     });
 
     searchBox.addEventListener('blur', function() {
         searchBox.isFocused = false;
-        updatePlaceholder();
+        managePlaceholder();
     });
 
     searchBox.addEventListener('input', function() {
         const filter = searchBox.textContent.trim().toLowerCase();
         dropdownItems.forEach(function(item) {
-            const text = item.textContent.toLowerCase();
-            if (text.includes(filter) || !filter) {
+            if (item.textContent.toLowerCase().includes(filter)) {
                 item.style.display = '';
             } else {
                 item.style.display = 'none';
             }
         });
+        if (searchBox.textContent.trim() === '') {
+            managePlaceholder();
+        }
     });
 });
     
