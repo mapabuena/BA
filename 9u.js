@@ -91,10 +91,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 document.addEventListener('DOMContentLoaded', function() {
     const searchBox = document.getElementById('searchBox');
-    const dropdownLinks = document.querySelectorAll('.dropdown-list .dropdown-link'); // Using the new class name "dropdown-list"
+    searchBox.setAttribute('data-placeholder', 'Search...'); // Set the placeholder attribute if not done in HTML
+    const dropdownLinks = document.querySelectorAll('.dropdown-list .dropdown-link');
 
     searchBox.addEventListener('input', function() {
-        const filter = searchBox.textContent.trim().toLowerCase();
+        let filter = searchBox.textContent.toLowerCase().trim();
         dropdownLinks.forEach(function(link) {
             if (link.textContent.toLowerCase().includes(filter)) {
                 link.style.display = ''; // Show matching item
@@ -104,26 +105,27 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Additional code to manage placeholder if necessary
-    if (!searchBox.textContent.trim()) {
-        searchBox.style.color = '#ccc'; // Placeholder text color
-        searchBox.textContent = 'Search...'; // Placeholder text
-    }
-
     searchBox.addEventListener('focus', function() {
-        if (searchBox.textContent === 'Search...') {
+        if (searchBox.textContent.trim() === 'Search...' || !searchBox.textContent.trim().length) {
             searchBox.textContent = '';
-            searchBox.style.color = '#000'; // Normal text color
+            searchBox.style.color = 'black'; // Normal text color on focus
         }
     });
 
     searchBox.addEventListener('blur', function() {
-        if (!searchBox.textContent.trim()) {
+        if (!searchBox.textContent.trim().length) {
             searchBox.textContent = 'Search...';
             searchBox.style.color = '#ccc'; // Placeholder text color
         }
     });
+
+    // Set initial placeholder if empty
+    if (!searchBox.textContent.trim().length) {
+        searchBox.textContent = 'Search...';
+        searchBox.style.color = '#ccc';
+    }
 });
+
     
     const searchButton = document.getElementById('searchButton');
     const dropbtn = document.querySelector('.dropdown-menu .dropbtn');
