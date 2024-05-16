@@ -89,41 +89,50 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+document.addEventListener('DOMContentLoaded', function() {
     const searchBox = document.getElementById('searchBox');
-    const placeholderText = searchBox.getAttribute('data-placeholder'); // Get the placeholder text from the data attribute
+    const placeholderText = 'Search...'; // Define your placeholder text here
+    const dropdownItems = document.querySelectorAll('.dropdown-link');
 
-    // Initialize with placeholder if empty
+    function handlePlaceholder() {
+        if (searchBox.textContent.trim() === '' || searchBox.textContent === placeholderText) {
+            searchBox.textContent = placeholderText;
+            searchBox.style.color = '#aaa'; // Light grey color for placeholder
+            searchBox.classList.add('placeholder'); // Add a class if needed for specific styles
+        }
+    }
+
     if (!searchBox.textContent.trim()) {
-        searchBox.textContent = placeholderText;
-        searchBox.style.color = '#aaa'; // Placeholder text color
+        handlePlaceholder();
     }
 
     searchBox.addEventListener('focus', function() {
         if (searchBox.textContent === placeholderText) {
             searchBox.textContent = '';
-            searchBox.style.color = '#000'; // Normal text color when focused
+            searchBox.style.color = '#000'; // Default text color
+            searchBox.classList.remove('placeholder');
         }
     });
 
     searchBox.addEventListener('blur', function() {
-        if (!searchBox.textContent.trim()) {
-            searchBox.textContent = placeholderText;
-            searchBox.style.color = '#aaa'; // Placeholder text color when not focused
-        }
+        handlePlaceholder();
     });
 
     searchBox.addEventListener('input', function() {
-        const filter = searchBox.textContent.toLowerCase();
-        const dropdownItems = document.querySelectorAll('.dropdown-link');
+        const filter = searchBox.textContent.toLowerCase().trim();
+        if (filter === placeholderText.toLowerCase()) {
+            return; // Avoid filtering if only the placeholder text is present
+        }
         dropdownItems.forEach(function(item) {
             const text = item.textContent.toLowerCase();
-            if (text.includes(filter)) {
+            if (text.includes(filter) || filter === '') {
                 item.style.display = ''; // Show item
             } else {
                 item.style.display = 'none'; // Hide item
             }
         });
     });
+});
     
     const searchButton = document.getElementById('searchButton');
     const dropbtn = document.querySelector('.dropdown-menu .dropbtn');
