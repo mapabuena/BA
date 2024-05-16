@@ -91,39 +91,47 @@ document.addEventListener('DOMContentLoaded', function() {
 
 document.addEventListener('DOMContentLoaded', function() {
     const searchBox = document.getElementById('searchBox');
-    searchBox.setAttribute('data-placeholder', 'Search...'); // Set the placeholder attribute if not done in HTML
-    const dropdownLinks = document.querySelectorAll('.dropdown-list .dropdown-link');
+    const dropdownLinks = document.querySelectorAll('.dropdown-list .dropdown-link'); // Ensure class names match your HTML structure.
 
+    // Function to manage placeholder text behavior
+    function updatePlaceholder() {
+        if (!searchBox.textContent.trim() && !searchBox.contains(document.activeElement)) {
+            searchBox.textContent = 'Search...'; // Set placeholder text
+            searchBox.style.color = '#ccc'; // Set placeholder text color
+        }
+    }
+
+    // Clear placeholder on focus
+    searchBox.addEventListener('focus', function() {
+        if (searchBox.textContent === 'Search...') {
+            searchBox.textContent = '';
+            searchBox.style.color = 'black'; // Reset text color to default
+        }
+    });
+
+    // Reset placeholder on blur
+    searchBox.addEventListener('blur', function() {
+        updatePlaceholder();
+    });
+
+    // Handling input for search and filtering
     searchBox.addEventListener('input', function() {
-        let filter = searchBox.textContent.toLowerCase().trim();
-        dropdownLinks.forEach(function(link) {
-            if (link.textContent.toLowerCase().includes(filter)) {
-                link.style.display = ''; // Show matching item
-            } else {
-                link.style.display = 'none'; // Hide non-matching item
-            }
+        if (searchBox.textContent.trim()) {
+            searchBox.style.color = 'black'; // Set text color for input
+        } else {
+            updatePlaceholder();
+        }
+
+        // Filtering function
+        const filter = searchBox.textContent.trim().toLowerCase();
+        dropdownLinks.forEach(link => {
+            const text = link.textContent.toLowerCase();
+            link.style.display = text.includes(filter) ? '' : 'none';
         });
     });
 
-    searchBox.addEventListener('focus', function() {
-        if (searchBox.textContent.trim() === 'Search...' || !searchBox.textContent.trim().length) {
-            searchBox.textContent = '';
-            searchBox.style.color = 'black'; // Normal text color on focus
-        }
-    });
-
-    searchBox.addEventListener('blur', function() {
-        if (!searchBox.textContent.trim().length) {
-            searchBox.textContent = 'Search...';
-            searchBox.style.color = '#ccc'; // Placeholder text color
-        }
-    });
-
-    // Set initial placeholder if empty
-    if (!searchBox.textContent.trim().length) {
-        searchBox.textContent = 'Search...';
-        searchBox.style.color = '#ccc';
-    }
+    // Initial check to set placeholder if necessary
+    updatePlaceholder();
 });
 
     
