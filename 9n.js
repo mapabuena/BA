@@ -88,6 +88,43 @@ document.addEventListener('DOMContentLoaded', function() {
             startDateInput.value = endDateInput.value;
         }
     });
+
+    const searchBox = document.getElementById('searchBox');
+    const placeholderText = searchBox.getAttribute('data-placeholder'); // Get the placeholder text from the data attribute
+
+    // Initialize with placeholder if empty
+    if (!searchBox.textContent.trim()) {
+        searchBox.textContent = placeholderText;
+        searchBox.style.color = '#aaa'; // Placeholder text color
+    }
+
+    searchBox.addEventListener('focus', function() {
+        if (searchBox.textContent === placeholderText) {
+            searchBox.textContent = '';
+            searchBox.style.color = '#000'; // Normal text color when focused
+        }
+    });
+
+    searchBox.addEventListener('blur', function() {
+        if (!searchBox.textContent.trim()) {
+            searchBox.textContent = placeholderText;
+            searchBox.style.color = '#aaa'; // Placeholder text color when not focused
+        }
+    });
+
+    searchBox.addEventListener('input', function() {
+        const filter = searchBox.textContent.toLowerCase();
+        const dropdownItems = document.querySelectorAll('.dropdown-link');
+        dropdownItems.forEach(function(item) {
+            const text = item.textContent.toLowerCase();
+            if (text.includes(filter)) {
+                item.style.display = ''; // Show item
+            } else {
+                item.style.display = 'none'; // Hide item
+            }
+        });
+    });
+    
     const searchButton = document.getElementById('searchButton');
     const dropbtn = document.querySelector('.dropdown-menu .dropbtn');
     const dropdownContent = document.querySelector('.dropdown-content');
