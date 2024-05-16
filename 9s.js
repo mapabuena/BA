@@ -94,27 +94,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const dropdownItems = document.querySelectorAll('.dropdown-link');
     const placeholderText = 'Search...';
 
-    // Update or remove placeholder based on content
     function managePlaceholder() {
         if (!searchBox.textContent.trim() && !searchBox.isFocused) {
             searchBox.textContent = placeholderText;
             searchBox.classList.add('placeholder');
-        } else if (searchBox.textContent === placeholderText && searchBox.isFocused) {
-            searchBox.textContent = '';
-            searchBox.classList.remove('placeholder');
+            searchBox.style.color = '#ccc'; // Placeholder text color
         }
     }
-
-    // Initial placeholder setup
-    managePlaceholder();
 
     searchBox.addEventListener('focus', function() {
         searchBox.isFocused = true;
         if (searchBox.textContent === placeholderText) {
             searchBox.textContent = '';
             searchBox.classList.remove('placeholder');
+            searchBox.style.color = '#000'; // Normal text color
         }
-        searchBox.style.color = '#000'; // Ensure text color changes
     });
 
     searchBox.addEventListener('blur', function() {
@@ -124,17 +118,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
     searchBox.addEventListener('input', function() {
         const filter = searchBox.textContent.trim().toLowerCase();
+        if (!filter) {
+            managePlaceholder();
+        }
         dropdownItems.forEach(function(item) {
-            if (item.textContent.toLowerCase().includes(filter)) {
+            if (item.textContent.toLowerCase().includes(filter) || !filter) {
                 item.style.display = '';
             } else {
                 item.style.display = 'none';
             }
         });
-        if (searchBox.textContent.trim() === '') {
-            managePlaceholder();
-        }
     });
+
+    // Ensure initial placeholder state is set correctly
+    managePlaceholder();
 });
     
     const searchButton = document.getElementById('searchButton');
