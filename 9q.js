@@ -90,40 +90,48 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 document.addEventListener('DOMContentLoaded', function() {
-    const searchBox = document.getElementById('searchBox');  // Ensure this is your contenteditable div
-    const dropdownItems = document.querySelectorAll('.dropdown-link');  // Selecting dropdown links
+    const searchBox = document.getElementById('searchBox');
+    const dropdownItems = document.querySelectorAll('.dropdown-link');
+    const placeholderText = 'Search...';
 
-    searchBox.addEventListener('input', function() {
-        const filter = searchBox.textContent.toLowerCase().trim();  // Use textContent for contenteditable
-        dropdownItems.forEach(function(item) {
-            if (item.textContent.toLowerCase().includes(filter)) {
-                item.style.display = '';  // Show matching item
-            } else {
-                item.style.display = 'none';  // Hide non-matching item
-            }
-        });
-    });
-
-    // Placeholder handling
-    const placeholderText = 'Search...';  // Placeholder text
-    // Initialize placeholder
-    if (!searchBox.textContent.trim()) {
-        searchBox.textContent = placeholderText;
-        searchBox.style.color = '#ccc';  // Placeholder text color
+    // Function to set or remove placeholder
+    function updatePlaceholder() {
+        if (!searchBox.textContent.trim() && !searchBox.isFocused) {
+            searchBox.textContent = placeholderText;
+            searchBox.classList.add('placeholder');  // Use a class to style the placeholder
+        } else if (searchBox.textContent === placeholderText) {
+            searchBox.textContent = '';
+            searchBox.classList.remove('placeholder');
+        }
     }
 
+    // Initial check
+    updatePlaceholder();
+
     searchBox.addEventListener('focus', function() {
+        searchBox.isFocused = true;  // Custom property to track focus
         if (searchBox.textContent === placeholderText) {
             searchBox.textContent = '';
-            searchBox.style.color = '#000';  // Normal text color
+            searchBox.classList.remove('placeholder');
         }
+        searchBox.style.color = '#000';  // Normal text color
     });
 
     searchBox.addEventListener('blur', function() {
-        if (!searchBox.textContent.trim()) {
-            searchBox.textContent = placeholderText;
-            searchBox.style.color = '#ccc';  // Placeholder text color
-        }
+        searchBox.isFocused = false;
+        updatePlaceholder();
+    });
+
+    searchBox.addEventListener('input', function() {
+        const filter = searchBox.textContent.trim().toLowerCase();
+        dropdownItems.forEach(function(item) {
+            const text = item.textContent.toLowerCase();
+            if (text.includes(filter) || !filter) {
+                item.style.display = '';
+            } else {
+                item.style.display = 'none';
+            }
+        });
     });
 });
     
