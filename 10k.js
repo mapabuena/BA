@@ -115,29 +115,8 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   });
-
-  // Managing placeholder if using contenteditable div
-  if (!searchBar.textContent.trim() && searchBar.getAttribute('data-placeholder')) {
-    searchBar.style.color = '#ccc'; // Placeholder text color
-    searchBar.textContent = searchBar.getAttribute('data-placeholder'); // Set placeholder text
-  }
-
-  searchBar.addEventListener('focus', function() {
-    if (searchBar.textContent === searchBar.getAttribute('data-placeholder')) {
-      searchBar.textContent = '';
-      searchBar.style.color = '#000'; // Normal text color
-    }
-  });
-
-  searchBar.addEventListener('blur', function() {
-    if (!searchBar.textContent.trim()) {
-      searchBar.textContent = searchBar.getAttribute('data-placeholder');
-      searchBar.style.color = '#ccc'; // Reset placeholder text color
-    }
-  });
 });
-                                            
-  
+                                    
     const searchButton = document.getElementById('searchButton');
     const dropbtn = document.querySelector('.dropdown-menu .dropbtn');
     const dropdownContent = document.querySelector('.dropdown-content');
