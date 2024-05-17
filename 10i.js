@@ -91,18 +91,13 @@ document.addEventListener('DOMContentLoaded', function() {
 //list of trees
 document.addEventListener('DOMContentLoaded', function() {
   const searchBar = document.getElementById('search-input'); // Ensure this is the correct ID for your input field
-  if (!searchBar) {
-    console.error('searchBar element not found');
-    return;
-  }
+console.log('searchBar:', searchBar);
   
   const list = document.getElementById('search-list'); // Ensure this is the correct ID for your list container
-  if (!list) {
-    console.error('list element not found');
-    return;
-  }
+console.log('list:', list);
 
   searchBar.addEventListener('keyup', function(e){
+        console.log('Keyup event triggered');
     const term = e.target.value.toLowerCase();
     console.log('Search term:', term);
 
