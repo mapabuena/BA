@@ -143,6 +143,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 toggleGroup(this.getAttribute('data-category'));
             });
         });
+      });
     }
 
 // Function to apply date filter based on selected range
@@ -164,7 +165,6 @@ function applyDateFilter() {
 document.addEventListener('DOMContentLoaded', function() {
     const startDateInput = document.getElementById('startDateTime');
     const endDateInput = document.getElementById('endDateTime');
-
     if (!startDateInput || !endDateInput) {
         console.error("Date inputs are not found on the page.");
         return; // Exit if inputs are not found
