@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 //list of trees
-  const list - document.querySelector('#search-list');
+  const list = document.querySelector('#search-list');
   // Filter trees
   const searchBar = document.querySelector('#search-input');
 
