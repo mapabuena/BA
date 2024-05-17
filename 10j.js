@@ -90,40 +90,50 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 //list of trees
 document.addEventListener('DOMContentLoaded', function() {
-  const searchBar = document.getElementById('search-input'); // Ensure this is the correct ID for your input field
-console.log('searchBar:', searchBar);
-  
-  const list = document.getElementById('search-list'); // Ensure this is the correct ID for your list container
-console.log('list:', list);
+  const searchBar = document.getElementById('search-input'); // Ensure this ID matches your search input
+  if (!searchBar) {
+    console.error('Search input not found');
+    return;
+  }
 
-  searchBar.addEventListener('keyup', function(e){
-        console.log('Keyup event triggered');
+  const list = document.getElementById('search-list'); // Ensure this ID matches your list container
+  if (!list) {
+    console.error('List container not found');
+    return;
+  }
+
+  searchBar.addEventListener('keyup', function(e) {
     const term = e.target.value.toLowerCase();
-    console.log('Search term:', term);
+    const searchObjects = list.getElementsByClassName('search-object'); // Targeting 'search-object'
 
-    const searchItems = list.getElementsByClassName('search-cities');
-    console.log('Number of items:', searchItems.length);
-
-    Array.from(searchItems).forEach(function(item, index){
-      // Check if the item has a first child and if it has text content
-      const textElement = item.firstElementChild;
-      if (!textElement) {
-        console.error('No first child element for item index', index);
-        return;
-      }
-
-      const text = textElement.textContent;
-      console.log(`Item ${index} text:`, text);
-
-      if(text.toLowerCase().includes(term)){
-        item.style.display = 'block'; // Show matching item
-        console.log(`Item ${index} shown`);
-      }
-      else {
-        item.style.display = 'none'; // Hide non-matching item
-        console.log(`Item ${index} hidden`);
+    Array.from(searchObjects).forEach(function(obj) {
+      const city = obj.getElementsByClassName('search-cities')[0]; // Assuming there's a single 'search-cities' per 'search-object'
+      if (city && city.textContent.toLowerCase().includes(term)) {
+        obj.style.display = ''; // Show matching object
+      } else {
+        obj.style.display = 'none'; // Hide non-matching object
       }
     });
+  });
+
+  // Managing placeholder if using contenteditable div
+  if (!searchBar.textContent.trim() && searchBar.getAttribute('data-placeholder')) {
+    searchBar.style.color = '#ccc'; // Placeholder text color
+    searchBar.textContent = searchBar.getAttribute('data-placeholder'); // Set placeholder text
+  }
+
+  searchBar.addEventListener('focus', function() {
+    if (searchBar.textContent === searchBar.getAttribute('data-placeholder')) {
+      searchBar.textContent = '';
+      searchBar.style.color = '#000'; // Normal text color
+    }
+  });
+
+  searchBar.addEventListener('blur', function() {
+    if (!searchBar.textContent.trim()) {
+      searchBar.textContent = searchBar.getAttribute('data-placeholder');
+      searchBar.style.color = '#ccc'; // Reset placeholder text color
+    }
   });
 });
                                             
