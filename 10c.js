@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchItems = list.getElementsByClassName('search-item w-dyn-item');
     Array.from(searchItems).forEach(function(item){
       const text = items.firstElementChild.textContent;
-      if(text.toLowerCase().indexOf(term)!=-1{
+      if(text.toLowerCase().indexOf(term)!=-1){
         item.style.display = 'block';
       }
       else {
