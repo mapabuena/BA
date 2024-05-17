@@ -89,9 +89,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
   const searchBar = document.getElementById('search-input');
-  const list = document.getElementById('search-list');
-
-  const searchBar = document.getElementById('search-input');
   const searchList = document.getElementById('search-list').getElementsByTagName('span');
 
   searchBar.addEventListener('input', function() {
