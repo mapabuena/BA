@@ -100,7 +100,6 @@ const searchBar = document.getElementById('search-inputs');  // Make sure this I
     return;
   }
     });
-  });
 });
                                     
     const searchButton = document.getElementById('searchButton');
