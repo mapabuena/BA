@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const term = e.target.value.toLowerCase();
     const searchItems = list.getElementsByClassName('search-cities');
     Array.from(searchItems).forEach(function(item){
-      const text = items.firstElementChild.textContent;
+      const text = item.firstElementChild.textContent;
       if(text.toLowerCase().indexOf(term)!=-1){
         item.style.display = 'block';
       }
