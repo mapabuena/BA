@@ -87,28 +87,17 @@ document.addEventListener('DOMContentLoaded', function() {
         if (startDateInput.value && endDateInput.value < startDateInput.value) {
             startDateInput.value = endDateInput.value;
         }
-    });
-//list of trees
-document.addEventListener('DOMContentLoaded', function() {
-  const searchBar = document.getElementById('search-input'); // Ensure this ID matches your search input
-  if (!searchBar) {
-    console.error('Search input not found');
-    return;
-  }
 
-  const list = document.getElementById('search-list'); // Ensure this ID matches your list container
-  if (!list) {
-    console.error('List container not found');
-    return;
-  }
+  const searchBar = document.getElementById('search-input');
+  const list = document.getElementById('search-list');
 
   searchBar.addEventListener('keyup', function(e) {
     const term = e.target.value.toLowerCase();
-    const searchObjects = list.getElementsByClassName('search-object'); // Targeting 'search-object'
+    const searchObjects = list.getElementsByClassName('search-object'); // Accessing all .search-object within #search-list
 
     Array.from(searchObjects).forEach(function(obj) {
-      const city = obj.getElementsByClassName('search-cities')[0]; // Assuming there's a single 'search-cities' per 'search-object'
-      if (city && city.textContent.toLowerCase().includes(term)) {
+      const city = obj.getElementsByClassName('search-cities')[0]; // Target the first .search-cities within each .search-object
+      if (city.textContent.toLowerCase().includes(term)) {
         obj.style.display = ''; // Show matching object
       } else {
         obj.style.display = 'none'; // Hide non-matching object
