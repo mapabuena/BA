@@ -195,7 +195,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (startDateInput.value && endDateInput.value < startDateInput.value) {
             endDateInput.value = startDateInput.value; // Correct this line to maintain logical consistency
         }
-    });
+    }
 });
 
 
