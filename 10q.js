@@ -88,18 +88,19 @@ document.addEventListener('DOMContentLoaded', function() {
             startDateInput.value = endDateInput.value;
         }
 
-  const searchBar = document.getElementById('search-input');
-  const searchList = document.getElementById('search-list').getElementsByTagName('span');
+   const searchBar = document.getElementById('search-inputs');  // Now using the new ID for the search input
+  const searchItems = document.getElementById('search-list').children;  // Access all direct children divs of 'search-list'
 
   searchBar.addEventListener('input', function() {
     const term = searchBar.value.toLowerCase();
 
-    Array.from(searchList).forEach(function(item) {
-      // Assuming each item is a span with an id like "city1", "city2", etc.
-      if (item.textContent.toLowerCase().includes(term)) {
-        item.parentNode.style.display = ''; // Show the parent div of the matching span
+    Array.from(searchItems).forEach(function(item) {
+      // Assuming each child div contains one text element with a unique ID
+      const textContent = item.textContent || item.innerText;  // Get text content from each div
+      if (textContent.toLowerCase().includes(term)) {
+        item.style.display = ''; // Show the matching div
       } else {
-        item.parentNode.style.display = 'none'; // Hide the parent div of the non-matching span
+        item.style.display = 'none'; // Hide the non-matching div
       }
     });
   });
