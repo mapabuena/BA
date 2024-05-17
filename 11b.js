@@ -37,37 +37,32 @@ document.getElementById('browse-map').addEventListener('click', function() {
 document.addEventListener('DOMContentLoaded', function() {
     const startDateInput = document.getElementById('startDateTime');
     const endDateInput = document.getElementById('endDateTime');
-    var startDatePicker;
-    var endDatePicker;
-
     if (!startDateInput || !endDateInput) {
         console.error("Date inputs are not found on the page.");
-        return; // Exit if inputs are not found
+        return;
     }
 
-    startDatePicker = flatpickr(startDateInput, {
+    var startDatePicker = flatpickr(startDateInput, {
         enableTime: true,
         dateFormat: "Y-m-d H:i",
-        altInput: true,           // Enable alternative input
-        altFormat: "F j H:i",     // Human-friendly format
-        onChange: function(selectedDates, dateStr, instance) {
+        altInput: true,
+        altFormat: "F j, H:i",
+        onChange: function(selectedDates, dateStr) {
             endDatePicker.set('minDate', dateStr);
-            // Adjust endDate if it is before the new startDate
-            if (endDatePicker.selectedDates[0] && endDatePicker.selectedDates[0] < selectedDates[0]) {
+            if (endDatePicker.selectedDates[0] < selectedDates[0]) {
                 endDatePicker.setDate(selectedDates[0]);
             }
         }
     });
 
-    endDatePicker = flatpickr(endDateInput, {
+    var endDatePicker = flatpickr(endDateInput, {
         enableTime: true,
         dateFormat: "Y-m-d H:i",
-        altInput: true,           // Enable alternative input
-        altFormat: "F j H:i",     // Human-friendly format
-        onChange: function(selectedDates, dateStr, instance) {
+        altInput: true,
+        altFormat: "F j, H:i",
+        onChange: function(selectedDates, dateStr) {
             startDatePicker.set('maxDate', dateStr);
-            // Adjust startDate if it is after the new endDate
-            if (startDatePicker.selectedDates[0] && startDatePicker.selectedDates[0] > selectedDates[0]) {
+            if (startDatePicker.selectedDates[0] > selectedDates[0]) {
                 startDatePicker.setDate(selectedDates[0]);
             }
         }
@@ -75,39 +70,38 @@ document.addEventListener('DOMContentLoaded', function() {
 
     startDateInput.addEventListener('change', function() {
         endDatePicker.set('minDate', startDateInput.value);
-        // Ensure the end date does not exceed an already set start date
-        if (endDateInput.value && startDateInput.value > endDateInput.value) {
+        if (endDateInput.value < startDateInput.value) {
             endDateInput.value = startDateInput.value;
         }
     });
 
     endDateInput.addEventListener('change', function() {
         startDatePicker.set('maxDate', endDateInput.value);
-        // Ensure the start date does not exceed an already set end date
-        if (startDateInput.value && endDateInput.value < startDateInput.value) {
+        if (startDateInput.value > endDateInput.value) {
             startDateInput.value = endDateInput.value;
         }
-          const form = document.getElementById('search-inputs'); // Adjust if necessary to match your form ID
+    });
+
+    const form = document.getElementById('search-inputs'); // Ensure this matches your form ID
     form.addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevent form submission
+        event.preventDefault();
         const list = document.getElementById('search-list');
         const firstVisibleDiv = Array.from(list.children)
-            .find(div => div.style.display !== 'none' && div.style.display !== '');
-
+            .find(div => div.style.display !== 'none');
         if (firstVisibleDiv) {
-            // Assuming each div contains a clickable element, like a link
             const clickableElement = firstVisibleDiv.querySelector('a');
             if (clickableElement) {
-                clickableElement.click(); // Simulate click on the link
+                clickableElement.click();
             }
         }
     });
+
     const searchButton = document.getElementById('searchButton');
     const dropbtn = document.querySelector('.dropdown-menu .dropbtn');
     const dropdownContent = document.querySelector('.dropdown-content');
     const closeButton = document.querySelector('.dropdown-content .close-btn');
     const checkboxes = document.querySelectorAll('.dropdown-content input[type="checkbox"]');
-
+    
     if (!searchButton || !dropbtn || !dropdownContent || !closeButton) {
         console.error('One or more essential elements are missing.');
         console.error({
@@ -143,7 +137,8 @@ document.addEventListener('DOMContentLoaded', function() {
             toggleGroup(this.getAttribute('data-category'));
         });
     });
-});
+
+});    
 
 // Function to apply date filter based on selected range
 function applyDateFilter() {
