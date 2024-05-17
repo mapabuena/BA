@@ -91,24 +91,46 @@ document.addEventListener('DOMContentLoaded', function() {
 //list of trees
 document.addEventListener('DOMContentLoaded', function() {
   const searchBar = document.getElementById('search-input'); // Ensure this is the correct ID for your input field
+  if (!searchBar) {
+    console.error('searchBar element not found');
+    return;
+  }
+  
   const list = document.getElementById('search-list'); // Ensure this is the correct ID for your list container
+  if (!list) {
+    console.error('list element not found');
+    return;
+  }
 
   searchBar.addEventListener('keyup', function(e){
     const term = e.target.value.toLowerCase();
-    const searchItems = list.getElementsByClassName('search-cities');
+    console.log('Search term:', term);
 
-    Array.from(searchItems).forEach(function(item){
+    const searchItems = list.getElementsByClassName('search-cities');
+    console.log('Number of items:', searchItems.length);
+
+    Array.from(searchItems).forEach(function(item, index){
       // Check if the item has a first child and if it has text content
-      const text = item.firstElementChild ? item.firstElementChild.textContent : "";
-      
-      if(text.toLowerCase().indexOf(term) !== -1){
+      const textElement = item.firstElementChild;
+      if (!textElement) {
+        console.error('No first child element for item index', index);
+        return;
+      }
+
+      const text = textElement.textContent;
+      console.log(`Item ${index} text:`, text);
+
+      if(text.toLowerCase().includes(term)){
         item.style.display = 'block'; // Show matching item
+        console.log(`Item ${index} shown`);
       }
       else {
         item.style.display = 'none'; // Hide non-matching item
+        console.log(`Item ${index} hidden`);
       }
     });
   });
+});
 });
                                             
   
