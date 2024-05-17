@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
     Array.from(searchObjects).forEach(function(obj) {
       const city = obj.getElementsByClassName('search-cities')[0]; // Target the first .search-cities within each .search-object
       if (city.textContent.toLowerCase().includes(term)) {
-        obj.style.display = ''; // Show matching object
+        obj.style.display = 'block'; // Show matching object
       } else {
         obj.style.display = 'none'; // Hide non-matching object
       }
