@@ -102,6 +102,7 @@ const searchBar = document.getElementById('search-inputs');  // Make sure this I
     });
 });
                                     
+document.addEventListener('DOMContentLoaded', function() {
     const searchButton = document.getElementById('searchButton');
     const dropbtn = document.querySelector('.dropdown-menu .dropbtn');
     const dropdownContent = document.querySelector('.dropdown-content');
@@ -116,34 +117,33 @@ const searchBar = document.getElementById('search-inputs');  // Make sure this I
             dropdownContent: !!dropdownContent,
             closeButton: !!closeButton
         });
-        return;
-    }
-
-    searchButton.addEventListener('click', applyDateFilter);
-
-    dropbtn.addEventListener('click', function(event) {
-        dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
-        event.stopPropagation();
-    });
-
-    closeButton.addEventListener('click', function(event) {
-        dropdownContent.style.display = 'none';
-        event.stopPropagation();
-    });
-
-    document.addEventListener('click', function(event) {
-        if (!dropdownContent.contains(event.target) && !dropbtn.contains(event.target)) {
-            dropdownContent.style.display = 'none';
-        }
-    });
-
-    checkboxes.forEach(checkbox => {
-        checkbox.checked = true;
-        checkbox.addEventListener('change', function() {
-            toggleGroup(this.getAttribute('data-category'));
+    } else {
+        searchButton.addEventListener('click', function() {
+            applyDateFilter(); // Ensure this function is defined to handle the filter logic
         });
-    });
-});
+
+        dropbtn.addEventListener('click', function(event) {
+            dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
+            event.stopPropagation();
+        });
+
+        closeButton.addEventListener('click', function(event) {
+            dropdownContent.style.display = 'none';
+            event.stopPropagation();
+        });
+
+        document.addEventListener('click', function(event) {
+            if (!dropdownContent.contains(event.target) && !dropbtn.contains(event.target)) {
+                dropdownContent.style.display = 'none';
+            }
+        });
+
+        checkboxes.forEach(function(checkbox) {
+            checkbox.addEventListener('change', function() {
+                toggleGroup(this.getAttribute('data-category'));
+            });
+        });
+    }
 
 // Function to apply date filter based on selected range
 function applyDateFilter() {
