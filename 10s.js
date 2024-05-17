@@ -99,25 +99,6 @@ const searchBar = document.getElementById('search-inputs');  // Make sure this I
     console.error('Search list container not found!');
     return;
   }
-
-  const searchItems = listContainer.children;  // This will get all child divs directly under the list container
-  console.log(`Total items loaded: ${searchItems.length}`);
-
-  searchBar.addEventListener('input', function() {
-    const term = searchBar.value.trim().toLowerCase();
-    console.log(`Search term: ${term}`);
-
-    Array.from(searchItems).forEach(function(item) {
-      const textContent = item.textContent || item.innerText;  // Gets the text content of the child div
-      console.log(`Checking item: ${textContent}`);
-
-      if (textContent.toLowerCase().includes(term)) {
-        item.style.display = 'block'; // Ensure this is the correct display style for your layout
-        console.log(`Item shown: ${textContent}`);
-      } else {
-        item.style.display = 'none'; // Hide the non-matching item
-        console.log(`Item hidden: ${textContent}`);
-      }
     });
   });
 });
