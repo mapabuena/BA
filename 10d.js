@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   searchBar.addEventListener('keyup', function(e){
     const term = e.target.value.toLowerCase();
-    const searchItems = list.getElementsByClassName('search-item w-dyn-item');
+    const searchItems = list.getElementsByClassName('search-cities');
     Array.from(searchItems).forEach(function(item){
       const text = items.firstElementChild.textContent;
       if(text.toLowerCase().indexOf(term)!=-1){
