@@ -89,23 +89,27 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 //list of trees
-  const list = document.querySelector('#search-list');
-  // Filter trees
-  const searchBar = document.querySelector('#search-input');
+document.addEventListener('DOMContentLoaded', function() {
+  const searchBar = document.getElementById('search-input'); // Ensure this is the correct ID for your input field
+  const list = document.getElementById('search-list'); // Ensure this is the correct ID for your list container
 
   searchBar.addEventListener('keyup', function(e){
     const term = e.target.value.toLowerCase();
     const searchItems = list.getElementsByClassName('search-cities');
+
     Array.from(searchItems).forEach(function(item){
-      const text = item.firstElementChild.textContent;
-      if(text.toLowerCase().indexOf(term)!=-1){
-        item.style.display = 'block';
+      // Check if the item has a first child and if it has text content
+      const text = item.firstElementChild ? item.firstElementChild.textContent : "";
+      
+      if(text.toLowerCase().indexOf(term) !== -1){
+        item.style.display = 'block'; // Show matching item
       }
       else {
-        item.style.display = 'block';
+        item.style.display = 'none'; // Hide non-matching item
       }
-    })
-  })
+    });
+  });
+});
                                             
   
     const searchButton = document.getElementById('searchButton');
