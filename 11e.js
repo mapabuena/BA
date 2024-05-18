@@ -610,7 +610,7 @@ function loadCSV(csvFile, centerLat, centerLng) {
             // Recenter the map
             map.flyTo({
                 center: [centerLng, centerLat],
-                zoom: 13, // Adjust the zoom level as needed
+                zoom: 6, // Adjust the zoom level as needed
                 essential: true // This ensures the transition is performed smoothly
             });
         })
