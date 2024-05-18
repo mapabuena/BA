@@ -3,7 +3,7 @@ let map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/n31ld/clt4onrza001401pcc1j9he1u',
     center: [-58.42, -34.58],
-    zoom: 13
+    zoom: 10
 });
 
 let markers = [];
@@ -610,7 +610,7 @@ function loadCSV(csvFile, centerLat, centerLng) {
             // Recenter the map
             map.flyTo({
                 center: [centerLng, centerLat],
-                zoom: 6, // Adjust the zoom level as needed
+                zoom: 10, // Adjust the zoom level as needed
                 essential: true // This ensures the transition is performed smoothly
             });
         })
