@@ -82,14 +82,24 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-document.querySelectorAll('.cityButton').forEach(button => {
+document.addEventListener('DOMContentLoaded', function() {
+    const cityButtons = document.querySelectorAll('.cityButton');
+    console.log(cityButtons); // This should log the NodeList of elements
+
+    if (cityButtons.length === 0) {
+        console.error('No city buttons found.');
+        return;
+    }
+
+    cityButtons.forEach(button => {
+        console.log('Adding event listener to:', button);
         button.addEventListener('click', function() {
+            console.log('Button clicked:', this);
             const csvUrl = this.getAttribute('data-csv');
             const lat = parseFloat(this.getAttribute('data-lat'));
             const lng = parseFloat(this.getAttribute('data-lng'));
             loadCSV(csvUrl, lat, lng);
 
-            // Assuming there is an element to display the selected city name
             const cityNameDisplay = document.getElementById('currentCity');
             if (cityNameDisplay) {
                 cityNameDisplay.textContent = this.querySelector('.cityName').textContent;
