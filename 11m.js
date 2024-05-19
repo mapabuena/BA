@@ -91,23 +91,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
-    document.body.addEventListener('click', function(event) {
-        if (event.target.classList.contains('cityButton')) {
-            console.log('City button clicked:', event.target);
-            const csvUrl = event.target.getAttribute('data-csv');
-            const lat = parseFloat(event.target.getAttribute('data-lat'));
-            const lng = parseFloat(event.target.getAttribute('data-lng'));
-            loadCSV(csvUrl, lat, lng);
-
-            const cityNameDisplay = document.getElementById('currentCity');
-            if (cityNameDisplay) {
-                cityNameDisplay.textContent = event.target.querySelector('.cityName').textContent;
-            }
-        }
-    });
-});
-    
+  
     const form = document.getElementById('search-inputs'); // Ensure this matches your form ID
     form.addEventListener('submit', function(event) {
         event.preventDefault();
@@ -623,3 +607,20 @@ function clearMarkers() {
     markers.forEach(marker => marker.marker.remove());
     markers = [];
 }
+
+        document.addEventListener('DOMContentLoaded', function() {
+    document.body.addEventListener('click', function(event) {
+        if (event.target.classList.contains('cityButton')) {
+            console.log('City button clicked:', event.target);
+            const csvUrl = event.target.getAttribute('data-csv');
+            const lat = parseFloat(event.target.getAttribute('data-lat'));
+            const lng = parseFloat(event.target.getAttribute('data-lng'));
+            loadCSV(csvUrl, lat, lng);
+
+            const cityNameDisplay = document.getElementById('currentCity');
+            if (cityNameDisplay) {
+                cityNameDisplay.textContent = event.target.querySelector('.cityName').textContent;
+            }
+        }
+    });
+});
