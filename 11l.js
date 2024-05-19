@@ -91,6 +91,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
 
+    document.addEventListener('DOMContentLoaded', function() {
     document.body.addEventListener('click', function(event) {
         if (event.target.classList.contains('cityButton')) {
             console.log('City button clicked:', event.target);
@@ -105,6 +106,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
+});
     
     const form = document.getElementById('search-inputs'); // Ensure this matches your form ID
     form.addEventListener('submit', function(event) {
