@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-      
+ });  
     const form = document.getElementById('search-inputs'); // Ensure this matches your form ID
     form.addEventListener('submit', function(event) {
         event.preventDefault();
