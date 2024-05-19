@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 document.addEventListener('DOMContentLoaded', function() {
     const citybuttons = document.querySelectorAll('.citybutton');
-    console.log(cityb    uttons); // This should log the NodeList of elements
+    console.log(citybuttons); // This should log the NodeList of elements
 
     if (citybuttons.length === 0) {
         console.error('No city buttons found.');
