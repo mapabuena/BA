@@ -183,7 +183,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
      });
 });
-
+});
 
 
 // Example for async fetchMarkersData, modify according to your data fetching logic
