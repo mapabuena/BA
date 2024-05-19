@@ -607,19 +607,28 @@ function clearMarkers() {
     markers.forEach(marker => marker.marker.remove());
     markers = [];
 }
-
 document.addEventListener('DOMContentLoaded', function() {
     console.log("DOM fully loaded and parsed");
 
     document.body.addEventListener('click', function(event) {
+        // This function will climb up the DOM tree from the target of the event
+        function findParentWithClass(element, className) {
+            while (element && !element.classList.contains(className)) {
+                element = element.parentElement;
+            }
+            return element;
+        }
+
+        let target = findParentWithClass(event.target, 'cityButton');
+        
         console.log("Click event on body:", event.target);
 
-        if (event.target.classList.contains('cityButton')) {
-            console.log('City button clicked:', event.target);
+        if (target) {
+            console.log('City button clicked:', target);
 
-            const csvUrl = event.target.getAttribute('data-csv');
-            const lat = parseFloat(event.target.getAttribute('data-lat'));
-            const lng = parseFloat(event.target.getAttribute('data-lng'));
+            const csvUrl = target.getAttribute('data-csv');
+            const lat = parseFloat(target.getAttribute('data-lat'));
+            const lng = parseFloat(target.getAttribute('data-lng'));
 
             console.log("CSV URL:", csvUrl, "Latitude:", lat, "Longitude:", lng);
 
@@ -631,7 +640,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const cityNameDisplay = document.getElementById('currentCity');
             if (cityNameDisplay) {
-                cityNameDisplay.textContent = event.target.querySelector('.cityName') ? event.target.querySelector('.cityName').textContent : "City name not found";
+                cityNameDisplay.textContent = target.querySelector('.cityName') ? target.querySelector('.cityName').textContent : "City name not found";
                 console.log("Updated city name display to:", cityNameDisplay.textContent);
             } else {
                 console.error("City name display element not found");
@@ -640,6 +649,9 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log("Clicked element is not a city button");
         }
     });
+
+    console.log("Event listener for city buttons set up");
+});
 
     console.log("Event listener for city buttons set up");
 });
