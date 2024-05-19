@@ -619,7 +619,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return element;
         }
 
-        let target = findParentWithClass(event.target, 'cityButton');
+        let target = findParentWithClass(event.target, 'citybutton');
         
         console.log("Click event on body:", event.target);
 
@@ -638,9 +638,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error("Invalid coordinates provided:", lat, lng);
             }
 
-            const cityNameDisplay = document.getElementById('currentCity');
+            const cityNameDisplay = document.getElementById('currentcity');
             if (cityNameDisplay) {
-                cityNameDisplay.textContent = target.querySelector('.cityName') ? target.querySelector('.cityName').textContent : "City name not found";
+                cityNameDisplay.textContent = target.querySelector('.cityname') ? target.querySelector('.cityname').textContent : "City name not found";
                 console.log("Updated city name display to:", cityNameDisplay.textContent);
             } else {
                 console.error("City name display element not found");
