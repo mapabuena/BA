@@ -653,6 +653,3 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log("Event listener for city buttons set up");
 });
 
-    console.log("Event listener for city buttons set up");
-});
-
