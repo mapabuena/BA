@@ -608,20 +608,39 @@ function clearMarkers() {
     markers = [];
 }
 
-          document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("DOM fully loaded and parsed");
+
     document.body.addEventListener('click', function(event) {
+        console.log("Click event on body:", event.target);
+
         if (event.target.classList.contains('cityButton')) {
             console.log('City button clicked:', event.target);
+
             const csvUrl = event.target.getAttribute('data-csv');
             const lat = parseFloat(event.target.getAttribute('data-lat'));
             const lng = parseFloat(event.target.getAttribute('data-lng'));
-            loadCSV(csvUrl, lat, lng);
+
+            console.log("CSV URL:", csvUrl, "Latitude:", lat, "Longitude:", lng);
+
+            if (!isNaN(lat) && !isNaN(lng)) {
+                loadCSV(csvUrl, lat, lng);
+            } else {
+                console.error("Invalid coordinates provided:", lat, lng);
+            }
 
             const cityNameDisplay = document.getElementById('currentCity');
             if (cityNameDisplay) {
-                cityNameDisplay.textContent = event.target.querySelector('.cityName').textContent;
+                cityNameDisplay.textContent = event.target.querySelector('.cityName') ? event.target.querySelector('.cityName').textContent : "City name not found";
+                console.log("Updated city name display to:", cityNameDisplay.textContent);
+            } else {
+                console.error("City name display element not found");
             }
+        } else {
+            console.log("Clicked element is not a city button");
         }
     });
+
+    console.log("Event listener for city buttons set up");
 });
 
