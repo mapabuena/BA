@@ -122,17 +122,13 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     const searchButton = document.getElementById('searchButton');
-    const dropbtn = document.querySelector('.dropdown-menu .dropbtn');
-    const dropdownContent = document.querySelector('.dropdown-content');
     const closeButton = document.querySelector('.dropdown-content .close-btn');
-    const checkboxes = document.querySelectorAll('.dropdown-content input[type="checkbox"]');
+
     
     if (!searchButton || !dropbtn || !dropdownContent || !closeButton) {
         console.error('One or more essential elements are missing.');
         console.error({
             searchButton: !!searchButton,
-            dropbtn: !!dropbtn,
-            dropdownContent: !!dropdownContent,
             closeButton: !!closeButton
         });
         return;
@@ -140,21 +136,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     searchButton.addEventListener('click', applyDateFilter);
 
-    dropbtn.addEventListener('click', function(event) {
-        dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
-        event.stopPropagation();
-    });
-
-    closeButton.addEventListener('click', function(event) {
-        dropdownContent.style.display = 'none';
-        event.stopPropagation();
-    });
-
-    document.addEventListener('click', function(event) {
-        if (!dropdownContent.contains(event.target) && !dropbtn.contains(event.target)) {
-            dropdownContent.style.display = 'none';
-        }
-    });
 
     checkboxes.forEach(checkbox => {
         checkbox.checked = true;
