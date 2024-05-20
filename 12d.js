@@ -79,7 +79,7 @@ function setupCityButtons() {
             const easingFunction = this.getAttribute('data-easing'); // This would need to be translated from a string to a function if used
 
             loadCSV(csvUrl, lat, lng, zoom, speed, curve, easingFunction);
-            const cityNameDisplay = document.getElementById('currentCity');
+            const cityNameDisplay = document.getElementById('currentcity');
             if (cityNameDisplay) {
                 cityNameDisplay.textContent = this.textContent.trim();
             }
