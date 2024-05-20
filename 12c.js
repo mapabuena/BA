@@ -604,10 +604,10 @@ const easingFunctions = {
     // Less aggressive exponential decay
     ease4: function(t) {
         return 1 - Math.pow(2, -4 * t);
-    }
+    },
     ease2: function(t) {
         return 1 - Math.pow(2, -2 * t);
-    }
+    },
     ease1: function(t) {
         return 1 - Math.pow(2, -1 * t);
     }
