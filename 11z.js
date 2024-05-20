@@ -69,14 +69,18 @@ function setupDatePickers() {
 }
 
 function setupCityButtons() {
-    const cityButtons = document.querySelectorAll('.citybutton');
-    cityButtons.forEach(button => {
+    document.querySelectorAll('.citybutton').forEach(button => {
         button.addEventListener('click', function() {
             const csvUrl = this.getAttribute('data-csv');
             const lat = parseFloat(this.getAttribute('data-lat'));
             const lng = parseFloat(this.getAttribute('data-lng'));
-            loadCSV(csvUrl, lat, lng);
-            const cityNameDisplay = document.getElementById('currentcity');
+            const zoom = parseFloat(this.getAttribute('data-zoom')) || 11; // Default to 11 if not specified
+            const speed = parseFloat(this.getAttribute('data-speed')) || 500; // Default to 500ms if not specified
+            const curve = parseFloat(this.getAttribute('data-curve')) || 1.42; // Default curve
+            const easingFunction = this.getAttribute('data-easing'); // This would need to be translated from a string to a function if used
+
+            loadCSV(csvUrl, lat, lng, zoom, speed, curve, easingFunction);
+            const cityNameDisplay = document.getElementById('currentCity');
             if (cityNameDisplay) {
                 cityNameDisplay.textContent = this.textContent.trim();
             }
@@ -592,26 +596,32 @@ function applyFilters() {
     updateInfoWindowContent(); // Make sure this function is defined and functioning
 }
 
-function loadCSV(csvFile, centerLat, centerLng) {
+// Define easing functions
+const easingFunctions = {
+    // Standard exponential decay (Mapbox default)
+    standard: function(t) {
+        return 1 - Math.pow(2, -10 * t);
+    },
+    // Less aggressive exponential decay
+    lessAggressive: function(t) {
+        return 1 - Math.pow(2, -5 * t);
+    }
+};
+function loadCSV(csvFile, centerLat, centerLng, zoom, speed, curve, easing) {
     fetch(csvFile)
         .then(response => response.text())
         .then(csvData => {
-            // Clear existing markers
             clearMarkers();
-
-            // Process the new CSV data
             processCSVData(csvData);
-
-            // Recenter the map
             map.flyTo({
                 center: [centerLng, centerLat],
-                zoom: 11, // Adjust the zoom level as needed
-                essential: true // This ensures the transition is performed smoothly
+                zoom: zoom,
+                speed: speed,
+                curve: curve,
+                easing: easingFunctions[easing] || easingFunctions.standard // Use the standard easing if not specified
             });
         })
-        .catch(error => {
-            console.error('Error fetching or processing CSV data:', error);
-        });
+        .catch(error => console.error('Error fetching or processing CSV data:', error));
 }
 
 function clearMarkers() {
