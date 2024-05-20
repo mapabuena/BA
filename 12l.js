@@ -461,13 +461,13 @@ function createMarker(data) {
 
 // Define the popup HTML with the "popup-content" class wrapping your content
 const popupHTML = `
-<div class="popup-content" style="max-height: 15%; max-width: 30%; border-radius: 15px; overflow-y: auto; overflow-x: hidden; box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.2);">
-    <div style="font-size:15px; font-weight:bold; color:black; font-family:'Gill Sans MT', Arial; margin-bottom:8px;">
-        <img src="${data.icon_url}" alt="Popup Image" style="max-width:20%; height:auto; margin-bottom:8px;">
+<div class="popup-content" style="max-height: 100px; max-width: 200px; border-radius: 10px; overflow-y: auto; overflow-x: hidden; box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.2);">
+    <div style="font-size:15px; font-weight:bold; color:black; font-family:'Gill Sans MT', Arial; margin-bottom:2px;">
+        <img src="${data.icon_url}" alt="Popup Image" style="max-width:35x; height:50px; margin-bottom:2px;">
         ${data.popup_header}
-        <a href="#" class="copy-address-link" style="font-size:10px; font-family:'Gill Sans MT', Arial; margin-left:16px;">COPY ADDRESS</a>
+        <a href="#" class="copy-address-link" style="font-size:12px; font-family:'Gill Sans MT', Arial; margin-left:2px;">COPY ADDRESS</a>
     </div>
-    <div style="font-size:16px; color:black; font-family:'Gill Sans MT', Arial;">${data.description}</div>
+    <div style="font-size:13px; color:black; font-family:'Gill Sans MT', Arial;">${data.description}</div>
 </div>
 `;
 
