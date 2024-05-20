@@ -602,8 +602,14 @@ const easingFunctions = {
         return 1 - Math.pow(2, -10 * t);
     },
     // Less aggressive exponential decay
-    lessAggressive: function(t) {
-        return 1 - Math.pow(2, -5 * t);
+    ease4: function(t) {
+        return 1 - Math.pow(2, -4 * t);
+    }
+    ease2: function(t) {
+        return 1 - Math.pow(2, -2 * t);
+    }
+    ease1: function(t) {
+        return 1 - Math.pow(2, -1 * t);
     }
 };
 function loadCSV(csvFile, centerLat, centerLng, zoom, speed, curve, easing) {
