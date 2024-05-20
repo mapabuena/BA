@@ -459,11 +459,11 @@ function createMarker(data) {
     el.style.height = '31px';
     el.style.backgroundSize = '100%';
 
-    // Define the popup HTML with the "popup-content" class wrapping your content
-    const popupHTML = `
-<div class="popup-content">
+// Define the popup HTML with the "popup-content" class wrapping your content
+const popupHTML = `
+<div class="popup-content" style="max-height: 15%; max-width: 30%; border-radius: 15px; overflow-y: auto; overflow-x: hidden; box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.2);">
     <div style="font-size:15px; font-weight:bold; color:black; font-family:'Gill Sans MT', Arial; margin-bottom:8px;">
-    <img src="${data.icon_url}" alt="Popup Image" style="max-width:20%; height:auto; margin-bottom:8px;">
+        <img src="${data.icon_url}" alt="Popup Image" style="max-width:20%; height:auto; margin-bottom:8px;">
         ${data.popup_header}
         <a href="#" class="copy-address-link" style="font-size:10px; font-family:'Gill Sans MT', Arial; margin-left:16px;">COPY ADDRESS</a>
     </div>
@@ -471,23 +471,23 @@ function createMarker(data) {
 </div>
 `;
 
-    // Create a popup and set its HTML content
-    const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(popupHTML);
+// Create a popup and set its HTML content
+const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(popupHTML);
 
-    // Attach an event listener to the popup after it opens
-    popup.on('open', () => {
-        const copyLink = document.querySelector('.mapboxgl-popup .copy-address-link');
-        if (copyLink) {
-            copyLink.onclick = (event) => {
-                event.preventDefault();
-                navigator.clipboard.writeText(data.name).then(() => {
-                    alert('Address copied to clipboard!');
-                }).catch(err => {
-                    console.error('Could not copy text:', err);
-                });
-            };
-        }
-    });
+// Attach an event listener to the popup after it opens
+popup.on('open', () => {
+    const copyLink = document.querySelector('.mapboxgl-popup .copy-address-link');
+    if (copyLink) {
+        copyLink.onclick = (event) => {
+            event.preventDefault();
+            navigator.clipboard.writeText(data.name).then(() => {
+                alert('Address copied to clipboard!');
+            }).catch(err => {
+                console.error('Could not copy text:', err);
+            });
+        };
+    }
+});
 
     // Create the marker and add it to the map
     const marker = new mapboxgl.Marker(el, { anchor: 'bottom' })
