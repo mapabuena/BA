@@ -22,12 +22,6 @@ function toggleGroup(group) {
     applyFilters();  // Apply all filters again
 }
 
-document.getElementById('browse-map').addEventListener('click', function() {
-    map.flyTo({ center: [0, 0], zoom: 1, essential: true });
-    activeFilters.category = ['city'];
-    applyFilters();
-});
-
 document.addEventListener('DOMContentLoaded', function() {
     setupDatePickers();
     setupCityButtons();
