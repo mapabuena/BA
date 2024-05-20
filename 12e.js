@@ -596,20 +596,35 @@ function applyFilters() {
 }
 
 // Define easing functions
+// Define easing functions including ease-out quad and ease-in-out quad
 const easingFunctions = {
     // Standard exponential decay (Mapbox default)
     standard: function(t) {
         return 1 - Math.pow(2, -10 * t);
     },
     // Less aggressive exponential decay
-    ease4: function(t) {
+    lessAggressive: function(t) {
+        return 1 - Math.pow(2, -8 * t);
+    },
+    // Even less aggressive exponential decay
+    lessAggressive2: function(t) {
+        return 1 - Math.pow(2, -6 * t);
+    },
+    // Minimal exponential decay
+    minimalAggressive: function(t) {
         return 1 - Math.pow(2, -4 * t);
     },
-    ease2: function(t) {
+    // Near linear (very minimal exponential characteristics)
+    nearLinear: function(t) {
         return 1 - Math.pow(2, -2 * t);
     },
-    ease1: function(t) {
-        return 1 - Math.pow(2, -1 * t);
+    // Ease-Out Quad (quadratic easing out)
+    easeOutQuad: function(t) {
+        return (--t) * t * t + 1;
+    },
+    // Ease-In-Out Quad (quadratic easing in and out)
+    easeInOutQuad: function(t) {
+        return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
     }
 };
 function loadCSV(csvFile, centerLat, centerLng, zoom, speed, curve, easing) {
