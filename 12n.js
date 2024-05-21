@@ -463,9 +463,9 @@ function createMarker(data) {
 const popupHTML = `
 <div class="popup-content" style="max-height: 100px; max-width: 200px; border-radius: 10px; overflow-y: auto; overflow-x: hidden;">
     <div style="font-size:15px; font-weight:bold; color:black; font-family:'Gill Sans MT', Arial; margin-bottom:2px;">
-        <img src="${data.icon_url}" alt="Popup Image" style="max-width:25px; height:37px; margin-bottom:2px;">
+        <img src="${data.icon_url}" class="copy-icon" alt="Popup Image" style="max-width:25px; height:37px; margin-bottom:2px;">
+        <img src="https://raw.githubusercontent.com/mapabuena/BA/main/copyaddress.svg" class="copy-icon" alt="Popup Image" style="max-width:20px; height:27px; margin-bottom:2px;">
         ${data.popup_header}
-        <a href="#" class="copy-address-link" style="font-size:12px; font-family:'Gill Sans MT', Arial; margin-left:2px;">COPY ADDRESS</a>
     </div>
     <div style="font-size:13px; color:black; font-family:'Gill Sans MT', Arial;">${data.description}</div>
 </div>
@@ -477,17 +477,26 @@ const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(popupHTML);
 // Attach an event listener to the popup after it opens
 popup.on('open', () => {
     const copyLink = document.querySelector('.mapboxgl-popup .copy-address-link');
+    const copyIcons = document.querySelectorAll('.mapboxgl-popup .copy-icon');
+
+    const copyToClipboard = (event) => {
+        event.preventDefault();
+        navigator.clipboard.writeText(data.name).then(() => {
+            alert('Address copied to clipboard!');
+        }).catch(err => {
+            console.error('Could not copy text:', err);
+        });
+    };
+
     if (copyLink) {
-        copyLink.onclick = (event) => {
-            event.preventDefault();
-            navigator.clipboard.writeText(data.name).then(() => {
-                alert('Address copied to clipboard!');
-            }).catch(err => {
-                console.error('Could not copy text:', err);
-            });
-        };
+        copyLink.onclick = copyToClipboard;
     }
+
+    copyIcons.forEach(icon => {
+        icon.onclick = copyToClipboard;
+    });
 });
+
 
     // Create the marker and add it to the map
     const marker = new mapboxgl.Marker(el, { anchor: 'bottom' })
