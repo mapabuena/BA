@@ -461,10 +461,10 @@ function createMarker(data) {
 
 // Define the popup HTML with the "popup-content" class wrapping your content
 const popupHTML = `
-<div class="popup-content" style="max-height: 100px; max-width: 200px; border-radius: 10px; overflow-y: auto; overflow-x: hidden;">
+<div class="popup-content" style="max-height: 100px; max-width: 260px; border-radius: 10px; overflow-y: auto; overflow-x: hidden;">
     <div style="font-size:15px; font-weight:bold; color:black; font-family:'Gill Sans MT', Arial; margin-bottom:2px;">
         <img src="${data.icon_url}" class="copy-icon" alt="Popup Image" style="max-width:25px; height:37px; margin-bottom:2px;">
-        <img src="https://raw.githubusercontent.com/mapabuena/BA/main/copyaddress.svg" class="copy-icon" alt="Popup Image" style="max-width:20px; height:27px; margin-bottom:2px;">
+        <img src="https://raw.githubusercontent.com/mapabuena/BA/main/copyaddress.svg" class="copy-icon" alt="Popup Image" style="max-width:13px; height:18px; margin-bottom:2px;">
         ${data.popup_header}
     </div>
     <div style="font-size:13px; color:black; font-family:'Gill Sans MT', Arial;">${data.description}</div>
