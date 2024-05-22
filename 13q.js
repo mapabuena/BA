@@ -382,14 +382,12 @@ function processCSVData(csvData) {
 function createMarker(data) {
     const el = document.createElement('div');
     el.className = 'marker';
-    el.style.display = 'flex'; // Use flexbox to handle the size
-    el.style.alignItems = 'center'; // Center the icon vertically
-    el.style.justifyContent = 'center'; // Center the icon horizontally
     el.style.backgroundImage = `url(${data.icon_url})`;
     el.style.height = `${data.iconheight}px`;
-    el.style.width = 'auto'; // Allow width to scale automatically
+    el.style.width = 'auto';
     el.style.backgroundSize = 'contain'; // Maintain aspect ratio
     el.style.backgroundRepeat = 'no-repeat'; // Prevent the background image from repeating
+    el.style.backgroundPosition = 'center'; // Center the image within the div
 
 
 // Define the popup HTML with the "popup-content" class wrapping your content
