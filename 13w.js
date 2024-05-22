@@ -111,7 +111,7 @@ function setupMapEvents() {
 
 function adjustMarkerSizes() {
     const zoom = map.getZoom();
-    const sizeFactor = Math.pow(2, zoom - 11); // Adjust the factor as necessary
+    const sizeFactor = Math.pow(2, zoom - 8 ); // Adjust the factor as necessary
 
     markers.forEach(({ marker, data }) => {
         const el = marker.getElement();
