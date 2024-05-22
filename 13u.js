@@ -91,7 +91,6 @@ function setupFormHandlers() {
     });
 }
 
-
 function setupMapEvents() {
     map.on('load', function() {
         setTimeout(function() {
@@ -104,9 +103,24 @@ function setupMapEvents() {
             clearTimeout(updateTimeout);
             updateTimeout = setTimeout(updateInfoWindowContent, 100);
         });
+
+        map.on('zoom', function() {
+            adjustMarkerSizes(map.getZoom());
+        });
     });
 }
 
+// Function to adjust marker sizes based on zoom level
+function adjustMarkerSizes(zoom) {
+    const scale = Math.pow(2, zoom - 11); // Adjust scale factor as needed
+    markers.forEach(({ marker, data }) => {
+        const element = marker.getElement();
+        element.style.height = `${data.iconheight * scale}px`;
+        element.style.minHeight = `${data.iconheight * scale}px`;
+        element.style.width = 'auto';
+        element.style.minWidth = `${data.iconwidth * scale}px`;
+    });
+}
 
 // Function to apply date filter based on selected range
 function applyDateFilter() {
