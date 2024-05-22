@@ -384,9 +384,14 @@ function createMarker(data) {
     el.className = 'marker';
     el.style.backgroundImage = `url(${data.icon_url})`;
     el.style.height = `${data.iconheight}px`;
-    el.style.width = 'auto'; // Allow width to scale automatically
-    el.style.backgroundSize = 'auto 100%'; // Maintain aspect ratio with specified height
+    el.style.width = '100%'; // Set the width to 100% of its container
+    el.style.backgroundSize = 'contain'; // Maintain aspect ratio
     el.style.backgroundRepeat = 'no-repeat'; // Prevent the background image from repeating
+
+    // Adjust the container to maintain the aspect ratio
+    const aspectRatio = data.iconwidth / data.iconheight;
+    el.style.paddingBottom = `${100 / aspectRatio}%`; // Maintain the aspect ratio
+
 
 // Define the popup HTML with the "popup-content" class wrapping your content
 const popupHTML = `
