@@ -295,17 +295,20 @@ function processCSVData(csvData) {
             results.data.forEach((data, rowIndex) => {
                 console.log(`Processing row ${rowIndex + 1}:`, data);
 
+                // Check if lat and lng are valid numbers
                 const lat = parseFloat(data.latitude);
                 const lng = parseFloat(data.longitude);
                 if (isNaN(lat) || isNaN(lng)) {
                     console.error(`Invalid coordinates at row ${rowIndex + 1}: lat=${data.latitude}, lng=${data.longitude}`);
-                    return;
+                    return; // Skip this row if coordinates are invalid
                 }
 
+                // Split categories, starts, and ends into arrays
                 const categories = [data.category, data.category2, data.category3, data.category4].filter(Boolean);
                 const starts = data.starts ? data.starts.split('|') : [];
                 const ends = data.ends ? data.ends.split('|') : [];
 
+                // Ensure that starts and ends arrays are paired correctly
                 const dateRanges = [];
                 if (starts.length === ends.length) {
                     starts.forEach((start, index) => {
@@ -318,38 +321,43 @@ function processCSVData(csvData) {
                     console.error(`Mismatch in starts and ends lengths at row ${rowIndex + 1}`);
                 }
 
-                try {
-                    const geojsonString = data.GeoJSON.replace(/""/g, '"');
-                    const markerData = {
-                        address: data.address,
-                        lat: lat,
-                        lng: lng,
-                        popup_header: data.popup_header,
-                        popupimage_url: data.popupimage_url,
-                        description: data.description,
-                        description2: data.description2,
-                        icon_url: data.icon_url,
-                        iconwidth: data.iconwidth,
-                        iconheight: data.iconheight,
-                        icon2_url: data.icon2_url,
-                        icon2width: data.icon2width,
-                        icon2height: data.icon2height,
-                        icon3_url: data.icon3_url,
-                        icon3width: data.icon3width,
-                        icon3height: data.icon3height,
-                        categories: categories,
-                        dateRanges: dateRanges,
-                        cost: data.cost,
-                        tags: data.tags,
-                        favorite: data.favorite,
-                        geojson: JSON.parse(geojsonString)
-                    };
-
-                    console.log(`Marker Data for ${data.address}:`, markerData);
-                    createMarker(markerData);
-                } catch (error) {
-                    console.error(`Error parsing GeoJSON at row ${rowIndex + 1}:`, error, data.GeoJSON);
+                let geojson = null;
+                if (data.GeoJSON) {
+                    try {
+                        const geojsonString = data.GeoJSON.replace(/""/g, '"');
+                        geojson = JSON.parse(geojsonString);
+                    } catch (error) {
+                        console.error(`Error parsing GeoJSON at row ${rowIndex + 1}:`, error, data.GeoJSON);
+                    }
                 }
+
+                const markerData = {
+                    address: data.address,
+                    lat: lat,
+                    lng: lng,
+                    popup_header: data.popup_header,
+                    popupimage_url: data.popupimage_url,
+                    description: data.description,
+                    description2: data.description2,
+                    icon_url: data.icon_url,
+                    iconwidth: data.iconwidth,
+                    iconheight: data.iconheight,
+                    icon2_url: data.icon2_url,
+                    icon2width: data.icon2width,
+                    icon2height: data.icon2height,
+                    icon3_url: data.icon3_url,
+                    icon3width: data.icon3width,
+                    icon3height: data.icon3height,
+                    categories: categories,
+                    dateRanges: dateRanges,
+                    cost: data.cost,
+                    tags: data.tags,
+                    favorite: data.favorite,
+                    geojson: geojson
+                };
+
+                console.log(`Marker Data for ${data.address}:`, markerData);
+                createMarker(markerData);
             });
 
             updateInfoWindowContent();
