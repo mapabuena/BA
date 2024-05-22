@@ -385,6 +385,7 @@ function createMarker(data) {
     el.style.backgroundImage = `url(${data.icon_url})`;
     el.style.height = `${data.iconheight}px`;
     el.style.width = 'auto';
+    el.style.minWidth = '20px'; // Set a minimum width to ensure visibility
     el.style.backgroundSize = 'contain'; // Maintain aspect ratio
     el.style.backgroundRepeat = 'no-repeat'; // Prevent the background image from repeating
     el.style.backgroundPosition = 'center'; // Center the image within the div
