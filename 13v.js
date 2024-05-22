@@ -104,21 +104,20 @@ function setupMapEvents() {
             updateTimeout = setTimeout(updateInfoWindowContent, 100);
         });
 
-        map.on('zoom', function() {
-            adjustMarkerSizes(map.getZoom());
-        });
+        // Call adjustMarkerSizes on zoom
+        map.on('zoom', adjustMarkerSizes);
     });
 }
 
-// Function to adjust marker sizes based on zoom level
-function adjustMarkerSizes(zoom) {
-    const scale = Math.pow(2, zoom - 11); // Adjust scale factor as needed
+function adjustMarkerSizes() {
+    const zoom = map.getZoom();
+    const sizeFactor = Math.pow(2, zoom - 11); // Adjust the factor as necessary
+
     markers.forEach(({ marker, data }) => {
-        const element = marker.getElement();
-        element.style.height = `${data.iconheight * scale}px`;
-        element.style.minHeight = `${data.iconheight * scale}px`;
-        element.style.width = 'auto';
-        element.style.minWidth = `${data.iconwidth * scale}px`;
+        const el = marker.getElement();
+        console.log(`Adjusting marker for ${data.address}: height=${data.iconheight * sizeFactor}px, width=${data.iconwidth * sizeFactor}px`);
+        el.style.minHeight = `${data.iconheight * sizeFactor}px`;
+        el.style.minWidth = `${data.iconwidth * sizeFactor}px`;
     });
 }
 
