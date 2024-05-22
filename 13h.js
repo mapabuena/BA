@@ -324,9 +324,15 @@ function processCSVData(csvData) {
                 let geojson = null;
                 if (data.GeoJSON && data.GeoJSON.trim() !== '') {
                     try {
-                        // Remove outer quotes if present
+                        // Log the raw GeoJSON string before parsing
+                        console.log(`Raw GeoJSON at row ${rowIndex + 1}:`, data.GeoJSON);
+
+                        // Remove outer quotes if present and replace double quotes
                         const geojsonString = data.GeoJSON.replace(/""/g, '"').replace(/^"(.*)"$/, '$1');
                         geojson = JSON.parse(geojsonString);
+
+                        // Log the parsed GeoJSON object
+                        console.log(`Parsed GeoJSON at row ${rowIndex + 1}:`, geojson);
                     } catch (error) {
                         console.error(`Error parsing GeoJSON at row ${rowIndex + 1}:`, error, data.GeoJSON);
                     }
@@ -368,7 +374,6 @@ function processCSVData(csvData) {
         }
     });
 }
-
 
 function createMarker(data) {
     const el = document.createElement('div');
