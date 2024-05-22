@@ -329,6 +329,10 @@ function processCSVData(csvData) {
 
                         // Remove outer quotes if present and replace double quotes
                         const geojsonString = data.GeoJSON.replace(/""/g, '"').replace(/^"(.*)"$/, '$1');
+
+                        // Log the processed GeoJSON string before parsing
+                        console.log(`Processed GeoJSON at row ${rowIndex + 1}:`, geojsonString);
+
                         geojson = JSON.parse(geojsonString);
 
                         // Log the parsed GeoJSON object
