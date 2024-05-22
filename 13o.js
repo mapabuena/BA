@@ -392,7 +392,6 @@ function createMarker(data) {
     el.style.backgroundRepeat = 'no-repeat'; // Prevent the background image from repeating
 
 
-
 // Define the popup HTML with the "popup-content" class wrapping your content
 const popupHTML = `
 <div class="popup-content" style="max-height: 100px; max-width: 260px; border-radius: 10px; overflow-y: auto; overflow-x: hidden;">
