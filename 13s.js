@@ -383,9 +383,10 @@ function createMarker(data) {
     const el = document.createElement('div');
     el.className = 'marker';
     el.style.backgroundImage = `url(${data.icon_url})`;
-    el.style.height = `${data.iconheight}px`;
+    el.style.height =  'auto';
+    el.style.minHeight = `${data.iconheight}px`; // Set the minimum height from data.iconheight
     el.style.width = 'auto';
-    el.style.minWidth = '20px'; // Set a minimum width to ensure visibility
+    el.style.minWidth = `${data.iconwidth}px`; // Set the minimum width from data.iconwidth
     el.style.backgroundSize = 'contain'; // Maintain aspect ratio
     el.style.backgroundRepeat = 'no-repeat'; // Prevent the background image from repeating
     el.style.backgroundPosition = 'center'; // Center the image within the div
