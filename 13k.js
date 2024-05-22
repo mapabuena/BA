@@ -328,7 +328,7 @@ function processCSVData(csvData) {
                         console.log(`Raw GeoJSON at row ${rowIndex + 1}:`, data.GeoJSON);
 
                         // Remove outer quotes if present and replace double quotes
-                        const geojsonString = data.GeoJSON.replace(/""/g, '"').replace(/^"|"$/g, '');
+                        const geojsonString = data.GeoJSON.replace(/""/g, '"').replace(/\\\\"/g, '"').replace(/^"|"$/g, '');
 
                         // Log the processed GeoJSON string before parsing
                         console.log(`Processed GeoJSON at row ${rowIndex + 1}:`, geojsonString);
@@ -378,6 +378,7 @@ function processCSVData(csvData) {
         }
     });
 }
+
 
 function createMarker(data) {
     const el = document.createElement('div');
@@ -432,7 +433,7 @@ popup.on('open', () => {
         .setPopup(popup)
         .addTo(map);
 
-    // Event listener to toggle the route when the marker is clicked
+    // Event listener to  the route when the marker is clicked
     marker.getElement().addEventListener('click', () => {
         if (data.geojson) {
             toggleSpecificRoute(data);
@@ -492,6 +493,7 @@ function toggleGeoJSONRoute(geojson, visibility) {
         }
     }
 }
+
 
 function toggleSpecificRoute(markerData) {
     const layerId = 'route-layer';
