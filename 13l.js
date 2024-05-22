@@ -351,14 +351,14 @@ function processCSVData(csvData) {
                     description: data.description,
                     description2: data.description2,
                     icon_url: data.icon_url,
-                    iconwidth: data.iconwidth,
-                    iconheight: data.iconheight,
+                    iconwidth: parseInt(data.iconwidth, 10) || 20, // Default to 20 if not specified
+                    iconheight: parseInt(data.iconheight, 10) || 31, // Default to 31 if not specified
                     icon2_url: data.icon2_url,
-                    icon2width: data.icon2width,
-                    icon2height: data.icon2height,
+                    icon2width: parseInt(data.icon2width, 10),
+                    icon2height: parseInt(data.icon2height, 10),
                     icon3_url: data.icon3_url,
-                    icon3width: data.icon3width,
-                    icon3height: data.icon3height,
+                    icon3width: parseInt(data.icon3width, 10),
+                    icon3height: parseInt(data.icon3height, 10),
                     categories: categories,
                     dateRanges: dateRanges,
                     cost: data.cost,
@@ -384,8 +384,8 @@ function createMarker(data) {
     const el = document.createElement('div');
     el.className = 'marker';
     el.style.backgroundImage = `url(${data.icon_url})`;
-    el.style.width = '20px';
-    el.style.height = '31px';
+    el.style.width = `${data.iconwidth}px`;
+    el.style.height = `${data.iconheight}px`;
     el.style.backgroundSize = '100%';
 
 // Define the popup HTML with the "popup-content" class wrapping your content
