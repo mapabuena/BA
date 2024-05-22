@@ -379,14 +379,14 @@ function processCSVData(csvData) {
     });
 }
 
-
 function createMarker(data) {
     const el = document.createElement('div');
     el.className = 'marker';
     el.style.backgroundImage = `url(${data.icon_url})`;
-    el.style.width = `${data.iconwidth}px`;
     el.style.height = `${data.iconheight}px`;
-    el.style.backgroundSize = '100%';
+    el.style.width = 'auto'; // Allow width to scale automatically
+    el.style.backgroundSize = 'auto 100%'; // Maintain aspect ratio with specified height
+    el.style.backgroundRepeat = 'no-repeat'; // Prevent the background image from repeating
 
 // Define the popup HTML with the "popup-content" class wrapping your content
 const popupHTML = `
