@@ -322,9 +322,10 @@ function processCSVData(csvData) {
                 }
 
                 let geojson = null;
-                if (data.GeoJSON) {
+                if (data.GeoJSON && data.GeoJSON.trim() !== '') {
                     try {
-                        const geojsonString = data.GeoJSON.replace(/""/g, '"');
+                        // Remove outer quotes if present
+                        const geojsonString = data.GeoJSON.replace(/""/g, '"').replace(/^"(.*)"$/, '$1');
                         geojson = JSON.parse(geojsonString);
                     } catch (error) {
                         console.error(`Error parsing GeoJSON at row ${rowIndex + 1}:`, error, data.GeoJSON);
@@ -367,6 +368,7 @@ function processCSVData(csvData) {
         }
     });
 }
+
 
 function createMarker(data) {
     const el = document.createElement('div');
@@ -435,6 +437,7 @@ popup.on('open', () => {
 
 function toggleGeoJSONRoute(geojson, visibility) {
     const sourceId = 'route-source';
+    const layerId = 'route-layer';
 
     if (!map.getSource(sourceId)) {
         map.addSource(sourceId, {
@@ -443,7 +446,7 @@ function toggleGeoJSONRoute(geojson, visibility) {
         });
 
         map.addLayer({
-            'id': 'route-layer',
+            'id': layerId,
             'type': 'line',
             'source': sourceId,
             'layout': {
@@ -458,15 +461,34 @@ function toggleGeoJSONRoute(geojson, visibility) {
         });
     } else {
         map.getSource(sourceId).setData(geojson);
-        map.setLayoutProperty('route-layer', 'visibility', visibility ? 'visible' : 'none');
+        if (map.getLayer(layerId)) {
+            map.setLayoutProperty(layerId, 'visibility', visibility ? 'visible' : 'none');
+        } else {
+            map.addLayer({
+                'id': layerId,
+                'type': 'line',
+                'source': sourceId,
+                'layout': {
+                    'line-join': 'round',
+                    'line-cap': 'round',
+                    'visibility': visibility ? 'visible' : 'none'
+                },
+                'paint': {
+                    'line-color': '#888',
+                    'line-width': 6
+                }
+            });
+        }
     }
 }
 
 function toggleSpecificRoute(markerData) {
-    const currentVisibility = map.getLayoutProperty('route-layer', 'visibility');
+    const layerId = 'route-layer';
+    const currentVisibility = map.getLayer(layerId) ? map.getLayoutProperty(layerId, 'visibility') : 'none';
     const newVisibility = currentVisibility === 'visible' ? 'none' : 'visible';
     toggleGeoJSONRoute(markerData.geojson, newVisibility === 'visible');
 }
+
 // Function to recenter map on marker click
 function recenterMap(lng, lat) {
     const mapContainer = map.getContainer();
