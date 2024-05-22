@@ -328,7 +328,7 @@ function processCSVData(csvData) {
                         console.log(`Raw GeoJSON at row ${rowIndex + 1}:`, data.GeoJSON);
 
                         // Remove outer quotes if present and replace double quotes
-                        const geojsonString = data.GeoJSON.replace(/""/g, '"').replace(/^"(.*)"$/, '$1');
+                        const geojsonString = data.GeoJSON.replace(/""/g, '"').replace(/^"|"$/g, '');
 
                         // Log the processed GeoJSON string before parsing
                         console.log(`Processed GeoJSON at row ${rowIndex + 1}:`, geojsonString);
@@ -432,11 +432,13 @@ popup.on('open', () => {
         .setPopup(popup)
         .addTo(map);
 
-    // Add click event listener to marker for recentering
+    // Event listener to toggle the route when the marker is clicked
     marker.getElement().addEventListener('click', () => {
+        if (data.geojson) {
+            toggleSpecificRoute(data);
+        }
         recenterMap(data.lng, data.lat);
     });
-
     // Store the marker for later use
     markers.push({
         marker: marker,
