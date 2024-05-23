@@ -393,6 +393,8 @@ function processCSVData(csvData) {
                     icon3_url: data.icon3_url,
                     icon3width: parseInt(data.icon3width, 10),
                     icon3height: parseInt(data.icon3height, 10),
+                    category2: data.category2 || '', // Ensure category2 is captured
+                    category3: data.category3 || '', // Ensure category3 is captured
                     categories: categories,
                     dateRanges: dateRanges,
                     cost: data.cost,
@@ -412,6 +414,7 @@ function processCSVData(csvData) {
         }
     });
 }
+
 function createMarker(data) {
     const el = document.createElement('div');
     el.className = 'marker';
@@ -444,8 +447,24 @@ function createMarker(data) {
         document.getElementById('sidebarimage').innerHTML = `<img src="${data.popupimage_url}" alt="Popup Image" style="width: 100%;">`;
         document.getElementById('sidebartitle').innerText = data.popup_header;
         document.getElementById('sidebardescription').innerText = data.description;
-        document.getElementById('sidecategory2').innerText = data.category2 || ''; // Populate sidecategory2
-        document.getElementById('sidecategory3').innerText = data.category3 || ''; // Populate sidecategory3
+        
+        // Debugging logs to check category values
+        console.log('Category2:', data.category2);
+        console.log('Category3:', data.category3);
+        
+        // Populate sidecategory2 and sidecategory3
+        const sideCategory2Element = document.getElementById('sidecategory2');
+        const sideCategory3Element = document.getElementById('sidecategory3');
+        if (sideCategory2Element) {
+            sideCategory2Element.innerText = data.category2 || ''; // Populate sidecategory2
+        } else {
+            console.error('Element with id "sidecategory2" not found.');
+        }
+        if (sideCategory3Element) {
+            sideCategory3Element.innerText = data.category3 || ''; // Populate sidecategory3
+        } else {
+            console.error('Element with id "sidecategory3" not found.');
+        }
 
         // Trigger the sidebar to open
         document.getElementById('sidebarbutton').click();
