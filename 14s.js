@@ -110,7 +110,7 @@ function setupMapEvents() {
                 });
 
                 // Trigger the sidebar button to close the sidebar
-                document.getElementById('sidebarcloser').click();
+                document.getElementById('sidebarbutton').click();
             }, 100);
         });
 
@@ -412,7 +412,6 @@ function processCSVData(csvData) {
         }
     });
 }
-
 function createMarker(data) {
     const el = document.createElement('div');
     el.className = 'marker';
@@ -445,9 +444,11 @@ function createMarker(data) {
         document.getElementById('sidebarimage').innerHTML = `<img src="${data.popupimage_url}" alt="Popup Image" style="width: 100%;">`;
         document.getElementById('sidebartitle').innerText = data.popup_header;
         document.getElementById('sidebardescription').innerText = data.description;
+        document.getElementById('sidecategory2').innerText = data.category2 || ''; // Populate sidecategory2
+        document.getElementById('sidecategory3').innerText = data.category3 || ''; // Populate sidecategory3
 
         // Trigger the sidebar to open
-        document.getElementById('sidebaropener').click();
+        document.getElementById('sidebarbutton').click();
     });
 
     // Store the marker for later use
@@ -456,6 +457,7 @@ function createMarker(data) {
         data: data
     });
 }
+
 
 
 function toggleGeoJSONRoute(geojson, visibility) {
