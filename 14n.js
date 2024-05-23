@@ -459,7 +459,6 @@ function createMarker(data) {
         marker: marker,
         data: data
     });
-}
 
 function toggleGeoJSONRoute(geojson, visibility) {
     const sourceId = 'route-source';
