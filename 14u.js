@@ -278,7 +278,7 @@ function updateInfoWindowContent() {
     visibleMarkers.forEach(({ marker, data }) => {
         const item = document.createElement('div');
         item.className = 'info-item';
-        item.innerHTML = `<h4>${data.popup_header}</h4><img src="${data.popupimage_url}" alt="${data.name}" style="width:100%;">`;
+        item.innerHTML = `<h4>${data.sidebarheader}</h4><img src="${data.sidebarimage}" alt="${data.name}" style="width:100%;">`;
         infoWindow.appendChild(item);
 
         // Add event listener to show the route when info-item is clicked
@@ -380,8 +380,9 @@ function processCSVData(csvData) {
                     address: data.address,
                     lat: lat,
                     lng: lng,
-                    popup_header: data.popup_header,
-                    popupimage_url: data.popupimage_url,
+                    sidebarheader: data.sidebarheader, // Changed from popup_header to sidebarheader
+                    sidebarimage: data.sidebarimage, // Changed from popupimage_url to sidebarimage
+                    sidebarheader2: data.sidebarheader2, // New column for sidebarheader2
                     description: data.description,
                     description2: data.description2,
                     icon_url: data.icon_url,
@@ -393,8 +394,6 @@ function processCSVData(csvData) {
                     icon3_url: data.icon3_url,
                     icon3width: parseInt(data.icon3width, 10),
                     icon3height: parseInt(data.icon3height, 10),
-                    category2: data.category2 || '', // Ensure category2 is captured
-                    category3: data.category3 || '', // Ensure category3 is captured
                     categories: categories,
                     dateRanges: dateRanges,
                     cost: data.cost,
@@ -444,27 +443,10 @@ function createMarker(data) {
         el.style.backgroundImage = `url(${data.icon2_url})`;
 
         // Update the sidebar content
-        document.getElementById('sidebarimage').innerHTML = `<img src="${data.popupimage_url}" alt="Popup Image" style="width: 100%;">`;
-        document.getElementById('sidebartitle').innerText = data.popup_header;
+        document.getElementById('sidebarimage').innerHTML = `<img src="${data.sidebarimage}" alt="Sidebar Image" style="width: 100%;">`;
+        document.getElementById('sidebartitle').innerText = data.sidebarheader;
         document.getElementById('sidebardescription').innerText = data.description;
-        
-        // Debugging logs to check category values
-        console.log('Category2:', data.category2);
-        console.log('Category3:', data.category3);
-        
-        // Populate sidecategory2 and sidecategory3
-        const sideCategory2Element = document.getElementById('sidecategory2');
-        const sideCategory3Element = document.getElementById('sidecategory3');
-        if (sideCategory2Element) {
-            sideCategory2Element.innerText = data.category2 || ''; // Populate sidecategory2
-        } else {
-            console.error('Element with id "sidecategory2" not found.');
-        }
-        if (sideCategory3Element) {
-            sideCategory3Element.innerText = data.category3 || ''; // Populate sidecategory3
-        } else {
-            console.error('Element with id "sidecategory3" not found.');
-        }
+        document.getElementById('sidebarheader2').innerText = data.sidebarheader2 || '';
 
         // Trigger the sidebar to open
         document.getElementById('sidebarbutton').click();
