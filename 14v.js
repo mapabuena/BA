@@ -253,6 +253,7 @@ function calculateDistance(center, data) {
 function toRadians(degrees) {
     return degrees * Math.PI / 180;
 }
+
 function updateInfoWindowContent() {
     const center = map.getCenter();
     const bounds = map.getBounds();
@@ -278,17 +279,20 @@ function updateInfoWindowContent() {
     visibleMarkers.forEach(({ marker, data }) => {
         const item = document.createElement('div');
         item.className = 'info-item';
-        item.innerHTML = `<h4>${data.sidebarheader}</h4><img src="${data.sidebarimage}" alt="${data.name}" style="width:100%;">`;
+        item.innerHTML = `<h4>${data.sidebarheader}</h4><img src="${data.sidebarimage}" alt="${data.address}" style="width:100%;">`;
         infoWindow.appendChild(item);
 
-        // Add event listener to show the route when info-item is clicked
         item.addEventListener('click', () => {
             toggleSpecificRoute(data);
             recenterMap(data.lng, data.lat);
-            marker.getPopup().addTo(map); // Open the popup
+            const popup = marker.getPopup();
+            if (popup) {
+                popup.addTo(map);
+            }
         });
     });
 }
+
 
 function recenterMap(lng, lat) {
     map.flyTo({
@@ -358,19 +362,8 @@ function processCSVData(csvData) {
                 let geojson = null;
                 if (data.GeoJSON && data.GeoJSON.trim() !== '') {
                     try {
-                        // Log the raw GeoJSON string before parsing
-                        console.log(`Raw GeoJSON at row ${rowIndex + 1}:`, data.GeoJSON);
-
-                        // Remove outer quotes if present and replace double quotes
                         const geojsonString = data.GeoJSON.replace(/""/g, '"').replace(/\\\\"/g, '"').replace(/^"|"$/g, '');
-
-                        // Log the processed GeoJSON string before parsing
-                        console.log(`Processed GeoJSON at row ${rowIndex + 1}:`, geojsonString);
-
                         geojson = JSON.parse(geojsonString);
-
-                        // Log the parsed GeoJSON object
-                        console.log(`Parsed GeoJSON at row ${rowIndex + 1}:`, geojson);
                     } catch (error) {
                         console.error(`Error parsing GeoJSON at row ${rowIndex + 1}:`, error, data.GeoJSON);
                     }
@@ -380,14 +373,14 @@ function processCSVData(csvData) {
                     address: data.address,
                     lat: lat,
                     lng: lng,
-                    sidebarheader: data.sidebarheader, // Changed from popup_header to sidebarheader
-                    sidebarimage: data.sidebarimage, // Changed from popupimage_url to sidebarimage
-                    sidebarheader2: data.sidebarheader2, // New column for sidebarheader2
+                    sidebarheader: data.sidebarheader,
+                    sidebarheader2: data.sidebarheader2,
+                    sidebarimage: data.sidebarimage,
                     description: data.description,
                     description2: data.description2,
                     icon_url: data.icon_url,
-                    iconwidth: parseInt(data.iconwidth, 10) || 20, // Default to 20 if not specified
-                    iconheight: parseInt(data.iconheight, 10) || 31, // Default to 31 if not specified
+                    iconwidth: parseInt(data.iconwidth, 10) || 20,
+                    iconheight: parseInt(data.iconheight, 10) || 31,
                     icon2_url: data.icon2_url,
                     icon2width: parseInt(data.icon2width, 10),
                     icon2height: parseInt(data.icon2height, 10),
@@ -419,46 +412,38 @@ function createMarker(data) {
     el.className = 'marker';
     el.style.backgroundImage = `url(${data.icon_url})`;
     el.style.height = 'auto';
-    el.style.minHeight = `${data.iconheight}px`; // Set the minimum height from data.iconheight
+    el.style.minHeight = `${data.iconheight}px`; 
     el.style.width = 'auto';
-    el.style.minWidth = `${data.iconwidth}px`; // Set the minimum width from data.iconwidth
-    el.style.backgroundSize = 'contain'; // Maintain aspect ratio
-    el.style.backgroundRepeat = 'no-repeat'; // Prevent the background image from repeating
-    el.style.backgroundPosition = 'center'; // Center the image within the div
+    el.style.minWidth = `${data.iconwidth}px`; 
+    el.style.backgroundSize = 'contain'; 
+    el.style.backgroundRepeat = 'no-repeat'; 
+    el.style.backgroundPosition = 'center'; 
 
-    // Create the marker and add it to the map
     const marker = new mapboxgl.Marker(el, { anchor: 'bottom' })
         .setLngLat([data.lng, data.lat])
         .addTo(map);
 
-    // Event listener to change marker image and update the sidebar when the marker is clicked
     marker.getElement().addEventListener('click', () => {
-        // Reset all markers to their original icon_url
         markers.forEach(({ marker, data }) => {
             const el = marker.getElement();
             el.style.backgroundImage = `url(${data.icon_url})`;
         });
 
-        // Change clicked marker image to icon2_url
         el.style.backgroundImage = `url(${data.icon2_url})`;
 
-        // Update the sidebar content
         document.getElementById('sidebarimage').innerHTML = `<img src="${data.sidebarimage}" alt="Sidebar Image" style="width: 100%;">`;
         document.getElementById('sidebartitle').innerText = data.sidebarheader;
         document.getElementById('sidebardescription').innerText = data.description;
         document.getElementById('sidebarheader2').innerText = data.sidebarheader2 || '';
 
-        // Trigger the sidebar to open
         document.getElementById('sidebarbutton').click();
     });
 
-    // Store the marker for later use
     markers.push({
         marker: marker,
         data: data
     });
 }
-
 
 
 function toggleGeoJSONRoute(geojson, visibility) {
