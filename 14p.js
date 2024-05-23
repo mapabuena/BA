@@ -110,9 +110,7 @@ function setupMapEvents() {
         // Add click event listener to map to handle clicks outside markers
         map.on('click', (e) => {
             // Check if the clicked element is not a marker
-            const features = map.queryRenderedFeatures(e.point, {
-                layers: ['marker-layer']
-            });
+            const features = map.queryRenderedFeatures(e.point);
 
             if (!features.length) {
                 // Reset all markers to their original icon_url
@@ -122,7 +120,7 @@ function setupMapEvents() {
                 });
 
                 // Trigger the sidebar button to close the sidebar
-                document.getElementById('sidebarbutton').click();
+                document.getElementById('sidebarcloser').click();
             }
         });
     });
@@ -455,7 +453,7 @@ function createMarker(data) {
         document.getElementById('sidebardescription').innerText = data.description;
 
         // Trigger the sidebar to open
-        document.getElementById('sidebarbutton').click();
+        document.getElementById('sidebaropener').click();
     });
 
     // Store the marker for later use
