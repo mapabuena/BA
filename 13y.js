@@ -111,13 +111,16 @@ function setupMapEvents() {
 
 function adjustMarkerSizes() {
     const zoom = map.getZoom();
-    const sizeFactor = Math.pow(2, zoom - 12 ); // Adjust the factor as necessary
+    const scaleFactor = 0.2; // Adjust this factor to control the scaling sensitivity
+    const sizeMultiplier = Math.pow(2, (zoom - 12) * scaleFactor); // Adjust the scale factor as necessary
 
     markers.forEach(({ marker, data }) => {
         const el = marker.getElement();
-        console.log(`Adjusting marker for ${data.address}: height=${data.iconheight * sizeFactor}px, width=${data.iconwidth * sizeFactor}px`);
-        el.style.minHeight = `${data.iconheight * sizeFactor}px`;
-        el.style.minWidth = `${data.iconwidth * sizeFactor}px`;
+        const height = data.iconheight * sizeMultiplier;
+        const width = data.iconwidth * sizeMultiplier;
+        console.log(`Adjusting marker for ${data.address}: height=${height}px, width=${width}px`);
+        el.style.height = `${height}px`;
+        el.style.width = `${width}px`;
     });
 }
 
