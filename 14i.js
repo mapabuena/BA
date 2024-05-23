@@ -115,7 +115,7 @@ function adjustMarkerSizes() {
 
     const zoomThreshold = 13; // Define the zoom threshold
     const closeScaleFactor = 0.10; // Scaling sensitivity for closer zoom levels
-    const farScaleFactor = 0.04; // Scaling sensitivity for farther zoom levels
+    const farScaleFactor = 0.01; // Scaling sensitivity for farther zoom levels
 
     const sizeMultiplier = zoom > zoomThreshold
         ? Math.pow(2, (zoom - 11) * closeScaleFactor)
