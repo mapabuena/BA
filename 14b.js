@@ -111,8 +111,8 @@ function setupMapEvents() {
 
 function adjustMarkerSizes() {
     const zoom = map.getZoom();
-    const scaleFactor = 0.17; // Adjust this factor to control the scaling sensitivity
-    const sizeMultiplier = Math.pow(2, (zoom - 14) * scaleFactor); // Adjust the scale factor as necessary
+    const scaleFactor = 0.13; // Adjust this factor to control the scaling sensitivity
+    const sizeMultiplier = Math.pow(2, (zoom - 15) * scaleFactor); // Adjust the scale factor as necessary
 
     markers.forEach(({ marker, data }) => {
         const el = marker.getElement();
