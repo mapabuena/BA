@@ -113,9 +113,9 @@ function adjustMarkerSizes() {
     const zoom = map.getZoom();
     console.log(`Current zoom level: ${zoom}`); // Log the current zoom level
 
-    const zoomThreshold = 13; // Define the zoom threshold
+    const zoomThreshold = 14; // Define the zoom threshold
     const closeScaleFactor = 0.10; // Scaling sensitivity for closer zoom levels
-    const farScaleFactor = 0.01; // Scaling sensitivity for farther zoom levels
+    const farScaleFactor = 0.002; // Scaling sensitivity for farther zoom levels
 
     const sizeMultiplier = zoom > zoomThreshold
         ? Math.pow(2, (zoom - 11) * closeScaleFactor)
