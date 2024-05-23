@@ -406,7 +406,7 @@ function createMarker(data) {
     const el = document.createElement('div');
     el.className = 'marker';
     el.style.backgroundImage = `url(${data.icon_url})`;
-    el.style.height =  'auto';
+    el.style.height = 'auto';
     el.style.minHeight = `${data.iconheight}px`; // Set the minimum height from data.iconheight
     el.style.width = 'auto';
     el.style.minWidth = `${data.iconwidth}px`; // Set the minimum width from data.iconwidth
@@ -414,44 +414,31 @@ function createMarker(data) {
     el.style.backgroundRepeat = 'no-repeat'; // Prevent the background image from repeating
     el.style.backgroundPosition = 'center'; // Center the image within the div
 
+    // Create the marker and add it to the map
+    const marker = new mapboxgl.Marker(el, { anchor: 'bottom' })
+        .setLngLat([data.lng, data.lat])
+        .addTo(map);
 
-// Define the popup HTML with the "popup-content" class wrapping your content
-const popupHTML = `
-<div class="popup-content" style="max-height: 100px; max-width: 260px; border-radius: 10px; overflow-y: auto; overflow-x: hidden;">
-    <div style="font-size:15px; font-weight:bold; color:black; font-family:'Gill Sans MT', Arial; margin-bottom:2px;">
-        <img src="${data.icon_url}" class="copy-icon" alt="Popup Image" style="max-width:25px; height:37px; margin-bottom:2px;">
-        <img src="https://raw.githubusercontent.com/mapabuena/BA/main/copyaddress.svg" class="copy-icon" alt="Popup Image" style="max-width:13px; height:18px; margin-bottom:2px;">
-        ${data.popup_header}
-    </div>
-    <div style="font-size:13px; color:black; font-family:'Gill Sans MT', Arial;">${data.description}</div>
-</div>
-`;
+    // Event listener to change marker image and update the sidebar when the marker is clicked
+    marker.getElement().addEventListener('click', () => {
+        // Change marker image to icon2_url
+        el.style.backgroundImage = `url(${data.icon2_url})`;
 
-// Create a popup and set its HTML content
-const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(popupHTML);
+        // Update the sidebar content
+        document.getElementById('sidebarimage').innerHTML = `<img src="${data.popupimage_url}" alt="Popup Image" style="width: 100%;">`;
+        document.getElementById('sidebartitle').innerText = data.popup_header;
+        document.getElementById('sidebardescription').innerText = data.description;
 
-// Attach an event listener to the popup after it opens
-popup.on('open', () => {
-    const copyLink = document.querySelector('.mapboxgl-popup .copy-address-link');
-    const copyIcons = document.querySelectorAll('.mapboxgl-popup .copy-icon');
-
-    const copyToClipboard = (event) => {
-        event.preventDefault();
-        navigator.clipboard.writeText(data.address).then(() => {
-            alert('Address copied to clipboard!');
-        }).catch(err => {
-            console.error('Could not copy text:', err);
-        });
-    };
-
-    if (copyLink) {
-        copyLink.onclick = copyToClipboard;
-    }
-
-    copyIcons.forEach(icon => {
-        icon.onclick = copyToClipboard;
+        // Trigger the sidebar to open
+        document.getElementById('sidebarbutton').click();
     });
-});
+
+    // Store the marker for later use
+    markers.push({
+        marker: marker,
+        data: data
+    });
+}
 
 
     // Create the marker and add it to the map
