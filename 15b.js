@@ -299,7 +299,7 @@ function setupClickSimulations() {
         document.getElementById('extendinfobar').click();
     });
 
-    document.getElementById('sideinfobar').addEventListener('click', () => {
+    document.getElementById('sidebarbutton').addEventListener('click', () => {
         document.getElementById('extendinfobar').click();
     });
 }
