@@ -110,7 +110,7 @@ function setupMapEvents() {
                 });
 
                 // Trigger the sidebar button to close the sidebar
-                document.getElementById('sidebaropener').click();
+                document.getElementById('sidebarcloser').click();
             }, 100);
         });
 
