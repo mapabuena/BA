@@ -21,6 +21,17 @@ document.addEventListener('DOMContentLoaded', function() {
     setupInfoItemHoverEffects();
 });
 
+function setupInfoItemHoverEffects() {
+    document.querySelectorAll('.info-item').forEach(item => {
+        item.addEventListener('mouseover', () => {
+            item.style.boxShadow = '0px 4px 10px rgba(0, 0, 0, 0.3)';
+        });
+
+        item.addEventListener('mouseout', () => {
+            item.style.boxShadow = 'none';
+        });
+    });
+}
 function setupDatePickers() {
     const startDateInput = document.getElementById('startDateTime');
     const endDateInput = document.getElementById('endDateTime');
@@ -285,9 +296,12 @@ function updateInfoWindowContent() {
         infoWindow.appendChild(item);
 
         item.addEventListener('click', () => {
-            simulateMarkerClick(index);
+            const globalIndex = markers.indexOf(markers.find(m => m.marker === marker));
+            simulateMarkerClick(globalIndex);
         });
     });
+
+    setupInfoItemHoverEffects(); // Ensure hover effects are set up
 }
 
 function setupClickSimulations() {
@@ -311,14 +325,14 @@ function recenterMap(lng, lat) {
     });
 }
          
-function simulateMarkerClick(markerId) {
-    // Assuming markerId is the index in the markers array
-    const { marker } = markers[markerId];
-
-    // Directly open the popup if it's not already open
-    if (!marker.getPopup().isOpen()) {
-        marker.togglePopup();
-    }
+function simulateMarkerClick(markerIndex) {
+    const { marker } = markers[markerIndex];
+    const clickEvent = new MouseEvent('click', {
+        view: window,
+        bubbles: true,
+        cancelable: true
+    });
+    marker.getElement().dispatchEvent(clickEvent);
 }
 
 async function fetchMarkersData() {
@@ -455,17 +469,6 @@ function createMarker(data) {
     });
 }
 
-function setupInfoItemHoverEffects() {
-    document.querySelectorAll('.info-item').forEach(item => {
-        item.addEventListener('mouseover', () => {
-            item.style.boxShadow = '0px 4px 10px rgba(0, 0, 0, 0.3)';
-        });
-
-        item.addEventListener('mouseout', () => {
-            item.style.boxShadow = 'none';
-        });
-    });
-}
 
 function toggleGeoJSONRoute(geojson, visibility) {
     const sourceId = 'route-source';
