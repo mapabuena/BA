@@ -110,7 +110,7 @@ function setupMapEvents() {
                 });
 
                 // Trigger the sidebar button to close the sidebar
-                document.getElementById('sidebarbutton').click();
+                document.getElementById('sidebaropener').click();
             }, 100);
         });
 
@@ -436,7 +436,7 @@ function createMarker(data) {
         document.getElementById('sidebardescription').innerText = data.description;
         document.getElementById('sidebarheader2').innerText = data.sidebarheader2 || '';
 
-        document.getElementById('sidebarbutton').click();
+        document.getElementById('sidebaropener').click();
     });
 
     markers.push({
