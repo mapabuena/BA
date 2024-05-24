@@ -455,6 +455,17 @@ function createMarker(data) {
     });
 }
 
+function setupInfoItemHoverEffects() {
+    document.querySelectorAll('.info-item').forEach(item => {
+        item.addEventListener('mouseover', () => {
+            item.style.boxShadow = '0px 4px 10px rgba(0, 0, 0, 0.3)';
+        });
+
+        item.addEventListener('mouseout', () => {
+            item.style.boxShadow = 'none';
+        });
+    });
+}
 
 function toggleGeoJSONRoute(geojson, visibility) {
     const sourceId = 'route-source';
