@@ -432,7 +432,7 @@ function createMarker(data) {
         el.style.backgroundImage = `url(${data.icon2_url})`;
 
         document.getElementById('sidebarimage').innerHTML = `<img src="${data.sidebarimage}" alt="Sidebar Image" style="width: 100%;">`;
-        document.getElementById('sidebartitle').innerText = data.sidebarheader;
+        document.getElementById('sidebarheader').innerText = data.sidebarheader;
         document.getElementById('sidebardescription').innerText = data.description;
         document.getElementById('sidebarheader2').innerText = data.sidebarheader2 || '';
 
