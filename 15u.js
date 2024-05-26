@@ -428,13 +428,17 @@ function convertRecurringToSpecificDates(schedule, startDate, endDate) {
     };
 
     if (!Array.isArray(schedule)) {
-        console.error("Invalid schedule format:", schedule);
+        console.error("Invalid schedule format (not an array):", schedule);
         return [];
     }
 
     let specificDates = [];
     schedule.forEach(event => {
         console.log("Processing event:", event); // Log each event
+        if (typeof event !== 'object' || !event.day || !event.start_time || !event.end_time) {
+            console.error("Invalid event format:", event);
+            return;
+        }
         const dayOfWeek = dayMap[event.day];
         specificDates = specificDates.concat(
             getNextOccurrences(dayOfWeek, event.start_time, event.end_time, startDate, endDate)
@@ -442,6 +446,7 @@ function convertRecurringToSpecificDates(schedule, startDate, endDate) {
     });
     return specificDates;
 }
+
 function getNextOccurrences(dayOfWeek, startTime, endTime, startDate, endDate) {
     let occurrences = [];
     let current = new Date(startDate);
