@@ -349,9 +349,10 @@ function processCSVData(csvData) {
                 let recurringSchedule = [];
                 if (data.recurring_schedule) {
                     recurringSchedule = data.recurring_schedule.split('|').map(schedule => {
-                        const [day, times] = schedule.split(':');
+                        const [day, times] = schedule.split(':').map(part => part.trim());
                         if (times) {
-                            const [start_time, end_time] = times.split('-');
+                            const [start_time, end_time] = times.split('-').map(part => part.trim());
+                            console.log(`Processing schedule at row ${rowIndex + 1}: day=${day}, start_time=${start_time}, end_time=${end_time}`);
                             if (start_time && end_time) {
                                 return { day: day.trim(), start_time: start_time.trim(), end_time: end_time.trim() };
                             } else {
