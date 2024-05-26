@@ -155,7 +155,6 @@ function adjustMarkerSizes() {
     });
 }
 
-// Function to apply date filter based on selected range
 function applyDateFilter() {
     const startDateTime = new Date(document.getElementById('startDateTime').value);
     const endDateTime = new Date(document.getElementById('endDateTime').value);
@@ -357,7 +356,12 @@ function processCSVData(csvData) {
                         const [day, times] = schedule.split(':');
                         if (times) {
                             const [start_time, end_time] = times.split('-');
-                            return { day: day.trim(), start_time: start_time.trim(), end_time: end_time.trim() };
+                            if (start_time && end_time) {
+                                return { day: day.trim(), start_time: start_time.trim(), end_time: end_time.trim() };
+                            } else {
+                                console.error(`Error parsing times at row ${rowIndex + 1}: start_time or end_time is undefined in ${schedule}`);
+                                return null;
+                            }
                         } else {
                             console.error(`Error parsing recurring_schedule at row ${rowIndex + 1}: times are undefined in ${schedule}`);
                             return null;
@@ -428,10 +432,12 @@ function convertRecurringToSpecificDates(schedule, startDate, endDate) {
 
     let specificDates = [];
     schedule.forEach(event => {
-        const dayOfWeek = dayMap[event.day];
-        specificDates = specificDates.concat(
-            getNextOccurrences(dayOfWeek, event.start_time, event.end_time, startDate, endDate)
-        );
+        if (event) {
+            const dayOfWeek = dayMap[event.day];
+            specificDates = specificDates.concat(
+                getNextOccurrences(dayOfWeek, event.start_time, event.end_time, startDate, endDate)
+            );
+        }
     });
     return specificDates;
 }
@@ -454,6 +460,7 @@ function getNextOccurrences(dayOfWeek, startTime, endTime, startDate, endDate) {
     }
     return occurrences;
 }
+
 function createMarker(data) {
     const el = document.createElement('div');
     el.className = 'marker';
