@@ -345,29 +345,14 @@ function processCSVData(csvData) {
                     });
                 }
 
-                // Log the original recurring_schedule
-                console.log(`Original recurring_schedule: ${data.recurring_schedule}`);
-
-                // Transform the recurring_schedule string to JSON
+                // Parse the new recurring_schedule format
                 let recurringSchedule = [];
                 if (data.recurring_schedule) {
-                    recurringSchedule = data.recurring_schedule.split('|').map(schedule => {
-                        const [day, times] = schedule.split(':').map(part => part.trim());
-                        console.log(`Parsing schedule: day=${day}, times=${times}`);
-                        if (times) {
-                            const [start_time, end_time] = times.split('-').map(part => part.trim());
-                            console.log(`Parsed times: start_time=${start_time}, end_time=${end_time}`);
-                            if (start_time && end_time) {
-                                return { day: day.trim(), start_time: start_time.trim(), end_time: end_time.trim() };
-                            } else {
-                                console.error(`Error parsing times at row ${rowIndex + 1}: start_time or end_time is undefined in ${schedule}`);
-                                return null;
-                            }
-                        } else {
-                            console.error(`Error parsing recurring_schedule at row ${rowIndex + 1}: times are undefined in ${schedule}`);
-                            return null;
-                        }
-                    }).filter(Boolean); // Filter out any null values
+                    try {
+                        recurringSchedule = JSON.parse(data.recurring_schedule.replace(/'/g, '"'));
+                    } catch (error) {
+                        console.error(`Error parsing recurring_schedule at row ${rowIndex + 1}:`, error);
+                    }
                 }
 
                 // Parse GeoJSON string
@@ -419,6 +404,7 @@ function processCSVData(csvData) {
         }
     });
 }
+
 function convertRecurringToSpecificDates(schedule, startDate, endDate) {
     const dayMap = {
         "Sunday": 0,
