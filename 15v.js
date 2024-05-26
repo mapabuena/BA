@@ -352,10 +352,18 @@ function processCSVData(csvData) {
                         const rawSchedule = data.recurring_schedule.trim().replace(/'/g, '"');
                         console.log("Original recurring_schedule string:", data.recurring_schedule);
                         console.log("Processed recurring_schedule string:", rawSchedule);
-                        recurringSchedule = JSON.parse(rawSchedule);
-                        console.log("Parsed recurring_schedule:", recurringSchedule);
+                        let parsedSchedule = JSON.parse(rawSchedule);
+                        console.log("Parsed recurring_schedule (first pass):", parsedSchedule);
 
-                        // Check if parsed recurring_schedule is an array
+                        // If parsedSchedule is a string, parse it again
+                        if (typeof parsedSchedule === 'string') {
+                            parsedSchedule = JSON.parse(parsedSchedule);
+                            console.log("Parsed recurring_schedule (second pass):", parsedSchedule);
+                        }
+
+                        recurringSchedule = parsedSchedule;
+
+                        // Check if parsed recurringSchedule is an array
                         if (Array.isArray(recurringSchedule)) {
                             console.log("recurring_schedule is a valid array:", recurringSchedule);
                         } else {
@@ -465,6 +473,7 @@ function getNextOccurrences(dayOfWeek, startTime, endTime, startDate, endDate) {
     }
     return occurrences;
 }
+
 
 
 function createMarker(data) {
