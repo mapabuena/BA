@@ -440,7 +440,6 @@ function convertRecurringToSpecificDates(schedule, startDate, endDate) {
     });
     return specificDates;
 }
-
 function getNextOccurrences(dayOfWeek, startTime, endTime, startDate, endDate) {
     let occurrences = [];
     let current = new Date(startDate);
