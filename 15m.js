@@ -344,8 +344,10 @@ function processCSVData(csvData) {
                         return { start: start.trim(), end: end.trim() };
                     });
                 }
-            console.log(`Original recurring_schedule: ${data.recurring_schedule}`);
-                
+
+                // Log the original recurring_schedule
+                console.log(`Original recurring_schedule: ${data.recurring_schedule}`);
+
                 // Transform the recurring_schedule string to JSON
                 let recurringSchedule = [];
                 if (data.recurring_schedule) {
