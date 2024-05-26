@@ -301,7 +301,7 @@ function processCSVData(csvData) {
                 if (data.dateRanges) {
                     dateRanges = data.dateRanges.split('|').map(range => {
                         const [start, end] = range.split(':');
-                        return { start: start.trim(), end: end.trim() };
+                        return { start: new Date(start.trim()), end: new Date(end.trim()) };
                     });
                 }
 
