@@ -350,7 +350,7 @@ function processCSVData(csvData) {
                 if (data.recurring_schedule) {
                     try {
                         console.log("Original recurring_schedule:", data.recurring_schedule);
-                        recurringSchedule = JSON.parse(data.recurring_schedule.replace(/'/g, '"'));
+                        recurringSchedule = JSON.parse(data.recurring_schedule.replace(/'/g, '"').trim());
                         console.log("Parsed recurring_schedule:", recurringSchedule);
                     } catch (error) {
                         console.error(`Error parsing recurring_schedule at row ${rowIndex + 1}:`, error);
@@ -417,6 +417,11 @@ function convertRecurringToSpecificDates(schedule, startDate, endDate) {
         "Friday": 5,
         "Saturday": 6
     };
+
+    if (!Array.isArray(schedule)) {
+        console.error("Invalid schedule format:", schedule);
+        return [];
+    }
 
     let specificDates = [];
     schedule.forEach(event => {
