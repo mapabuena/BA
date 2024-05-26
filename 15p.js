@@ -345,11 +345,13 @@ function processCSVData(csvData) {
                     });
                 }
 
-                // Parse the new recurring_schedule format
+                // Parse the recurring_schedule JSON format
                 let recurringSchedule = [];
                 if (data.recurring_schedule) {
                     try {
+                        console.log("Original recurring_schedule:", data.recurring_schedule);
                         recurringSchedule = JSON.parse(data.recurring_schedule.replace(/'/g, '"'));
+                        console.log("Parsed recurring_schedule:", recurringSchedule);
                     } catch (error) {
                         console.error(`Error parsing recurring_schedule at row ${rowIndex + 1}:`, error);
                     }
