@@ -184,43 +184,6 @@ function applyDateFilter() {
     updateInfoWindowContent();
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    const startDateInput = document.getElementById('startDateTime');
-    const endDateInput = document.getElementById('endDateTime');
-
-    if (!startDateInput || !endDateInput) {
-        console.error("Date inputs are not found on the page.");
-        return; // Exit if inputs are not found
-    }
-
-    // Function to check and apply date filters if both dates are set
-    function checkAndApplyFilter() {
-        if (startDateInput.value && endDateInput.value) {
-            applyDateFilter(); // Automatically apply filter when both dates are valid
-        }
-    }
-
-    // Adjust the minimum allowable date of the end date input
-    startDateInput.addEventListener('change', function() {
-        endDateInput.min = startDateInput.value;
-        checkAndApplyFilter(); // Apply filter if end date is already set
-        // Ensure the start date does not exceed an already set end date
-        if (endDateInput.value && startDateInput.value > endDateInput.value) {
-            startDateInput.value = endDateInput.value; // Correct this line to maintain logical consistency
-        }
-    });
-
-    // Adjust the maximum allowable date of the start date input
-    endDateInput.addEventListener('change', function() {
-        startDateInput.max = endDateInput.value;
-        checkAndApplyFilter(); // Apply filter if start date is already set
-        // Ensure the end date is not before an already set start date
-        if (startDateInput.value && endDateInput.value < startDateInput.value) {
-            endDateInput.value = startDateInput.value; // Correct this line to maintain logical consistency
-        }
-     });
-});
-
 
 // Example for async fetchMarkersData, modify according to your data fetching logic
 async function fetchMarkersData() {
@@ -392,9 +355,14 @@ function processCSVData(csvData) {
                 if (data.recurring_schedule) {
                     recurringSchedule = data.recurring_schedule.split('|').map(schedule => {
                         const [day, times] = schedule.split(':');
-                        const [start_time, end_time] = times.split('-');
-                        return { day: day.trim(), start_time: start_time.trim(), end_time: end_time.trim() };
-                    });
+                        if (times) {
+                            const [start_time, end_time] = times.split('-');
+                            return { day: day.trim(), start_time: start_time.trim(), end_time: end_time.trim() };
+                        } else {
+                            console.error(`Error parsing recurring_schedule at row ${rowIndex + 1}: times are undefined in ${schedule}`);
+                            return null;
+                        }
+                    }).filter(Boolean); // Filter out any null values
                 }
 
                 // Parse GeoJSON string
@@ -446,6 +414,7 @@ function processCSVData(csvData) {
         }
     });
 }
+
 function convertRecurringToSpecificDates(schedule, startDate, endDate) {
     const dayMap = {
         "Sunday": 0,
