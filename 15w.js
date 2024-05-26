@@ -179,7 +179,6 @@ function applyDateFilter() {
     updateInfoWindowContent();
 }
 
-
 // Example for async fetchMarkersData, modify according to your data fetching logic
 async function fetchMarkersData() {
     const response = await fetch('https://raw.githubusercontent.com/mapabuena/BA/main/NewYorkPinsGroups.csv');
@@ -349,11 +348,21 @@ function processCSVData(csvData) {
                 let recurringSchedule = [];
                 if (data.recurring_schedule) {
                     try {
-                        console.log("Original recurring_schedule:", data.recurring_schedule);
-                        recurringSchedule = JSON.parse(data.recurring_schedule.replace(/'/g, '"').trim());
-                        console.log("Parsed recurring_schedule:", recurringSchedule);
+                        const rawSchedule = data.recurring_schedule.trim().replace(/'/g, '"');
+                        console.log("Original recurring_schedule string:", data.recurring_schedule);
+                        console.log("Processed recurring_schedule string:", rawSchedule);
+                        let parsedSchedule = JSON.parse(rawSchedule);
+                        console.log("Parsed recurring_schedule (first pass):", parsedSchedule);
 
-                        // Check if parsed recurring_schedule is an array
+                        // If parsedSchedule is a string, parse it again
+                        if (typeof parsedSchedule === 'string') {
+                            parsedSchedule = JSON.parse(parsedSchedule);
+                            console.log("Parsed recurring_schedule (second pass):", parsedSchedule);
+                        }
+
+                        recurringSchedule = parsedSchedule;
+
+                        // Check if parsed recurringSchedule is an array
                         if (Array.isArray(recurringSchedule)) {
                             console.log("recurring_schedule is a valid array:", recurringSchedule);
                         } else {
