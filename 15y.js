@@ -179,45 +179,6 @@ function applyDateFilter() {
     updateInfoWindowContent();
 }
 
-// Example for async fetchMarkersData, modify according to your data fetching logic
-async function fetchMarkersData() {
-    const response = await fetch('https://raw.githubusercontent.com/mapabuena/BA/main/NewYorkPinsGroups.csv');
-    const csvData = await response.text();
-    processCSVData(csvData);
-}
-
-map.on('load', function() {
-    setTimeout(function() {
-        map.resize();
-        fetchMarkersData().then(() => {
-            updateFilters();
-
-            // List of group values to activate
-            const groupValues = ['group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'city'];
-
-            // Simulate clicks for specified groups
-            groupValues.forEach(value => {
-                let button = document.querySelector(`.filter-button[data-category="category"][data-value="${value}"]`);
-                if (button) {
-                    button.click(); // Simulate click
-                }
-            });
-
-            // Update the info window initially after data is fetched and processed
-            updateInfoWindowContent();
-        }).catch(error => {
-            console.error("Error fetching marker data: ", error);
-        });
-    }, 250);
-
-    // Throttle 'moveend' event to update info window with some delay after map movements
-    let updateTimeout;
-    map.on('moveend', function() {
-        clearTimeout(updateTimeout);
-        updateTimeout = setTimeout(updateInfoWindowContent, 100); // Only update after 100 ms of inactivity
-    });
-});
-
 
 function calculateDistance(center, data) {
     const R = 6371; // Radius of the Earth in kilometers
