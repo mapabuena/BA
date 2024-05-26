@@ -301,7 +301,7 @@ function processCSVData(csvData) {
                 if (data.dateRanges) {
                     console.log("Original dateRanges string:", data.dateRanges);
                     dateRanges = data.dateRanges.split('|').map(range => {
-                        const [start, end] = range.match(/(.+?)\:(.+)/).slice(1, 3);
+                        const [start, end] = range.split(';');
                         console.log(`Parsed dateRange - start: ${start.trim()}, end: ${end.trim()}`);
                         return { start: new Date(start.trim()), end: new Date(end.trim()) };
                     });
