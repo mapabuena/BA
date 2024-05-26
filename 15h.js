@@ -47,6 +47,7 @@ function setupDatePickers() {
         altFormat: "F j, H:i",
         onChange: function(selectedDates, dateStr) {
             endDatePicker.set('minDate', dateStr);
+            applyDateFilter(); // Automatically apply filter when the date is changed
         }
     });
 
@@ -57,17 +58,11 @@ function setupDatePickers() {
         altFormat: "F j, H:i",
         onChange: function(selectedDates, dateStr) {
             startDatePicker.set('maxDate', dateStr);
+            applyDateFilter(); // Automatically apply filter when the date is changed
         }
     });
-
-    startDateInput.addEventListener('change', function() {
-        endDatePicker.set('minDate', startDateInput.value);
-    });
-
-    endDateInput.addEventListener('change', function() {
-        startDatePicker.set('maxDate', endDateInput.value);
-    });
 }
+
 
 function setupCityButtons() {
     document.querySelectorAll('.citybutton').forEach(button => {
@@ -155,6 +150,7 @@ function adjustMarkerSizes() {
     });
 }
 
+// Function to apply date filter based on selected range
 function applyDateFilter() {
     const startDateTime = new Date(document.getElementById('startDateTime').value);
     const endDateTime = new Date(document.getElementById('endDateTime').value);
@@ -430,14 +426,23 @@ function convertRecurringToSpecificDates(schedule, startDate, endDate) {
         "Saturday": 6
     };
 
+function convertRecurringToSpecificDates(schedule, startDate, endDate) {
+    const dayMap = {
+        "Sunday": 0,
+        "Monday": 1,
+        "Tuesday": 2,
+        "Wednesday": 3,
+        "Thursday": 4,
+        "Friday": 5,
+        "Saturday": 6
+    };
+
     let specificDates = [];
     schedule.forEach(event => {
-        if (event) {
-            const dayOfWeek = dayMap[event.day];
-            specificDates = specificDates.concat(
-                getNextOccurrences(dayOfWeek, event.start_time, event.end_time, startDate, endDate)
-            );
-        }
+        const dayOfWeek = dayMap[event.day];
+        specificDates = specificDates.concat(
+            getNextOccurrences(dayOfWeek, event.start_time, event.end_time, startDate, endDate)
+        );
     });
     return specificDates;
 }
@@ -460,6 +465,7 @@ function getNextOccurrences(dayOfWeek, startTime, endTime, startDate, endDate) {
     }
     return occurrences;
 }
+
 
 function createMarker(data) {
     const el = document.createElement('div');
