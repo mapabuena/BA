@@ -349,8 +349,10 @@ function processCSVData(csvData) {
                 let recurringSchedule = [];
                 if (data.recurring_schedule) {
                     try {
-                        console.log("Original recurring_schedule:", data.recurring_schedule);
-                        recurringSchedule = JSON.parse(data.recurring_schedule.replace(/'/g, '"').trim());
+                        const rawSchedule = data.recurring_schedule.trim().replace(/'/g, '"');
+                        console.log("Original recurring_schedule string:", data.recurring_schedule);
+                        console.log("Processed recurring_schedule string:", rawSchedule);
+                        recurringSchedule = JSON.parse(rawSchedule);
                         console.log("Parsed recurring_schedule:", recurringSchedule);
 
                         // Check if parsed recurring_schedule is an array
