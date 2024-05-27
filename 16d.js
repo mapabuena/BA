@@ -1,7 +1,7 @@
 mapboxgl.accessToken = 'pk.eyJ1IjoibjMxbGQiLCJhIjoiY2x0NHc5NjVpMDdzaDJscGE5Y2gyYnQ5MyJ9.zfzXUlLbNlVbr9pt4naycw'; // Replace with your actual access token
 let map = new mapboxgl.Map({
     container: 'map',
-    style: 'mapbox://styles/n31ld/clt4onrza001401pcc1j9he1u',
+    style: 'mapbox://styles/n31ld/clwocpejw03s201ql6pto7fh9',
     center: [-73.985428, 40.748817],
     zoom: 11
 });
