@@ -68,11 +68,13 @@ function setupInfoItemHoverEffects() {
         item.addEventListener('mouseover', () => {
             const marker = markers[index].marker;
             marker.getElement().classList.add('marker-hover');
+            console.log(`Mouse over on info-item ${index}: Added marker-hover class to marker`, marker.getElement());
         });
 
         item.addEventListener('mouseout', () => {
             const marker = markers[index].marker;
             marker.getElement().classList.remove('marker-hover');
+            console.log(`Mouse out on info-item ${index}: Removed marker-hover class from marker`, marker.getElement());
         });
 
         item.addEventListener('mouseover', () => {
