@@ -6,11 +6,6 @@ let map = new mapboxgl.Map({
     zoom: 11
 });
 
-let markers = [];
-let activeFilters = {
-    category: [],
-};
-
 const nightStyle = 'mapbox://styles/n31ld/clwo829pt03rh01ql4z379sp2';
 const originalStyle = 'mapbox://styles/n31ld/clwocpejw03s201ql6pto7fh9';
 
@@ -20,12 +15,8 @@ document.getElementById('nightmode').addEventListener('click', () => {
     isNightMode = !isNightMode;
     map.setStyle(isNightMode ? nightStyle : originalStyle);
 
-    document.querySelectorAll('.info-item').forEach(item => {
-        if (isNightMode) {
-            item.classList.add('nightmode');
-        } else {
-            item.classList.remove('nightmode');
-        }
+    document.querySelectorAll('.info-item h4').forEach(h4 => {
+        h4.style.color = isNightMode ? 'white' : 'black';
     });
 
     document.querySelectorAll('.some-div').forEach(div => {
@@ -34,9 +25,9 @@ document.getElementById('nightmode').addEventListener('click', () => {
 
     const nightModeButton = document.getElementById('nightmode');
     if (isNightMode) {
-        nightModeButton.classList.add('pressed');
+        nightModeButton.classList.add('Pressed');
     } else {
-        nightModeButton.classList.remove('pressed');
+        nightModeButton.classList.remove('Pressed');
     }
 });
 
