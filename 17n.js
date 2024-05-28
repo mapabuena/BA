@@ -108,12 +108,12 @@ function setupCityButtons() {
     document.querySelectorAll('.citybutton').forEach(button => {
         button.addEventListener('click', function() {
             const csvUrl = this.getAttribute('data-csv');
-            const lat = parseFloat(this.getAttribute('data-lat'));
-            const lng = parseFloat(this.getAttribute('data-lng'));
+            const lat = parseFloat(this.getAttribute('data-lat')) || 0; // Default to 0 if not specified
+            const lng = parseFloat(this.getAttribute('data-lng')) || 0; // Default to 0 if not specified
             const zoom = parseFloat(this.getAttribute('data-zoom')) || 11; // Default to 11 if not specified
             const speed = parseFloat(this.getAttribute('data-speed')) || 1.2; // Default to 1.2 if not specified
             const curve = parseFloat(this.getAttribute('data-curve')) || 1.42; // Default curve
-            const easingFunction = this.getAttribute('data-easing'); // This would need to be translated from a string to a function if used
+            const easingFunction = easingFunctions[this.getAttribute('data-easing')] || easingFunctions.easeInOutQuad; // Default to easeInOutQuad if not specified
 
             // Delay the CSV load until after the zoom animation
             map.flyTo({
@@ -121,7 +121,7 @@ function setupCityButtons() {
                 zoom: zoom,
                 speed: speed,
                 curve: curve,
-                easing: easingFunctions[easing] || easingFunctions.standard, // Use the standard easing if not specified
+                easing: easingFunction, // Use the specified easing function or the default
                 essential: true
             });
 
@@ -132,7 +132,6 @@ function setupCityButtons() {
         });
     });
 }
-
 
 function setupFormHandlers() {
     const form = document.getElementById('search-inputs');
