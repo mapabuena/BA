@@ -272,7 +272,7 @@ visibleMarkers.forEach(({ marker, data }, index) => {
 });
 
 setupInfoItemHoverEffects(); // Ensure hover effects are set up
-
+}
 
 function setupClickSimulations() {
     document.getElementById('sidebaropener').addEventListener('click', () => {
