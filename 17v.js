@@ -130,7 +130,13 @@ function setupCityButtons() {
             // Load the CSV after the animation completes
             setTimeout(() => {
                 loadCSV(csvUrl, lat, lng, zoom, speed, curve, easingFunction);
-            }, speed * 130);
+
+                // Update the current city display
+                const cityNameDisplay = document.getElementById('currentcity');
+                if (cityNameDisplay) {
+                    cityNameDisplay.textContent = this.textContent.trim();
+                }
+            }, speed * 130); // Adjust the multiplier if needed
         });
     });
 }
