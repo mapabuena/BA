@@ -25,10 +25,10 @@ document.getElementById('nightmode').addEventListener('click', () => {
     const h4Elements = document.querySelectorAll('.info-item h4');
     h4Elements.forEach(h4 => {
         if (isNightMode) {
-            h4.classList.add('nightmode-text');
+            h4.classList.remove('daymode-text'); // Remove day mode class
             h4.style.color = 'white'; // Apply inline style
         } else {
-            h4.classList.remove('nightmode-text');
+            h4.classList.add('daymode-text'); // Add day mode class
             h4.style.color = 'black'; // Apply inline style
         }
         console.log('h4 Classes:', h4.className);
