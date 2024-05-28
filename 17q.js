@@ -50,7 +50,7 @@ document.getElementById('nightmode').addEventListener('click', () => {
 });
 document.addEventListener('DOMContentLoaded', function() {
     setupDatePickers();
-    Buttons();
+    setupCityButtons();
     setupFormHandlers();
     setupMapEvents();
     setupClickSimulations();
@@ -128,11 +128,10 @@ function setupCityButtons() {
             // Load the CSV after the animation completes
             setTimeout(() => {
                 loadCSV(csvUrl, lat, lng, zoom, speed, curve, easingFunction);
-            }, speed * 150);
+            }, speed * 1000);
         });
     });
 }
-
 function setupFormHandlers() {
     const form = document.getElementById('search-inputs');
     form.addEventListener('submit', function(event) {
