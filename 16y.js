@@ -33,6 +33,7 @@ document.getElementById('nightmode').addEventListener('click', () => {
         }
         console.log('h4 Classes:', h4.className);
     });
+});
 
     document.querySelectorAll('.some-div').forEach(div => {
         div.style.backgroundColor = isNightMode ? 'darkgray' : 'white';
