@@ -20,12 +20,15 @@ document.getElementById('nightmode').addEventListener('click', () => {
     isNightMode = !isNightMode;
     map.setStyle(isNightMode ? nightStyle : originalStyle);
 
+    console.log('Night Mode:', isNightMode);
+
     document.querySelectorAll('.info-item h4').forEach(h4 => {
         if (isNightMode) {
             h4.classList.add('nightmode-text');
         } else {
             h4.classList.remove('nightmode-text');
         }
+        console.log('h4 Classes:', h4.className); // Add this line to log the class names
     });
 
     document.querySelectorAll('.some-div').forEach(div => {
@@ -39,7 +42,6 @@ document.getElementById('nightmode').addEventListener('click', () => {
         nightModeButton.classList.remove('nightmode-active');
     }
 
-    console.log('Night Mode:', isNightMode);
     console.log('Button Classes:', nightModeButton.className);
 });
 
