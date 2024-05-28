@@ -128,7 +128,7 @@ function setupCityButtons() {
             // Load the CSV after the animation completes
             setTimeout(() => {
                 loadCSV(csvUrl, lat, lng, zoom, speed, curve, easingFunction);
-            }, speed * 1000);
+            }, speed * 300);
         });
     });
 }
