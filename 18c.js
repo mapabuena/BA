@@ -67,14 +67,16 @@ function setupInfoItemHoverEffects() {
     document.querySelectorAll('.info-item').forEach((item, index) => {
         item.addEventListener('mouseover', () => {
             const marker = markers[index].marker;
-            marker.getElement().classList.add('marker-hover');
-            console.log(`Mouse over on info-item ${index}: Added marker-hover class to marker`, marker.getElement());
+            const markerElement = marker.getElement();
+            markerElement.style.transform = 'scale(1.5)';
+            console.log(`Mouse over on info-item ${index}: Scaled up marker`, markerElement);
         });
 
         item.addEventListener('mouseout', () => {
             const marker = markers[index].marker;
-            marker.getElement().classList.remove('marker-hover');
-            console.log(`Mouse out on info-item ${index}: Removed marker-hover class from marker`, marker.getElement());
+            const markerElement = marker.getElement();
+            markerElement.style.transform = 'scale(1)';
+            console.log(`Mouse out on info-item ${index}: Scaled down marker`, markerElement);
         });
 
         item.addEventListener('mouseover', () => {
