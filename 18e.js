@@ -64,19 +64,21 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function setupInfoItemHoverEffects() {
-    document.querySelectorAll('.info-item').forEach((item, index) => {
+    document.querySelectorAll('.info-item').forEach((item) => {
+        const markerIndex = item.getAttribute('data-index'); // Get the index from data-index attribute
+
         item.addEventListener('mouseover', () => {
-            const marker = markers[index].marker;
+            const marker = markers[markerIndex].marker;
             const markerElement = marker.getElement();
             markerElement.style.transform = 'scale(1.5)';
-            console.log(`Mouse over on info-item ${index}: Scaled up marker`, markerElement);
+            console.log(`Mouse over on info-item ${markerIndex}: Scaled up marker`, markerElement);
         });
 
         item.addEventListener('mouseout', () => {
-            const marker = markers[index].marker;
+            const marker = markers[markerIndex].marker;
             const markerElement = marker.getElement();
             markerElement.style.transform = 'scale(1)';
-            console.log(`Mouse out on info-item ${index}: Scaled down marker`, markerElement);
+            console.log(`Mouse out on info-item ${markerIndex}: Scaled down marker`, markerElement);
         });
 
         item.addEventListener('mouseover', () => {
@@ -293,6 +295,7 @@ function updateInfoWindowContent() {
     visibleMarkers.forEach(({ marker, data }, index) => {
         const item = document.createElement('div');
         item.className = 'info-item';
+        item.setAttribute('data-index', index); // Set data-index attribute
         item.innerHTML = `<h4 class="daymode-text">${data.sidebarheader}</h4><img src="${data.sidebarimage}" alt="${data.address}" style="width:100%;">`;
         infoWindow.appendChild(item);
 
