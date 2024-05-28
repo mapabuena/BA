@@ -707,7 +707,6 @@ const easingFunctions = {
     }
 };
 
-let isDataLoading = false;
 
 function loadCSV(csvFile, centerLat, centerLng, zoom, speed, curve, easing) {
     if (isDataLoading) {
