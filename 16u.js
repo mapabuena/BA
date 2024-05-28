@@ -22,7 +22,8 @@ document.getElementById('nightmode').addEventListener('click', () => {
 
     console.log('Night Mode:', isNightMode);
 
-    document.querySelectorAll('.info-item h4').forEach(h4 => {
+    const h4Elements = document.querySelectorAll('.info-item h4');
+    h4Elements.forEach(h4 => {
         if (isNightMode) {
             h4.classList.add('nightmode-text');
             h4.style.color = 'white'; // Apply inline style
