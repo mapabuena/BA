@@ -1,0 +1,268 @@
+<style>
+.infowindowbar {
+  overflow-x: auto; /* Enable horizontal scrolling */
+  overflow-y: hidden; /* Hide vertical scrollbar */
+  white-space: nowrap; /* Keep items in a single line for horizontal scrolling */
+}
+
+.infowindowbar::-webkit-scrollbar {
+  height: 8px; /* Adjust the height of horizontal scrollbar */
+}
+
+.infowindowbar::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Light grey track */
+}
+
+.infowindowbar::-webkit-scrollbar-thumb {
+  background: #888; /* Darker grey thumb */
+}
+
+.infowindowbar::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Even darker grey on hover */
+}
+
+.info-content {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap; /* Prevents items from wrapping to a new line */
+  padding: 10px 0;
+}
+
+.info-item {
+  display: inline-block;
+  width: 156px; /* Fixed width */
+  text-align: center;
+  vertical-align: top;
+  margin-right: 5px; /* Adjust or remove margin as needed for your layout */
+  transition: box-shadow 0.3s;
+}
+
+.info-item img {
+  width: 156px; /* Force the image to be exactly 156px wide */
+  height: auto; /* Maintain aspect ratio */
+}
+
+.info-item h4 {
+  font-size: 14px; /* Adjust font size as needed */
+  color: black;
+  margin-top: 2px; /* Minimize margin */
+  margin-bottom: 2px; /* Ensure no padding is adding extra space */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap; /* Ensures text does not wrap */
+  width: 156px; /* Fixed width to match the container */
+  line-height: 1.3; /* Adjust line height to control spacing within the h4 element */
+  font-family: Calibri, 'Trebuchet MS', sans-serif; /* Set font-family */
+}
+
+/* Hide description to maintain fixed sizing */
+.info-item p {
+  display: none;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center the content */
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#map-container {
+  position: relative; /* Add this line */
+  display: flex;
+  width: 100vw;
+  height: 80vh /* Ensure this is set or adjust accordingly */
+}
+
+#map {
+  height: 80vh;
+  width: 100vw; /* Adjust based on your layout needs */
+}
+
+.button-container {
+  width: 100%; /* Full width */
+  text-align: center; /* Center buttons */
+  margin-top: 0px; /* Space from the map */
+  justify-content: center;
+  gap: 2px; /* Adjust this value to manage spacing between buttons */
+}
+
+button {
+  background-color: #FFF;
+  color: black;
+  font-family: 'Gill Sans MT', sans-serif;
+  margin: .5px 0px; /* Reduced vertical margin and horizontal margin */
+  padding: 2px 6px; /* Adjust padding inside the buttons if necessary */
+}
+
+button:hover {
+  background-color: #ddd; /* Light grey background on hover */
+}
+
+.info-item:hover,
+.info-item:active {
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.75);
+}
+
+/* Change cursor to pointer for Flatpickr input elements */
+.flatpickr-input,
+.flatpickr-input:focus,
+.flatpickr-input:hover {
+  cursor: pointer !important;
+}
+
+/* Change font to Gill Sans MT for all text in Flatpickr calendar */
+.flatpickr-calendar,
+.flatpickr-calendar * {
+  font-family: 'Gill Sans MT', Arial, sans-serif !important;
+}
+
+.date-filter-btn:hover {
+  background-color: #ddd;
+}
+
+.date-filter-btn:hover, .dropbtn:hover {
+  background-color: #ddd; /* Uniform hover effect for both buttons */
+}
+
+button.active {
+  background-color: #000000;
+  color: white;
+}
+
+/* Override the default Mapbox popup styles */
+.mapboxgl-popup {
+  padding: 0;
+  background: none; /* Remove any background from the container */
+}
+
+.mapboxgl-popup-content {
+  max-height: 100px;
+  max-width: 200px;
+  border-radius: 10px;
+  overflow-y: auto; /* Ensure only vertical scrolling if needed */
+  overflow-x: hidden;
+  box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.2);
+  position: relative;
+  padding: 0px;
+  background-color: white; /* Ensure the background is solid */
+}
+
+.mapboxgl-popup-close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.popup-content {
+  /* Additional content styling, but no overflow properties */
+  font-size: 15px;
+  font-weight: bold;
+  color: black;
+  font-family: 'Gill Sans MT', Arial;
+  margin-bottom: 8px;
+  padding: 7px
+}
+
+.search-box {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  min-height: 20px;
+  color: black; /* Default text color */
+}
+
+.copy-icon {
+  cursor: pointer;
+}
+
+.search-box:empty:before {
+  content: attr(data-placeholder);
+  color: #ccc; /* Placeholder text color */
+}
+
+.search-box:focus:before {
+  content: ''; /* Removes placeholder text on focus */
+}
+
+.search-box:focus {
+  color: black; /* Ensure text color is black when focused */
+}
+
+.toggle-info-btn {
+  cursor: pointer;
+  background-color: #FFF; /* Button background */
+  color: black; /* Button text color */
+  padding: 8px 16px; /* Button padding */
+  margin: 2px; /* Consistent with other buttons */
+  border: none; /* Remove border */
+  border-radius: 4px; /* Optional: Rounded corners */
+  display: inline-block; /* Align with other buttons if needed */
+}
+
+input[type="date"] {
+  font-family: 'Gill Sans MT', sans-serif; /* Fallback to sans-serif if Gill Sans MT is not available */
+  padding: 5px;
+  color: black; /* Ensuring text color is black for visibility */
+  background-color: white; /* Optional: setting background color for better contrast */
+  border: 1px solid #ccc; /* Optional: adding a border for better definition */
+  border-radius: 4px; /* Optional: rounding the corners of the input field */
+}
+
+.dropdown-menu {
+  position: relative; /* This ensures that the dropdown content positions itself relative to the button */
+  display: inline-block;
+  z-index: 10;  /* Higher than info-window to ensure it appears on top */
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1000; /* Ensure it's above other content but below modal overlays if any */
+  left: 0; /* Align left edge with the button */
+  top: 100%; /* Position below the button */
+}
+
+.dropdown-content label {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.close-btn {
+  float: right;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.dropdown-menu .dropbtn {
+  background-color: #FFF;
+  color: black;
+  padding: 8px 16px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+.dropdown-menu .dropbtn:hover,
+.dropdown-menu .dropbtn:focus {
+  background-color: #ddd;
+}
+  </style>
