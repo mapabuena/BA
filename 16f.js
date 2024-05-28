@@ -20,9 +20,20 @@ document.getElementById('nightmode').addEventListener('click', () => {
     isNightMode = !isNightMode;
     map.setStyle(isNightMode ? nightStyle : originalStyle);
 
+    document.querySelectorAll('.info-item h4').forEach(h4 => {
+        h4.style.color = isNightMode ? 'white' : 'black';
+    });
+
     document.querySelectorAll('.some-div').forEach(div => {
         div.style.backgroundColor = isNightMode ? 'darkgray' : 'white';
     });
+
+    const nightModeButton = document.getElementById('nightmode');
+    if (isNightMode) {
+        nightModeButton.classList.add('pressed');
+    } else {
+        nightModeButton.classList.remove('pressed');
+    }
 });
 
 document.addEventListener('DOMContentLoaded', function() {
