@@ -50,7 +50,7 @@ document.getElementById('nightmode').addEventListener('click', () => {
 });
 document.addEventListener('DOMContentLoaded', function() {
     setupDatePickers();
-    setupCityButtons();
+    Buttons();
     setupFormHandlers();
     setupMapEvents();
     setupClickSimulations();
@@ -128,7 +128,7 @@ function setupCityButtons() {
             // Load the CSV after the animation completes
             setTimeout(() => {
                 loadCSV(csvUrl, lat, lng, zoom, speed, curve, easingFunction);
-            }, speed * 300);
+            }, speed * 150);
         });
     });
 }
