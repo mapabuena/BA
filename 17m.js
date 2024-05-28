@@ -15,6 +15,7 @@ const nightStyle = 'mapbox://styles/n31ld/clwo829pt03rh01ql4z379sp2';
 const originalStyle = 'mapbox://styles/n31ld/clwocpejw03s201ql6pto7fh9';
 
 let isNightMode = false;
+let currentCSV = 'https://raw.githubusercontent.com/mapabuena/BA/main/NewYorkPinsGroups.csv'; // Default CSV file
 
 document.getElementById('nightmode').addEventListener('click', () => {
     isNightMode = !isNightMode;
