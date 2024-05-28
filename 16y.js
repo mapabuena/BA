@@ -26,10 +26,10 @@ document.getElementById('nightmode').addEventListener('click', () => {
     h4Elements.forEach(h4 => {
         if (isNightMode) {
             h4.classList.remove('daymode-text'); // Remove day mode class
-            h4.style.color = 'white'; // Apply inline style
+            h4.classList.add('nightmode-text'); // Add night mode class
         } else {
+            h4.classList.remove('nightmode-text'); // Remove night mode class
             h4.classList.add('daymode-text'); // Add day mode class
-            h4.style.color = 'black'; // Apply inline style
         }
         console.log('h4 Classes:', h4.className);
     });
@@ -68,6 +68,9 @@ document.addEventListener('DOMContentLoaded', function() {
     setupMapEvents();
     setupClickSimulations();
     setupInfoItemHoverEffects();
+     // Initially add daymode-text class to h4 elements
+    document.querySelectorAll('.info-item h4').forEach(h4 => {
+        h4.classList.add('daymode-text');
 });
 
 function setupInfoItemHoverEffects() {
