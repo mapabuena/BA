@@ -11,17 +11,18 @@ let activeFilters = {
     category: [],
 };
 
-const nightStyle = 'mapbox://styles/n31ld/clwo829pt03rh01ql4z379sp2';
-const originalStyle = 'mapbox://styles/n31ld/clwocpejw03s201ql6pto7fh9';
-
-let isNightMode = false;
-
 document.getElementById('nightmode').addEventListener('click', () => {
     isNightMode = !isNightMode;
     map.setStyle(isNightMode ? nightStyle : originalStyle);
 
-    document.querySelectorAll('.info-item h4').forEach(h4 => {
-        h4.style.color = isNightMode ? 'white' : 'black';
+    console.log('Night Mode:', isNightMode);
+
+    document.querySelectorAll('.info-item').forEach(item => {
+        if (isNightMode) {
+            item.classList.add('nightmode-active');
+        } else {
+            item.classList.remove('nightmode-active');
+        }
     });
 
     document.querySelectorAll('.some-div').forEach(div => {
@@ -34,6 +35,8 @@ document.getElementById('nightmode').addEventListener('click', () => {
     } else {
         nightModeButton.classList.remove('Pressed');
     }
+
+    console.log('Button Classes:', nightModeButton.className);
 });
 
 document.addEventListener('DOMContentLoaded', function() {
