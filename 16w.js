@@ -52,7 +52,7 @@ document.getElementById('nightmode').addEventListener('click', () => {
 const observer = new MutationObserver(mutations => {
     mutations.forEach(mutation => {
         if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-            console.log(`Class changed: ${mutation.target.className}`);
+            console.log(`Class changed: ${mutation.target.className}`, mutation);
         }
     });
 });
