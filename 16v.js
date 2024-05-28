@@ -48,6 +48,19 @@ document.getElementById('nightmode').addEventListener('click', () => {
     console.log('Button Classes:', nightModeButton.className);
 });
 
+// MutationObserver to monitor class changes
+const observer = new MutationObserver(mutations => {
+    mutations.forEach(mutation => {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+            console.log(`Class changed: ${mutation.target.className}`);
+        }
+    });
+});
+
+document.querySelectorAll('.info-item h4').forEach(h4 => {
+    observer.observe(h4, { attributes: true });
+});
+
 document.addEventListener('DOMContentLoaded', function() {
     setupDatePickers();
     setupCityButtons();
