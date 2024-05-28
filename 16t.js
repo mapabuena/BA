@@ -25,10 +25,12 @@ document.getElementById('nightmode').addEventListener('click', () => {
     document.querySelectorAll('.info-item h4').forEach(h4 => {
         if (isNightMode) {
             h4.classList.add('nightmode-text');
+            h4.style.color = 'white'; // Apply inline style
         } else {
             h4.classList.remove('nightmode-text');
+            h4.style.color = 'black'; // Apply inline style
         }
-        console.log('h4 Classes:', h4.className); // Add this line to log the class names
+        console.log('h4 Classes:', h4.className);
     });
 
     document.querySelectorAll('.some-div').forEach(div => {
