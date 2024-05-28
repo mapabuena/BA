@@ -11,6 +11,11 @@ let activeFilters = {
     category: [],
 };
 
+const nightStyle = 'mapbox://styles/n31ld/clwo829pt03rh01ql4z379sp2';
+const originalStyle = 'mapbox://styles/n31ld/clwocpejw03s201ql6pto7fh9';
+
+let isNightMode = false;
+
 document.getElementById('nightmode').addEventListener('click', () => {
     isNightMode = !isNightMode;
     map.setStyle(isNightMode ? nightStyle : originalStyle);
