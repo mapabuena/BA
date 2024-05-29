@@ -15,24 +15,25 @@ let isNightMode = false;
 let currentCSV = 'https://raw.githubusercontent.com/mapabuena/BA/main/NewYorkPinsGroups.csv'; // Default CSV file
 let isDataLoading = false;
 
-// Add the following to ensure markers scale on hover
-map.on('mouseenter', 'markers', (e) => {
-    map.getCanvas().style.cursor = 'pointer';
-    map.setFeatureState(
-        { source: 'markers', id: e.features[0].id },
-        { hover: true }
-    );
-});
 
-map.on('mouseleave', 'markers', (e) => {
-    map.getCanvas().style.cursor = '';
-    map.setFeatureState(
-        { source: 'markers', id: e.features[0].id },
-        { hover: false }
-    );
-});
+map.on('load', function() {
+    // Add the following to ensure markers scale on hover
+    map.on('mouseenter', 'markers', (e) => {
+        map.getCanvas().style.cursor = 'pointer';
+        map.setFeatureState(
+            { source: 'markers', id: e.features[0].id },
+            { hover: true }
+        );
+    });
 
-map.on('style.load', () => {
+    map.on('mouseleave', 'markers', (e) => {
+        map.getCanvas().style.cursor = '';
+        map.setFeatureState(
+            { source: 'markers', id: e.features[0].id },
+            { hover: false }
+        );
+    });
+
     map.addSource('markers', {
         type: 'geojson',
         data: {
@@ -55,7 +56,6 @@ map.on('style.load', () => {
             ]
         }
     });
-});
 
 document.getElementById('nightmode').addEventListener('click', () => {
     isNightMode = !isNightMode;
