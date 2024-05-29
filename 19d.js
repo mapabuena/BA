@@ -360,19 +360,9 @@ async function fetchMarkersData(csvFile) {
         const response = await fetch(csvFile);
         const csvData = await response.text();
         const features = await processCSVData(csvData); // Adjust processCSVData to return GeoJSON features
-        const source = map.getSource('markers');
-        if (source) {
-            source.setData({
-                type: 'FeatureCollection',
-                features: features
-            });
-            // Create markers after the data has been set
-            createMarkers(features);
-            // Update the info window content after the markers have been added
-            updateInfoWindowContent();
-        } else {
-            console.error('Source "markers" not found');
-        }
+        clearMarkers(); // Clear any existing markers
+        createMarkers(features); // Create HTML markers after processing CSV data
+        updateInfoWindowContent(); // Update the info window content after the markers have been added
     } catch (error) {
         console.error('Error fetching or parsing CSV data:', error);
     }
@@ -446,7 +436,6 @@ async function processCSVData(csvData) {
                         },
                         properties: {
                             id: rowIndex,
-                            icon: data.icon_url.split('/').pop().split('.').shift(), // Extract icon name
                             sidebarheader: data.sidebarheader,
                             sidebarimage: data.sidebarimage,
                             description: data.description,
