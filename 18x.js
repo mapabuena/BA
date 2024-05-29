@@ -79,9 +79,7 @@ map.on('styledata', function() {
 // Handle missing images
 map.on('styleimagemissing', function(e) {
     const id = e.id;
-    // Dynamically determine the file extension from the id
-    const extension = id.includes('.svg') ? '.svg' : '.jpg'; // Adjust as needed based on your icon naming convention
-    const url = `https://raw.githubusercontent.com/mapabuena/BA/main/${id}${extension}`;
+    const url = id; // Use the id directly as the URL since it contains the full path
 
     map.loadImage(url, (error, image) => {
         if (error) {
@@ -520,7 +518,7 @@ async function processCSVData(csvData) {
                         },
                         properties: {
                             id: rowIndex,
-                            icon: data.icon_url.split('/').pop().split('.').shift(), // Extract icon name
+                            icon: data.icon_url, // Use icon_url directly
                             sidebarheader: data.sidebarheader,
                             sidebarimage: data.sidebarimage,
                             description: data.description,
