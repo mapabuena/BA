@@ -31,7 +31,7 @@ function addMarkerSourceAndLayer() {
             type: 'symbol',
             source: 'markers',
             layout: {
-                'icon-image': ['concat', ['get', 'icon'], '-15'],
+                'icon-image': ['get', 'icon_url'], // Use the full icon URL
             },
             paint: {
                 'icon-size': [
@@ -79,7 +79,9 @@ map.on('styledata', function() {
 // Handle missing images
 map.on('styleimagemissing', function(e) {
     const id = e.id;
-    const url = `https://raw.githubusercontent.com/mapabuena/BA/main/${id}.svg`; // Adjust this path to your images location
+    // Dynamically determine the file extension from the id
+    const extension = id.includes('.svg') ? '.svg' : '.jpg'; // Adjust as needed based on your icon naming convention
+    const url = `https://raw.githubusercontent.com/mapabuena/BA/main/${id}${extension}`;
 
     map.loadImage(url, (error, image) => {
         if (error) {
