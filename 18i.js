@@ -1,4 +1,5 @@
-mapboxgl.accessToken = 'pk.eyJ1IjoibjMxbGQiLCJhIjoiY2x0NHc5NjVpMDdzaDJscGE5Y2gyYnQ5MyJ9.zfzXUlLbNlVbr9pt4naycw'; // Replace with your actual access token
+// Initialize map
+mapboxgl.accessToken = 'pk.eyJ1IjoibjMxbGQiLCJhIjoiY2x0NHc5NjVpMDdzaDJscGE5Y2gyYnQ5MyJ9.zfzXUlLbNlVbr9pt4naycw';
 let map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/n31ld/clwocpejw03s201ql6pto7fh9',
@@ -7,17 +8,54 @@ let map = new mapboxgl.Map({
 });
 
 let markers = [];
-let activeFilters = {
-    category: [],
-};
-
+let activeFilters = { category: [] };
 const nightStyle = 'mapbox://styles/n31ld/clwo829pt03rh01ql4z379sp2';
 const originalStyle = 'mapbox://styles/n31ld/clwocpejw03s201ql6pto7fh9';
-
 let isNightMode = false;
 let currentCSV = 'https://raw.githubusercontent.com/mapabuena/BA/main/NewYorkPinsGroups.csv'; // Default CSV file
 let isDataLoading = false;
 
+// Add the following to ensure markers scale on hover
+map.on('mouseenter', 'markers', (e) => {
+    map.getCanvas().style.cursor = 'pointer';
+    map.setFeatureState(
+        { source: 'markers', id: e.features[0].id },
+        { hover: true }
+    );
+});
+
+map.on('mouseleave', 'markers', (e) => {
+    map.getCanvas().style.cursor = '';
+    map.setFeatureState(
+        { source: 'markers', id: e.features[0].id },
+        { hover: false }
+    );
+});
+
+map.on('style.load', () => {
+    map.addSource('markers', {
+        type: 'geojson',
+        data: {
+            type: 'FeatureCollection',
+            features: []
+        }
+    });
+
+    map.addLayer({
+        id: 'markers',
+        type: 'symbol',
+        source: 'markers',
+        layout: {
+            'icon-image': ['concat', ['get', 'icon'], '-15'],
+            'icon-size': [
+                'case',
+                ['boolean', ['feature-state', 'hover'], false],
+                1.5, // Size when hovered
+                1 // Default size
+            ]
+        }
+    });
+});
 
 document.getElementById('nightmode').addEventListener('click', () => {
     isNightMode = !isNightMode;
@@ -64,26 +102,24 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function setupInfoItemHoverEffects() {
-    document.querySelectorAll('.info-item').forEach((item) => {
-        const markerIndex = item.getAttribute('data-index'); // Get the index from data-index attribute
+    document.querySelectorAll('.info-item').forEach(item => {
+        const markerIndex = item.getAttribute('data-index');
 
-        if (markerIndex !== null && markers[markerIndex]) {
-            item.addEventListener('mouseover', () => {
-                const marker = markers[markerIndex].marker;
-                const markerElement = marker.getElement();
-                markerElement.style.transform = 'scale(1.5)';
-                console.log(`Mouse over on info-item ${markerIndex}: Scaled up marker`, markerElement);
-            });
+        item.addEventListener('mouseover', () => {
+            console.log(`Mouse over on info-item ${markerIndex}: Scaled up marker`);
+            map.setFeatureState(
+                { source: 'markers', id: parseInt(markerIndex) },
+                { hover: true }
+            );
+        });
 
-            item.addEventListener('mouseout', () => {
-                const marker = markers[markerIndex].marker;
-                const markerElement = marker.getElement();
-                markerElement.style.transform = 'scale(1)';
-                console.log(`Mouse out on info-item ${markerIndex}: Scaled down marker`, markerElement);
-            });
-        } else {
-            console.error(`Invalid marker index: ${markerIndex}`);
-        }
+        item.addEventListener('mouseout', () => {
+            console.log(`Mouse out on info-item ${markerIndex}: Scaled down marker`);
+            map.setFeatureState(
+                { source: 'markers', id: parseInt(markerIndex) },
+                { hover: false }
+            );
+        });
 
         item.addEventListener('mouseover', () => {
             item.style.boxShadow = '0px 4px 10px rgba(0, 0, 0, 0.3)';
@@ -94,7 +130,6 @@ function setupInfoItemHoverEffects() {
         });
     });
 }
-
 function setupDatePickers() {
     const startDateInput = document.getElementById('startDateTime');
     const endDateInput = document.getElementById('endDateTime');
@@ -354,18 +389,19 @@ async function fetchMarkersData(csvFile) {
     try {
         const response = await fetch(csvFile);
         const csvData = await response.text();
-        clearMarkers();
-        await processCSVData(csvData); // Ensure processCSVData is adjusted to be async or returns a Promise
-        updateInfoWindowContent(); // Update info window content after all markers are added
+        const features = await processCSVData(csvData); // Adjust processCSVData to return GeoJSON features
+        map.getSource('markers').setData({
+            type: 'FeatureCollection',
+            features: features
+        });
     } catch (error) {
         console.error('Error fetching or parsing CSV data:', error);
     }
 }
 
-function processCSVData(csvData) {
+async function processCSVData(csvData) {
     return new Promise((resolve, reject) => {
-        console.log("Processing CSV Data...");
-
+        const features = [];
         Papa.parse(csvData, {
             header: true,
             skipEmptyLines: true,
@@ -433,39 +469,46 @@ function processCSVData(csvData) {
                         }
                     }
 
-                    const markerData = {
-                        address: data.address,
-                        lat: lat,
-                        lng: lng,
-                        sidebarheader: data.sidebarheader,
-                        sidebarheader2: data.sidebarheader2,
-                        sidebarimage: data.sidebarimage,
-                        description: data.description,
-                        description2: data.description2,
-                        icon_url: data.icon_url,
-                        iconwidth: parseInt(data.iconwidth, 10) || 20,
-                        iconheight: parseInt(data.iconheight, 10) || 31,
-                        icon2_url: data.icon2_url,
-                        icon2width: parseInt(data.icon2width, 10),
-                        icon2height: parseInt(data.icon2height, 10),
-                        icon3_url: data.icon3_url,
-                        icon3width: parseInt(data.icon3width, 10),
-                        icon3height: parseInt(data.icon3height, 10),
-                        categories: [data.category, data.category2, data.category3, data.category4].filter(Boolean),
-                        dateRanges: dateRanges,
-                        recurring_schedule: recurringSchedule,
-                        geojson: geojson,
-                        cost: data.cost,
-                        tags: data.tags,
-                        favorite: data.favorite
+                    // Create GeoJSON feature
+                    const feature = {
+                        type: 'Feature',
+                        geometry: {
+                            type: 'Point',
+                            coordinates: [lng, lat]
+                        },
+                        properties: {
+                            id: rowIndex,
+                            icon: data.icon_url.split('/').pop().split('.').shift(), // Extract icon name
+                            sidebarheader: data.sidebarheader,
+                            sidebarimage: data.sidebarimage,
+                            description: data.description,
+                            address: data.address,
+                            sidebarheader2: data.sidebarheader2,
+                            description2: data.description2,
+                            icon_url: data.icon_url,
+                            iconwidth: parseInt(data.iconwidth, 10) || 20,
+                            iconheight: parseInt(data.iconheight, 10) || 31,
+                            icon2_url: data.icon2_url,
+                            icon2width: parseInt(data.icon2width, 10),
+                            icon2height: parseInt(data.icon2height, 10),
+                            icon3_url: data.icon3_url,
+                            icon3width: parseInt(data.icon3width, 10),
+                            icon3height: parseInt(data.icon3height, 10),
+                            categories: [data.category, data.category2, data.category3, data.category4].filter(Boolean),
+                            dateRanges: dateRanges,
+                            recurring_schedule: recurringSchedule,
+                            geojson: geojson,
+                            cost: data.cost,
+                            tags: data.tags,
+                            favorite: data.favorite
+                        }
                     };
 
-                    console.log(`Marker Data for ${data.address}:`, markerData);
-                    createMarker(markerData);
+                    features.push(feature);
                 });
 
-                updateInfoWindowContent();
-                resolve(); // Resolve the promise when processing is done
+                updateInfoWindowContent(features);
+                resolve(features); // Resolve the promise when processing is done
             },
             error: function(error) {
                 console.error('Error parsing CSV data:', error);
@@ -474,7 +517,6 @@ function processCSVData(csvData) {
         });
     });
 }
-
 function convertRecurringToSpecificDates(schedule, startDate, endDate) {
     const dayMap = {
         "Sunday": 0,
