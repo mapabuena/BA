@@ -574,12 +574,12 @@ function createMarker(data) {
     el.className = 'marker';
     el.style.backgroundImage = `url(${data.icon_url})`;
     el.style.height = 'auto';
-    el.style.minHeight = `${data.iconheight}px`; 
+    el.style.minHeight = `${data.iconheight}px`;
     el.style.width = 'auto';
-    el.style.minWidth = `${data.iconwidth}px`; 
-    el.style.backgroundSize = 'contain'; 
-    el.style.backgroundRepeat = 'no-repeat'; 
-    el.style.backgroundPosition = 'center'; 
+    el.style.minWidth = `${data.iconwidth}px`;
+    el.style.backgroundSize = 'contain';
+    el.style.backgroundRepeat = 'no-repeat';
+    el.style.backgroundPosition = 'center';
 
     const marker = new mapboxgl.Marker(el, { anchor: 'bottom' })
         .setLngLat([data.lng, data.lat])
@@ -608,6 +608,7 @@ function createMarker(data) {
 
     console.log(`Created marker for ${data.address} at index ${markers.length - 1}`);
 }
+
 
 function toggleGeoJSONRoute(geojson, visibility) {
     const sourceId = 'route-source';
