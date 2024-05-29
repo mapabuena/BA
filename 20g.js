@@ -66,10 +66,10 @@ document.addEventListener('DOMContentLoaded', function() {
 function setupInfoItemHoverEffects() {
     document.querySelectorAll('.info-item').forEach(item => {
         item.addEventListener('mouseover', () => {
-            // Find the corresponding marker using the global index logic
-            const globalIndex = markers.indexOf(markers.find(m => m.marker.getElement().isSameNode(item.closest('.marker'))));
+            const markerIndex = item.getAttribute('data-marker-index');
+            const globalIndex = parseInt(markerIndex);
             console.log('Mouseover globalIndex:', globalIndex); // Debug log
-            if (globalIndex !== -1) {
+            if (globalIndex !== -1 && markers[globalIndex]) {
                 const marker = markers[globalIndex].marker;
                 const markerData = markers[globalIndex].data;
                 console.log('Changing marker background to:', markerData.icon2_url); // Debug log
@@ -79,9 +79,10 @@ function setupInfoItemHoverEffects() {
         });
 
         item.addEventListener('mouseout', () => {
-            const globalIndex = markers.indexOf(markers.find(m => m.marker.getElement().isSameNode(item.closest('.marker'))));
+            const markerIndex = item.getAttribute('data-marker-index');
+            const globalIndex = parseInt(markerIndex);
             console.log('Mouseout globalIndex:', globalIndex); // Debug log
-            if (globalIndex !== -1) {
+            if (globalIndex !== -1 && markers[globalIndex]) {
                 const marker = markers[globalIndex].marker;
                 const markerData = markers[globalIndex].data;
                 console.log('Reverting marker background to:', markerData.icon_url); // Debug log
@@ -298,6 +299,7 @@ function updateInfoWindowContent() {
     visibleMarkers.forEach(({ marker, data }, index) => {
         const item = document.createElement('div');
         item.className = 'info-item';
+        item.setAttribute('data-marker-index', index); // Add index attribute to info-item
         item.innerHTML = `<h4 class="daymode-text">${data.sidebarheader}</h4><img src="${data.sidebarimage}" alt="${data.address}" style="width:100%;">`;
         infoWindow.appendChild(item);
 
@@ -314,7 +316,6 @@ function updateInfoWindowContent() {
 
     setupInfoItemHoverEffects(); // Ensure hover effects are set up
 }
-
 function setupClickSimulations() {
     document.getElementById('sidebaropener').addEventListener('click', () => {
         document.getElementById('closeinfobar').click();
