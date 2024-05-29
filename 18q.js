@@ -1,4 +1,5 @@
 // Initialize map
+// Initialize map
 mapboxgl.accessToken = 'pk.eyJ1IjoibjMxbGQiLCJhIjoiY2x0NHc5NjVpMDdzaDJscGE5Y2gyYnQ5MyJ9.zfzXUlLbNlVbr9pt4naycw';
 let map = new mapboxgl.Map({
     container: 'map',
@@ -64,61 +65,13 @@ map.on('load', function() {
 
 // Add styledata event listener
 map.on('styledata', function() {
-    if (!map.getSource('markers')) {
-        map.addSource('markers', {
-            type: 'geojson',
-            data: {
-                type: 'FeatureCollection',
-                features: []
-            }
-        });
-
-        map.addLayer({
-            id: 'markers',
-            type: 'symbol',
-            source: 'markers',
-            layout: {
-                'icon-image': ['concat', ['get', 'icon'], '-15'],
-            },
-            paint: {
-                'icon-size': [
-                    'case',
-                    ['boolean', ['feature-state', 'hover'], false],
-                    1.5, // Size when hovered
-                    1 // Default size
-                ]
-            }
-        });
-
-        // Ensure markers scale on hover
-        map.on('mouseenter', 'markers', (e) => {
-            map.getCanvas().style.cursor = 'pointer';
-            map.setFeatureState(
-                { source: 'markers', id: e.features[0].id },
-                { hover: true }
-            );
-        });
-
-        map.on('mouseleave', 'markers', (e) => {
-            map.getCanvas().style.cursor = '';
-            map.setFeatureState(
-                { source: 'markers', id: e.features[0].id },
-                { hover: false }
-            );
-        });
-    }
-
-    fetchMarkersData(currentCSV);
-});
-
-// Add styledata event listener
-map.on('styledata', function() {
-    if (isSourceAdded) {
+    if (map.getSource('markers')) {
         fetchMarkersData(currentCSV);
     } else {
         console.error('Source "markers" not found');
     }
 });
+
 document.getElementById('nightmode').addEventListener('click', () => {
     isNightMode = !isNightMode;
     map.setStyle(isNightMode ? nightStyle : originalStyle);
