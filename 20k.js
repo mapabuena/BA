@@ -105,11 +105,11 @@ function setupInfoItemHoverEffects() {
             if (globalIndex !== -1 && markers[globalIndex]) {
                 const marker = markers[globalIndex].marker;
                 const markerData = markers[globalIndex].data;
-                console.log('Clicking marker background to:', markerData.icon3_url); // Debug log
+                console.log('Clicking marker background to:', markerData.icon2_url); // Debug log
                 const markerElement = marker.getElement();
-                markerElement.style.backgroundImage = `url(${markerData.icon3_url})`; // Change marker's background image
-                markerElement.style.width = `${markerData.icon3width}px`; // Set marker's width
-                markerElement.style.height = `${markerData.icon3height}px`; // Set marker's height
+                markerElement.style.backgroundImage = `url(${markerData.icon2_url})`; // Change marker's background image
+                markerElement.style.width = `${markerData.icon2width}px`; // Set marker's width
+                markerElement.style.height = `${markerData.icon2height}px`; // Set marker's height
             }
         });
     });
