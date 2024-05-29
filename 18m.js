@@ -17,7 +17,33 @@ let isDataLoading = false;
 
 
 map.on('load', function() {
-    // Add the following to ensure markers scale on hover
+    // Add source and layer for markers
+    map.addSource('markers', {
+        type: 'geojson',
+        data: {
+            type: 'FeatureCollection',
+            features: []
+        }
+    });
+
+    map.addLayer({
+        id: 'markers',
+        type: 'symbol',
+        source: 'markers',
+        layout: {
+            'icon-image': ['concat', ['get', 'icon'], '-15'],
+        },
+        paint: {
+            'icon-size': [
+                'case',
+                ['boolean', ['feature-state', 'hover'], false],
+                1.5, // Size when hovered
+                1 // Default size
+            ]
+        }
+    });
+
+    // Ensure markers scale on hover
     map.on('mouseenter', 'markers', (e) => {
         map.getCanvas().style.cursor = 'pointer';
         map.setFeatureState(
@@ -34,29 +60,9 @@ map.on('load', function() {
         );
     });
 
-    map.addSource('markers', {
-        type: 'geojson',
-        data: {
-            type: 'FeatureCollection',
-            features: []
-        }
-    });
+    fetchMarkersData(currentCSV);
+});
 
-    map.addLayer({
-        id: 'markers',
-        type: 'symbol',
-        source: 'markers',
-        layout: {
-            'icon-image': ['concat', ['get', 'icon'], '-15'],
-            'icon-size': [
-                'case',
-                ['boolean', ['feature-state', 'hover'], false],
-                1.5, // Size when hovered
-                1 // Default size
-            ]
-        }
-    });
-   });
 document.getElementById('nightmode').addEventListener('click', () => {
     isNightMode = !isNightMode;
     map.setStyle(isNightMode ? nightStyle : originalStyle);
