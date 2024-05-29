@@ -76,20 +76,6 @@ map.on('styledata', function() {
     }
 });
 
-// Handle missing images
-map.on('styleimagemissing', function(e) {
-    const id = e.id;
-    const url = id; // Use the id directly as the URL since it contains the full path
-
-    map.loadImage(url, (error, image) => {
-        if (error) {
-            console.error(`Error loading image ${id} from ${url}:`, error);
-            return;
-        }
-        map.addImage(id, image);
-    });
-});
-
 document.getElementById('nightmode').addEventListener('click', () => {
     isNightMode = !isNightMode;
     map.setStyle(isNightMode ? nightStyle : originalStyle);
@@ -611,11 +597,9 @@ function getNextOccurrences(dayOfWeek, startTime, endTime, startDate, endDate) {
 function createMarker(data) {
     const el = document.createElement('div');
     el.className = 'marker';
+    el.style.height = `${data.iconheight}px`;
+    el.style.width = `${data.iconwidth}px`;
     el.style.backgroundImage = `url(${data.icon_url})`;
-    el.style.height = 'auto';
-    el.style.minHeight = `${data.iconheight}px`;
-    el.style.width = 'auto';
-    el.style.minWidth = `${data.iconwidth}px`;
     el.style.backgroundSize = 'contain';
     el.style.backgroundRepeat = 'no-repeat';
     el.style.backgroundPosition = 'center';
