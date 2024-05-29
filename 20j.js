@@ -17,6 +17,7 @@ const originalStyle = 'mapbox://styles/n31ld/clwocpejw03s201ql6pto7fh9';
 let isNightMode = false;
 let currentCSV = 'https://raw.githubusercontent.com/mapabuena/BA/main/NewYorkPinsGroups.csv'; // Default CSV file
 let isDataLoading = false;
+let selectedMarkerIndex = null; // Variable to keep track of the selected marker index
 
 
 document.getElementById('nightmode').addEventListener('click', () => {
@@ -113,6 +114,7 @@ function setupInfoItemHoverEffects() {
         });
     });
 }
+
 
 function setupDatePickers() {
     const startDateInput = document.getElementById('startDateTime');
@@ -406,8 +408,8 @@ function processCSVData(csvData) {
                         console.log("Original dateRanges string:", data.dateRanges);
                         dateRanges = data.dateRanges.split('|').map(range => {
                             const [start, end] = range.split(';');
-                            console.log(`Parsed dateRange - start: ${start.trim()}, end: ${end.trim()}`);
-                            return { start: new Date(start.trim()), end: new Date(end.trim()) };
+                            console.log(`Parsed dateRange - start: ${start.trim()}, end: ${end ? end.trim() : ''}`);
+                            return { start: new Date(start.trim()), end: end ? new Date(end.trim()) : undefined };
                         });
                     }
                     console.log("Parsed dateRanges:", dateRanges);
