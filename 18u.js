@@ -76,6 +76,19 @@ map.on('styledata', function() {
     }
 });
 
+// Handle missing images
+map.on('styleimagemissing', function(e) {
+    const id = e.id;
+    const url = `path_to_your_images_directory/${id}.png`; // Adjust this path to your images location
+
+    map.loadImage(url, (error, image) => {
+        if (error) {
+            console.error(`Error loading image ${id} from ${url}:`, error);
+            return;
+        }
+        map.addImage(id, image);
+    });
+});
 
 document.getElementById('nightmode').addEventListener('click', () => {
     isNightMode = !isNightMode;
@@ -180,7 +193,6 @@ function setupDatePickers() {
         }
     });
 }
-
 
 function setupCityButtons() {
     document.querySelectorAll('.citybutton').forEach(button => {
@@ -592,8 +604,6 @@ function getNextOccurrences(dayOfWeek, startTime, endTime, startDate, endDate) {
     return occurrences;
 }
 
-
-
 function createMarker(data) {
     const el = document.createElement('div');
     el.className = 'marker';
@@ -633,7 +643,6 @@ function createMarker(data) {
 
     console.log(`Created marker for ${data.address} at index ${markers.length - 1}`);
 }
-
 
 function toggleGeoJSONRoute(geojson, visibility) {
     const sourceId = 'route-source';
@@ -687,7 +696,6 @@ function simulateMarkerClick(markerId) {
     // Simulate marker click
     marker.getElement().dispatchEvent(new Event('click'));
 }
-
 
 function toggleSpecificRoute(markerData) {
     const layerId = 'route-layer';
@@ -776,7 +784,7 @@ function applyFilters() {
             return isInDateRange;
         });
 
-        console.log(`Date Visibility for ${data.address}: ${isVisibleByDate}`);
+        console.log(`Date Visibility for ${data.address}: ${isInDateRange}`);
 
         // Update marker display based on combined visibility results
         marker.getElement().style.display = (isVisibleByCategory && isVisibleByDate) ? '' : 'none';
@@ -785,7 +793,6 @@ function applyFilters() {
     updateInfoWindowContent(); // Make sure this function is defined and functioning
 }
 
-// Define easing functions
 // Define easing functions including ease-out quad and ease-in-out quad
 const easingFunctions = {
     // Standard exponential decay (Mapbox default)
