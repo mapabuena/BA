@@ -1,5 +1,4 @@
 // Initialize map
-// Initialize map
 mapboxgl.accessToken = 'pk.eyJ1IjoibjMxbGQiLCJhIjoiY2x0NHc5NjVpMDdzaDJscGE5Y2gyYnQ5MyJ9.zfzXUlLbNlVbr9pt4naycw';
 let map = new mapboxgl.Map({
     container: 'map',
@@ -15,6 +14,7 @@ const originalStyle = 'mapbox://styles/n31ld/clwocpejw03s201ql6pto7fh9';
 let isNightMode = false;
 let currentCSV = 'https://raw.githubusercontent.com/mapabuena/BA/main/NewYorkPinsGroups.csv'; // Default CSV file
 let isDataLoading = false;
+let isSourceAdded = false;
 
 map.on('load', function() {
     // Add source and layer for markers
@@ -43,6 +43,8 @@ map.on('load', function() {
         }
     });
 
+    isSourceAdded = true;
+
     // Ensure markers scale on hover
     map.on('mouseenter', 'markers', (e) => {
         map.getCanvas().style.cursor = 'pointer';
@@ -65,10 +67,8 @@ map.on('load', function() {
 
 // Add styledata event listener
 map.on('styledata', function() {
-    if (map.getSource('markers')) {
+    if (isSourceAdded) {
         fetchMarkersData(currentCSV);
-    } else {
-        console.error('Source "markers" not found');
     }
 });
 
