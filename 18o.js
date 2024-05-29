@@ -14,6 +14,7 @@ const originalStyle = 'mapbox://styles/n31ld/clwocpejw03s201ql6pto7fh9';
 let isNightMode = false;
 let currentCSV = 'https://raw.githubusercontent.com/mapabuena/BA/main/NewYorkPinsGroups.csv'; // Default CSV file
 let isDataLoading = false;
+let isSourceAdded = false;
 
 
 map.on('load', function() {
@@ -25,7 +26,7 @@ map.on('load', function() {
             features: []
         }
     });
-
+    isSourceAdded = true; // Set the flag to true
     map.addLayer({
         id: 'markers',
         type: 'symbol',
@@ -60,12 +61,14 @@ map.on('load', function() {
         );
     });
 
-    fetchMarkersData(currentCSV);
+    fetchMarkersData(currentCSV); // Call fetchMarkersData only after the map has fully loaded
 });
 // Add styledata event listener
 map.on('styledata', function() {
-    if (map.getSource('markers')) {
+    if (isSourceAdded) {
         fetchMarkersData(currentCSV);
+    } else {
+        console.error('Source "markers" not found');
     }
 });
 document.getElementById('nightmode').addEventListener('click', () => {
