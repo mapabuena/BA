@@ -15,7 +15,6 @@ let isNightMode = false;
 let currentCSV = 'https://raw.githubusercontent.com/mapabuena/BA/main/NewYorkPinsGroups.csv'; // Default CSV file
 let isDataLoading = false;
 
-
 map.on('load', function() {
     fetchMarkersData(currentCSV); // Call fetchMarkersData only after the map has fully loaded
 });
@@ -367,6 +366,8 @@ async function fetchMarkersData(csvFile) {
                 type: 'FeatureCollection',
                 features: features
             });
+            // Create markers after the data has been set
+            createMarkers(features);
             // Update the info window content after the markers have been added
             updateInfoWindowContent();
         } else {
@@ -565,6 +566,10 @@ function createMarker(feature) {
     });
 
     markers.push({ marker, feature });
+}
+
+function createMarkers(features) {
+    features.forEach(feature => createMarker(feature));
 }
 
 function clearMarkers() {
