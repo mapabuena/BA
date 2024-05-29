@@ -56,7 +56,7 @@ map.on('load', function() {
             ]
         }
     });
-
+   });
 document.getElementById('nightmode').addEventListener('click', () => {
     isNightMode = !isNightMode;
     map.setStyle(isNightMode ? nightStyle : originalStyle);
