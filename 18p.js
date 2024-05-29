@@ -14,8 +14,6 @@ const originalStyle = 'mapbox://styles/n31ld/clwocpejw03s201ql6pto7fh9';
 let isNightMode = false;
 let currentCSV = 'https://raw.githubusercontent.com/mapabuena/BA/main/NewYorkPinsGroups.csv'; // Default CSV file
 let isDataLoading = false;
-let isSourceAdded = false;
-
 
 map.on('load', function() {
     // Add source and layer for markers
@@ -26,7 +24,7 @@ map.on('load', function() {
             features: []
         }
     });
-    isSourceAdded = true; // Set the flag to true
+
     map.addLayer({
         id: 'markers',
         type: 'symbol',
@@ -63,6 +61,56 @@ map.on('load', function() {
 
     fetchMarkersData(currentCSV); // Call fetchMarkersData only after the map has fully loaded
 });
+
+// Add styledata event listener
+map.on('styledata', function() {
+    if (!map.getSource('markers')) {
+        map.addSource('markers', {
+            type: 'geojson',
+            data: {
+                type: 'FeatureCollection',
+                features: []
+            }
+        });
+
+        map.addLayer({
+            id: 'markers',
+            type: 'symbol',
+            source: 'markers',
+            layout: {
+                'icon-image': ['concat', ['get', 'icon'], '-15'],
+            },
+            paint: {
+                'icon-size': [
+                    'case',
+                    ['boolean', ['feature-state', 'hover'], false],
+                    1.5, // Size when hovered
+                    1 // Default size
+                ]
+            }
+        });
+
+        // Ensure markers scale on hover
+        map.on('mouseenter', 'markers', (e) => {
+            map.getCanvas().style.cursor = 'pointer';
+            map.setFeatureState(
+                { source: 'markers', id: e.features[0].id },
+                { hover: true }
+            );
+        });
+
+        map.on('mouseleave', 'markers', (e) => {
+            map.getCanvas().style.cursor = '';
+            map.setFeatureState(
+                { source: 'markers', id: e.features[0].id },
+                { hover: false }
+            );
+        });
+    }
+
+    fetchMarkersData(currentCSV);
+});
+
 // Add styledata event listener
 map.on('styledata', function() {
     if (isSourceAdded) {
