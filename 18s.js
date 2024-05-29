@@ -16,61 +16,66 @@ let currentCSV = 'https://raw.githubusercontent.com/mapabuena/BA/main/NewYorkPin
 let isDataLoading = false;
 let isSourceAdded = false;
 
+function addMarkerSourceAndLayer() {
+    if (!isSourceAdded) {
+        map.addSource('markers', {
+            type: 'geojson',
+            data: {
+                type: 'FeatureCollection',
+                features: []
+            }
+        });
+
+        map.addLayer({
+            id: 'markers',
+            type: 'symbol',
+            source: 'markers',
+            layout: {
+                'icon-image': ['concat', ['get', 'icon'], '-15'],
+            },
+            paint: {
+                'icon-size': [
+                    'case',
+                    ['boolean', ['feature-state', 'hover'], false],
+                    1.5, // Size when hovered
+                    1 // Default size
+                ]
+            }
+        });
+
+        isSourceAdded = true;
+
+        // Ensure markers scale on hover
+        map.on('mouseenter', 'markers', (e) => {
+            map.getCanvas().style.cursor = 'pointer';
+            map.setFeatureState(
+                { source: 'markers', id: e.features[0].id },
+                { hover: true }
+            );
+        });
+
+        map.on('mouseleave', 'markers', (e) => {
+            map.getCanvas().style.cursor = '';
+            map.setFeatureState(
+                { source: 'markers', id: e.features[0].id },
+                { hover: false }
+            );
+        });
+    }
+}
+
 map.on('load', function() {
-    // Add source and layer for markers
-    map.addSource('markers', {
-        type: 'geojson',
-        data: {
-            type: 'FeatureCollection',
-            features: []
-        }
-    });
-
-    map.addLayer({
-        id: 'markers',
-        type: 'symbol',
-        source: 'markers',
-        layout: {
-            'icon-image': ['concat', ['get', 'icon'], '-15'],
-        },
-        paint: {
-            'icon-size': [
-                'case',
-                ['boolean', ['feature-state', 'hover'], false],
-                1.5, // Size when hovered
-                1 // Default size
-            ]
-        }
-    });
-
-    isSourceAdded = true;
-
-    // Ensure markers scale on hover
-    map.on('mouseenter', 'markers', (e) => {
-        map.getCanvas().style.cursor = 'pointer';
-        map.setFeatureState(
-            { source: 'markers', id: e.features[0].id },
-            { hover: true }
-        );
-    });
-
-    map.on('mouseleave', 'markers', (e) => {
-        map.getCanvas().style.cursor = '';
-        map.setFeatureState(
-            { source: 'markers', id: e.features[0].id },
-            { hover: false }
-        );
-    });
-
+    addMarkerSourceAndLayer();
     fetchMarkersData(currentCSV); // Call fetchMarkersData only after the map has fully loaded
 });
 
-// Add styledata event listener
 map.on('styledata', function() {
+    addMarkerSourceAndLayer();
     if (isSourceAdded) {
         fetchMarkersData(currentCSV);
     }
 });
+
 
 document.getElementById('nightmode').addEventListener('click', () => {
     isNightMode = !isNightMode;
