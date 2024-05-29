@@ -367,6 +367,8 @@ async function fetchMarkersData(csvFile) {
                 type: 'FeatureCollection',
                 features: features
             });
+            // Update the info window content after the markers have been added
+            updateInfoWindowContent();
         } else {
             console.error('Source "markers" not found');
         }
@@ -383,8 +385,6 @@ async function processCSVData(csvData) {
             skipEmptyLines: true,
             complete: function(results) {
                 results.data.forEach((data, rowIndex) => {
-                    console.log(`Processing row ${rowIndex + 1}:`, data);
-
                     // Check if lat and lng are valid numbers
                     const lat = parseFloat(data.latitude);
                     const lng = parseFloat(data.longitude);
@@ -396,37 +396,28 @@ async function processCSVData(csvData) {
                     // Transform the dateRanges string to JSON
                     let dateRanges = [];
                     if (data.dateRanges) {
-                        console.log("Original dateRanges string:", data.dateRanges);
                         dateRanges = data.dateRanges.split('|').map(range => {
                             const [start, end] = range.split(';');
-                            console.log(`Parsed dateRange - start: ${start.trim()}, end: ${end.trim()}`);
                             return { start: new Date(start.trim()), end: new Date(end.trim()) };
                         });
                     }
-                    console.log("Parsed dateRanges:", dateRanges);
 
                     // Parse the recurring_schedule JSON format
                     let recurringSchedule = [];
                     if (data.recurring_schedule) {
                         try {
                             const rawSchedule = data.recurring_schedule.trim().replace(/'/g, '"');
-                            console.log("Original recurring_schedule string:", data.recurring_schedule);
-                            console.log("Processed recurring_schedule string:", rawSchedule);
                             let parsedSchedule = JSON.parse(rawSchedule);
-                            console.log("Parsed recurring_schedule (first pass):", parsedSchedule);
 
                             // If parsedSchedule is a string, parse it again
                             if (typeof parsedSchedule === 'string') {
                                 parsedSchedule = JSON.parse(parsedSchedule);
-                                console.log("Parsed recurring_schedule (second pass):", parsedSchedule);
                             }
 
                             recurringSchedule = parsedSchedule;
 
                             // Check if parsed recurringSchedule is an array
-                            if (Array.isArray(recurringSchedule)) {
-                                console.log("recurring_schedule is a valid array:", recurringSchedule);
-                            } else {
+                            if (!Array.isArray(recurringSchedule)) {
                                 console.error("Parsed recurring_schedule is not an array:", recurringSchedule);
                             }
                         } catch (error) {
@@ -446,7 +437,7 @@ async function processCSVData(csvData) {
                     }
 
                     // Create GeoJSON feature
-                     const feature = {
+                    const feature = {
                         type: 'Feature',
                         geometry: {
                             type: 'Point',
@@ -454,7 +445,7 @@ async function processCSVData(csvData) {
                         },
                         properties: {
                             id: rowIndex,
-                            icon: data.icon_url,
+                            icon: data.icon_url.split('/').pop().split('.').shift(), // Extract icon name
                             sidebarheader: data.sidebarheader,
                             sidebarimage: data.sidebarimage,
                             description: data.description,
@@ -464,13 +455,16 @@ async function processCSVData(csvData) {
                             icon_url: data.icon_url,
                             iconwidth: parseInt(data.iconwidth, 10) || 20,
                             iconheight: parseInt(data.iconheight, 10) || 31,
+                            icon2_url: data.icon2_url,
+                            icon2width: parseInt(data.icon2width, 10),
+                            icon2height: parseInt(data.icon2height, 10),
+                            icon3_url: data.icon3_url,
+                            icon3width: parseInt(data.icon3width, 10),
+                            icon3height: parseInt(data.icon3height, 10),
                             categories: [data.category, data.category2, data.category3, data.category4].filter(Boolean),
-                            dateRanges: data.dateRanges ? data.dateRanges.split('|').map(range => {
-                                const [start, end] = range.split(';');
-                                return { start: new Date(start.trim()), end: new Date(end.trim()) };
-                            }) : [],
-                            recurring_schedule: data.recurring_schedule ? JSON.parse(data.recurring_schedule.replace(/'/g, '"')) : [],
-                            geojson: data.GeoJSON ? JSON.parse(data.GeoJSON.replace(/""/g, '"').replace(/\\\\"/g, '"').replace(/^"|"$/g, '')) : null,
+                            dateRanges: dateRanges,
+                            recurring_schedule: recurringSchedule,
+                            geojson: geojson,
                             cost: data.cost,
                             tags: data.tags,
                             favorite: data.favorite
@@ -480,7 +474,6 @@ async function processCSVData(csvData) {
                     features.push(feature);
                 });
 
-                updateInfoWindowContent(features);
                 resolve(features); // Resolve the promise when processing is done
             },
             error: function(error) {
