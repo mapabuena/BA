@@ -67,20 +67,24 @@ function setupInfoItemHoverEffects() {
     document.querySelectorAll('.info-item').forEach(item => {
         item.addEventListener('mouseover', () => {
             // Find the corresponding marker using the global index logic
-            const globalIndex = markers.indexOf(markers.find(m => m.marker === marker));
+            const globalIndex = markers.indexOf(markers.find(m => m.marker.getElement().isSameNode(item.closest('.marker'))));
+            console.log('Mouseover globalIndex:', globalIndex); // Debug log
             if (globalIndex !== -1) {
                 const marker = markers[globalIndex].marker;
                 const markerData = markers[globalIndex].data;
+                console.log('Changing marker background to:', markerData.icon2_url); // Debug log
                 marker.getElement().style.backgroundImage = `url(${markerData.icon2_url})`; // Change marker's background image
             }
             item.style.boxShadow = '0px 4px 10px rgba(0, 0, 0, 0.3)'; // Add box shadow to info-item
         });
 
         item.addEventListener('mouseout', () => {
-            const globalIndex = markers.indexOf(markers.find(m => m.marker === marker));
+            const globalIndex = markers.indexOf(markers.find(m => m.marker.getElement().isSameNode(item.closest('.marker'))));
+            console.log('Mouseout globalIndex:', globalIndex); // Debug log
             if (globalIndex !== -1) {
                 const marker = markers[globalIndex].marker;
                 const markerData = markers[globalIndex].data;
+                console.log('Reverting marker background to:', markerData.icon_url); // Debug log
                 marker.getElement().style.backgroundImage = `url(${markerData.icon_url})`; // Revert marker's background image
             }
             item.style.boxShadow = 'none'; // Remove box shadow from info-item
@@ -310,7 +314,6 @@ function updateInfoWindowContent() {
 
     setupInfoItemHoverEffects(); // Ensure hover effects are set up
 }
-
 
 function setupClickSimulations() {
     document.getElementById('sidebaropener').addEventListener('click', () => {
