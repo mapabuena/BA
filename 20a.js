@@ -65,19 +65,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function setupInfoItemHoverEffects() {
     document.querySelectorAll('.info-item').forEach(item => {
-        const markerIndex = Array.from(item.parentNode.children).indexOf(item); // Get the index of the current info-item
-
         item.addEventListener('mouseover', () => {
-            const marker = markers[markerIndex].marker;
-            marker.style.backgroundImage = `url(${data.icon2_url})`; // Change marker's background image
-
+            // Find the corresponding marker using the global index logic
+            const globalIndex = markers.indexOf(markers.find(m => m.marker.getElement().isSameNode(item.closest('.marker'))));
+            if (globalIndex !== -1) {
+                const marker = markers[globalIndex].marker;
+                marker.getElement().style.backgroundImage = `url(${data.icon2_url})`; // Change marker's background image
+            }
             item.style.boxShadow = '0px 4px 10px rgba(0, 0, 0, 0.3)'; // Add box shadow to info-item
         });
 
         item.addEventListener('mouseout', () => {
-            const marker = markers[markerIndex].marker;
-            marker.style.backgroundImage = `url(${data.icon_url})`; // Revert marker's background image
-
+            const globalIndex = markers.indexOf(markers.find(m => m.marker.getElement().isSameNode(item.closest('.marker'))));
+            if (globalIndex !== -1) {
+                const marker = markers[globalIndex].marker;
+                marker.getElement().style.backgroundImage = `url(${data.icon_url})`; // Revert marker's background image
+            }
             item.style.boxShadow = 'none'; // Remove box shadow from info-item
         });
     });
