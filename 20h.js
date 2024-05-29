@@ -93,7 +93,6 @@ function setupInfoItemHoverEffects() {
     });
 }
 
-
 function setupDatePickers() {
     const startDateInput = document.getElementById('startDateTime');
     const endDateInput = document.getElementById('endDateTime');
@@ -299,7 +298,7 @@ function updateInfoWindowContent() {
     visibleMarkers.forEach(({ marker, data }, index) => {
         const item = document.createElement('div');
         item.className = 'info-item';
-        item.setAttribute('data-marker-index', index); // Add index attribute to info-item
+        item.setAttribute('data-marker-index', markers.indexOf(markers.find(m => m.marker === marker))); // Ensure correct index
         item.innerHTML = `<h4 class="daymode-text">${data.sidebarheader}</h4><img src="${data.sidebarimage}" alt="${data.address}" style="width:100%;">`;
         infoWindow.appendChild(item);
 
