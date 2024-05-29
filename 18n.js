@@ -62,7 +62,12 @@ map.on('load', function() {
 
     fetchMarkersData(currentCSV);
 });
-
+// Add styledata event listener
+map.on('styledata', function() {
+    if (map.getSource('markers')) {
+        fetchMarkersData(currentCSV);
+    }
+});
 document.getElementById('nightmode').addEventListener('click', () => {
     isNightMode = !isNightMode;
     map.setStyle(isNightMode ? nightStyle : originalStyle);
@@ -396,10 +401,15 @@ async function fetchMarkersData(csvFile) {
         const response = await fetch(csvFile);
         const csvData = await response.text();
         const features = await processCSVData(csvData); // Adjust processCSVData to return GeoJSON features
-        map.getSource('markers').setData({
-            type: 'FeatureCollection',
-            features: features
-        });
+        const source = map.getSource('markers');
+        if (source) {
+            source.setData({
+                type: 'FeatureCollection',
+                features: features
+            });
+        } else {
+            console.error('Source "markers" not found');
+        }
     } catch (error) {
         console.error('Error fetching or parsing CSV data:', error);
     }
