@@ -264,6 +264,11 @@ function applyDateFilter() {
 }
 
 function calculateDistance(center, data) {
+    if (!data || !data.lat || !data.lng) {
+        console.error("Invalid data for calculating distance:", data);
+        return Number.MAX_VALUE; // Return a large number if data is invalid to sort it last
+    }
+
     const R = 6371; // Radius of the Earth in kilometers
     const dLat = toRadians(data.lat - center.lat);
     const dLon = toRadians(data.lng - center.lng);
@@ -281,13 +286,14 @@ function toRadians(degrees) {
     return degrees * Math.PI / 180;
 }
 
+
 function updateInfoWindowContent() {
     const center = map.getCenter();
     const bounds = map.getBounds();
     console.log("Updating info window. Map Center:", center);
     console.log("Map Bounds:", JSON.stringify(bounds));
 
-    const visibleMarkers = markers.filter(({ marker }) => {
+    const visibleMarkers = markers.filter(({ marker, feature }) => {
         const position = marker.getLngLat();
         const isInBounds = bounds.contains(position);
         const isVisible = marker.getElement().style.display !== 'none';
@@ -299,11 +305,12 @@ function updateInfoWindowContent() {
         return;
     }
 
-    visibleMarkers.sort((a, b) => calculateDistance(center, a.data) - calculateDistance(center, b.data));
+    visibleMarkers.sort((a, b) => calculateDistance(center, a.feature.properties) - calculateDistance(center, b.feature.properties));
 
     const infoWindow = document.getElementById('infowindowbar');
     infoWindow.innerHTML = '';
-    visibleMarkers.forEach(({ marker, data }, index) => {
+    visibleMarkers.forEach(({ marker, feature }, index) => {
+        const data = feature.properties;
         const item = document.createElement('div');
         item.className = 'info-item';
         item.setAttribute('data-index', index); // Set data-index attribute
@@ -325,6 +332,7 @@ function updateInfoWindowContent() {
 
     setupInfoItemHoverEffects(); // Ensure hover effects are set up
 }
+
 
 function setupClickSimulations() {
     document.getElementById('sidebaropener').addEventListener('click', () => {
@@ -362,9 +370,19 @@ async function fetchMarkersData(csvFile) {
         const response = await fetch(csvFile);
         const csvData = await response.text();
         const features = await processCSVData(csvData); // Adjust processCSVData to return GeoJSON features
-        clearMarkers(); // Clear any existing markers
-        createMarkers(features); // Create HTML markers after processing CSV data
-        updateInfoWindowContent(); // Update the info window content after the markers have been added
+        const source = map.getSource('markers');
+        if (source) {
+            source.setData({
+                type: 'FeatureCollection',
+                features: features
+            });
+            // Create markers after the data has been set
+            createMarkers(features);
+            // Update the info window content after the markers have been added
+            updateInfoWindowContent();
+        } else {
+            console.error('Source "markers" not found');
+        }
     } catch (error) {
         console.error('Error fetching or parsing CSV data:', error);
     }
