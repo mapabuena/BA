@@ -14,55 +14,7 @@ const originalStyle = 'mapbox://styles/n31ld/clwocpejw03s201ql6pto7fh9';
 let isNightMode = false;
 let currentCSV = 'https://raw.githubusercontent.com/mapabuena/BA/main/NewYorkPinsGroups.csv'; // Default CSV file
 let isDataLoading = false;
-let isSourceAdded = false;
 
-function addMarkerSourceAndLayer() {
-    if (!isSourceAdded) {
-        map.addSource('markers', {
-            type: 'geojson',
-            data: {
-                type: 'FeatureCollection',
-                features: []
-            }
-        });
-
-        map.addLayer({
-            id: 'markers',
-            type: 'symbol',
-            source: 'markers',
-            layout: {
-                'icon-image': ['get', 'icon_url'], // Use the full icon URL
-            },
-            paint: {
-                'icon-size': [
-                    'case',
-                    ['boolean', ['feature-state', 'hover'], false],
-                    1.5, // Size when hovered
-                    1 // Default size
-                ]
-            }
-        });
-
-        isSourceAdded = true;
-
-        // Ensure markers scale on hover
-        map.on('mouseenter', 'markers', (e) => {
-            map.getCanvas().style.cursor = 'pointer';
-            map.setFeatureState(
-                { source: 'markers', id: e.features[0].id },
-                { hover: true }
-            );
-        });
-
-        map.on('mouseleave', 'markers', (e) => {
-            map.getCanvas().style.cursor = '';
-            map.setFeatureState(
-                { source: 'markers', id: e.features[0].id },
-                { hover: false }
-            );
-        });
-    }
-}
 
 map.on('load', function() {
     addMarkerSourceAndLayer();
@@ -496,7 +448,7 @@ async function processCSVData(csvData) {
                     }
 
                     // Create GeoJSON feature
-                    const feature = {
+                     const feature = {
                         type: 'Feature',
                         geometry: {
                             type: 'Point',
@@ -504,7 +456,7 @@ async function processCSVData(csvData) {
                         },
                         properties: {
                             id: rowIndex,
-                            icon: data.icon_url, // Use icon_url directly
+                            icon: data.icon_url,
                             sidebarheader: data.sidebarheader,
                             sidebarimage: data.sidebarimage,
                             description: data.description,
@@ -514,16 +466,13 @@ async function processCSVData(csvData) {
                             icon_url: data.icon_url,
                             iconwidth: parseInt(data.iconwidth, 10) || 20,
                             iconheight: parseInt(data.iconheight, 10) || 31,
-                            icon2_url: data.icon2_url,
-                            icon2width: parseInt(data.icon2width, 10),
-                            icon2height: parseInt(data.icon2height, 10),
-                            icon3_url: data.icon3_url,
-                            icon3width: parseInt(data.icon3width, 10),
-                            icon3height: parseInt(data.icon3height, 10),
                             categories: [data.category, data.category2, data.category3, data.category4].filter(Boolean),
-                            dateRanges: dateRanges,
-                            recurring_schedule: recurringSchedule,
-                            geojson: geojson,
+                            dateRanges: data.dateRanges ? data.dateRanges.split('|').map(range => {
+                                const [start, end] = range.split(';');
+                                return { start: new Date(start.trim()), end: new Date(end.trim()) };
+                            }) : [],
+                            recurring_schedule: data.recurring_schedule ? JSON.parse(data.recurring_schedule.replace(/'/g, '"')) : [],
+                            geojson: data.GeoJSON ? JSON.parse(data.GeoJSON.replace(/""/g, '"').replace(/\\\\"/g, '"').replace(/^"|"$/g, '')) : null,
                             cost: data.cost,
                             tags: data.tags,
                             favorite: data.favorite
@@ -594,42 +543,42 @@ function getNextOccurrences(dayOfWeek, startTime, endTime, startDate, endDate) {
     return occurrences;
 }
 
-function createMarker(data) {
+function createMarker(feature) {
     const el = document.createElement('div');
     el.className = 'marker';
-    el.style.height = `${data.iconheight}px`;
-    el.style.width = `${data.iconwidth}px`;
-    el.style.backgroundImage = `url(${data.icon_url})`;
+    el.style.backgroundImage = `url(${feature.properties.icon_url})`;
+    el.style.width = `${feature.properties.iconwidth}px`;
+    el.style.height = `${feature.properties.iconheight}px`;
     el.style.backgroundSize = 'contain';
     el.style.backgroundRepeat = 'no-repeat';
     el.style.backgroundPosition = 'center';
 
-    const marker = new mapboxgl.Marker(el, { anchor: 'bottom' })
-        .setLngLat([data.lng, data.lat])
+    const marker = new mapboxgl.Marker(el)
+        .setLngLat(feature.geometry.coordinates)
         .addTo(map);
 
     marker.getElement().addEventListener('click', () => {
-        markers.forEach(({ marker, data }) => {
+        markers.forEach(({ marker }) => {
             const el = marker.getElement();
-            el.style.backgroundImage = `url(${data.icon_url})`;
+            el.style.backgroundImage = `url(${feature.properties.icon_url})`;
         });
 
-        el.style.backgroundImage = `url(${data.icon2_url})`;
+        el.style.backgroundImage = `url(${feature.properties.icon2_url})`;
 
-        document.getElementById('sidebarimage').innerHTML = `<img src="${data.sidebarimage}" alt="Sidebar Image" style="width: 100%;">`;
-        document.getElementById('sidebarheader').innerText = data.sidebarheader;
-        document.getElementById('sidebardescription').innerText = data.description;
-        document.getElementById('sidebarheader2').innerText = data.sidebarheader2 || '';
+        document.getElementById('sidebarimage').innerHTML = `<img src="${feature.properties.sidebarimage}" alt="Sidebar Image" style="width: 100%;">`;
+        document.getElementById('sidebarheader').innerText = feature.properties.sidebarheader;
+        document.getElementById('sidebardescription').innerText = feature.properties.description;
+        document.getElementById('sidebarheader2').innerText = feature.properties.sidebarheader2 || '';
 
         document.getElementById('sidebaropener').click();
     });
 
-    markers.push({
-        marker: marker,
-        data: data
-    });
+    markers.push({ marker, feature });
+}
 
-    console.log(`Created marker for ${data.address} at index ${markers.length - 1}`);
+function clearMarkers() {
+    markers.forEach(({ marker }) => marker.remove());
+    markers = [];
 }
 
 function toggleGeoJSONRoute(geojson, visibility) {
