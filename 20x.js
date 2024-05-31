@@ -415,17 +415,6 @@ function processCSVData(csvData) {
                     }
                     console.log("Parsed dateRanges:", dateRanges);
 
-                    // Transform the dateRanges string to JSON
-                    let dateRanges = [];
-                    if (data.dateRanges) {
-                        console.log("Original dateRanges string:", data.dateRanges);
-                        dateRanges = data.dateRanges.split('|').map(range => {
-                            const [start, end] = range.split(';');
-                            console.log(`Parsed dateRange - start: ${start.trim()}, end: ${end ? end.trim() : ''}`);
-                            return { start: new Date(start.trim()), end: end ? new Date(end.trim()) : undefined };
-                        });
-                    }
-                    console.log("Parsed dateRanges:", dateRanges);
 
                     // Parse the recurring_schedule JSON format
                     let recurringSchedule = [];
