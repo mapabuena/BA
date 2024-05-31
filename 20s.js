@@ -131,7 +131,6 @@ function setupDatePickers() {
         altFormat: "F j, H:i",
         onChange: function(selectedDates, dateStr) {
             endDatePicker.set('minDate', dateStr);
-            applyDateFilter(); // Automatically apply filter when the date is changed
         }
     });
 
@@ -142,15 +141,9 @@ function setupDatePickers() {
         altFormat: "F j, H:i",
         onChange: function(selectedDates, dateStr) {
             startDatePicker.set('maxDate', dateStr);
-            applyDateFilter(); // Automatically apply filter when the date is changed
         }
     });
 }
-
-document.getElementById('searchButton').addEventListener('click', function() {
-    applyFilters();
-});
-
 
 function setupCityButtons() {
     document.querySelectorAll('.citybutton').forEach(button => {
@@ -715,13 +708,19 @@ function updateFilters() {
 }
 
 function applyFilters() {
-    var startDateTimeInput = document.getElementById('startDateTime').value;
-    var endDateTimeInput = document.getElementById('endDateTime').value;
+    var startDateTimeInput = document.getElementById('startDateTime')._flatpickr.selectedDates[0];
+    var endDateTimeInput = document.getElementById('endDateTime')._flatpickr.selectedDates[0];
+    
+    if (!startDateTimeInput || !endDateTimeInput) {
+        alert("Please select both start and end dates.");
+        return;
+    }
+
     var startDateTime = new Date(startDateTimeInput);
     var endDateTime = new Date(endDateTimeInput);
 
     console.log("Applying Filters...");
-    console.log("Filter range:", startDateTimeInput, "to", endDateTimeInput);
+    console.log("Filter range:", startDateTime, "to", endDateTime);
 
     markers.forEach(({ marker, data }) => {
         console.log(`Checking visibility for ${data.address}`);
@@ -746,7 +745,6 @@ function applyFilters() {
 
     updateInfoWindowContent(); // Make sure this function is defined and functioning
 }
-
 
 // Define easing functions
 // Define easing functions including ease-out quad and ease-in-out quad
