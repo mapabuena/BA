@@ -413,6 +413,12 @@ function processCSVData(csvData) {
                             return { start: new Date(start.trim()), end: end ? new Date(end.trim()) : undefined };
                         });
                     }
+
+                    // Ensure dateRanges is an array
+                    if (!Array.isArray(dateRanges)) {
+                        console.error(`Invalid dateRanges format at row ${rowIndex + 1}:`, dateRanges);
+                        dateRanges = [];
+                    }
                     console.log("Parsed dateRanges:", dateRanges);
 
                     // Parse the recurring_schedule JSON format
@@ -438,9 +444,11 @@ function processCSVData(csvData) {
                                 console.log("recurring_schedule is a valid array:", recurringSchedule);
                             } else {
                                 console.error("Parsed recurring_schedule is not an array:", recurringSchedule);
+                                recurringSchedule = [];
                             }
                         } catch (error) {
                             console.error(`Error parsing recurring_schedule at row ${rowIndex + 1}:`, error);
+                            recurringSchedule = [];
                         }
                     }
 
@@ -496,7 +504,6 @@ function processCSVData(csvData) {
         });
     });
 }
-
 
 function convertRecurringToSpecificDates(schedule, startDate, endDate) {
     const dayMap = {
@@ -733,7 +740,7 @@ function applyFilters() {
                                     data.categories.some(cat => activeFilters.category.includes(cat));
         console.log(`Category Visibility for ${data.address}: ${isVisibleByCategory}`);
 
-        const isVisibleByDate = data.dateRanges && data.dateRanges.some(range => {
+        const isVisibleByDate = Array.isArray(data.dateRanges) && data.dateRanges.some(range => {
             const rangeStart = new Date(range.start);
             const rangeEnd = new Date(range.end);
             const isInDateRange = rangeStart <= endDateTime && rangeEnd >= startDateTime;
@@ -741,15 +748,21 @@ function applyFilters() {
             return isInDateRange;
         });
 
-        console.log(`Date Visibility for ${data.address}: ${isVisibleByDate}`);
+        const specificDates = convertRecurringToSpecificDates(data.recurring_schedule, startDateTime, endDateTime);
+        const isVisibleByRecurring = specificDates.some(range => {
+            const isInRecurringDateRange = range.start <= endDateTime && range.end >= startDateTime;
+            console.log(`Checking recurring date range ${range.start} to ${range.end} for ${data.address}: ${isInRecurringDateRange}`);
+            return isInRecurringDateRange;
+        });
+
+        console.log(`Date Visibility for ${data.address}: ${isVisibleByDate || isVisibleByRecurring}`);
 
         // Update marker display based on combined visibility results
-        marker.getElement().style.display = (isVisibleByCategory && isVisibleByDate) ? '' : 'none';
+        marker.getElement().style.display = (isVisibleByCategory && (isVisibleByDate || isVisibleByRecurring)) ? '' : 'none';
     });
 
     updateInfoWindowContent(); // Make sure this function is defined and functioning
 }
-
 // Define easing functions
 // Define easing functions including ease-out quad and ease-in-out quad
 const easingFunctions = {
