@@ -500,6 +500,7 @@ function processCSVData(csvData) {
     });
 }
 
+
 function convertRecurringToSpecificDates(schedule, startDate, endDate) {
     const dayMap = {
         "Sunday": 0,
@@ -724,12 +725,12 @@ function applyFilters() {
 
     markers.forEach(({ marker, data }) => {
         console.log(`Checking visibility for ${data.address}`);
-        
+
         const isVisibleByCategory = activeFilters.category.length === 0 || 
                                     data.categories.some(cat => activeFilters.category.includes(cat));
         console.log(`Category Visibility for ${data.address}: ${isVisibleByCategory}`);
 
-        const isVisibleByDate = data.dateRanges.some(range => {
+        const isVisibleByDate = data.dateRanges && data.dateRanges.some(range => {
             const rangeStart = new Date(range.start);
             const rangeEnd = new Date(range.end);
             const isInDateRange = rangeStart <= endDateTime && rangeEnd >= startDateTime;
