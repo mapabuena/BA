@@ -415,7 +415,6 @@ function processCSVData(csvData) {
                     }
                     console.log("Parsed dateRanges:", dateRanges);
 
-
                     // Parse the recurring_schedule JSON format
                     let recurringSchedule = [];
                     if (data.recurring_schedule) {
@@ -497,7 +496,6 @@ function processCSVData(csvData) {
         });
     });
 }
-
 
 function convertRecurringToSpecificDates(schedule, startDate, endDate) {
     const dayMap = {
