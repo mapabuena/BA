@@ -145,6 +145,10 @@ function setupDatePickers() {
     });
 }
 
+document.getElementById('searchButton').addEventListener('click', function() {
+    applyFilters();
+});
+
 function setupCityButtons() {
     document.querySelectorAll('.citybutton').forEach(button => {
         button.addEventListener('click', function() {
