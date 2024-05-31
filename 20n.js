@@ -848,7 +848,7 @@ function addMarkerToMap(data) {
 }
 
 // Event listener for search input
-document.getElementById('search-box').addEventListener('input', async function() {
+document.getElementById('mapsearchbox').addEventListener('input', async function() {
     const query = this.value;
     if (query.length > 0) {
         const data = await loadCSVData(currentCSV);
@@ -861,7 +861,7 @@ document.getElementById('search-box').addEventListener('input', async function()
 
 // Event listener for "Add All to Map" button
 document.getElementById('add-all-to-map').addEventListener('click', async function() {
-    const query = document.getElementById('search-box').value;
+    const query = document.getElementById('mapsearchbox').value;
     if (query.length > 0) {
         const data = await loadCSVData(currentCSV);
         const suggestions = filterData(data, query);
