@@ -560,6 +560,7 @@ function getNextOccurrences(dayOfWeek, startTime, endTime, startDate, endDate) {
 
 
 // Function to create markers
+// Function to create markers
 function createMarker(data) {
     const el = document.createElement('div');
     el.className = 'marker';
@@ -569,8 +570,8 @@ function createMarker(data) {
     el.style.backgroundSize = 'contain';
     el.style.backgroundRepeat = 'no-repeat';
 
-    const lat = parseFloat(data.latitude);
-    const lng = parseFloat(data.longitude);
+    const lat = data.lat;
+    const lng = data.lng;
 
     if (isNaN(lat) || isNaN(lng)) {
         console.error('Invalid coordinates for marker:', data);
@@ -602,6 +603,8 @@ function createMarker(data) {
         data: data
     });
 }
+
+// Other related functions remain unchanged
 
 function toggleGeoJSONRoute(geojson, visibility) {
     const sourceId = 'route-source';
