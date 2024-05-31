@@ -398,7 +398,7 @@ function processCSVData(csvData) {
                     // Check if lat and lng are valid numbers
                     const lat = parseFloat(data.latitude);
                     const lng = parseFloat(data.longitude);
-                    if (isNaN(lat) || isNaN(lng) || !data.latitude || !data.longitude) {
+                    if (isNaN(lat) || isNaN(lng)) {
                         console.error(`Invalid coordinates at row ${rowIndex + 1}: lat=${data.latitude}, lng=${data.longitude}`);
                         return; // Skip this row if coordinates are invalid
                     }
@@ -504,6 +504,7 @@ function processCSVData(csvData) {
         });
     });
 }
+
 
 function convertRecurringToSpecificDates(schedule, startDate, endDate) {
     const dayMap = {
