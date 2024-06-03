@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 110.37 285.48">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #000;
+      }
+
+      .cls-1, .cls-2 {
+        stroke-width: 0px;
+      }
+
+      .cls-2 {
+        fill: #fff;
+      }
+    </style>
+  </defs>
+  <g id="Layer_1-2" data-name="Layer 1">
+    <path class="cls-1" d="M103.44,5.04c13.83,12.43,6.27,32.68-16.57,44.33-7.62,3.89-13.24,5.57-23.29,5.27-6.1-.16-13.11-3.67-13.11-3.67,0,44.7.17,129.44.17,171.21-2.48-.01-4.06.01-7.53.01l-.12-60.52s.22-90.05.22-124.2c0-5.88,5.33-15.85,8.33-19.43C65.22,1.7,91.48-5.7,103.44,5.04h0Z"/>
+    <image width="96" height="79" transform="translate(0 206.48)" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABQCAYAAADm4nCVAAAACXBIWXMAAAsSAAALEgHS3X78AAAD5ElEQVR4nO2ZYZOyMAyEo97//8Xv6X3K3LJuQnVoyvnmmXFaELDu0jQEs6ZpmqZpmqZpmqZpmqZpmqZpmqb5ZC6rB/Am0bgfpaM4gLMaMGtcpzPoTAaMjGV0vCNCn8KMMxigxpCNa2TMkbhq/1IjVhrAv/3qNu4bEfbV7RJWGJAJq/ojRjAP0Vf7sn4J1QZEYr7aqmtloo+23J9OpQGZ+K/21TUzcR9iW/X5WtP5KvqdLLRcTIsdffh6iBKdP35+tm5E3x9OlQHMntjX5Ds0gsmEf5jZ3bZG4Hm8oJeYUGEA3/1K/Kvoc+t9vo6DwqLQd2gv4js8v9yEyhmgjGChuc/7slkQ3e1324p/gX1XezbBx/cRISiL90p8/twsNgKvi7GfhffPt/2K7ygT/DoXaqewcg1AE1j0m20NQCPULFB3v4uO4n/b88y527ORHzEDVNqZLbooPn8iExAl/tW24uOx3qrsio2YZkj1IozbURhC4b/s2Qg0AeGwg+KPpq1ld75T+RygMiAlvrdflpugQhDHez6Gj73adhZgJoTnTGPFGpCFIDUD2IAbnIO4qB56ojXiSi2PhUWfGoZmGRBNeZWKZpmQCkX4PXKHa3G8xzves55sTfqYUoQyQsXkbEao7IjXAb9DOadX11FZlBrPn8+C9sjuwOjBi83x67BYeLdnv2H2LH4pPI1nMvpHVZjaEy8TVR07Mr4sezqMSgNGp/Tey5J3Xytm56v9qmh3OCtDkNl+zR5TS1w8cRE1cawqxkW1/6XMNoDzat/HrRI8quX4OSoL4uO/bd+QqDxdwiwDlPC4P6vXZw9TZnka+rBf4dmAUSM+8kkYUaJfqGUD8LzRJ2H//DNtyGhY+oj3AfgnohngBqiKJa8FI7UgZQJWSNkIE230Hw6jwgBVX3ET/MFJpXxszs22T7tRqUGVoqOQlIWgP/8g9soCzC9ETHzvNZ49AyIT1MLMZqjfn0rlGoCGoAHqbZS3nnpiAe6dN2IserQWlGdFVWkotkj0ShC/u5oOPVnIioyIMiIl/J8PQYyaAWZbE1AIXCf2imjRM4UyglPQaCG2YPtQqgpRqr6D/awIN1rBHDEhewbga/B1p7CqFBGFJN/m2jwbZrCN53k/M2Mv6ykNQ5WlWFVt9DarakbVT0WUZfG26mPL/WlU18IzE6I2KzEzSsARwUvjPrLiZURkAvb39qntSMTMlOy8Ela+DdoTNLvjR2bA3vaSBy9mpQGOGsPovoxIzFMI75zBACcby7vj3BN2mfDOmQxwZo9puejIGQ2IOCoENU3TNE3TNE3TNE3TNE3TNE3TNE3T/C/8AP1GKWFRRlbYAAAAAElFTkSuQmCC"/>
+    <ellipse class="cls-2" cx="77.68" cy="27.41" rx="28.65" ry="11.64" transform="translate(-3.3 42.51) rotate(-30)"/>
+  </g>
+</svg>
