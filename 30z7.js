@@ -585,24 +585,6 @@ function getNextOccurrences(dayOfWeek, startTime, endTime, startDate, endDate) {
 
 // Function to create markers
 
-let mapMoveCount = 0; // Counter for map movements
-let isFlying = false; // Flag to track if the map is flying
-
-// Function to handle moveend event
-function onMoveEnd() {
-    if (!isFlying) {
-        mapMoveCount++;
-        if (mapMoveCount >= 3 && selectedMarker) {
-            const el = selectedMarker.getElement();
-            const data = markers.find(m => m.marker === selectedMarker).data;
-            el.style.backgroundImage = `url(${data.icon_url})`; // Revert to original icon after three moves
-            mapMoveCount = 0; // Reset counter
-        }
-    }
-}
-
-// Add moveend event listener
-map.on('moveend', onMoveEnd);
 
 function resetMarkerStyles() {
     markers.forEach(({ marker, data }) => {
