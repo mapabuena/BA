@@ -213,7 +213,6 @@ function setupMapEvents() {
                     const el = marker.getElement();
                     el.style.backgroundImage = `url(${data.icon_url})`;
                 });
-                document.getElementById('sidebarcloser').click();
             }, 100);
         });
 
