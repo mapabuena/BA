@@ -375,14 +375,15 @@ function recenterMap(lng, lat) {
 
     // Offset to position the marker at (x, y) = (0.75, 0.5)
     const offsetY = 0;
-    const offsetX = mapWidth * 0.25;
+    const offsetX = (-mapWidth * 0.25);
 
     map.flyTo({
         center: [lng, lat],
-        offset: [offsetX, offsetY],
+        offset: [offsetX, 0],
         essential: true
     });
 }
+
          
 function simulateMarkerClick(markerIndex) {
     const { marker } = markers[markerIndex];
@@ -607,17 +608,20 @@ function createMarker(data) {
             const el = marker.getElement();
             el.style.backgroundImage = `url(${data.icon_url})`;
         });
-      
-        recenterMap(lng, lat); // Add this line to call recenterMap
-        el.style.backgroundImage = `url(${data.icon2_url})`;
-    
-        document.getElementById('sidebarimage').innerHTML = `<img src="${data.sidebarimage}" alt="Sidebar Image" style="width: 100%;">`;
-        document.getElementById('sidebarheader').innerText = data.sidebarheader;
-        document.getElementById('sidebardescription').innerText = data.description;
-        document.getElementById('sidebarheader2').innerText = data.sidebarheader2 || '';
+       recenterMap(lng, lat); // Add this line to call recenterMap
+     
+        
+     // Use a timeout to ensure marker selection happens after fly-to animation
+        setTimeout(() => {
+            el.style.backgroundImage = `url(${data.icon2_url})`;
 
-        document.getElementById('sidebaropener').click();
+            document.getElementById('sidebarimage').innerHTML = `<img src="${data.sidebarimage}" alt="Sidebar Image" style="width: 100%;">`;
+            document.getElementById('sidebarheader').innerText = data.sidebarheader;
+            document.getElementById('sidebardescription').innerText = data.description;
+            document.getElementById('sidebarheader2').innerText = data.sidebarheader2 || '';
 
+            document.getElementById('sidebaropener').click();
+        }, 300); // Adjust the timeout duration if necessary
     });
 
     markers.push({
@@ -625,7 +629,6 @@ function createMarker(data) {
         data: data
     });
 }
-
 // Other related functions remain unchanged
 
 function toggleGeoJSONRoute(geojson, visibility) {
