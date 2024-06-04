@@ -52,7 +52,7 @@ document.getElementById('nightmode').addEventListener('click', () => {
     console.log('Button Classes:', nightModeButton.className);
 });
 document.addEventListener('DOMContentLoaded', function() {
-     recenterMap(-73.985428, 40.748817); // Test coordinates
+     recenterMap(73.985428, -40.748817); // Test coordinates
     setupDatePickers();
     setupCityButtons();
     setupFormHandlers();
