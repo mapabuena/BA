@@ -73,7 +73,7 @@ function setupInfoItemHoverEffects() {
                 const marker = markers[globalIndex].marker;
                 const markerData = markers[globalIndex].data;
                 const markerElement = marker.getElement();
-                if (markerElement.style.backgroundImage !== `url(${markerData.icon2_url})`) {
+                if (markerElement.getAttribute('data-is-selected') !== 'true') {
                     console.log('Changing marker background to:', markerData.icon3_url); // Debug log
                     markerElement.style.backgroundImage = `url(${markerData.icon3_url})`; // Change marker's background image
                     markerElement.style.width = `${markerData.icon3width}px`; // Set marker's width
@@ -91,7 +91,7 @@ function setupInfoItemHoverEffects() {
                 const marker = markers[globalIndex].marker;
                 const markerData = markers[globalIndex].data;
                 const markerElement = marker.getElement();
-                if (markerElement.style.backgroundImage !== `url(${markerData.icon2_url})`) {
+                if (markerElement.getAttribute('data-is-selected') !== 'true') {
                     console.log('Reverting marker background to:', markerData.icon_url); // Debug log
                     markerElement.style.backgroundImage = `url(${markerData.icon_url})`; // Revert marker's background image
                     markerElement.style.width = `${markerData.iconwidth}px`; // Revert marker's width
@@ -110,6 +110,8 @@ function setupInfoItemHoverEffects() {
                 const markerData = markers[globalIndex].data;
                 console.log('Clicking marker background to:', markerData.icon2_url); // Debug log
                 const markerElement = marker.getElement();
+                resetMarkerStates(); // Reset all marker states
+                markerElement.setAttribute('data-is-selected', 'true');
                 markerElement.style.backgroundImage = `url(${markerData.icon2_url})`; // Change marker's background image
                 markerElement.style.width = `${markerData.icon2width}px`; // Set marker's width
                 markerElement.style.height = `${markerData.icon2height}px`; // Set marker's height
@@ -121,7 +123,13 @@ function setupInfoItemHoverEffects() {
     });
 }
 
-
+// Function to reset all marker states
+function resetMarkerStates() {
+    markers.forEach(({ marker }) => {
+        const markerElement = marker.getElement();
+        markerElement.setAttribute('data-is-selected', 'false');
+    });
+}
 function setupDatePickers() {
     const startDateInput = document.getElementById('startDateTime');
     const endDateInput = document.getElementById('endDateTime');
@@ -608,6 +616,7 @@ function createMarker(data) {
     el.style.width = `${data.iconwidth}px`;
     el.style.backgroundSize = 'contain';
     el.style.backgroundRepeat = 'no-repeat';
+    el.setAttribute('data-is-selected', 'false'); // Initialize state
 
     const lat = data.lat;
     const lng = data.lng;
@@ -627,6 +636,7 @@ function createMarker(data) {
         selectedMarker = marker; // Track the selected marker
 
         el.style.backgroundImage = `url(${data.icon2_url})`;
+        el.setAttribute('data-is-selected', 'true'); // Mark as selected
 
         document.getElementById('sidebarimage').innerHTML = `<img src="${data.sidebarimage}" alt="Sidebar Image" style="width: 100%;">`;
         document.getElementById('sidebarheader').innerText = data.sidebarheader;
@@ -643,7 +653,6 @@ function createMarker(data) {
         data: data
     });
 }
-
 
 function toggleGeoJSONRoute(geojson, visibility) {
     const sourceId = 'route-source';
