@@ -584,8 +584,6 @@ function getNextOccurrences(dayOfWeek, startTime, endTime, startDate, endDate) {
 
 let selectedMarker = null;
 
-let selectedMarker = null;
-
 function createMarker(data) {
     const el = document.createElement('div');
     el.className = 'marker';
