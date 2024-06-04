@@ -726,20 +726,6 @@ function toggleSpecificRoute(markerData) {
     toggleGeoJSONRoute(markerData.geojson, newVisibility === 'visible');
 }
 
-// Function to recenter map on marker click
-function recenterMap(lng, lat) {
-    const mapContainer = map.getContainer();
-    const mapWidth = mapContainer.offsetWidth;
-
-    // Offset to position the marker at (x, y) = (0.75, 0.5)
-    const offsetX = mapWidth * 0.3;
-
-    map.flyTo({
-        center: [lng, lat],
-        offset: [offsetX, 0],
-        essential: true
-    });
-}
 
 function copyToClipboard(text) {
     navigator.clipboard.writeText(text).then(() => {
