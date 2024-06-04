@@ -585,6 +585,25 @@ function getNextOccurrences(dayOfWeek, startTime, endTime, startDate, endDate) {
 let selectedMarker = null;
 
 // Function to create markers
+let mapMoveCount = 0; // Counter for map movements
+
+map.on('moveend', () => {
+    mapMoveCount++;
+    if (mapMoveCount >= 3 && selectedMarker) {
+        const el = selectedMarker.getElement();
+        const data = markers.find(m => m.marker === selectedMarker).data;
+        el.style.backgroundImage = `url(${data.icon_url})`; // Revert to original icon after three moves
+        mapMoveCount = 0; // Reset counter
+    }
+});
+
+function resetMarkerStyles() {
+    markers.forEach(({ marker, data }) => {
+        const el = marker.getElement();
+        el.style.backgroundImage = `url(${data.icon_url})`;
+    });
+}
+
 function createMarker(data) {
     const el = document.createElement('div');
     el.className = 'marker';
@@ -607,10 +626,9 @@ function createMarker(data) {
         .addTo(map);
 
     marker.getElement().addEventListener('click', () => {
-        markers.forEach(({ marker, data }) => {
-            const el = marker.getElement();
-            el.style.backgroundImage = `url(${data.icon_url})`;
-        });
+        resetMarkerStyles(); // Reset all marker styles
+
+        selectedMarker = marker; // Track the selected marker
 
         el.style.backgroundImage = `url(${data.icon2_url})`;
 
@@ -620,6 +638,8 @@ function createMarker(data) {
         document.getElementById('sidebarheader2').innerText = data.sidebarheader2 || '';
 
         document.getElementById('sidebaropener').click();
+
+        recenterMap(lng, lat); // Recenter map with offset
     });
 
     markers.push({
@@ -627,26 +647,6 @@ function createMarker(data) {
         data: data
     });
 }
-
-function selectMarker(el, data) {
-    el.style.backgroundImage = `url(${data.icon2_url})`;
-
-    document.getElementById('sidebarimage').innerHTML = `<img src="${data.sidebarimage}" alt="Sidebar Image" style="width: 100%;">`;
-    document.getElementById('sidebarheader').innerText = data.sidebarheader;
-    document.getElementById('sidebardescription').innerText = data.description;
-    document.getElementById('sidebarheader2').innerText = data.sidebarheader2 || '';
-
-    document.getElementById('sidebaropener').click();
-}
-map.on('moveend', () => {
-    if (selectedMarker) {
-        const el = selectedMarker.getElement();
-        const data = markers.find(m => m.marker === selectedMarker).data;
-        console.log('Reapplying selected marker style', el, data.icon2_url);
-        el.style.backgroundImage = `url(${data.icon2_url})`;
-    }
-});
-
 
 function toggleGeoJSONRoute(geojson, visibility) {
     const sourceId = 'route-source';
