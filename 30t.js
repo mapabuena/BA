@@ -583,6 +583,8 @@ function getNextOccurrences(dayOfWeek, startTime, endTime, startDate, endDate) {
 // Function to create markers
 let clickedMarker = null;
 
+let selectedMarker = null;
+
 function createMarker(data) {
     const el = document.createElement('div');
     el.className = 'marker';
@@ -610,13 +612,18 @@ function createMarker(data) {
             el.style.backgroundImage = `url(${data.icon_url})`;
         });
 
-        recenterMap(lng, lat); // Call recenterMap first
+        selectedMarker = marker; // Track the selected marker
 
-        // Track the clicked marker
-        clickedMarker = marker;
+        el.style.backgroundImage = `url(${data.icon2_url})`;
 
-        // Apply marker selection logic
-        selectMarker(el, data);
+        document.getElementById('sidebarimage').innerHTML = `<img src="${data.sidebarimage}" alt="Sidebar Image" style="width: 100%;">`;
+        document.getElementById('sidebarheader').innerText = data.sidebarheader;
+        document.getElementById('sidebardescription').innerText = data.description;
+        document.getElementById('sidebarheader2').innerText = data.sidebarheader2 || '';
+
+        document.getElementById('sidebaropener').click();
+
+        recenterMap(lng, lat); // Call recenterMap after setting the selected marker
     });
 
     markers.push({
@@ -636,13 +643,15 @@ function selectMarker(el, data) {
     document.getElementById('sidebaropener').click();
 }
 
+// Ensure the selected marker remains selected even after map movement
 map.on('moveend', () => {
-    if (clickedMarker) {
-        const el = clickedMarker.getElement();
-        const data = markers.find(m => m.marker === clickedMarker).data;
-        selectMarker(el, data);
+    if (selectedMarker) {
+        const el = selectedMarker.getElement();
+        const data = markers.find(m => m.marker === selectedMarker).data;
+        el.style.backgroundImage = `url(${data.icon2_url})`;
     }
 });
+
 
 
 function toggleGeoJSONRoute(geojson, visibility) {
