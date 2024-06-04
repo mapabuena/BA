@@ -117,6 +117,7 @@ function setupInfoItemHoverEffects() {
                 markerElement.style.width = `${markerData.icon2width}px`; // Set marker's width
                 markerElement.style.height = `${markerData.icon2height}px`; // Set marker's height
 
+                console.log(`Calling recenterMap for marker at lng=${markerData.lng}, lat=${markerData.lat}`); // Log before calling recenterMap
                 // Recenter map with offset
                 recenterMap(markerData.lng, markerData.lat);
             }
@@ -255,7 +256,6 @@ function adjustMarkerSizes() {
         const el = marker.getElement();
         const height = data.iconheight * sizeMultiplier;
         const width = data.iconwidth * sizeMultiplier;
-        console.log(`Adjusting marker for ${data.address}: height=${height}px, width=${width}px`);
         el.style.height = `${height}px`;
         el.style.width = `${width}px`;
     });
@@ -380,10 +380,8 @@ function updateInfoWindowContent() {
 
     setupInfoItemHoverEffects(); // Ensure hover effects are set up
 }
-
 function recenterMap(lng, lat) {
-    console.log(`Recenter map called with coordinates: lng=${lng}, lat=${lat}`); // Confirm the function is called
-
+    console.log(`recenterMap function called with lng=${lng}, lat=${lat}`); // Basic log to ensure function is called
     const mapContainer = map.getContainer();
     const mapWidth = mapContainer.offsetWidth;
     const mapHeight = mapContainer.offsetHeight;
@@ -393,11 +391,11 @@ function recenterMap(lng, lat) {
     let offsetX = 0, offsetY = 0;
 
     if (window.innerWidth <= 479) { // Extra small devices (e.g., phones in portrait mode)
-        offsetX = (mapWidth * 0);
-        offsetY = (mapHeight * 0);
+        offsetX = mapWidth * 0;
+        offsetY = mapHeight * 0;
     } else if (window.innerWidth > 479 && window.innerWidth < 769) { // Small devices (e.g., phones in landscape mode)
-        offsetX = (mapWidth * 0);
-        offsetY = (mapHeight * 0);
+        offsetX = mapWidth * 0;
+        offsetY = mapHeight * 0;
     } else if (window.innerWidth >= 769 && window.innerWidth < 1280) { // Medium devices (e.g., tablets)
         offsetX = 0;
         offsetY = -(mapHeight * 0);
@@ -406,7 +404,6 @@ function recenterMap(lng, lat) {
         offsetY = -(mapHeight * 0);
     }
 
-    // Debug logging
     console.log(`Calculated offsets: offsetX=${offsetX}, offsetY=${offsetY}`); // Add detailed log for offsets
 
     map.flyTo({
@@ -415,6 +412,7 @@ function recenterMap(lng, lat) {
         essential: true
     });
 }
+
          
 function simulateMarkerClick(markerIndex) {
     const { marker } = markers[markerIndex];
