@@ -391,7 +391,7 @@ function recenterMap(lng, lat) {
 
     map.flyTo({
         center: [lng, lat],
-        offset: [offsetX, 0],
+        offset: [offsetX, offsetY],
         essential: true
     });
 
