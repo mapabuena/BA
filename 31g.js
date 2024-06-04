@@ -387,18 +387,18 @@ function recenterMap(lng, lat) {
 
     let offsetX, offsetY;
 
-    if (window.innerWidth <= 576) { // Extra small devices (e.g., phones in portrait mode)
-        offsetX = mapWidth * 0.33;
-        offsetY = -mapHeight * 0.33;
-    } else if (window.innerWidth <= 768) { // Small devices (e.g., phones in landscape mode)
+    if (window.innerWidth <= 479) { // Extra small devices (e.g., phones in portrait mode)
+        offsetX = mapWidth * 0.1;
+        offsetY = -mapHeight * 0.3;
+    } else if (window.innerWidth > 479 && window.innerWidth < 769) { // Small devices (e.g., phones in landscape mode)
         offsetX = mapWidth * 0.2;
         offsetY = -mapHeight * 0.2;
-    } else if (window.innerWidth <= 992) { // Medium devices (e.g., tablets)
-        offsetX = mapWidth * 0.15;
-        offsetY = -mapHeight * 0.15;
+    } else if (window.innerWidth >= 769 && window.innerWidth < 1280) { // Medium devices (e.g., tablets)
+        offsetX = mapWidth * 0.25;
+        offsetY = -mapHeight * 0.25;
     } else { // Large devices (e.g., desktops)
-        offsetX = mapWidth * 0.15;
-        offsetY = -mapHeight * 0.15;
+        offsetX = mapWidth * 0.3;
+        offsetY = -mapHeight * 0.2;
     }
 
     map.flyTo({
@@ -407,7 +407,6 @@ function recenterMap(lng, lat) {
         essential: true
     });
 }
-
          
 function simulateMarkerClick(markerIndex) {
     const { marker } = markers[markerIndex];
