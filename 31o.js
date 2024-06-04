@@ -382,13 +382,15 @@ function updateInfoWindowContent() {
 }
 
 function recenterMap(lng, lat) {
-    console.log(`Recenter map called with coordinates: lng=${lng}, lat=${lat}`); // New log statement
+    console.log(`Recenter map called with coordinates: lng=${lng}, lat=${lat}`); // Confirm the function is called
 
     const mapContainer = map.getContainer();
     const mapWidth = mapContainer.offsetWidth;
     const mapHeight = mapContainer.offsetHeight;
 
-    let offsetX, offsetY;
+    console.log(`Map dimensions: width=${mapWidth}, height=${mapHeight}`); // Log map dimensions
+
+    let offsetX = 0, offsetY = 0;
 
     if (window.innerWidth <= 479) { // Extra small devices (e.g., phones in portrait mode)
         offsetX = (mapWidth * 0);
@@ -405,7 +407,7 @@ function recenterMap(lng, lat) {
     }
 
     // Debug logging
-    console.log(`Recenter map with offsets - offsetX: ${offsetX}, offsetY: ${offsetY}`);
+    console.log(`Calculated offsets: offsetX=${offsetX}, offsetY=${offsetY}`); // Add detailed log for offsets
 
     map.flyTo({
         center: [lng, lat],
