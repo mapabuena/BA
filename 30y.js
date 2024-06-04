@@ -584,6 +584,8 @@ function getNextOccurrences(dayOfWeek, startTime, endTime, startDate, endDate) {
 
 let selectedMarker = null;
 
+let selectedMarker = null;
+
 function createMarker(data) {
     const el = document.createElement('div');
     el.className = 'marker';
@@ -642,11 +644,11 @@ function selectMarker(el, data) {
 
     document.getElementById('sidebaropener').click();
 }
-
 map.on('moveend', () => {
     if (selectedMarker) {
         const el = selectedMarker.getElement();
         const data = markers.find(m => m.marker === selectedMarker).data;
+        console.log('Reapplying selected marker style', el, data.icon2_url);
         el.style.backgroundImage = `url(${data.icon2_url})`;
     }
 });
