@@ -581,10 +581,6 @@ function getNextOccurrences(dayOfWeek, startTime, endTime, startDate, endDate) {
 
 
 // Function to create markers
-let clickedMarker = null;
-
-let selectedMarker = null;
-
 let selectedMarker = null;
 
 function createMarker(data) {
