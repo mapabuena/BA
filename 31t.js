@@ -52,7 +52,6 @@ document.getElementById('nightmode').addEventListener('click', () => {
     console.log('Button Classes:', nightModeButton.className);
 });
 document.addEventListener('DOMContentLoaded', function() {
-     recenterMap(73.985428, -40.748817); // Test coordinates
     setupDatePickers();
     setupCityButtons();
     setupFormHandlers();
@@ -388,20 +387,20 @@ function recenterMap(lng, lat) {
 
     console.log(`Map dimensions: width=${mapWidth}, height=${mapHeight}`); // Log map dimensions
 
-    let offsetX = 0, offsetY = 0;
+   let offsetX, offsetY;
 
-    if (window.innerWidth <= 479) { // Extra small devices (e.g., phones in portrait mode)
-        offsetX = mapWidth * 0;
-        offsetY = mapHeight * 0;
+   if (window.innerWidth <= 479) { // Extra small devices (e.g., phones in portrait mode)
+        offsetX = (mapWidth * .3);
+        offsetY = (mapHeight * .3);
     } else if (window.innerWidth > 479 && window.innerWidth < 769) { // Small devices (e.g., phones in landscape mode)
-        offsetX = mapWidth * 0;
-        offsetY = mapHeight * 0;
+        offsetX = (mapWidth * .2);
+        offsetY = (mapHeight * .2);
     } else if (window.innerWidth >= 769 && window.innerWidth < 1280) { // Medium devices (e.g., tablets)
-        offsetX = 0;
-        offsetY = -(mapHeight * 0);
+        offsetX = (mapWidth * .10);
+        offsetY = (mapHeight * .10);
     } else { // Large devices (e.g., desktops)
-        offsetX = 0;
-        offsetY = -(mapHeight * 0);
+          offsetX = (mapWidth * .1);
+        offsetY = (mapHeight * .1);
     }
 
     console.log(`Calculated offsets: offsetX=${offsetX}, offsetY=${offsetY}`); // Add detailed log for offsets
