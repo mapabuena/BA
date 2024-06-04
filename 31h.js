@@ -388,17 +388,17 @@ function recenterMap(lng, lat) {
     let offsetX, offsetY;
 
     if (window.innerWidth <= 479) { // Extra small devices (e.g., phones in portrait mode)
-        offsetX = mapWidth * 0.1;
-        offsetY = -mapHeight * 0.3;
+        offsetX = (mapWidth * 0.4);
+        offsetY = (mapHeight * 0.4);
     } else if (window.innerWidth > 479 && window.innerWidth < 769) { // Small devices (e.g., phones in landscape mode)
-        offsetX = mapWidth * 0.2;
-        offsetY = -mapHeight * 0.2;
+        offsetX = (mapWidth * 0.2);
+        offsetY = (mapHeight * 0.2);
     } else if (window.innerWidth >= 769 && window.innerWidth < 1280) { // Medium devices (e.g., tablets)
-        offsetX = mapWidth * 0.25;
-        offsetY = -mapHeight * 0.25;
+        offsetX = (mapWidth * 0.20);
+        offsetY = -(mapHeight * 0.20);
     } else { // Large devices (e.g., desktops)
-        offsetX = mapWidth * 0.3;
-        offsetY = -mapHeight * 0.2;
+        offsetX = (mapWidth * 0.1);
+        offsetY = (mapHeight * 0.1);
     }
 
     map.flyTo({
