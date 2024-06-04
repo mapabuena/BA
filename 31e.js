@@ -387,7 +387,7 @@ function recenterMap(lng, lat) {
 
     // Offset to position the marker at (x, y) = (0.75, 0.5)
     const offsetX = mapWidth * 0.3;
-    const offsetY = mapHeight * 0.3;
+    const offsetY = -mapHeight * 0.3;
 
 
     map.flyTo({
