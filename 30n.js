@@ -56,7 +56,6 @@ document.addEventListener('DOMContentLoaded', function() {
     setupCityButtons();
     setupFormHandlers();
     setupMapEvents();
-    setupClickSimulations();
     setupInfoItemHoverEffects();
     // Initially add daymode-text class to h4 elements
     document.querySelectorAll('.info-item h4').forEach(h4 => {
@@ -369,19 +368,6 @@ function updateInfoWindowContent() {
     setupInfoItemHoverEffects(); // Ensure hover effects are set up
 }
 
-function setupClickSimulations() {
-    document.getElementById('sidebaropener').addEventListener('click', () => {
-        document.getElementById('closeinfobar').click();
-    });
-
-    document.getElementById('sidebarcloser').addEventListener('click', () => {
-        document.getElementById('extendinfobar').click();
-    });
-
-    document.getElementById('sidebarbutton').addEventListener('click', () => {
-        document.getElementById('extendinfobar').click();
-    });
-}
 
 function recenterMap(lng, lat) {
     const mapContainer = map.getContainer();
