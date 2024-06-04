@@ -52,6 +52,7 @@ document.getElementById('nightmode').addEventListener('click', () => {
     console.log('Button Classes:', nightModeButton.className);
 });
 document.addEventListener('DOMContentLoaded', function() {
+     recenterMap(-73.985428, 40.748817); // Test coordinates
     setupDatePickers();
     setupCityButtons();
     setupFormHandlers();
@@ -381,6 +382,8 @@ function updateInfoWindowContent() {
 }
 
 function recenterMap(lng, lat) {
+    console.log(`Recenter map called with coordinates: lng=${lng}, lat=${lat}`); // New log statement
+
     const mapContainer = map.getContainer();
     const mapWidth = mapContainer.offsetWidth;
     const mapHeight = mapContainer.offsetHeight;
