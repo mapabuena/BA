@@ -72,11 +72,13 @@ function setupInfoItemHoverEffects() {
             if (globalIndex !== -1 && markers[globalIndex]) {
                 const marker = markers[globalIndex].marker;
                 const markerData = markers[globalIndex].data;
-                console.log('Changing marker background to:', markerData.icon3_url); // Debug log
                 const markerElement = marker.getElement();
-                markerElement.style.backgroundImage = `url(${markerData.icon3_url})`; // Change marker's background image
-                markerElement.style.width = `${markerData.icon3width}px`; // Set marker's width
-                markerElement.style.height = `${markerData.icon3height}px`; // Set marker's height
+                if (markerElement.style.backgroundImage !== `url(${markerData.icon2_url})`) {
+                    console.log('Changing marker background to:', markerData.icon3_url); // Debug log
+                    markerElement.style.backgroundImage = `url(${markerData.icon3_url})`; // Change marker's background image
+                    markerElement.style.width = `${markerData.icon3width}px`; // Set marker's width
+                    markerElement.style.height = `${markerData.icon3height}px`; // Set marker's height
+                }
             }
             item.style.boxShadow = '0px 4px 10px rgba(0, 0, 0, 0.3)'; // Add box shadow to info-item
         });
@@ -88,11 +90,13 @@ function setupInfoItemHoverEffects() {
             if (globalIndex !== -1 && markers[globalIndex] && globalIndex !== selectedMarkerIndex) {
                 const marker = markers[globalIndex].marker;
                 const markerData = markers[globalIndex].data;
-                console.log('Reverting marker background to:', markerData.icon_url); // Debug log
                 const markerElement = marker.getElement();
-                markerElement.style.backgroundImage = `url(${markerData.icon_url})`; // Revert marker's background image
-                markerElement.style.width = `${markerData.iconwidth}px`; // Revert marker's width
-                markerElement.style.height = `${markerData.iconheight}px`; // Revert marker's height
+                if (markerElement.style.backgroundImage !== `url(${markerData.icon2_url})`) {
+                    console.log('Reverting marker background to:', markerData.icon_url); // Debug log
+                    markerElement.style.backgroundImage = `url(${markerData.icon_url})`; // Revert marker's background image
+                    markerElement.style.width = `${markerData.iconwidth}px`; // Revert marker's width
+                    markerElement.style.height = `${markerData.iconheight}px`; // Revert marker's height
+                }
             }
             item.style.boxShadow = 'none'; // Remove box shadow from info-item
         });
@@ -109,6 +113,9 @@ function setupInfoItemHoverEffects() {
                 markerElement.style.backgroundImage = `url(${markerData.icon2_url})`; // Change marker's background image
                 markerElement.style.width = `${markerData.icon2width}px`; // Set marker's width
                 markerElement.style.height = `${markerData.icon2height}px`; // Set marker's height
+
+                // Recenter map with offset
+                recenterMap(markerData.lng, markerData.lat);
             }
         });
     });
