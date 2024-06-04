@@ -342,23 +342,12 @@ function updateInfoWindowContent() {
     console.log("Updating info window. Map Center:", center);
     console.log("Map Bounds:", JSON.stringify(bounds));
 
-    const visibleMarkers = markers.filter(({ marker }) => {
-        const position = marker.getLngLat();
-        const isInBounds = bounds.contains(position);
-        const isVisible = marker.getElement().style.display !== 'none';
-        return isInBounds && isVisible;
-    });
-
-    if (visibleMarkers.length === 0) {
-        document.getElementById('infowindowbar').innerHTML = 'No visible markers within bounds.';
-        return;
-    }
-
-    visibleMarkers.sort((a, b) => calculateDistance(center, a.data) - calculateDistance(center, b.data));
+    // Sort all markers by their distance to the center of the map
+    markers.sort((a, b) => calculateDistance(center, a.data) - calculateDistance(center, b.data));
 
     const infoWindow = document.getElementById('infowindowbar');
     infoWindow.innerHTML = '';
-    visibleMarkers.forEach(({ marker, data }, index) => {
+    markers.forEach(({ marker, data }, index) => {
         const item = document.createElement('div');
         item.className = 'info-item';
         item.setAttribute('data-marker-index', markers.indexOf(markers.find(m => m.marker === marker))); // Ensure correct index
@@ -379,6 +368,28 @@ function updateInfoWindowContent() {
 
     setupInfoItemHoverEffects(); // Ensure hover effects are set up
 }
+
+function calculateDistance(center, data) {
+    const R = 6371; // Radius of the Earth in kilometers
+    const dLat = toRadians(data.lat - center.lat);
+    const dLon = toRadians(data.lng - center.lng);
+    const lat1 = toRadians(center.lat);
+    const lat2 = toRadians(data.lat);
+
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+              Math.cos(lat1) * Math.cos(lat2) *
+              Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    
+    const distance = R * c;
+
+    return distance;
+}
+
+function toRadians(degrees) {
+    return degrees * Math.PI / 180;
+}
+
 function recenterMap(lng, lat) {
     console.log(`recenterMap function called with lng=${lng}, lat=${lat}`); // Basic log to ensure function is called
     const mapContainer = map.getContainer();
