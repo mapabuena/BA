@@ -403,26 +403,38 @@ function recenterMap(lng, lat) {
         offsetY = -(mapHeight * .2);
     }
 
-    console.log(`Calculated offsets: offsetX=${offsetX}, offsetY=${offsetY}`); // Add detailed log for offsets
+     console.log(`Calculated offsets: offsetX=${offsetX}, offsetY=${offsetY}`); // Add detailed log for offsets
+
+    // Get the current zoom level
+    const currentZoom = map.getZoom();
+    console.log(`Current zoom level: ${currentZoom}`);
+
+    // Define speed based on zoom level ranges
+    let speed;
+    if (currentZoom >= 0 && currentZoom < 5) {
+        speed = 0.2; // Slow speed for very low zoom levels
+    } else if (currentZoom >= 5 && currentZoom < 10) {
+        speed = 0.5; // Moderate speed for low to mid zoom levels
+    } else if (currentZoom >= 10 && currentZoom < 15) {
+        speed = 1.0; // Default speed for mid zoom levels
+    } else if (currentZoom >= 15 && currentZoom < 18) {
+        speed = 1.5; // Faster speed for high zoom levels
+    } else if (currentZoom >= 18 && currentZoom <= 22) {
+        speed = 2.0; // Fastest speed for very high zoom levels
+    } else {
+        speed = 1.2; // Default speed for any other cases
+    }
+    console.log(`Calculated flyTo speed: ${speed}`);
 
     map.flyTo({
         center: [lng, lat],
         offset: [offsetX, offsetY],
+        speed: speed,
         essential: true
     });
-}
 
-         
-function simulateMarkerClick(markerIndex) {
-    const { marker } = markers[markerIndex];
-    const clickEvent = new MouseEvent('click', {
-        view: window,
-        bubbles: true,
-        cancelable: true
-    });
-    marker.getElement().dispatchEvent(clickEvent);
+    console.log(`FlyTo called with center: [${lng}, ${lat}], offset: [${offsetX}, ${offsetY}], speed: ${speed}`);
 }
-
 async function fetchMarkersData(csvFile) {
     try {
         const response = await fetch(csvFile);
