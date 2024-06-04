@@ -583,6 +583,8 @@ function getNextOccurrences(dayOfWeek, startTime, endTime, startDate, endDate) {
 // Function to create markers
 let selectedMarker = null;
 
+let selectedMarker = null;
+
 function createMarker(data) {
     const el = document.createElement('div');
     el.className = 'marker';
@@ -605,10 +607,11 @@ function createMarker(data) {
         .addTo(map);
 
     marker.getElement().addEventListener('click', () => {
-        markers.forEach(({ marker, data }) => {
-            const el = marker.getElement();
-            el.style.backgroundImage = `url(${data.icon_url})`;
-        });
+        if (selectedMarker) {
+            const previousMarkerEl = selectedMarker.getElement();
+            const previousMarkerData = markers.find(m => m.marker === selectedMarker).data;
+            previousMarkerEl.style.backgroundImage = `url(${previousMarkerData.icon_url})`;
+        }
 
         selectedMarker = marker; // Track the selected marker
 
@@ -648,7 +651,6 @@ map.on('moveend', () => {
         el.style.backgroundImage = `url(${data.icon2_url})`;
     }
 });
-
 
 
 function toggleGeoJSONRoute(geojson, visibility) {
