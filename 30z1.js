@@ -584,6 +584,7 @@ function getNextOccurrences(dayOfWeek, startTime, endTime, startDate, endDate) {
 
 let selectedMarker = null;
 
+// Function to create markers
 function createMarker(data) {
     const el = document.createElement('div');
     el.className = 'marker';
@@ -606,13 +607,10 @@ function createMarker(data) {
         .addTo(map);
 
     marker.getElement().addEventListener('click', () => {
-        if (selectedMarker) {
-            const previousMarkerEl = selectedMarker.getElement();
-            const previousMarkerData = markers.find(m => m.marker === selectedMarker).data;
-            previousMarkerEl.style.backgroundImage = `url(${previousMarkerData.icon_url})`;
-        }
-
-        selectedMarker = marker; // Track the selected marker
+        markers.forEach(({ marker, data }) => {
+            const el = marker.getElement();
+            el.style.backgroundImage = `url(${data.icon_url})`;
+        });
 
         el.style.backgroundImage = `url(${data.icon2_url})`;
 
@@ -622,8 +620,6 @@ function createMarker(data) {
         document.getElementById('sidebarheader2').innerText = data.sidebarheader2 || '';
 
         document.getElementById('sidebaropener').click();
-
-        recenterMap(lng, lat); // Call recenterMap after setting the selected marker
     });
 
     markers.push({
