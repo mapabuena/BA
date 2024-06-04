@@ -581,7 +581,8 @@ function getNextOccurrences(dayOfWeek, startTime, endTime, startDate, endDate) {
 
 
 // Function to create markers
-// Function to create markers
+let clickedMarker = null;
+
 function createMarker(data) {
     const el = document.createElement('div');
     el.className = 'marker';
@@ -608,20 +609,14 @@ function createMarker(data) {
             const el = marker.getElement();
             el.style.backgroundImage = `url(${data.icon_url})`;
         });
-       recenterMap(lng, lat); // Add this line to call recenterMap
-     
-        
-     // Use a timeout to ensure marker selection happens after fly-to animation
-        setTimeout(() => {
-            el.style.backgroundImage = `url(${data.icon2_url})`;
 
-            document.getElementById('sidebarimage').innerHTML = `<img src="${data.sidebarimage}" alt="Sidebar Image" style="width: 100%;">`;
-            document.getElementById('sidebarheader').innerText = data.sidebarheader;
-            document.getElementById('sidebardescription').innerText = data.description;
-            document.getElementById('sidebarheader2').innerText = data.sidebarheader2 || '';
+        recenterMap(lng, lat); // Call recenterMap first
 
-            document.getElementById('sidebaropener').click();
-        }, 300); // Adjust the timeout duration if necessary
+        // Track the clicked marker
+        clickedMarker = marker;
+
+        // Apply marker selection logic
+        selectMarker(el, data);
     });
 
     markers.push({
@@ -629,7 +624,26 @@ function createMarker(data) {
         data: data
     });
 }
-// Other related functions remain unchanged
+
+function selectMarker(el, data) {
+    el.style.backgroundImage = `url(${data.icon2_url})`;
+
+    document.getElementById('sidebarimage').innerHTML = `<img src="${data.sidebarimage}" alt="Sidebar Image" style="width: 100%;">`;
+    document.getElementById('sidebarheader').innerText = data.sidebarheader;
+    document.getElementById('sidebardescription').innerText = data.description;
+    document.getElementById('sidebarheader2').innerText = data.sidebarheader2 || '';
+
+    document.getElementById('sidebaropener').click();
+}
+
+map.on('moveend', () => {
+    if (clickedMarker) {
+        const el = clickedMarker.getElement();
+        const data = markers.find(m => m.marker === clickedMarker).data;
+        selectMarker(el, data);
+    }
+});
+
 
 function toggleGeoJSONRoute(geojson, visibility) {
     const sourceId = 'route-source';
