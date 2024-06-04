@@ -367,23 +367,28 @@ function updateInfoWindowContent() {
     setupInfoItemHoverEffects(); // Ensure hover effects are set up
 }
 
-
 function recenterMap(lng, lat) {
     const mapContainer = map.getContainer();
-    const mapHeight = mapContainer.offsetHeight;
     const mapWidth = mapContainer.offsetWidth;
 
     // Offset to position the marker at (x, y) = (0.75, 0.5)
-    const offsetY = 0;
-    const offsetX = (-mapWidth * 0.25);
+    const offsetX = mapWidth * 0.3;
+
+    isFlying = true; // Set flying flag to true
 
     map.flyTo({
         center: [lng, lat],
         offset: [offsetX, 0],
         essential: true
     });
-}
 
+    // Disable moveend event listener during flyTo
+    map.once('moveend', () => {
+        setTimeout(() => {
+            isFlying = false; // Reset flying flag after flyTo completes
+        }, 500); // Adjust timeout as needed to ensure flyTo has fully completed
+    });
+}
          
 function simulateMarkerClick(markerIndex) {
     const { marker } = markers[markerIndex];
