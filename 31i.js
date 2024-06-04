@@ -391,14 +391,14 @@ function recenterMap(lng, lat) {
         offsetX = (mapWidth * 0);
         offsetY = (mapHeight * 0);
     } else if (window.innerWidth > 479 && window.innerWidth < 769) { // Small devices (e.g., phones in landscape mode)
-        offsetX = (mapWidth * 0.2);
-        offsetY = (mapHeight * 0.2);
+        offsetX = (mapWidth * 0);
+        offsetY = (mapHeight * 0);
     } else if (window.innerWidth >= 769 && window.innerWidth < 1280) { // Medium devices (e.g., tablets)
         offsetX = 0;
-        offsetY = -(mapHeight * 0.10);
+        offsetY = -(mapHeight * 0);
     } else { // Large devices (e.g., desktops)
         offsetX = 0;
-        offsetY = -(mapHeight * 0.1);
+        offsetY = -(mapHeight * 0);
     }
 
     map.flyTo({
