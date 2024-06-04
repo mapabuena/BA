@@ -210,7 +210,7 @@ function setupMapEvents() {
             updateTimeout = setTimeout(() => {
                 updateInfoWindowContent();
             
-                });
+           
             }, 100);
         });
 
