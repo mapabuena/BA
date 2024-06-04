@@ -373,9 +373,9 @@ function recenterMap(lng, lat) {
     const mapHeight = mapContainer.offsetHeight;
     const mapWidth = mapContainer.offsetWidth;
 
-    // Offset to position the marker at the center of the y-axis and 25% from the right on the x-axis
+    // Offset to position the marker at (x, y) = (0.75, 0.5)
     const offsetY = 0;
-    const offsetX = -mapWidth * 0.25;
+    const offsetX = mapWidth * 0.25;
 
     map.flyTo({
         center: [lng, lat],
@@ -607,9 +607,10 @@ function createMarker(data) {
             const el = marker.getElement();
             el.style.backgroundImage = `url(${data.icon_url})`;
         });
-
+      
+        recenterMap(lng, lat); // Add this line to call recenterMap
         el.style.backgroundImage = `url(${data.icon2_url})`;
-       recenterMap(lng, lat); // Add this line to call recenterMap
+    
         document.getElementById('sidebarimage').innerHTML = `<img src="${data.sidebarimage}" alt="Sidebar Image" style="width: 100%;">`;
         document.getElementById('sidebarheader').innerText = data.sidebarheader;
         document.getElementById('sidebardescription').innerText = data.description;
