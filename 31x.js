@@ -391,16 +391,16 @@ function recenterMap(lng, lat) {
 
    if (window.innerWidth <= 479) { // Extra small devices (e.g., phones in portrait mode)
         offsetX = (mapWidth * .3);
-        offsetY = -(mapHeight * .3);
+        offsetY = -(mapHeight * .2);
     } else if (window.innerWidth > 479 && window.innerWidth < 769) { // Small devices (e.g., phones in landscape mode)
         offsetX = (mapWidth * .2);
-        offsetY = -(mapHeight * .3);
+        offsetY = -(mapHeight * .2);
     } else if (window.innerWidth >= 769 && window.innerWidth < 1280) { // Medium devices (e.g., tablets)
-        offsetX = (mapWidth * .1);
-        offsetY = -(mapHeight * .3);
+        offsetX = (mapWidth * .15);
+        offsetY = -(mapHeight * .2);
     } else { // Large devices (e.g., desktops)
-          offsetX = (mapWidth * .1);
-        offsetY = -(mapHeight * .3);
+          offsetX = (mapWidth * .15);
+        offsetY = -(mapHeight * .2);
     }
 
     console.log(`Calculated offsets: offsetX=${offsetX}, offsetY=${offsetY}`); // Add detailed log for offsets
