@@ -624,7 +624,7 @@ function createMarker(data) {
         });
 
         el.style.backgroundImage = `url(${data.icon2_url})`;
-
+       recenterMap(lng, lat); // Add this line to call recenterMap
         document.getElementById('sidebarimage').innerHTML = `<img src="${data.sidebarimage}" alt="Sidebar Image" style="width: 100%;">`;
         document.getElementById('sidebarheader').innerText = data.sidebarheader;
         document.getElementById('sidebardescription').innerText = data.description;
@@ -632,7 +632,6 @@ function createMarker(data) {
 
         document.getElementById('sidebaropener').click();
 
-        recenterMap(lng, lat); // Add this line to call recenterMap
     });
 
     markers.push({
