@@ -585,6 +585,8 @@ let clickedMarker = null;
 
 let selectedMarker = null;
 
+let selectedMarker = null;
+
 function createMarker(data) {
     const el = document.createElement('div');
     el.className = 'marker';
@@ -643,7 +645,6 @@ function selectMarker(el, data) {
     document.getElementById('sidebaropener').click();
 }
 
-// Ensure the selected marker remains selected even after map movement
 map.on('moveend', () => {
     if (selectedMarker) {
         const el = selectedMarker.getElement();
@@ -718,18 +719,14 @@ function toggleSpecificRoute(markerData) {
 // Function to recenter map on marker click
 function recenterMap(lng, lat) {
     const mapContainer = map.getContainer();
-    const mapHeight = mapContainer.offsetHeight;
     const mapWidth = mapContainer.offsetWidth;
 
-    // Offset to position the marker at the bottom 10% of the map
-    const offsetY = -mapHeight * 0.2;
-
-    // Offset to position the marker at the left 20% of the map
-    const offsetX = -mapWidth * 0;
+    // Offset to position the marker at (x, y) = (0.75, 0.5)
+    const offsetX = mapWidth * 0.3;
 
     map.flyTo({
         center: [lng, lat],
-        offset: [offsetX, offsetY],
+        offset: [offsetX, 0],
         essential: true
     });
 }
