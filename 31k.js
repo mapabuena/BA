@@ -401,6 +401,9 @@ function recenterMap(lng, lat) {
         offsetY = -(mapHeight * 0);
     }
 
+    // Debug logging
+    console.log(`Recenter map with offsets - offsetX: ${offsetX}, offsetY: ${offsetY}`);
+
     map.flyTo({
         center: [lng, lat],
         offset: [offsetX, offsetY],
