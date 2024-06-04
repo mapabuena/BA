@@ -383,6 +383,7 @@ function updateInfoWindowContent() {
 function recenterMap(lng, lat) {
     const mapContainer = map.getContainer();
     const mapWidth = mapContainer.offsetWidth;
+    const mapHeight = mapContainer.offsetHeight;
 
     // Offset to position the marker at (x, y) = (0.75, 0.5)
     const offsetX = mapWidth * 0.3;
