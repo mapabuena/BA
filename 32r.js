@@ -128,7 +128,6 @@ function setupDirectionsButton() {
     }
 }
 
-
 document.getElementById('nightmode').addEventListener('click', () => {
     isNightMode = !isNightMode;
     map.setStyle(isNightMode ? nightStyle : originalStyle);
