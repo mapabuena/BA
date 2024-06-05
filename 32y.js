@@ -104,6 +104,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 // Add this function to set up the directions button event listener
+// Add this function to set up the directions button event listener
 function setupDirectionsButton() {
     const directionsButton = document.getElementById('get-directions');
     if (directionsButton) {
@@ -118,7 +119,7 @@ function setupDirectionsButton() {
                     initializeDirectionsControl();
                 }
                 directions.setOrigin([lng, lat]);
-                directions.setDestination([lng, lat]); // Or set it to a different destination as needed
+                // directions.setDestination([lng, lat]); // Or set it to a different destination as needed
                 document.getElementById('directions-container').style.display = 'block';
             } else {
                 alert('Please select a marker first.');
