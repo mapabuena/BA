@@ -19,6 +19,7 @@ let currentCSV = 'https://raw.githubusercontent.com/mapabuena/BA/main/NewYorkPin
 let isDataLoading = false;
 let selectedMarkerIndex = null; // Variable to keep track of the selected marker index
 
+let directions; // Declare the directions variable here
 let directionsInitialized = false;
 
 function initializeDirectionsControl() {
