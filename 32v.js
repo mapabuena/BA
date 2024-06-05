@@ -79,13 +79,12 @@ document.addEventListener('DOMContentLoaded', function() {
     setupDirectionsButton();
    // Removed automatic initialization of directions control
 });
-    
-    // Initially add daymode-text class to h4 elements
+ // Initially add daymode-text class to h4 elements
     document.querySelectorAll('.info-item h4').forEach(h4 => {
         h4.classList.add('daymode-text');
     });
    // Add event listener to "close-directions" button
-    const closeDirectionsButton = document.getElementById('close-directions');
+  const closeDirectionsButton = document.getElementById('close-directions');
     if (closeDirectionsButton) {
         closeDirectionsButton.addEventListener('click', function() {
             document.getElementById('directions-container').style.display = 'none';
@@ -93,7 +92,7 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         console.error("Element with ID 'close-directions' not found.");
     }
-   // Call this function to set up the directions button event
+  // Call this function to set up the directions button event
     const directionsButton = document.getElementById('get-directions');
     if (directionsButton) {
         setupDirectionsButton();
