@@ -402,7 +402,7 @@ function recenterMap(lng, lat) {
 
    if (window.innerWidth <= 479) { // Extra small devices (e.g., phones in portrait mode)
         offsetX = (mapWidth * .3);
-        offsetY = -(mapHeight * .2);
+        offsetY = -(mapHeight * .15);
     } else if (window.innerWidth > 479 && window.innerWidth < 769) { // Small devices (e.g., phones in landscape mode)
         offsetX = (mapWidth * .15);
         offsetY = -(mapHeight * .1);
