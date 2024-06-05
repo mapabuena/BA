@@ -36,7 +36,7 @@ function initializeDirectionsControl() {
 
         document.getElementById('directions-control').appendChild(directions.onAdd(map));
 
-        // Listen for route updates and check for layer existence
+   // Listen for route updates and check for layer existence
         directions.on('route', () => {
             const layerId = 'directions-route-line-alt';
             if (map.getLayer(layerId)) {
@@ -48,40 +48,7 @@ function initializeDirectionsControl() {
     }
 }
 
-// Call this function on initial load
-initializeDirectionsControl();
 
-
-document.getElementById('nightmode').addEventListener('click', () => {
-    isNightMode = !isNightMode;
-    map.setStyle(isNightMode ? nightStyle : originalStyle);
-
-    map.once('styledata', function() {
-        initializeDirectionsControl();
-    });
-
-     const h4Elements = document.querySelectorAll('.info-item h4');
-    h4Elements.forEach(h4 => {
-        if (isNightMode) {
-            h4.classList.remove('daymode-text');
-            h4.classList.add('nightmode-text');
-        } else {
-            h4.classList.remove('nightmode-text');
-            h4.classList.add('daymode-text');
-        }
-    });
-  
-    document.querySelectorAll('.some-div').forEach(div => {
-        div.style.backgroundColor = isNightMode ? 'darkgray' : 'white';
-    });
-
- const nightModeButton = document.getElementById('nightmode');
-    if (isNightMode) {
-        nightModeButton.classList.add('nightmode-active');
-    } else {
-        nightModeButton.classList.remove('nightmode-active');
-    }
-});
 
 document.addEventListener('DOMContentLoaded', function() {
     setupDatePickers();
@@ -115,9 +82,40 @@ function setupDirectionsButton() {
         }
     });
 }
+
 // Add event listener to "close-directions" button
 document.getElementById('close-directions').addEventListener('click', function() {
     document.getElementById('directions-container').style.display = 'none';
+});
+document.getElementById('nightmode').addEventListener('click', () => {
+    isNightMode = !isNightMode;
+    map.setStyle(isNightMode ? nightStyle : originalStyle);
+
+    map.once('styledata', function() {
+        initializeDirectionsControl();
+    });
+
+     const h4Elements = document.querySelectorAll('.info-item h4');
+    h4Elements.forEach(h4 => {
+        if (isNightMode) {
+            h4.classList.remove('daymode-text');
+            h4.classList.add('nightmode-text');
+        } else {
+            h4.classList.remove('nightmode-text');
+            h4.classList.add('daymode-text');
+        }
+    });
+  
+    document.querySelectorAll('.some-div').forEach(div => {
+        div.style.backgroundColor = isNightMode ? 'darkgray' : 'white';
+    });
+
+ const nightModeButton = document.getElementById('nightmode');
+    if (isNightMode) {
+        nightModeButton.classList.add('nightmode-active');
+    } else {
+        nightModeButton.classList.remove('nightmode-active');
+    }
 });
 
 // Call this function to set up the button event
