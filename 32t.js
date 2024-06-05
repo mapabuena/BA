@@ -19,7 +19,7 @@ let currentCSV = 'https://raw.githubusercontent.com/mapabuena/BA/main/NewYorkPin
 let isDataLoading = false;
 let selectedMarkerIndex = null; // Variable to keep track of the selected marker index
 
-let directions;
+let directionsInitialized = false;
 
 function initializeDirectionsControl() {
     if (!directions) {
@@ -33,7 +33,7 @@ function initializeDirectionsControl() {
             }
         });
 
-        const directionsControlElement = document.getElementById('directions-control');
+      const directionsControlElement = document.getElementById('directions-control');
         if (directionsControlElement) {
             directionsControlElement.appendChild(directions.onAdd(map));
 
@@ -64,6 +64,8 @@ function initializeDirectionsControl() {
         } else {
             console.error("Element with ID 'directions-control' not found.");
         }
+        
+        directionsInitialized = true; // Mark as initialized
     }
 }
 
@@ -116,6 +118,9 @@ function setupDirectionsButton() {
 
             if (selectedMarker) {
                 const { lat, lng } = selectedMarker.data;
+                if (!directionsInitialized) {
+                    initializeDirectionsControl();
+                }
                 directions.setOrigin([lng, lat]);
                 directions.setDestination([lng, lat]); // Or set it to a different destination as needed
                 document.getElementById('directions-container').style.display = 'block';
