@@ -127,7 +127,6 @@ function setupDirectionsButton() {
         console.error("Element with ID 'get-directions' not found.");
     }
 }
-
 document.getElementById('nightmode').addEventListener('click', () => {
     isNightMode = !isNightMode;
     map.setStyle(isNightMode ? nightStyle : originalStyle);
@@ -778,17 +777,17 @@ function createMarker(data) {
 
         selectedMarker = marker; // Track the selected marker
 
-        el.style.backgroundImage = `url(${data.icon2_url})`;
-        el.setAttribute('data-is-selected', 'true'); // Mark as selected
+          el.style.backgroundImage = `url(${data.icon2_url})`;
+    el.setAttribute('data-is-selected', 'true'); // Mark as selected
 
-        document.getElementById('sidebarimage').innerHTML = `<img src="${data.sidebarimage}" alt="Sidebar Image" style="width: 100%;">`;
-        document.getElementById('sidebarheader').innerText = data.sidebarheader;
-        document.getElementById('sidebardescription').innerText = data.description;
-        document.getElementById('sidebarheader2').innerText = data.sidebarheader2 || '';
+    document.getElementById('sidebarimage').innerHTML = `<img src="${data.sidebarimage}" alt="Sidebar Image" style="width: 100%;">`;
+    document.getElementById('sidebarheader').innerText = data.sidebarheader;
+    document.getElementById('sidebardescription').innerText = data.description;
+    document.getElementById('sidebarheader2').innerText = data.sidebarheader2 || '';
 
-        document.getElementById('sidebaropener').click();
+    document.getElementById('sidebaropener').click();
 
-        recenterMap(lng, lat); // Recenter map with offset
+    recenterMap(lng, lat); // Recenter map with offset
     });
 
     markers.push({
