@@ -116,12 +116,17 @@ function setupDirectionsButton() {
                 if (!directionsInitialized) {
                     initializeDirectionsControl();
                 }
-                directions.setOrigin({
-                    coordinates: [lng, lat],
-                    address: sidebarheader
-                });
-                // directions.setDestination([lng, lat]); // Or set it to a different destination as needed
+                directions.setOrigin([lng, lat]); // Set coordinates directly
+                directions.setDestination(''); // Clear the destination
                 document.getElementById('directions-container').style.display = 'block';
+
+                // Wait a moment to allow the origin to be set, then manually update the input field
+                setTimeout(() => {
+                    const originInput = document.querySelector('.mapbox-directions-origin .mapboxgl-ctrl-geocoder--input');
+                    if (originInput) {
+                        originInput.value = sidebarheader;
+                    }
+                }, 100);
             } else {
                 alert('Please select a marker first.');
             }
