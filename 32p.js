@@ -48,7 +48,7 @@ function initializeDirectionsControl() {
             directions.on('destination', () => {
                 const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
                 if (destinationMarker) {
-                    destinationMarker.style.backgroundColor = 'blue'; // Change this to your desired color
+                    destinationMarker.style.backgroundColor = '#26617f'; // Change this to your desired color
                 }
             });
 
@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.info-item h4').forEach(h4 => {
         h4.classList.add('daymode-text');
     });
- // Add event listener to "close-directions" button
+    // Add event listener to "close-directions" button
     const closeDirectionsButton = document.getElementById('close-directions');
     if (closeDirectionsButton) {
         closeDirectionsButton.addEventListener('click', function() {
@@ -96,25 +96,32 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         console.error("Element with ID 'close-directions' not found.");
     }
+
+    // Call this function to set up the directions button event
+    setupDirectionsButton();
 });
 // Add this function to set up the directions button event listener
 // Add event listener to "get-directions" button
 function setupDirectionsButton() {
     const directionsButton = document.getElementById('get-directions');
-    directionsButton.addEventListener('click', function() {
-        const selectedMarker = markers.find(marker => 
-            marker.marker.getElement().getAttribute('data-is-selected') === 'true'
-        );
+    if (directionsButton) {
+        directionsButton.addEventListener('click', function() {
+            const selectedMarker = markers.find(marker => 
+                marker.marker.getElement().getAttribute('data-is-selected') === 'true'
+            );
 
-        if (selectedMarker) {
-            const { lat, lng } = selectedMarker.data;
-            directions.setOrigin([lng, lat]);
-            directions.setDestination([lng, lat]); // Or set it to a different destination as needed
-            document.getElementById('directions-container').style.display = 'block';
-        } else {
-            alert('Please select a marker first.');
-        }
-    });
+            if (selectedMarker) {
+                const { lat, lng } = selectedMarker.data;
+                directions.setOrigin([lng, lat]);
+                directions.setDestination([lng, lat]); // Or set it to a different destination as needed
+                document.getElementById('directions-container').style.display = 'block';
+            } else {
+                alert('Please select a marker first.');
+            }
+        });
+    } else {
+        console.error("Element with ID 'get-directions' not found.");
+    }
 }
 
 
