@@ -101,6 +101,8 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         console.error("Element with ID 'get-directions' not found.");
     }
+    
+    initializeDirectionsControl(); // Initialize directions control here
 });
 // Add this function to set up the directions button event listener
 function setupDirectionsButton() {
@@ -125,8 +127,9 @@ function setupDirectionsButton() {
                     const originInput = document.querySelector('.mapbox-directions-origin .mapboxgl-ctrl-geocoder--input');
                     if (originInput) {
                         originInput.value = sidebarheader;
+                        originInput.dispatchEvent(new Event('input', { bubbles: true })); // Trigger input event
                     }
-                }, 100);
+                }, 500);
             } else {
                 alert('Please select a marker first.');
             }
