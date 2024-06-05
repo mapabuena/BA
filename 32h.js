@@ -44,6 +44,7 @@ function initializeDirectionsControl() {
             console.warn(`Layer ${layerId} does not exist.`);
         }
     });
+    document.getElementById('directions-control').appendChild(directions.onAdd(map));
 }
 
 // Call this function on initial load
@@ -93,21 +94,31 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 // Add this function to set up the directions button event listener
+// Add event listener to "get-directions" button
 function setupDirectionsButton() {
     const directionsButton = document.getElementById('get-directions');
     directionsButton.addEventListener('click', function() {
         const selectedMarker = markers.find(marker => 
             marker.marker.getElement().getAttribute('data-is-selected') === 'true'
         );
-        
+
         if (selectedMarker) {
             const { lat, lng } = selectedMarker.data;
-            setDirections(lat, lng);
+            directions.setOrigin([lng, lat]);
+            directions.setDestination([lng, lat]); // Or set it to a different destination as needed
+            document.getElementById('directions-container').style.display = 'block';
         } else {
             alert('Please select a marker first.');
         }
     });
 }
+// Add event listener to "close-directions" button
+document.getElementById('close-directions').addEventListener('click', function() {
+    document.getElementById('directions-container').style.display = 'none';
+});
+
+// Call this function to set up the button event
+setupDirectionsButton();
 
 // Function to set directions in Mapbox Directions API
 function setDirections(lat, lng) {
