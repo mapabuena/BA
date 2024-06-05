@@ -62,6 +62,13 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.info-item h4').forEach(h4 => {
         h4.classList.add('daymode-text');
     });
+    // Add event listener to "close-directions" button
+    const closeDirectionsButton = document.getElementById('close-directions');
+    if (closeDirectionsButton) {
+        closeDirectionsButton.addEventListener('click', function() {
+            document.getElementById('directions-container').style.display = 'none';
+        });
+    }
 });
 // Add this function to set up the directions button event listener
 // Add event listener to "get-directions" button
@@ -83,10 +90,7 @@ function setupDirectionsButton() {
     });
 }
 
-// Add event listener to "close-directions" button
-document.getElementById('close-directions').addEventListener('click', function() {
-    document.getElementById('directions-container').style.display = 'none';
-});
+
 document.getElementById('nightmode').addEventListener('click', () => {
     isNightMode = !isNightMode;
     map.setStyle(isNightMode ? nightStyle : originalStyle);
