@@ -67,8 +67,11 @@ document.addEventListener('DOMContentLoaded', function() {
 function setupDirectionsButton() {
     const directionsButton = document.getElementById('get-directions');
     directionsButton.addEventListener('click', function() {
-        if (selectedMarkerIndex !== null) {
-            const selectedMarker = markers[selectedMarkerIndex];
+        const selectedMarker = markers.find(marker => 
+            marker.marker.getElement().getAttribute('data-is-selected') === 'true'
+        );
+        
+        if (selectedMarker) {
             const { lat, lng } = selectedMarker.data;
             launchDirectionsAPI(lat, lng);
         } else {
@@ -82,6 +85,7 @@ function launchDirectionsAPI(lat, lng) {
     const directionsUrl = `https://www.mapbox.com/directions/#/map?coordinates=${lng},${lat}&profile=driving&access_token=${mapboxgl.accessToken}`;
     window.open(directionsUrl, '_blank');
 }
+
 function setupInfoItemHoverEffects() {
     document.querySelectorAll('.info-item').forEach(item => {
         item.addEventListener('mouseover', () => {
