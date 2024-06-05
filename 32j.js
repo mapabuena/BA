@@ -35,19 +35,17 @@ function initializeDirectionsControl() {
         });
 
         document.getElementById('directions-control').appendChild(directions.onAdd(map));
-    }
-}
 
-    // Listen for route updates and check for layer existence
-    directions.on('route', () => {
-        const layerId = 'directions-route-line-alt';
-        if (map.getLayer(layerId)) {
-            console.log(`Layer ${layerId} exists and ready to be used.`);
-        } else {
-            console.warn(`Layer ${layerId} does not exist.`);
-        }
-    });
-    document.getElementById('directions-control').appendChild(directions.onAdd(map));
+        // Listen for route updates and check for layer existence
+        directions.on('route', () => {
+            const layerId = 'directions-route-line-alt';
+            if (map.getLayer(layerId)) {
+                console.log(`Layer ${layerId} exists and ready to be used.`);
+            } else {
+                console.warn(`Layer ${layerId} does not exist.`);
+            }
+        });
+    }
 }
 
 // Call this function on initial load
