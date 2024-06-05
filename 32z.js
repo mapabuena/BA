@@ -34,7 +34,7 @@ function initializeDirectionsControl() {
             }
         });
 
-      const directionsControlElement = document.getElementById('directions-control');
+        const directionsControlElement = document.getElementById('directions-control');
         if (directionsControlElement) {
             directionsControlElement.appendChild(directions.onAdd(map));
 
@@ -65,11 +65,10 @@ function initializeDirectionsControl() {
         } else {
             console.error("Element with ID 'directions-control' not found.");
         }
-        
+
         directionsInitialized = true; // Mark as initialized
     }
 }
-
 
 document.addEventListener('DOMContentLoaded', function() {
     setupDatePickers();
@@ -104,7 +103,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 // Add this function to set up the directions button event listener
-// Add this function to set up the directions button event listener
 function setupDirectionsButton() {
     const directionsButton = document.getElementById('get-directions');
     if (directionsButton) {
@@ -114,11 +112,14 @@ function setupDirectionsButton() {
             );
 
             if (selectedMarker) {
-                const { lat, lng } = selectedMarker.data;
+                const { lat, lng, sidebarheader } = selectedMarker.data;
                 if (!directionsInitialized) {
                     initializeDirectionsControl();
                 }
-                directions.setOrigin([lng, lat]);
+                directions.setOrigin({
+                    coordinates: [lng, lat],
+                    address: sidebarheader
+                });
                 // directions.setDestination([lng, lat]); // Or set it to a different destination as needed
                 document.getElementById('directions-container').style.display = 'block';
             } else {
