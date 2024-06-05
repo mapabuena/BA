@@ -89,6 +89,11 @@ document.addEventListener('DOMContentLoaded', function() {
     if (closeDirectionsButton) {
         closeDirectionsButton.addEventListener('click', function() {
             document.getElementById('directions-container').style.display = 'none';
+            if (directions) {
+                directions.removeRoutes(); // Clear routes
+                directions.setOrigin(''); // Clear the origin
+                directions.setDestination(''); // Clear the destination
+            }
         });
     } else {
         console.error("Element with ID 'close-directions' not found.");
@@ -101,8 +106,6 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         console.error("Element with ID 'get-directions' not found.");
     }
-    
-    initializeDirectionsControl(); // Initialize directions control here
 });
 // Add this function to set up the directions button event listener
 function setupDirectionsButton() {
@@ -138,6 +141,7 @@ function setupDirectionsButton() {
         console.error("Element with ID 'get-directions' not found.");
     }
 }
+
 document.getElementById('nightmode').addEventListener('click', () => {
     isNightMode = !isNightMode;
     map.setStyle(isNightMode ? nightStyle : originalStyle);
