@@ -77,13 +77,8 @@ document.addEventListener('DOMContentLoaded', function() {
     setupMapEvents();
     setupInfoItemHoverEffects();
     setupDirectionsButton();
-     // Check if the element exists before calling the function
-    const directionsControlElement = document.getElementById('directions-control');
-    if (directionsControlElement) {
-        initializeDirectionsControl();
-    } else {
-        console.error("Element with ID 'directions-control' not found.");
-    }
+   // Removed automatic initialization of directions control
+});
     
     // Initially add daymode-text class to h4 elements
     document.querySelectorAll('.info-item h4').forEach(h4 => {
