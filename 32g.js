@@ -5,19 +5,7 @@ let map = new mapboxgl.Map({
     center: [-73.985428, 40.748817],
     zoom: 11
 });
-// Initialize Mapbox Directions plugin
-const directions = new MapboxDirections({
-    accessToken: mapboxgl.accessToken,
-    unit: 'metric',
-    profile: 'mapbox/driving',
-    controls: {
-        inputs: true,
-        instructions: true,
-    }
-});
 
-// Add the Directions plugin to the map
-map.addControl(directions, 'top-left');
 let markers = [];
 let activeFilters = {
     category: [],
@@ -31,45 +19,74 @@ let currentCSV = 'https://raw.githubusercontent.com/mapabuena/BA/main/NewYorkPin
 let isDataLoading = false;
 let selectedMarkerIndex = null; // Variable to keep track of the selected marker index
 
+// Initialize Directions Control
+let directions;
+
+function initializeDirectionsControl() {
+    directions = new MapboxDirections({
+        accessToken: mapboxgl.accessToken,
+        unit: 'metric',
+        profile: 'mapbox/driving',
+        controls: {
+            inputs: true,
+            instructions: true,
+        }
+    });
+
+    map.addControl(directions, 'top-left');
+
+    // Listen for route updates and check for layer existence
+    directions.on('route', () => {
+        const layerId = 'directions-route-line-alt';
+        if (map.getLayer(layerId)) {
+            console.log(`Layer ${layerId} exists and ready to be used.`);
+        } else {
+            console.warn(`Layer ${layerId} does not exist.`);
+        }
+    });
+}
+
+// Call this function on initial load
+initializeDirectionsControl();
+
 
 document.getElementById('nightmode').addEventListener('click', () => {
     isNightMode = !isNightMode;
     map.setStyle(isNightMode ? nightStyle : originalStyle);
 
-    console.log('Night Mode:', isNightMode);
-
-    const h4Elements = document.querySelectorAll('.info-item h4');
-    h4Elements.forEach(h4 => {
-        if (isNightMode) {
-            h4.classList.remove('daymode-text'); // Remove day mode class
-            h4.classList.add('nightmode-text'); // Add night mode class
-        } else {
-            h4.classList.remove('nightmode-text'); // Remove night mode class
-            h4.classList.add('daymode-text'); // Add day mode class
-        }
-        console.log('h4 Classes After Change:', h4.className);
+    map.once('styledata', function() {
+        initializeDirectionsControl();
     });
 
+     const h4Elements = document.querySelectorAll('.info-item h4');
+    h4Elements.forEach(h4 => {
+        if (isNightMode) {
+            h4.classList.remove('daymode-text');
+            h4.classList.add('nightmode-text');
+        } else {
+            h4.classList.remove('nightmode-text');
+            h4.classList.add('daymode-text');
+        }
+    });
+  
     document.querySelectorAll('.some-div').forEach(div => {
         div.style.backgroundColor = isNightMode ? 'darkgray' : 'white';
     });
 
-    const nightModeButton = document.getElementById('nightmode');
+ const nightModeButton = document.getElementById('nightmode');
     if (isNightMode) {
         nightModeButton.classList.add('nightmode-active');
     } else {
         nightModeButton.classList.remove('nightmode-active');
     }
-
-    console.log('Button Classes:', nightModeButton.className);
 });
+
 document.addEventListener('DOMContentLoaded', function() {
     setupDatePickers();
     setupCityButtons();
     setupFormHandlers();
     setupMapEvents();
     setupInfoItemHoverEffects();
-    setupDirectionsButton();
     // Initially add daymode-text class to h4 elements
     document.querySelectorAll('.info-item h4').forEach(h4 => {
         h4.classList.add('daymode-text');
