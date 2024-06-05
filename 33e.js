@@ -123,16 +123,16 @@ function setupDirectionsButton() {
                 if (!directionsInitialized) {
                     initializeDirectionsControl();
                 }
+                directions.setDestination([lng, lat]); // Set coordinates as destination
                 directions.setOrigin(''); // Clear the origin
-                directions.setDestination([lng, lat]); // Set coordinates directly
                 document.getElementById('directions-container').style.display = 'block';
 
-                // Wait a moment to allow the origin to be set, then manually update the input field
+                // Wait a moment to allow the destination to be set, then manually update the input field
                 setTimeout(() => {
-                    const originInput = document.querySelector('.mapbox-directions-origin .mapboxgl-ctrl-geocoder--input');
-                    if (originInput) {
-                        originInput.value = sidebarheader;
-                        originInput.dispatchEvent(new Event('input', { bubbles: true })); // Trigger input event
+                    const destinationInput = document.querySelector('.mapbox-directions-destination .mapboxgl-ctrl-geocoder--input');
+                    if (destinationInput) {
+                        destinationInput.value = sidebarheader;
+                        destinationInput.dispatchEvent(new Event('input', { bubbles: true })); // Trigger input event
                     }
                 }, 500);
             } else {
