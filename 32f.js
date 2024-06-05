@@ -5,7 +5,19 @@ let map = new mapboxgl.Map({
     center: [-73.985428, 40.748817],
     zoom: 11
 });
+// Initialize Mapbox Directions plugin
+const directions = new MapboxDirections({
+    accessToken: mapboxgl.accessToken,
+    unit: 'metric',
+    profile: 'mapbox/driving',
+    controls: {
+        inputs: true,
+        instructions: true,
+    }
+});
 
+// Add the Directions plugin to the map
+map.addControl(directions, 'top-left');
 let markers = [];
 let activeFilters = {
     category: [],
@@ -73,17 +85,18 @@ function setupDirectionsButton() {
         
         if (selectedMarker) {
             const { lat, lng } = selectedMarker.data;
-            launchDirectionsAPI(lat, lng);
+            setDirections(lat, lng);
         } else {
             alert('Please select a marker first.');
         }
     });
 }
 
-// Function to launch Mapbox Directions API
-function launchDirectionsAPI(lat, lng) {
-    const directionsUrl = `https://www.mapbox.com/directions/#/map?coordinates=${lng},${lat}&profile=driving&access_token=${mapboxgl.accessToken}`;
-    window.open(directionsUrl, '_blank');
+// Function to set directions in Mapbox Directions API
+function setDirections(lat, lng) {
+    directions.setOrigin([lng, lat]);
+    directions.setDestination([lng, lat]);
+    directions.setProfile('mapbox/driving'); // Default to driving, can be changed later
 }
 
 function setupInfoItemHoverEffects() {
