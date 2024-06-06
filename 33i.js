@@ -79,12 +79,12 @@ document.addEventListener('DOMContentLoaded', function() {
     setupDirectionsButton();
     // Removed automatic initialization of directions control
 
-    // Initially add daymode-text class to h4 elements
+   // Initially add daymode-text class to h4 elements
     document.querySelectorAll('.info-item h4').forEach(h4 => {
         h4.classList.add('daymode-text');
     });
 
-      const closeDirectionsButton = document.getElementById('close-directions');
+    const closeDirectionsButton = document.getElementById('close-directions');
     if (closeDirectionsButton) {
         closeDirectionsButton.addEventListener('click', function() {
             document.getElementById('directions-container').style.display = 'none';
@@ -130,7 +130,7 @@ function setupDirectionsButton() {
 
                 // Wait a moment to allow the origin to be set, then manually update the input field
                 setTimeout(() => {
-                    const originInput = document.querySelector('.mapbox-directions-origin .mapboxgl-ctrl-geocoder--input');
+                    const originInput = document.querySelector('.mapbox-directions-origin input.mapboxgl-ctrl-geocoder--input');
                     if (originInput) {
                         originInput.value = sidebarheader || `${lat}, ${lng}`; // Use sidebarheader if available
                         originInput.dispatchEvent(new Event('input', { bubbles: true })); // Trigger input event
