@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setupFormHandlers();
     setupMapEvents();
     setupInfoItemHoverEffects();
-    Button();
+    SetupDirectionsButton();
     // Removed automatic initialization of directions control
 
    // Initially add daymode-text class to h4 elements
@@ -1142,15 +1142,19 @@ document.getElementById('mapsearchbox').addEventListener('input', async function
 });
 
 
-// Event listener for "Add All to Map" button
-document.getElementById('add-all-to-map').addEventListener('click', async function() {
-    const query = document.getElementById('mapsearchbox').value;
-    if (query.length > 0) {
+// Event listener for search input
+document.getElementById('mapsearchbox').addEventListener('input', async function() {
+    const query = this.value;
+    if (query.length >= 3) {
         const data = await loadCSVData(currentCSV);
         const suggestions = filterData(data, query);
         clearMarkers();
-        applyDateFilter(); // Reset any date filters
         suggestions.forEach(item => addMarkerToMap(item));
+        displaySuggestions(suggestions);
+        updateInfoWindowContent(); // Update the info window content as necessary
+    } else {
+        document.getElementById('auto-complete-results').innerHTML = '';
+        clearMarkers(); // Clear markers if query length is less than 3
     }
 });
 
