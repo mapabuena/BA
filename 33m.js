@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Call this function to set up the directions button event
     const directionsButton = document.getElementById('get-directions');
     if (directionsButton) {
-        Button();
+        setupDirectionsButton();
     } else {
         console.error("Element with ID 'get-directions' not found.");
     }
@@ -1128,18 +1128,6 @@ function addMarkerToMap(data) {
         console.error('Invalid coordinates for:', data);
     }
 }
-// Event listener for search input
-// Event listener for search input
-document.getElementById('mapsearchbox').addEventListener('input', async function() {
-    const query = this.value;
-    if (query.length > 0) {
-        const data = await loadCSVData(currentCSV);
-        const suggestions = filterData(data, query);
-        displaySuggestions(suggestions);
-    } else {
-        document.getElementById('auto-complete-results').innerHTML = '';
-    }
-});
 
 
 // Event listener for search input
