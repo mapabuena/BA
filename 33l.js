@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setupFormHandlers();
     setupMapEvents();
     setupInfoItemHoverEffects();
-    SetupDirectionsButton();
+    setupDirectionsButton();
     // Removed automatic initialization of directions control
 
    // Initially add daymode-text class to h4 elements
@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Call this function to set up the directions button event
     const directionsButton = document.getElementById('get-directions');
     if (directionsButton) {
-        setupDirectionsButton();
+        Button();
     } else {
         console.error("Element with ID 'get-directions' not found.");
     }
