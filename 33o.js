@@ -36,6 +36,7 @@ function initializeDirectionsControl() {
 
         const directionsControlElement = document.getElementById('directions-control');
         if (directionsControlElement) {
+            console.log('Appending directions control to the map.');
             directionsControlElement.appendChild(directions.onAdd(map));
 
             // Modify the start and end markers after they are added to the map
@@ -70,6 +71,7 @@ function initializeDirectionsControl() {
     }
 }
 
+
 document.addEventListener('DOMContentLoaded', function() {
     setupDatePickers();
     setupCityButtons();
@@ -77,10 +79,9 @@ document.addEventListener('DOMContentLoaded', function() {
     setupMapEvents();
     setupInfoItemHoverEffects();
     setupDirectionsButton();
-    // Removed automatic initialization of directions control
 
-   // Initially add daymode-text class to h4 elements
-     document.querySelectorAll('.info-item h4').forEach(h4 => {
+    // Initially add daymode-text class to h4 elements
+    document.querySelectorAll('.info-item h4').forEach(h4 => {
         h4.classList.add('daymode-text');
     });
 
@@ -100,6 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         console.error("Element with ID 'close-directions' not found.");
     }
+});
 
     // Call this function to set up the directions button event
     const directionsButton = document.getElementById('get-directions');
@@ -132,6 +134,7 @@ function setupDirectionsButton() {
                 // Wait a moment to allow the origin to be set, then manually update the input field
                 setTimeout(() => {
                     const originInput = document.querySelector('.mapboxgl-ctrl-geocoder--input[name="mapbox-directions-origin-input"]');
+                    console.log("Origin input element:", originInput); // Log the origin input element
                     if (originInput) {
                         console.log("Setting origin input value to:", sidebarheader || `${lat}, ${lng}`); // Log the value being set
                         originInput.value = sidebarheader || `${lat}, ${lng}`; // Use sidebarheader if available
