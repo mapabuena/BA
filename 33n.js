@@ -120,6 +120,7 @@ function setupDirectionsButton() {
 
             if (selectedMarker) {
                 const { lat, lng, sidebarheader } = selectedMarker.data;
+                console.log("Selected marker data:", selectedMarker.data); // Log the selected marker data
                 if (!directionsInitialized) {
                     initializeDirectionsControl();
                 }
@@ -132,11 +133,15 @@ function setupDirectionsButton() {
                 setTimeout(() => {
                     const originInput = document.querySelector('.mapboxgl-ctrl-geocoder--input[name="mapbox-directions-origin-input"]');
                     if (originInput) {
+                        console.log("Setting origin input value to:", sidebarheader || `${lat}, ${lng}`); // Log the value being set
                         originInput.value = sidebarheader || `${lat}, ${lng}`; // Use sidebarheader if available
                         originInput.dispatchEvent(new Event('input', { bubbles: true })); // Trigger input event
+                    } else {
+                        console.error("Origin input element not found.");
                     }
                 }, 500);
             } else {
+                console.error('No marker selected.');
                 alert('Please select a marker first.');
             }
         });
