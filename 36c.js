@@ -113,20 +113,20 @@ function showRoutePopup(route, coordinates, profile) {
     switch (profile) {
         case 'mapbox/driving':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/car.svg';
-            iconSize = { width: '32px', height: '32px' }; // Example size for car icon
-            popupSize = { width: '120px', height: '42px' }; // Example size for car popup
-            iconPaddingBottom = '22px'; // Padding below the car icon
+            iconSize = { width: '28px', height: '28px' }; // Example size for car icon
+            popupSize = { width: '120px', height: '45px' }; // Example size for car popup
+            iconPaddingBottom = '26px'; // Padding below the car icon
             break;
         case 'mapbox/walking':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/walking.svg';
             iconSize = { width: '55px', height: '55px' }; // Example size for walking icon
-            popupSize = { width: '120px', height: '40px' }; // Example size for walking popup
+            popupSize = { width: '120px', height: '43px' }; // Example size for walking popup
             iconPaddingBottom = '14px'; // Padding below the walking icon
             break;
         case 'mapbox/cycling':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/cycling.svg';
-            iconSize = { width: '42px', height: '42px' }; // Example size for cycling icon
-            popupSize = { width: '110px', height: '50px' }; // Example size for cycling popup
+            iconSize = { width: '42px', height: '48px' }; // Example size for cycling icon
+            popupSize = { width: '110px', height: '52px' }; // Example size for cycling popup
             iconPaddingBottom = '25px'; // Padding below the cycling icon
             break;
         default:
