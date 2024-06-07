@@ -108,8 +108,16 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function setDirectionsInputFields(originTitle, destinationTitle) {
-    document.querySelector('.mapbox-directions-origin input').value = originTitle;
-    document.querySelector('.mapbox-directions-destination input').value = destinationTitle;
+    const originInput = document.querySelector('.mapbox-directions-origin input');
+    const destinationInput = document.querySelector('.mapbox-directions-destination input');
+    
+    if (originTitle && originInput) {
+        originInput.value = originTitle;
+    }
+    
+    if (destinationTitle && destinationInput) {
+        destinationInput.value = destinationTitle;
+    }
 }
 // Add this function to set up the directions button event listener
 function setupDirectionsButton() {
@@ -156,16 +164,14 @@ function setupDirectionsButton() {
                 try {
                     directions.setOrigin([validLng, validLat]); // Set the custom origin object
                     console.log("Origin set to:", [validLng, validLat]);
-                    directions.setDestination(''); // Clear the destination
-                    console.log("Destination cleared.");
 
                     // Set the input fields with the custom text
                     setDirectionsInputFields(origin.properties.title, '');
 
-                    console.log("Origin and destination set successfully.");
+                    console.log("Origin set successfully.");
                 } catch (error) {
-                    console.error("Error setting origin or destination:", error);
-                    alert('Error setting origin or destination.');
+                    console.error("Error setting origin:", error);
+                    alert('Error setting origin.');
                 }
 
                 document.getElementById('directions-container').style.display = 'block';
@@ -176,6 +182,63 @@ function setupDirectionsButton() {
         });
     } else {
         console.error("Element with ID 'get-directions' not found.");
+    }
+
+    const destinationButton = document.getElementById('set-destination');
+    if (destinationButton) {
+        destinationButton.addEventListener('click', function() {
+            const selectedMarker = markers.find(marker => 
+                marker.marker.getElement().getAttribute('data-is-selected') === 'true'
+            );
+
+            if (selectedMarker) {
+                const { lat, lng, sidebarheader } = selectedMarker.data;
+                console.log("Selected marker data:", selectedMarker.data); // Log the selected marker data
+
+                // Validate coordinates
+                const validLat = parseFloat(lat);
+                const validLng = parseFloat(lng);
+
+                if (isNaN(validLat) || isNaN(validLng)) {
+                    console.error("Invalid coordinates:", lat, lng);
+                    alert('Invalid coordinates for the selected marker.');
+                    return;
+                }
+
+                const destination = {
+                    "type": "Feature",
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [validLng, validLat]
+                    },
+                    "properties": {
+                        "title": sidebarheader || `${validLat}, ${validLng}`
+                    }
+                };
+
+                console.log("Setting destination with:", JSON.stringify(destination));
+
+                try {
+                    directions.setDestination([validLng, validLat]); // Set the custom destination object
+                    console.log("Destination set to:", [validLng, validLat]);
+
+                    // Set the input fields with the custom text
+                    setDirectionsInputFields('', destination.properties.title);
+
+                    console.log("Destination set successfully.");
+                } catch (error) {
+                    console.error("Error setting destination:", error);
+                    alert('Error setting destination.');
+                }
+
+                document.getElementById('directions-container').style.display = 'block';
+            } else {
+                console.error('No marker selected.');
+                alert('Please select a marker first.');
+            }
+        });
+    } else {
+        console.error("Element with ID 'set-destination' not found.");
     }
 }
 
