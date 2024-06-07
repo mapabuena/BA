@@ -216,18 +216,15 @@ function onRoutesReceived(routes, profile) {
 
 document.addEventListener('DOMContentLoaded', function() {
     const directionsButton = document.getElementById('get-directions');
+
     setupDirectionsButton();
     setupMapEvents();
-});
-
     setupDatePickers();
     setupCityButtons();
     setupFormHandlers();
-    setupMapEvents();
     setupInfoItemHoverEffects();
-    setupDirectionsButton();
 
-     const closeDirectionsButton = document.getElementById('close-directions');
+    const closeDirectionsButton = document.getElementById('close-directions');
     if (closeDirectionsButton) {
         closeDirectionsButton.addEventListener('click', function() {
             document.getElementById('directions-container').style.display = 'none';
@@ -244,10 +241,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Element with ID 'close-directions' not found.");
     }
 
-    // Call this function to set up the directions button event
-    if (directionsButton) {
-        setupDirectionsButton();
-    } else {
+    if (!directionsButton) {
         console.error("Element with ID 'get-directions' not found.");
     }
 });
