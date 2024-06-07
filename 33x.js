@@ -120,18 +120,18 @@ function setupDirectionsButton() {
                 const { lat, lng, sidebarheader } = selectedMarker.data;
                 console.log("Selected marker data:", selectedMarker.data); // Log the selected marker data
 
-                if (!directionsInitialized) {
-                    initializeDirectionsControl();
-                }
-
-                directions.removeRoutes(); // Clear any existing routes
-
-                // Ensure lat and lng are valid numbers
+                // Validate coordinates
                 if (isNaN(lat) || isNaN(lng)) {
                     console.error("Invalid coordinates:", lat, lng);
                     alert('Invalid coordinates for the selected marker.');
                     return;
                 }
+
+                if (!directionsInitialized) {
+                    initializeDirectionsControl();
+                }
+
+                directions.removeRoutes(); // Clear any existing routes
 
                 const origin = {
                     "type": "Feature",
