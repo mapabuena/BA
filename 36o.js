@@ -153,9 +153,6 @@ function showRoutePopup(route, coordinates, profile, isBestRoute = true) {
             iconPaddingBottom = '15px';
     }
 
-    console.log("Route profile:", profile); // Log the profile to verify the switch case
-    console.log("Mode icon URL:", modeIcon); // Log the icon URL to ensure it's being set correctly
-
     const backgroundColor = isBestRoute ? 'rgba(255, 255, 255, 0.75)' : 'rgba(169, 169, 169, 0.75)'; // White for best route, gray for second-best
     const popupClass = isBestRoute ? 'best-route-popup' : 'second-route-popup'; // Set class based on the route type
 
@@ -171,26 +168,25 @@ function showRoutePopup(route, coordinates, profile, isBestRoute = true) {
         </div>
     `;
 
+    const popup = new mapboxgl.Popup({ closeButton: false })
+        .setLngLat(coordinates)
+        .setHTML(popupContent);
+
     if (isBestRoute) {
         if (currentPopup) {
             currentPopup.remove(); // Close the previous popup if it exists
         }
-
-        currentPopup = new mapboxgl.Popup({ closeButton: false })
-            .setLngLat(coordinates)
-            .setHTML(popupContent)
-            .addTo(map);
+        currentPopup = popup;
     } else {
         if (secondPopup) {
             secondPopup.remove(); // Close the previous popup if it exists
         }
-
-        secondPopup = new mapboxgl.Popup({ closeButton: false })
-            .setLngLat(coordinates)
-            .setHTML(popupContent)
-            .addTo(map);
+        secondPopup = popup;
     }
+
+    popup.addTo(map);
 }
+
 function displayRouteAlternatives(routes, profile) {
     console.log("Routes received:", routes); // Debug log for routes received
     if (routes && routes.length > 1) {
@@ -198,22 +194,15 @@ function displayRouteAlternatives(routes, profile) {
         const secondBestRoute = routes[1];
 
         console.log("Displaying best route popup"); // Debug log
-        const bestRouteCoordinates = getRouteCenter(polyline.decode(bestRoute.geometry));
-        const secondBestRouteCoordinates = getRouteCenter(polyline.decode(secondBestRoute.geometry));
-
-        console.log("Best route coordinates:", bestRouteCoordinates); // Debug log
-        console.log("Second-best route coordinates:", secondBestRouteCoordinates); // Debug log
-
+        const bestRouteCoordinates = bestRoute.geometry.coordinates[Math.floor(bestRoute.geometry.coordinates.length / 2)];
         showRoutePopup(bestRoute, bestRouteCoordinates, profile, true);
 
         console.log("Displaying second-best route popup"); // Debug log
+        const secondBestRouteCoordinates = secondBestRoute.geometry.coordinates[Math.floor(secondBestRoute.geometry.coordinates.length / 2)];
         showRoutePopup(secondBestRoute, secondBestRouteCoordinates, profile, false);
     } else if (routes && routes.length > 0) {
         const bestRoute = routes[0];
-        const bestRouteCoordinates = getRouteCenter(polyline.decode(bestRoute.geometry));
-
-        console.log("Best route coordinates:", bestRouteCoordinates); // Debug log
-
+        const bestRouteCoordinates = bestRoute.geometry.coordinates[Math.floor(bestRoute.geometry.coordinates.length / 2)];
         showRoutePopup(bestRoute, bestRouteCoordinates, profile, true);
     } else {
         console.warn("No routes available to display"); // Warn if no routes are available
