@@ -205,13 +205,11 @@ function setupInfoItemHoverEffects() {
         item.addEventListener('mouseover', () => {
             const markerIndex = item.getAttribute('data-marker-index');
             const globalIndex = parseInt(markerIndex);
-            console.log('Mouseover globalIndex:', globalIndex); // Debug log
             if (globalIndex !== -1 && markers[globalIndex]) {
                 const marker = markers[globalIndex].marker;
                 const markerData = markers[globalIndex].data;
                 const markerElement = marker.getElement();
                 if (markerElement.getAttribute('data-is-selected') !== 'true') {
-                    console.log('Changing marker background to:', markerData.icon3_url); // Debug log
                     markerElement.style.backgroundImage = `url(${markerData.icon3_url})`; // Change marker's background image
                     markerElement.style.width = `${markerData.icon3width}px`; // Set marker's width
                     markerElement.style.height = `${markerData.icon3height}px`; // Set marker's height
@@ -223,13 +221,11 @@ function setupInfoItemHoverEffects() {
         item.addEventListener('mouseout', () => {
             const markerIndex = item.getAttribute('data-marker-index');
             const globalIndex = parseInt(markerIndex);
-            console.log('Mouseout globalIndex:', globalIndex); // Debug log
             if (globalIndex !== -1 && markers[globalIndex] && globalIndex !== selectedMarkerIndex) {
                 const marker = markers[globalIndex].marker;
                 const markerData = markers[globalIndex].data;
                 const markerElement = marker.getElement();
                 if (markerElement.getAttribute('data-is-selected') !== 'true') {
-                    console.log('Reverting marker background to:', markerData.icon_url); // Debug log
                     markerElement.style.backgroundImage = `url(${markerData.icon_url})`; // Revert marker's background image
                     markerElement.style.width = `${markerData.iconwidth}px`; // Revert marker's width
                     markerElement.style.height = `${markerData.iconheight}px`; // Revert marker's height
@@ -245,15 +241,12 @@ function setupInfoItemHoverEffects() {
             if (globalIndex !== -1 && markers[globalIndex]) {
                 const marker = markers[globalIndex].marker;
                 const markerData = markers[globalIndex].data;
-                console.log('Clicking marker background to:', markerData.icon2_url); // Debug log
                 const markerElement = marker.getElement();
                 resetMarkerStates(); // Reset all marker states
                 markerElement.setAttribute('data-is-selected', 'true');
                 markerElement.style.backgroundImage = `url(${markerData.icon2_url})`; // Change marker's background image
                 markerElement.style.width = `${markerData.icon2width}px`; // Set marker's width
                 markerElement.style.height = `${markerData.icon2height}px`; // Set marker's height
-
-                console.log(`Calling recenterMap for marker at lng=${markerData.lng}, lat=${markerData.lat}`); // Log before calling recenterMap
                 // Recenter map with offset
                 recenterMap(markerData.lng, markerData.lat);
             }
@@ -378,7 +371,6 @@ function setupMapEvents() {
 
 function adjustMarkerSizes() {
     const zoom = map.getZoom();
-    console.log(`Current zoom level: ${zoom}`); // Log the current zoom level
 
     const zoomThreshold = 14; // Define the zoom threshold
     const closeScaleFactor = 0.10; // Scaling sensitivity for closer zoom levels
@@ -410,15 +402,12 @@ function applyFilters() {
     var startDateTime = new Date(startDateTimeInput);
     var endDateTime = new Date(endDateTimeInput);
 
-    console.log("Applying Filters...");
-    console.log("Filter range:", startDateTime, "to", endDateTime);
-
     markers.forEach(({ marker, data }) => {
-        console.log(`Checking visibility for ${data.address}`);
+        
 
         const isVisibleByCategory = activeFilters.category.length === 0 || 
                                     data.categories.some(cat => activeFilters.category.includes(cat));
-        console.log(`Category Visibility for ${data.address}: ${isVisibleByCategory}`);
+        
 
         const isVisibleByDate = Array.isArray(data.dateRanges) && data.dateRanges.some(range => {
             const rangeStart = new Date(range.start);
@@ -431,12 +420,8 @@ function applyFilters() {
         const specificDates = convertRecurringToSpecificDates(data.recurring_schedule, startDateTime, endDateTime);
         const isVisibleByRecurring = specificDates.some(range => {
             const isInRecurringDateRange = range.start <= endDateTime && range.end >= startDateTime;
-            console.log(`Checking recurring date range ${range.start} to ${range.end} for ${data.address}: ${isInRecurringDateRange}`);
             return isInRecurringDateRange;
         });
-
-        console.log(`Date Visibility for ${data.address}: ${isVisibleByDate || isVisibleByRecurring}`);
-
         // Update marker display based on combined visibility results
         marker.getElement().style.display = (isVisibleByCategory && (isVisibleByDate || isVisibleByRecurring)) ? '' : 'none';
     });
@@ -476,8 +461,7 @@ function toRadians(degrees) {
 function updateInfoWindowContent() {
     const center = map.getCenter();
     const bounds = map.getBounds();
-    console.log("Updating info window. Map Center:", center);
-    console.log("Map Bounds:", JSON.stringify(bounds));
+
 
     // Sort all markers by their distance to the center of the map
     markers.sort((a, b) => calculateDistance(center, a.data) - calculateDistance(center, b.data));
@@ -532,12 +516,9 @@ function toRadians(degrees) {
 }
 
 function recenterMap(lng, lat) {
-    console.log(`recenterMap function called with lng=${lng}, lat=${lat}`); // Basic log to ensure function is called
     const mapContainer = map.getContainer();
     const mapWidth = mapContainer.offsetWidth;
     const mapHeight = mapContainer.offsetHeight;
-
-    console.log(`Map dimensions: width=${mapWidth}, height=${mapHeight}`); // Log map dimensions
 
    let offsetX, offsetY;
 
@@ -555,12 +536,8 @@ function recenterMap(lng, lat) {
         offsetY = -(mapHeight * .05);
     }
 
-     console.log(`Calculated offsets: offsetX=${offsetX}, offsetY=${offsetY}`); // Add detailed log for offsets
-
     // Get the current zoom level
     const currentZoom = map.getZoom();
-    console.log(`Current zoom level: ${currentZoom}`);
-
     // Define speed based on zoom level ranges
     let speed;
     if (currentZoom >= 0 && currentZoom < 5) {
@@ -576,8 +553,7 @@ function recenterMap(lng, lat) {
     } else {
         speed = 1.2; // Default speed for any other cases
     }
-    console.log(`Calculated flyTo speed: ${speed}`);
-
+    
     map.flyTo({
         center: [lng, lat],
         offset: [offsetX, offsetY],
@@ -585,7 +561,7 @@ function recenterMap(lng, lat) {
         essential: true
     });
 
-    console.log(`FlyTo called with center: [${lng}, ${lat}], offset: [${offsetX}, ${offsetY}], speed: ${speed}`);
+    
 }
 async function fetchMarkersData(csvFile) {
     try {
@@ -601,14 +577,14 @@ async function fetchMarkersData(csvFile) {
 
 function processCSVData(csvData) {
     return new Promise((resolve, reject) => {
-        console.log("Processing CSV Data...");
+       
 
         Papa.parse(csvData, {
             header: true,
             skipEmptyLines: true,
             complete: function(results) {
                 results.data.forEach((data, rowIndex) => {
-                    console.log(`Processing row ${rowIndex + 1}:`, data);
+                    
 
                     // Check if lat and lng are valid numbers
                     const lat = parseFloat(data.latitude);
@@ -621,10 +597,8 @@ function processCSVData(csvData) {
                     // Transform the dateRanges string to JSON
                     let dateRanges = [];
                     if (data.dateRanges) {
-                        console.log("Original dateRanges string:", data.dateRanges);
                         dateRanges = data.dateRanges.split('|').map(range => {
                             const [start, end] = range.split(';');
-                            console.log(`Parsed dateRange - start: ${start.trim()}, end: ${end ? end.trim() : ''}`);
                             return { start: new Date(start.trim()), end: end ? new Date(end.trim()) : undefined };
                         });
                     }
@@ -634,22 +608,18 @@ function processCSVData(csvData) {
                         console.error(`Invalid dateRanges format at row ${rowIndex + 1}:`, dateRanges);
                         dateRanges = [];
                     }
-                    console.log("Parsed dateRanges:", dateRanges);
 
                     // Parse the recurring_schedule JSON format
                     let recurringSchedule = [];
                     if (data.recurring_schedule) {
                         try {
                             const rawSchedule = data.recurring_schedule.trim().replace(/'/g, '"');
-                            console.log("Original recurring_schedule string:", data.recurring_schedule);
-                            console.log("Processed recurring_schedule string:", rawSchedule);
                             let parsedSchedule = JSON.parse(rawSchedule);
-                            console.log("Parsed recurring_schedule (first pass):", parsedSchedule);
-
+                          
                             // If parsedSchedule is a string, parse it again
                             if (typeof parsedSchedule === 'string') {
                                 parsedSchedule = JSON.parse(parsedSchedule);
-                                console.log("Parsed recurring_schedule (second pass):", parsedSchedule);
+                               
                             }
 
                             recurringSchedule = parsedSchedule;
@@ -737,7 +707,6 @@ function convertRecurringToSpecificDates(schedule, startDate, endDate) {
 
     let specificDates = [];
     schedule.forEach(event => {
-        console.log("Processing event:", event); // Log each event
         if (typeof event !== 'object' || !event.day || !event.start_time || !event.end_time) {
             console.error("Invalid event format:", event);
             return;
@@ -937,34 +906,22 @@ function applyFilters() {
 
     var startDateTime = new Date(startDateTimeInput);
     var endDateTime = new Date(endDateTimeInput);
-
-    console.log("Applying Filters...");
-    console.log("Filter range:", startDateTime, "to", endDateTime);
-
     markers.forEach(({ marker, data }) => {
-        console.log(`Checking visibility for ${data.address}`);
-
+        
         const isVisibleByCategory = activeFilters.category.length === 0 || 
                                     data.categories.some(cat => activeFilters.category.includes(cat));
-        console.log(`Category Visibility for ${data.address}: ${isVisibleByCategory}`);
-
         const isVisibleByDate = Array.isArray(data.dateRanges) && data.dateRanges.some(range => {
             const rangeStart = new Date(range.start);
             const rangeEnd = new Date(range.end);
             const isInDateRange = rangeStart <= endDateTime && rangeEnd >= startDateTime;
-            console.log(`Checking date range ${range.start} to ${range.end} for ${data.address}: ${isInDateRange}`);
             return isInDateRange;
         });
 
         const specificDates = convertRecurringToSpecificDates(data.recurring_schedule, startDateTime, endDateTime);
         const isVisibleByRecurring = specificDates.some(range => {
             const isInRecurringDateRange = range.start <= endDateTime && range.end >= startDateTime;
-            console.log(`Checking recurring date range ${range.start} to ${range.end} for ${data.address}: ${isInRecurringDateRange}`);
             return isInRecurringDateRange;
         });
-
-        console.log(`Date Visibility for ${data.address}: ${isVisibleByDate || isVisibleByRecurring}`);
-
         // Update marker display based on combined visibility results
         marker.getElement().style.display = (isVisibleByCategory && (isVisibleByDate || isVisibleByRecurring)) ? '' : 'none';
     });
@@ -1006,7 +963,6 @@ const easingFunctions = {
 
 function loadCSV(csvFile, centerLat, centerLng, zoom, speed, curve, easing) {
     if (isDataLoading) {
-        console.log('Data is already loading, please wait.');
         return;
     }
 
