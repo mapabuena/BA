@@ -121,9 +121,11 @@ function setupDirectionsButton() {
             if (selectedMarker) {
                 const { lat, lng, sidebarheader } = selectedMarker.data;
                 console.log("Selected marker data:", selectedMarker.data); // Log the selected marker data
+
                 if (!directionsInitialized) {
                     initializeDirectionsControl();
                 }
+
                 directions.removeRoutes(); // Clear any existing routes
 
                 const origin = {
@@ -137,7 +139,14 @@ function setupDirectionsButton() {
                     }
                 };
 
-                directions.setOrigin(origin); // Set the custom origin object
+                console.log("Setting origin with:", origin);
+
+                try {
+                    directions.setOrigin(origin); // Set the custom origin object
+                } catch (error) {
+                    console.error("Error setting origin:", error);
+                }
+
                 directions.setDestination(''); // Clear the destination
                 document.getElementById('directions-container').style.display = 'block';
             } else {
@@ -149,7 +158,6 @@ function setupDirectionsButton() {
         console.error("Element with ID 'get-directions' not found.");
     }
 }
-
 
 document.getElementById('nightmode').addEventListener('click', () => {
     isNightMode = !isNightMode;
