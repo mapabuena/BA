@@ -57,10 +57,16 @@ function initializeDirectionsControl() {
                 const routes = event.route;
                 if (routes && routes.length > 0) {
                     const bestRoute = routes[0];
-                    const profile = directions.options.profile;
-                    console.log("Profile:", profile); // Log the profile to ensure it's being set correctly
+                    const profile = directions.getProfile();
+                    console.log("Profile from getProfile:", profile); // Log the profile to ensure it's being set correctly
                     addRouteLabels(bestRoute, profile); // Pass the profile directly
                 }
+            });
+
+            // Listen for profile change
+            document.querySelector('.mapbox-directions-profile').addEventListener('change', (e) => {
+                console.log("Profile changed to:", e.target.value);
+                directions.setProfile(e.target.value);
             });
         } else {
             console.error("Element with ID 'directions-control' not found.");
