@@ -193,6 +193,27 @@ function displayRouteAlternatives(routes, profile) {
     }
 }
 
+document.getElementById('drive-profile').addEventListener('click', () => {
+    directions.setProfile('mapbox/driving');
+    directions.on('route', (e) => {
+        displayRouteAlternatives(e.route, 'mapbox/driving');
+    });
+});
+
+document.getElementById('walk-profile').addEventListener('click', () => {
+    directions.setProfile('mapbox/walking');
+    directions.on('route', (e) => {
+        displayRouteAlternatives(e.route, 'mapbox/walking');
+    });
+});
+
+document.getElementById('cycle-profile').addEventListener('click', () => {
+    directions.setProfile('mapbox/cycling');
+    directions.on('route', (e) => {
+        displayRouteAlternatives(e.route, 'mapbox/cycling');
+    });
+});
+
 
 document.addEventListener('DOMContentLoaded', function() {
     // Ensure element exists
