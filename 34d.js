@@ -56,35 +56,38 @@ function initializeDirectionsControl() {
             });
 
             directions.on('route', (e) => {
-                const routes = e.route;
-                if (routes && routes.length > 1) {
-                    const bestRoute = routes[0];
-                    const secondBestRoute = routes[1];
-
-                    const bestRouteInfo = `Best route: ${bestRoute.distance / 1000} km, ${Math.round(bestRoute.duration / 60)} mins`;
-                    const secondBestRouteInfo = `Second-best route: ${secondBestRoute.distance / 1000} km, ${Math.round(secondBestRoute.duration / 60)} mins`;
-
-                    console.log(bestRouteInfo);
-                    console.log(secondBestRouteInfo);
-
-                    document.getElementById('route-info').innerHTML = `
-                        <p>${bestRouteInfo}</p>
-                        <p>${secondBestRouteInfo}</p>
-                    `;
-                } else if (routes && routes.length > 0) {
-                    const bestRoute = routes[0];
-                    const bestRouteInfo = `Best route: ${bestRoute.distance / 1000} km, ${Math.round(bestRoute.duration / 60)} mins`;
-
-                    console.log(bestRouteInfo);
-
-                    document.getElementById('route-info').innerHTML = `<p>${bestRouteInfo}</p>`;
-                }
+                displayRouteAlternatives(e.route);
             });
         } else {
             console.error("Element with ID 'directions-control' not found.");
         }
 
         directionsInitialized = true; // Mark as initialized
+    }
+}
+
+function displayRouteAlternatives(routes) {
+    if (routes && routes.length > 1) {
+        const bestRoute = routes[0];
+        const secondBestRoute = routes[1];
+
+        const bestRouteInfo = `Best route: ${bestRoute.distance / 1000} km, ${Math.round(bestRoute.duration / 60)} mins`;
+        const secondBestRouteInfo = `Second-best route: ${secondBestRoute.distance / 1000} km, ${Math.round(secondBestRoute.duration / 60)} mins`;
+
+        console.log(bestRouteInfo);
+        console.log(secondBestRouteInfo);
+
+        document.getElementById('route-info').innerHTML = `
+            <p>${bestRouteInfo}</p>
+            <p>${secondBestRouteInfo}</p>
+        `;
+    } else if (routes && routes.length > 0) {
+        const bestRoute = routes[0];
+        const bestRouteInfo = `Best route: ${bestRoute.distance / 1000} km, ${Math.round(bestRoute.duration / 60)} mins`;
+
+        console.log(bestRouteInfo);
+
+        document.getElementById('route-info').innerHTML = `<p>${bestRouteInfo}</p>`;
     }
 }
 
