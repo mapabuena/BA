@@ -39,7 +39,6 @@ function initializeDirectionsControl() {
             console.log('Appending directions control to the map.');
             directionsControlElement.appendChild(directions.onAdd(map));
 
-            // Modify the start and end markers after they are added to the map
             directions.on('origin', () => {
                 const originMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="A"]');
                 if (originMarker) {
@@ -54,7 +53,6 @@ function initializeDirectionsControl() {
                 }
             });
 
-            // Listen for route updates and check for layer existence
             directions.on('route', () => {
                 const layerId = 'directions-route-line-alt';
                 if (map.getLayer(layerId)) {
@@ -127,22 +125,21 @@ function setupDirectionsButton() {
                     initializeDirectionsControl();
                 }
                 directions.removeRoutes(); // Clear any existing routes
-                directions.setOrigin([lng, lat]); // Set coordinates directly
+
+                const origin = {
+                    "type": "Feature",
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [lng, lat]
+                    },
+                    "properties": {
+                        "title": sidebarheader || `${lat}, ${lng}`
+                    }
+                };
+
+                directions.setOrigin(origin); // Set the custom origin object
                 directions.setDestination(''); // Clear the destination
                 document.getElementById('directions-container').style.display = 'block';
-
-                // Wait a moment to allow the origin to be set, then manually update the input field
-                setTimeout(() => {
-                    const originInput = document.querySelector('.mapboxgl-ctrl-geocoder--input[name="mapbox-directions-origin-input"]');
-                    console.log("Origin input element:", originInput); // Log the origin input element
-                    if (originInput) {
-                        console.log("Setting origin input value to:", sidebarheader || `${lat}, ${lng}`); // Log the value being set
-                        originInput.value = sidebarheader || `${lat}, ${lng}`; // Use sidebarheader if available
-                        originInput.dispatchEvent(new Event('input', { bubbles: true })); // Trigger input event
-                    } else {
-                        console.error("Origin input element not found.");
-                    }
-                }, 500);
             } else {
                 console.error('No marker selected.');
                 alert('Please select a marker first.');
