@@ -37,7 +37,6 @@ function initializeDirectionsControl() {
 
         const directionsControlElement = document.getElementById('directions-control');
         if (directionsControlElement) {
-            console.log('Appending directions control to the map.');
             directionsControlElement.appendChild(directions.onAdd(map));
 
             directions.on('origin', () => {
@@ -54,18 +53,12 @@ function initializeDirectionsControl() {
                 }
             });
 
-        directions.on('route', (event) => {
-    const routes = event.route;
-    console.log("Routes:", routes); // Log the routes for debugging
-    if (routes && routes.length > 0) {
-        const bestRoute = routes[0];
-        displayRouteAlternatives(routes); // Existing functionality
-         addRouteLabels(bestRoute); // Replaced Labels with addRouteLabels
-
-        const bestRouteInfo = `Best route: ${bestRoute.distance / 1000} km, ${Math.round(bestRoute.duration / 60)} mins`;
-        console.log(bestRouteInfo);
-
-        document.getElementById('route-info').innerHTML = `<p>${bestRouteInfo}</p>`;
+            directions.on('route', (event) => {
+                const routes = event.route;
+                const profile = directions.options.profile; // Get the current profile
+                if (routes && routes.length > 0) {
+                    const bestRoute = routes[0];
+                    addRouteLabels(bestRoute, profile); // New functionality
                 }
             });
         } else {
@@ -76,18 +69,13 @@ function initializeDirectionsControl() {
     }
 }
 
-function addRouteLabels(route) {
-    console.log("Route data received:", route); // Log the route for debugging
+function addRouteLabels(route, profile) {
     if (route.geometry) {
         const coordinates = polyline.decode(route.geometry); // Decode the polyline string
-        console.log("Coordinates:", coordinates); // Log the coordinates for debugging
-
         const routeCenter = getRouteCenter(coordinates);
 
         // Show the popup with route details
-        showRoutePopup(route, routeCenter);
-    } else {
-        console.error("Route geometry is undefined.");
+        showRoutePopup(route, routeCenter, profile);
     }
 }
 
@@ -102,30 +90,28 @@ function getRouteCenter(coordinates) {
 }
 
 
-function showRoutePopup(route, coordinates) {
+function showRoutePopup(route, coordinates, profile) {
     const formattedDistance = (route.distance / 1000).toFixed(2) + ' km';
     const formattedTravelTime = Math.round(route.duration / 60) + ' mins';
 
     // Define the icon based on the transport mode
     let modeIcon;
-    const profile = directions.options.profile; // Get the profile from the directions instance
-    
     switch (profile) {
         case 'mapbox/driving':
-            modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/car.svg'; // Use your car icon path
+            modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/car.svg';
             break;
         case 'mapbox/walking':
-            modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/walking.svg'; // Use your walking icon path
+            modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/walking.svg';
             break;
         case 'mapbox/cycling':
-            modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/cycling.svg'; // Use your cycling icon path
+            modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/cycling.svg';
             break;
         default:
-            modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/default.svg'; // Use a default icon path
+            modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/default.svg';
     }
 
     const popupContent = `
-        <div style="display: flex; align-items: center; padding: 5px; background: rgba(255, 255, 255, 0.85); border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); font-family: Arial, sans-serif; overflow: hidden;">
+        <div style="display: flex; align-items: center; padding: 5px; background: rgba(255, 255, 255, 0.85); border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); font-family: Arial, sans-serif;">
             <div style="width: 30%; display: flex; justify-content: center; align-items: center;">
                 <img src="${modeIcon}" alt="Mode" style="width: 24px; height: 24px;">
             </div>
@@ -136,7 +122,11 @@ function showRoutePopup(route, coordinates) {
         </div>
     `;
 
-    new mapboxgl.Popup({ closeButton: false })
+    if (currentPopup) {
+        currentPopup.remove(); // Close the previous popup if it exists
+    }
+
+    currentPopup = new mapboxgl.Popup({ closeButton: false })
         .setLngLat(coordinates)
         .setHTML(popupContent)
         .addTo(map);
