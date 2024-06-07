@@ -215,9 +215,10 @@ function onRoutesReceived(routes, profile) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Ensure element exists
     const directionsButton = document.getElementById('get-directions');
-    console.log(directionsButton ? "get-directions button found." : "get-directions button NOT found.");
+    setupDirectionsButton();
+    setupMapEvents();
+});
 
     setupDatePickers();
     setupCityButtons();
@@ -552,6 +553,7 @@ function setupMapEvents() {
         setTimeout(function() {
             map.resize();
             fetchMarkersData(currentCSV);
+            initializeDirectionsControl(); // Initialize directions control after fetching markers data
         }, 250);
 
         let updateTimeout;
@@ -559,8 +561,6 @@ function setupMapEvents() {
             clearTimeout(updateTimeout);
             updateTimeout = setTimeout(() => {
                 updateInfoWindowContent();
-            
-           
             }, 100);
         });
 
