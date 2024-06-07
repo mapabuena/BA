@@ -53,6 +53,7 @@ function initializeDirectionsControl() {
                 }
             });
 
+
 directions.on('route', (event) => {
     const routes = event.route;
     const profile = directions.options.profile; // Get the current profile
@@ -61,7 +62,6 @@ directions.on('route', (event) => {
         onRoutesReceived(routes, profile); // Pass the routes and profile
     }
 });
-
 
             // Listen for profile change
             document.querySelectorAll('.mapbox-directions-profile input').forEach(input => {
@@ -82,6 +82,9 @@ function addRouteLabels(route, profile) {
     if (route.geometry) {
         const coordinates = polyline.decode(route.geometry); // Decode the polyline string
         const routeCenter = getRouteCenter(coordinates);
+
+        console.log("Decoded coordinates:", coordinates); // Debug log for decoded coordinates
+        console.log("Route center:", routeCenter); // Debug log for route center
 
         // Show the popup with route details
         showRoutePopup(route, routeCenter, profile);
@@ -114,27 +117,27 @@ function showRoutePopup(route, coordinates, profile, isBestRoute = true) {
     switch (profile) {
         case 'mapbox/driving':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/car.svg';
-            iconSize = { width: '32px', height: '32px' }; // Example size for car icon
-            popupSize = { width: '120px', height: '32px' }; // Example size for car popup
-            iconPaddingBottom = '15px'; // Padding below the car icon
+            iconSize = { width: '32px', height: '32px' };
+            popupSize = { width: '120px', height: '32px' };
+            iconPaddingBottom = '15px';
             break;
         case 'mapbox/walking':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/walking.svg';
-            iconSize = { width: '40px', height: '40px' }; // Example size for walking icon
-            popupSize = { width: '120px', height: '40px' }; // Example size for walking popup
-            iconPaddingBottom = '10px'; // Padding below the walking icon
+            iconSize = { width: '40px', height: '40px' };
+            popupSize = { width: '120px', height: '40px' };
+            iconPaddingBottom = '10px';
             break;
         case 'mapbox/cycling':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/cycling.svg';
-            iconSize = { width: '32px', height: '32px' }; // Example size for cycling icon
-            popupSize = { width: '160px', height: '40px' }; // Example size for cycling popup
-            iconPaddingBottom = '15px'; // Padding below the cycling icon
+            iconSize = { width: '32px', height: '32px' };
+            popupSize = { width: '160px', height: '40px' };
+            iconPaddingBottom = '15px';
             break;
         default:
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/default.svg';
-            iconSize = { width: '32px', height: '32px' }; // Default size for other icons
-            popupSize = { width: '120px', height: '40px' }; // Default size for other popups
-            iconPaddingBottom = '15px'; // Padding below the default icon
+            iconSize = { width: '32px', height: '32px' };
+            popupSize = { width: '120px', height: '40px' };
+            iconPaddingBottom = '15px';
     }
 
     console.log("Route profile:", profile); // Log the profile to verify the switch case
@@ -174,7 +177,6 @@ function showRoutePopup(route, coordinates, profile, isBestRoute = true) {
             .addTo(map);
     }
 }
-
 function displayRouteAlternatives(routes, profile) {
     console.log("Routes received:", routes); // Debug log for routes received
     if (routes && routes.length > 1) {
@@ -182,8 +184,11 @@ function displayRouteAlternatives(routes, profile) {
         const secondBestRoute = routes[1];
 
         console.log("Displaying best route popup"); // Debug log
-        const bestRouteCoordinates = polyline.decode(bestRoute.geometry)[Math.floor(polyline.decode(bestRoute.geometry).length / 2)];
-        const secondBestRouteCoordinates = polyline.decode(secondBestRoute.geometry)[Math.floor(polyline.decode(secondBestRoute.geometry).length / 2)];
+        const bestRouteCoordinates = getRouteCenter(polyline.decode(bestRoute.geometry));
+        const secondBestRouteCoordinates = getRouteCenter(polyline.decode(secondBestRoute.geometry));
+
+        console.log("Best route coordinates:", bestRouteCoordinates); // Debug log
+        console.log("Second-best route coordinates:", secondBestRouteCoordinates); // Debug log
 
         showRoutePopup(bestRoute, bestRouteCoordinates, profile, true);
 
@@ -191,7 +196,9 @@ function displayRouteAlternatives(routes, profile) {
         showRoutePopup(secondBestRoute, secondBestRouteCoordinates, profile, false);
     } else if (routes && routes.length > 0) {
         const bestRoute = routes[0];
-        const bestRouteCoordinates = polyline.decode(bestRoute.geometry)[Math.floor(polyline.decode(bestRoute.geometry).length / 2)];
+        const bestRouteCoordinates = getRouteCenter(polyline.decode(bestRoute.geometry));
+
+        console.log("Best route coordinates:", bestRouteCoordinates); // Debug log
 
         showRoutePopup(bestRoute, bestRouteCoordinates, profile, true);
     } else {
