@@ -114,20 +114,20 @@ function showRoutePopup(route, coordinates, profile) {
         case 'mapbox/driving':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/car.svg';
             iconSize = { width: '32px', height: '32px' }; // Example size for car icon
-            popupSize = { width: '120px', height: '32px' }; // Example size for car popup
-            iconPaddingBottom = '15px'; // Padding below the car icon
+            popupSize = { width: '120px', height: '42px' }; // Example size for car popup
+            iconPaddingBottom = '22px'; // Padding below the car icon
             break;
         case 'mapbox/walking':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/walking.svg';
-            iconSize = { width: '40px', height: '40px' }; // Example size for walking icon
+            iconSize = { width: '55px', height: '55px' }; // Example size for walking icon
             popupSize = { width: '120px', height: '40px' }; // Example size for walking popup
-            iconPaddingBottom = '10px'; // Padding below the walking icon
+            iconPaddingBottom = '14px'; // Padding below the walking icon
             break;
         case 'mapbox/cycling':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/cycling.svg';
-            iconSize = { width: '32px', height: '32px' }; // Example size for cycling icon
-            popupSize = { width: '160px', height: '40px' }; // Example size for cycling popup
-            iconPaddingBottom = '15px'; // Padding below the cycling icon
+            iconSize = { width: '42px', height: '42px' }; // Example size for cycling icon
+            popupSize = { width: '110px', height: '50px' }; // Example size for cycling popup
+            iconPaddingBottom = '25px'; // Padding below the cycling icon
             break;
         default:
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/default.svg';
@@ -144,7 +144,7 @@ function showRoutePopup(route, coordinates, profile) {
             <div style="width: 30%; display: flex; justify-content: center; align-items: center; padding-bottom: ${iconPaddingBottom};">
                 <img src="${modeIcon}" alt="Mode" style="width: ${iconSize.width}; height: ${iconSize.height};">
             </div>
-            <div style="width: 70%; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding-left: 3px;">
+            <div style="width: 70%; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding-left: 6px;">
                 <p style="margin: 0; font-size: 14px; font-weight: bold; color: green;">${formattedTravelTime}</p>
                 <p style="margin: 0; font-size: 12px; font-weight: bold; color: #333;">${formattedDistance}</p>
             </div>
