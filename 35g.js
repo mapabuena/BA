@@ -121,10 +121,12 @@ function showRoutePopup(route, coordinates) {
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/default.svg'; // Use a default icon path
     }
 
-      const popupContent = `
-        <div style="display: flex; align-items: center; padding: 5px; background: rgba(255, 255, 255, 0.85); border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); font-family: Arial, sans-serif;">
-            <img src="${modeIcon}" alt="Mode" style="width: 20px; height: 20px; margin-right: 5px;">
-            <div style="line-height: 1.2;">
+    const popupContent = `
+        <div style="display: flex; align-items: center; padding: 5px; background: rgba(255, 255, 255, 0.80); border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); font-family: Arial, sans-serif; overflow: hidden; width: 150px;">
+            <div style="flex: 1; display: flex; justify-content: center; align-items: center;">
+                <img src="${modeIcon}" alt="Mode" style="width: 20px; height: 20px;">
+            </div>
+            <div style="flex: 2; line-height: 1.2;">
                 <p style="margin: 0; font-size: 14px; font-weight: bold; color: green;">${formattedTravelTime}</p>
                 <p style="margin: 0; font-size: 12px; font-weight: bold; color: #333;">${formattedDistance}</p>
             </div>
