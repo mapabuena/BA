@@ -128,6 +128,13 @@ function setupDirectionsButton() {
 
                 directions.removeRoutes(); // Clear any existing routes
 
+                // Ensure lat and lng are valid numbers
+                if (isNaN(lat) || isNaN(lng)) {
+                    console.error("Invalid coordinates:", lat, lng);
+                    alert('Invalid coordinates for the selected marker.');
+                    return;
+                }
+
                 const origin = {
                     "type": "Feature",
                     "geometry": {
