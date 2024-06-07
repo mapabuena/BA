@@ -154,42 +154,37 @@ function showRoutePopup(route, coordinates, profile, isBestRoute = true) {
         </div>
     `;
 
-    if (isBestRoute) {
-        if (currentPopup) {
-            currentPopup.remove(); // Close the previous popup if it exists
-        }
+    const popup = new mapboxgl.Popup({ closeButton: false })
+        .setLngLat(coordinates)
+        .setHTML(popupContent)
+        .addTo(map);
 
-        currentPopup = new mapboxgl.Popup({ closeButton: false })
-            .setLngLat(coordinates)
-            .setHTML(popupContent)
-            .addTo(map);
-    } else {
-        if (secondPopup) {
-            secondPopup.remove(); // Close the previous popup if it exists
-        }
-
-        secondPopup = new mapboxgl.Popup({ closeButton: false })
-            .setLngLat(coordinates)
-            .setHTML(popupContent)
-            .addTo(map);
-    }
+    return popup;
 }
 
 function displayRouteAlternatives(routes, profile) {
-    if (routes && routes.length > 1) {
-        const bestRoute = routes[0];
-        const secondBestRoute = routes[1];
-
-        const bestRouteCoordinates = bestRoute.geometry.coordinates[Math.floor(bestRoute.geometry.coordinates.length / 2)];
-        const secondBestRouteCoordinates = secondBestRoute.geometry.coordinates[Math.floor(secondBestRoute.geometry.coordinates.length / 2)];
-
-        showRoutePopup(bestRoute, bestRouteCoordinates, profile, true);
-        showRoutePopup(secondBestRoute, secondBestRouteCoordinates, profile, false);
-    } else if (routes && routes.length > 0) {
+    if (routes && routes.length > 0) {
         const bestRoute = routes[0];
         const bestRouteCoordinates = bestRoute.geometry.coordinates[Math.floor(bestRoute.geometry.coordinates.length / 2)];
 
-        showRoutePopup(bestRoute, bestRouteCoordinates, profile, true);
+        // Display popup for the best route
+        if (currentPopup) {
+            currentPopup.remove(); // Close the previous popup if it exists
+        }
+        currentPopup = showRoutePopup(bestRoute, bestRouteCoordinates, profile, true);
+
+        // Display popup for the second-best route if available
+        if (routes.length > 1) {
+            const secondBestRoute = routes[1];
+            const secondBestRouteCoordinates = secondBestRoute.geometry.coordinates[Math.floor(secondBestRoute.geometry.coordinates.length / 2)];
+
+            if (secondPopup) {
+                secondPopup.remove(); // Close the previous popup if it exists
+            }
+            secondPopup = showRoutePopup(secondBestRoute, secondBestRouteCoordinates, profile, false);
+        } else if (secondPopup) {
+            secondPopup.remove(); // Remove secondPopup if it exists but there's no second-best route
+        }
     }
 }
 
@@ -213,6 +208,7 @@ document.getElementById('cycle-profile').addEventListener('click', () => {
         displayRouteAlternatives(e.route, 'mapbox/cycling');
     });
 });
+
 // Sample function call to display route alternatives
 function onRoutesReceived(routes) {
     const profile = 'mapbox/driving'; // Example profile, replace with actual profile
