@@ -113,22 +113,22 @@ function showRoutePopup(route, coordinates, profile) {
         case 'mapbox/driving':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/car.svg';
             iconSize = { width: '32px', height: '32px' }; // Example size for car icon
-            popupSize = { width: '320px', height: 'auto' }; // Example size for car popup
+            popupSize = { width: '200px', height: 'auto' }; // Example size for car popup
             break;
         case 'mapbox/walking':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/walking.svg';
-            iconSize = { width: '24px', height: '24px' }; // Example size for walking icon
-            popupSize = { width: '280px', height: 'auto' }; // Example size for walking popup
+            iconSize = { width: '24px', height: '70px' }; // Example size for walking icon
+            popupSize = { width: '200px', height: 'auto' }; // Example size for walking popup
             break;
         case 'mapbox/cycling':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/cycling.svg';
-            iconSize = { width: '28px', height: '28px' }; // Example size for cycling icon
-            popupSize = { width: '300px', height: 'auto' }; // Example size for cycling popup
+            iconSize = { width: '70px', height: '32px' }; // Example size for cycling icon
+            popupSize = { width: '220px', height: 'auto' }; // Example size for cycling popup
             break;
         default:
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/default.svg';
-            iconSize = { width: '24px', height: '24px' }; // Default size for other icons
-            popupSize = { width: '300px', height: 'auto' }; // Default size for other popups
+            iconSize = { width: '32px', height: '32px' }; // Default size for other icons
+            popupSize = { width: '200px', height: 'auto' }; // Default size for other popups
     }
 
     console.log("Route profile:", profile); // Log the profile to verify the switch case
