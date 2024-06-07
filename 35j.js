@@ -101,13 +101,27 @@ function getRouteCenter(coordinates) {
     }
 }
 
+directions = new MapboxDirections({
+    accessToken: mapboxgl.accessToken,
+    unit: 'metric',
+    profile: 'mapbox/driving', // Default profile
+    alternatives: true,
+    controls: {
+        inputs: true,
+        instructions: true,
+    }
+});
+
 function showRoutePopup(route, coordinates) {
     const formattedDistance = (route.distance / 1000).toFixed(2) + ' km';
     const formattedTravelTime = Math.round(route.duration / 60) + ' mins';
 
     // Define the icon based on the transport mode
     let modeIcon;
-    switch (route.request.profile) {
+    // Use the provided directions object or a default if unavailable
+    const profile = directions.getProfile ? directions.getProfile() : 'mapbox/driving';
+    
+    switch (profile) {
         case 'mapbox/driving':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/car.svg'; // Use your car icon path
             break;
