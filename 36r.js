@@ -193,17 +193,29 @@ function displayRouteAlternatives(routes, profile) {
         const bestRoute = routes[0];
         const secondBestRoute = routes[1];
 
-        console.log("Displaying best route popup"); // Debug log
-        const bestRouteCoordinates = bestRoute.geometry.coordinates[Math.floor(bestRoute.geometry.coordinates.length / 2)];
-        showRoutePopup(bestRoute, bestRouteCoordinates, profile, true);
+        if (bestRoute.geometry && bestRoute.geometry.coordinates) {
+            console.log("Displaying best route popup"); // Debug log
+            const bestRouteCoordinates = bestRoute.geometry.coordinates[Math.floor(bestRoute.geometry.coordinates.length / 2)];
+            showRoutePopup(bestRoute, bestRouteCoordinates, profile, true);
+        } else {
+            console.error("Best route geometry.coordinates is undefined");
+        }
 
-        console.log("Displaying second-best route popup"); // Debug log
-        const secondBestRouteCoordinates = secondBestRoute.geometry.coordinates[Math.floor(secondBestRoute.geometry.coordinates.length / 2)];
-        showRoutePopup(secondBestRoute, secondBestRouteCoordinates, profile, false);
+        if (secondBestRoute.geometry && secondBestRoute.geometry.coordinates) {
+            console.log("Displaying second-best route popup"); // Debug log
+            const secondBestRouteCoordinates = secondBestRoute.geometry.coordinates[Math.floor(secondBestRoute.geometry.coordinates.length / 2)];
+            showRoutePopup(secondBestRoute, secondBestRouteCoordinates, profile, false);
+        } else {
+            console.error("Second-best route geometry.coordinates is undefined");
+        }
     } else if (routes && routes.length > 0) {
         const bestRoute = routes[0];
-        const bestRouteCoordinates = bestRoute.geometry.coordinates[Math.floor(bestRoute.geometry.coordinates.length / 2)];
-        showRoutePopup(bestRoute, bestRouteCoordinates, profile, true);
+        if (bestRoute.geometry && bestRoute.geometry.coordinates) {
+            const bestRouteCoordinates = bestRoute.geometry.coordinates[Math.floor(bestRoute.geometry.coordinates.length / 2)];
+            showRoutePopup(bestRoute, bestRouteCoordinates, profile, true);
+        } else {
+            console.error("Best route geometry.coordinates is undefined");
+        }
     } else {
         console.warn("No routes available to display"); // Warn if no routes are available
     }
