@@ -190,10 +190,10 @@ function setupDestinationButton() {
 }
 
 // Initialize the event listeners for the buttons
-setupDirectionsButton();
-    const destinationButton = document.getElementById('set-destination');
-    if (destinationButton) {
-        destinationButton.addEventListener('click', function() {
+function setupDirectionsButton() {
+    const directionsButton = document.getElementById('get-directions');
+    if (directionsButton) {
+        directionsButton.addEventListener('click', function() {
             const selectedMarker = markers.find(marker => 
                 marker.marker.getElement().getAttribute('data-is-selected') === 'true'
             );
@@ -212,7 +212,7 @@ setupDirectionsButton();
                     return;
                 }
 
-                const destination = {
+                const origin = {
                     "type": "Feature",
                     "geometry": {
                         "type": "Point",
@@ -223,19 +223,18 @@ setupDirectionsButton();
                     }
                 };
 
-                console.log("Setting destination with:", JSON.stringify(destination));
+                console.log("Setting origin with:", JSON.stringify(origin));
 
                 try {
-                    directions.setDestination([validLng, validLat]); // Set the custom destination object
-                    console.log("Destination set to:", [validLng, validLat]);
+                    directions.setOrigin([validLng, validLat]); // Set the custom origin object
+                    console.log("Origin set to:", [validLng, validLat]);
 
                     // Set the input fields with the custom text
-                    setDirectionsInputFields('', destination.properties.title);
+                    setDirectionsInputFields(origin.properties.title, '');
 
-                    console.log("Destination set successfully.");
+                    console.log("Origin set successfully.");
                 } catch (error) {
-                    console.error("Error setting destination:", error);
-                    alert('Error setting destination.');
+                    console.error("Error setting origin:", error);
                 }
 
                 document.getElementById('directions-container').style.display = 'block';
@@ -245,7 +244,7 @@ setupDirectionsButton();
             }
         });
     } else {
-        console.error("Element with ID 'set-destination' not found.");
+        console.error("Element with ID 'get-directions' not found.");
     }
 }
 
@@ -279,7 +278,6 @@ document.getElementById('nightmode').addEventListener('click', () => {
         nightModeButton.classList.remove('nightmode-active');
     }
 });
-
 // Call this function to set up the button event
 setupDirectionsButton();
 
