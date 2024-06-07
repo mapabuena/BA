@@ -107,28 +107,28 @@ function showRoutePopup(route, coordinates, profile) {
     // Define the icon and popup size based on the transport mode
     let modeIcon;
     let iconSize = { width: '24px', height: '24px' }; // Default icon size
-    let popupSize = { width: '180px', height: 'auto' }; // Default popup size
+    let popupSize = { width: '120px', height: '24px' }; // Default popup size
 
     switch (profile) {
         case 'mapbox/driving':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/car.svg';
             iconSize = { width: '32px', height: '32px' }; // Example size for car icon
-            popupSize = { width: '180px', height: 'auto' }; // Example size for car popup
+            popupSize = { width: '120px', height: '32px' }; // Example size for car popup
             break;
         case 'mapbox/walking':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/walking.svg';
             iconSize = { width: '40px', height: '40px' }; // Example size for walking icon
-            popupSize = { width: '180px', height: 'auto' }; // Example size for walking popup
+            popupSize = { width: '120px', height: '40px' }; // Example size for walking popup
             break;
         case 'mapbox/cycling':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/cycling.svg';
             iconSize = { width: '32px', height: '32px' }; // Example size for cycling icon
-            popupSize = { width: '220px', height: 'auto' }; // Example size for cycling popup
+            popupSize = { width: '160px', height: '32px' }; // Example size for cycling popup
             break;
         default:
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/default.svg';
             iconSize = { width: '32px', height: '32px' }; // Default size for other icons
-            popupSize = { width: '200px', height: 'auto' }; // Default size for other popups
+            popupSize = { width: '120px', height: '32px' }; // Default size for other popups
     }
 
     console.log("Route profile:", profile); // Log the profile to verify the switch case
