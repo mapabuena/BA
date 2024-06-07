@@ -28,6 +28,7 @@ function initializeDirectionsControl() {
             accessToken: mapboxgl.accessToken,
             unit: 'metric',
             profile: 'mapbox/driving',
+            alternatives: true, // Enable alternatives to get multiple routes
             controls: {
                 inputs: true,
                 instructions: true,
@@ -53,12 +54,29 @@ function initializeDirectionsControl() {
                 }
             });
 
-            directions.on('route', () => {
-                const layerId = 'directions-route-line-alt';
-                if (map.getLayer(layerId)) {
-                    console.log(`Layer ${layerId} exists and ready to be used.`);
-                } else {
-                    console.warn(`Layer ${layerId} does not exist.`);
+            directions.on('route', (e) => {
+                const routes = e.route;
+                if (routes && routes.length > 1) {
+                    const bestRoute = routes[0];
+                    const secondBestRoute = routes[1];
+
+                    const bestRouteInfo = `Best route: ${bestRoute.distance / 1000} km, ${Math.round(bestRoute.duration / 60)} mins`;
+                    const secondBestRouteInfo = `Second-best route: ${secondBestRoute.distance / 1000} km, ${Math.round(secondBestRoute.duration / 60)} mins`;
+
+                    console.log(bestRouteInfo);
+                    console.log(secondBestRouteInfo);
+
+                    document.getElementById('route-info').innerHTML = `
+                        <p>${bestRouteInfo}</p>
+                        <p>${secondBestRouteInfo}</p>
+                    `;
+                } else if (routes && routes.length > 0) {
+                    const bestRoute = routes[0];
+                    const bestRouteInfo = `Best route: ${bestRoute.distance / 1000} km, ${Math.round(bestRoute.duration / 60)} mins`;
+
+                    console.log(bestRouteInfo);
+
+                    document.getElementById('route-info').innerHTML = `<p>${bestRouteInfo}</p>`;
                 }
             });
         } else {
@@ -68,6 +86,7 @@ function initializeDirectionsControl() {
         directionsInitialized = true; // Mark as initialized
     }
 }
+
 
 
 document.addEventListener('DOMContentLoaded', function() {
