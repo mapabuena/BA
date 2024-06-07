@@ -131,7 +131,7 @@ function showRoutePopup(route, coordinates) {
         </div>
     `;
 
-    new mapboxgl.Popup()
+   new mapboxgl.Popup({ closeButton: false })
         .setLngLat(coordinates)
         .setHTML(popupContent)
         .addTo(map);
