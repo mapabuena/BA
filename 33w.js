@@ -71,6 +71,10 @@ function initializeDirectionsControl() {
 
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Ensure element exists
+    const directionsButton = document.getElementById('get-directions');
+    console.log(directionsButton ? "get-directions button found." : "get-directions button NOT found.");
+
     setupDatePickers();
     setupCityButtons();
     setupFormHandlers();
@@ -78,12 +82,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setupInfoItemHoverEffects();
     setupDirectionsButton();
 
-    // Initially add daymode-text class to h4 elements
-    document.querySelectorAll('.info-item h4').forEach(h4 => {
-        h4.classList.add('daymode-text');
-    });
-
-    const closeDirectionsButton = document.getElementById('close-directions');
+     const closeDirectionsButton = document.getElementById('close-directions');
     if (closeDirectionsButton) {
         closeDirectionsButton.addEventListener('click', function() {
             document.getElementById('directions-container').style.display = 'none';
@@ -101,7 +100,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Call this function to set up the directions button event
-    const directionsButton = document.getElementById('get-directions');
     if (directionsButton) {
         setupDirectionsButton();
     } else {
