@@ -107,7 +107,7 @@ function showRoutePopup(route, coordinates) {
 
     // Define the icon based on the transport mode
     let modeIcon;
-    switch (route.profile) {
+    switch (directions.getProfile()) {
         case 'mapbox/driving':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/car.svg'; // Use your car icon path
             break;
@@ -122,18 +122,18 @@ function showRoutePopup(route, coordinates) {
     }
 
     const popupContent = `
-        <div style="display: flex; align-items: center; padding: 5px; background: rgba(255, 255, 255, 0.80); border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); font-family: Arial, sans-serif; overflow: hidden; width: 150px;">
-            <div style="flex: 1; display: flex; justify-content: center; align-items: center;">
-                <img src="${modeIcon}" alt="Mode" style="width: 20px; height: 20px;">
+        <div style="display: flex; align-items: center; padding: 5px; background: rgba(255, 255, 255, 0.85); border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); font-family: Arial, sans-serif; overflow: hidden;">
+            <div style="width: 30%; display: flex; justify-content: center; align-items: center;">
+                <img src="${modeIcon}" alt="Mode" style="width: 24px; height: 24px;">
             </div>
-            <div style="flex: 2; line-height: 1.2;">
+            <div style="width: 70%; display: flex; flex-direction: column; align-items: flex-start; padding-left: 5px;">
                 <p style="margin: 0; font-size: 14px; font-weight: bold; color: green;">${formattedTravelTime}</p>
                 <p style="margin: 0; font-size: 12px; font-weight: bold; color: #333;">${formattedDistance}</p>
             </div>
         </div>
     `;
 
-   new mapboxgl.Popup({ closeButton: false })
+    new mapboxgl.Popup({ closeButton: false })
         .setLngLat(coordinates)
         .setHTML(popupContent)
         .addTo(map);
