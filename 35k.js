@@ -101,16 +101,6 @@ function getRouteCenter(coordinates) {
     }
 }
 
-directions = new MapboxDirections({
-    accessToken: mapboxgl.accessToken,
-    unit: 'metric',
-    profile: 'mapbox/driving', // Default profile
-    alternatives: true,
-    controls: {
-        inputs: true,
-        instructions: true,
-    }
-});
 
 function showRoutePopup(route, coordinates) {
     const formattedDistance = (route.distance / 1000).toFixed(2) + ' km';
@@ -118,8 +108,7 @@ function showRoutePopup(route, coordinates) {
 
     // Define the icon based on the transport mode
     let modeIcon;
-    // Use the provided directions object or a default if unavailable
-    const profile = directions.getProfile ? directions.getProfile() : 'mapbox/driving';
+    const profile = directions.options.profile; // Get the profile from the directions instance
     
     switch (profile) {
         case 'mapbox/driving':
@@ -152,6 +141,7 @@ function showRoutePopup(route, coordinates) {
         .setHTML(popupContent)
         .addTo(map);
 }
+
 function displayRouteAlternatives(routes) {
     if (routes && routes.length > 1) {
         const bestRoute = routes[0];
