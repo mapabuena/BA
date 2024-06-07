@@ -107,7 +107,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Add this function to set up the directions button event listener
+function setDirectionsInputFields(originTitle, destinationTitle) {
+    document.querySelector('.mapbox-directions-origin input').value = originTitle;
+    document.querySelector('.mapbox-directions-destination input').value = destinationTitle;
+}
 // Add this function to set up the directions button event listener
 function setupDirectionsButton() {
     const directionsButton = document.getElementById('get-directions');
@@ -152,7 +155,13 @@ function setupDirectionsButton() {
 
                 try {
                     directions.setOrigin([validLng, validLat]); // Set the custom origin object
+                    console.log("Origin set to:", [validLng, validLat]);
                     directions.setDestination(''); // Clear the destination
+                    console.log("Destination cleared.");
+
+                    // Set the input fields with the custom text
+                    setDirectionsInputFields(origin.properties.title, '');
+
                     console.log("Origin and destination set successfully.");
                 } catch (error) {
                     console.error("Error setting origin or destination:", error);
