@@ -135,11 +135,11 @@ function showRoutePopup(route, coordinates, profile) {
     console.log("Mode icon URL:", modeIcon); // Log the icon URL to ensure it's being set correctly
 
     const popupContent = `
-        <div style="display: flex; align-items: center; padding: 5px; background: rgba(255, 255, 255, 0.85); border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); font-family: Arial, sans-serif; width: ${popupSize.width}; height: ${popupSize.height};">
-            <div style="width: 30%; display: flex; justify-content: center; align-items: center; height: 100%;">
+        <div style="display: flex; align-items: center; padding: 5px; background: rgba(255, 255, 255, 0.75); border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); font-family: Arial, sans-serif; width: ${popupSize.width}; height: ${popupSize.height}; overflow: hidden;">
+            <div style="width: 30%; display: flex; justify-content: center; align-items: center;">
                 <img src="${modeIcon}" alt="Mode" style="width: ${iconSize.width}; height: ${iconSize.height};">
             </div>
-            <div style="width: 70%; display: flex; flex-direction: column; align-items: flex-start; padding-left: 5px; justify-content: center;">
+            <div style="width: 70%; display: flex; flex-direction: column; align-items: flex-start; padding-left: 5px;">
                 <p style="margin: 0; font-size: 14px; font-weight: bold; color: green;">${formattedTravelTime}</p>
                 <p style="margin: 0; font-size: 12px; font-weight: bold; color: #333;">${formattedDistance}</p>
             </div>
