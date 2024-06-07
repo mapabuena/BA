@@ -54,7 +54,7 @@ function initializeDirectionsControl() {
                 }
             });
 
-                   directions.on('route', (event) => {
+            directions.on('route', (event) => {
                 const routes = event.route;
                 if (routes && routes.length > 0) {
                     const bestRoute = routes[0];
@@ -75,62 +75,58 @@ function initializeDirectionsControl() {
     }
 }
 
-function addRouteLabels(routes) {
-    if (routes && routes.length > 0) {
-        const bestRoute = routes[0];
-        const formattedDistance = (bestRoute.distance / 1000).toFixed(2) + ' km';
-        const formattedTravelTime = Math.round(bestRoute.duration / 60) + ' mins';
+function addRouteLabels(route) {
+    const formattedDistance = (route.distance / 1000).toFixed(2) + ' km';
+    const formattedTravelTime = Math.round(route.duration / 60) + ' mins';
+    const routeCenter = getRouteCenter(route.geometry.coordinates);
 
-        const routeCenter = getRouteCenter(bestRoute.geometry.coordinates);
-
-        // Create a label object
-        const distanceLabels = {
-            "type": "FeatureCollection",
-            "features": [
-                {
-                    "type": "Feature",
-                    "properties": {
-                        "distance": formattedDistance,
-                        "duration": formattedTravelTime
-                    },
-                    "geometry": {
-                        "type": "Point",
-                        "coordinates": routeCenter
-                    }
-                }
-            ]
-        };
-
-        // Add the label object as a source
-        if (map.getSource('distanceLabels')) {
-            map.getSource('distanceLabels').setData(distanceLabels);
-        } else {
-            map.addSource('distanceLabels', {
-                "type": "geojson",
-                "data": distanceLabels
-            });
-
-            // Add a layer that uses the source
-            map.addLayer({
-                "id": "distanceLabels",
-                "type": "symbol",
-                "source": "distanceLabels",
-                "layout": {
-                    "text-field": "{distance}\n{duration}",
-                    "text-size": 12,
-                    "text-offset": [0, 1.5]
+    // Create a label object
+    const distanceLabels = {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "properties": {
+                    "distance": formattedDistance,
+                    "duration": formattedTravelTime
                 },
-                "paint": {
-                    "text-color": "#000000"
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": routeCenter
                 }
-            });
-        }
+            }
+        ]
+    };
+
+    // Add the label object as a source
+    if (map.getSource('distanceLabels')) {
+        map.getSource('distanceLabels').setData(distanceLabels);
+    } else {
+        map.addSource('distanceLabels', {
+            "type": "geojson",
+            "data": distanceLabels
+        });
+
+        // Add a layer that uses the source
+        map.addLayer({
+            "id": "distanceLabels",
+            "type": "symbol",
+            "source": "distanceLabels",
+            "layout": {
+                "text-field": "{distance}\n{duration}",
+                "text-size": 12,
+                "text-offset": [0, 1.5],
+                "text-anchor": "top"
+            },
+            "paint": {
+                "text-color": "#000000"
+            }
+        });
     }
 }
 
 function getRouteCenter(coordinates) {
-    const l = coordinates.length;
-    const midIndex = Math.floor(l / 2);
+    const midIndex = Math.floor(coordinates.length / 2);
     return coordinates[midIndex];
 }
 
