@@ -92,6 +92,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setupMapEvents();
     setupInfoItemHoverEffects();
     setupDirectionsButton();
+    initializeDirectionsControl(); // Initialize directions control first
 
      const closeDirectionsButton = document.getElementById('close-directions');
     if (closeDirectionsButton) {
