@@ -53,7 +53,7 @@ function initializeDirectionsControl() {
                 }
             });
 
-      directions.on('route', (event) => {
+directions.on('route', (event) => {
     const routes = event.route;
     const profile = directions.options.profile; // Get the current profile
     console.log("Profile from options:", profile); // Log the profile to ensure it's being set correctly
@@ -182,8 +182,8 @@ function displayRouteAlternatives(routes, profile) {
         const secondBestRoute = routes[1];
 
         console.log("Displaying best route popup"); // Debug log
-        const bestRouteCoordinates = bestRoute.geometry.coordinates[Math.floor(bestRoute.geometry.coordinates.length / 2)];
-        const secondBestRouteCoordinates = secondBestRoute.geometry.coordinates[Math.floor(secondBestRoute.geometry.coordinates.length / 2)];
+        const bestRouteCoordinates = polyline.decode(bestRoute.geometry)[Math.floor(polyline.decode(bestRoute.geometry).length / 2)];
+        const secondBestRouteCoordinates = polyline.decode(secondBestRoute.geometry)[Math.floor(polyline.decode(secondBestRoute.geometry).length / 2)];
 
         showRoutePopup(bestRoute, bestRouteCoordinates, profile, true);
 
@@ -191,7 +191,7 @@ function displayRouteAlternatives(routes, profile) {
         showRoutePopup(secondBestRoute, secondBestRouteCoordinates, profile, false);
     } else if (routes && routes.length > 0) {
         const bestRoute = routes[0];
-        const bestRouteCoordinates = bestRoute.geometry.coordinates[Math.floor(bestRoute.geometry.coordinates.length / 2)];
+        const bestRouteCoordinates = polyline.decode(bestRoute.geometry)[Math.floor(polyline.decode(bestRoute.geometry).length / 2)];
 
         showRoutePopup(bestRoute, bestRouteCoordinates, profile, true);
     } else {
@@ -199,7 +199,6 @@ function displayRouteAlternatives(routes, profile) {
     }
 }
 
-// Sample function call to display route alternatives
 function onRoutesReceived(routes, profile) {
     console.log("Routes received for profile:", profile); // Debug log for profile
     displayRouteAlternatives(routes, profile);
