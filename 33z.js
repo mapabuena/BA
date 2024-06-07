@@ -108,6 +108,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Add this function to set up the directions button event listener
+// Add this function to set up the directions button event listener
 function setupDirectionsButton() {
     const directionsButton = document.getElementById('get-directions');
     if (directionsButton) {
@@ -121,7 +122,10 @@ function setupDirectionsButton() {
                 console.log("Selected marker data:", selectedMarker.data); // Log the selected marker data
 
                 // Validate coordinates
-                if (typeof lat !== 'number' || typeof lng !== 'number' || isNaN(lat) || isNaN(lng)) {
+                const validLat = parseFloat(lat);
+                const validLng = parseFloat(lng);
+
+                if (isNaN(validLat) || isNaN(validLng)) {
                     console.error("Invalid coordinates:", lat, lng);
                     alert('Invalid coordinates for the selected marker.');
                     return;
@@ -137,17 +141,17 @@ function setupDirectionsButton() {
                     "type": "Feature",
                     "geometry": {
                         "type": "Point",
-                        "coordinates": [lng, lat]
+                        "coordinates": [validLng, validLat]
                     },
                     "properties": {
-                        "title": sidebarheader || `${lat}, ${lng}`
+                        "title": sidebarheader || `${validLat}, ${validLng}`
                     }
                 };
 
                 console.log("Setting origin with:", JSON.stringify(origin));
 
                 try {
-                    directions.setOrigin(origin); // Set the custom origin object
+                    directions.setOrigin([validLng, validLat]); // Set the custom origin object
                     directions.setDestination(''); // Clear the destination
                     console.log("Origin and destination set successfully.");
                 } catch (error) {
