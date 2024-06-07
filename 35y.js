@@ -107,7 +107,7 @@ function showRoutePopup(route, coordinates, profile) {
     // Define the icon and popup size based on the transport mode
     let modeIcon;
     let iconSize = { width: '24px', height: '24px' }; // Default icon size
-    let popupSize = { width: '120px', height: '24px' }; // Default popup size
+    let popupSize = { width: '120px', height: '32px' }; // Default popup size
 
     switch (profile) {
         case 'mapbox/driving':
@@ -123,12 +123,12 @@ function showRoutePopup(route, coordinates, profile) {
         case 'mapbox/cycling':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/cycling.svg';
             iconSize = { width: '32px', height: '32px' }; // Example size for cycling icon
-            popupSize = { width: '160px', height: '32px' }; // Example size for cycling popup
+            popupSize = { width: '160px', height: '40px' }; // Example size for cycling popup
             break;
         default:
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/default.svg';
             iconSize = { width: '32px', height: '32px' }; // Default size for other icons
-            popupSize = { width: '120px', height: '32px' }; // Default size for other popups
+            popupSize = { width: '120px', height: '40px' }; // Default size for other popups
     }
 
     console.log("Route profile:", profile); // Log the profile to verify the switch case
@@ -136,10 +136,10 @@ function showRoutePopup(route, coordinates, profile) {
 
     const popupContent = `
         <div style="display: flex; align-items: center; padding: 5px; background: rgba(255, 255, 255, 0.75); border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); font-family: Arial, sans-serif; width: ${popupSize.width}; height: ${popupSize.height}; overflow: hidden;">
-            <div style="width: 30%; display: flex; justify-content: center; align-items: center;">
+            <div style="width: 30%; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding-bottom: 2px;">
                 <img src="${modeIcon}" alt="Mode" style="width: ${iconSize.width}; height: ${iconSize.height};">
             </div>
-            <div style="width: 70%; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding-left: 5px;">
+            <div style="width: 70%; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding-left: 3px;">
                 <p style="margin: 0; font-size: 14px; font-weight: bold; color: green;">${formattedTravelTime}</p>
                 <p style="margin: 0; font-size: 12px; font-weight: bold; color: #333;">${formattedDistance}</p>
             </div>
