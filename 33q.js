@@ -99,7 +99,6 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         console.error("Element with ID 'close-directions' not found.");
     }
-});
 
     // Call this function to set up the directions button event
     const directionsButton = document.getElementById('get-directions');
@@ -109,6 +108,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Element with ID 'get-directions' not found.");
     }
 });
+
 // Add this function to set up the directions button event listener
 function setupDirectionsButton() {
     const directionsButton = document.getElementById('get-directions');
