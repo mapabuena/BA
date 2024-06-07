@@ -197,6 +197,39 @@ function setupDirectionsButton() {
                 }
 
                 document.getElementById('directions-container').style.display = 'block';
+
+                // Add click event listener to the map for setting the destination
+                map.on('click', function(e) {
+                    const { lng, lat } = e.lngLat;
+                    console.log("Map clicked at:", lng, lat);
+
+                    const destination = {
+                        "type": "Feature",
+                        "geometry": {
+                            "type": "Point",
+                            "coordinates": [lng, lat]
+                        },
+                        "properties": {
+                            "title": `${lat}, ${lng}`
+                        }
+                    };
+
+                    console.log("Setting destination with:", JSON.stringify(destination));
+
+                    try {
+                        directions.setDestination([lng, lat]); // Set the custom destination object
+                        console.log("Destination set to:", [lng, lat]);
+
+                        // Set the input fields with the custom text
+                        setDirectionsInputFields('', destination.properties.title);
+
+                        console.log("Destination set successfully.");
+                    } catch (error) {
+                        console.error("Error setting destination:", error);
+                        alert('Error setting destination.');
+                    }
+                });
+
             } else {
                 console.error('No marker selected.');
                 alert('Please select a marker first.');
@@ -204,63 +237,6 @@ function setupDirectionsButton() {
         });
     } else {
         console.error("Element with ID 'get-directions' not found.");
-    }
-
-    const destinationButton = document.getElementById('set-destination');
-    if (destinationButton) {
-        destinationButton.addEventListener('click', function() {
-            const selectedMarker = markers.find(marker => 
-                marker.marker.getElement().getAttribute('data-is-selected') === 'true'
-            );
-
-            if (selectedMarker) {
-                const { lat, lng, sidebarheader } = selectedMarker.data;
-                console.log("Selected marker data:", selectedMarker.data); // Log the selected marker data
-
-                // Validate coordinates
-                const validLat = parseFloat(lat);
-                const validLng = parseFloat(lng);
-
-                if (isNaN(validLat) || isNaN(validLng)) {
-                    console.error("Invalid coordinates:", lat, lng);
-                    alert('Invalid coordinates for the selected marker.');
-                    return;
-                }
-
-                const destination = {
-                    "type": "Feature",
-                    "geometry": {
-                        "type": "Point",
-                        "coordinates": [validLng, validLat]
-                    },
-                    "properties": {
-                        "title": sidebarheader || `${validLat}, ${validLng}`
-                    }
-                };
-
-                console.log("Setting destination with:", JSON.stringify(destination));
-
-                try {
-                    directions.setDestination([validLng, validLat]); // Set the custom destination object
-                    console.log("Destination set to:", [validLng, validLat]);
-
-                    // Set the input fields with the custom text
-                    setDirectionsInputFields('', destination.properties.title);
-
-                    console.log("Destination set successfully.");
-                } catch (error) {
-                    console.error("Error setting destination:", error);
-                    alert('Error setting destination.');
-                }
-
-                document.getElementById('directions-container').style.display = 'block';
-            } else {
-                console.error('No marker selected.');
-                alert('Please select a marker first.');
-            }
-        });
-    } else {
-        console.error("Element with ID 'set-destination' not found.");
     }
 
     // Profile switcher event listeners
@@ -276,7 +252,6 @@ function setupDirectionsButton() {
         directions.setProfile('mapbox/cycling');
     });
 }
-
 
 document.getElementById('nightmode').addEventListener('click', () => {
     isNightMode = !isNightMode;
