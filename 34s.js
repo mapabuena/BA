@@ -78,7 +78,7 @@ function initializeDirectionsControl() {
 
 function addRouteLabels(route) {
     console.log("Route data received:", route); // Log the route for debugging
-    if (route.geometry && route.geometry.coordinates) {
+    if (route.geometry) {
         const coordinates = polyline.decode(route.geometry); // Decode the polyline string
         console.log("Coordinates:", coordinates); // Log the coordinates for debugging
 
@@ -130,7 +130,7 @@ function addRouteLabels(route) {
             });
         }
     } else {
-        console.error("Route geometry or coordinates are undefined.");
+        console.error("Route geometry is undefined.");
     }
 }
 
