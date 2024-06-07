@@ -32,6 +32,7 @@ function initializeDirectionsControl() {
             controls: {
                 inputs: true,
                 instructions: true,
+                profileSwitcher: true, // Enable profile switcher to toggle between driving, walking, and cycling
             }
         });
 
@@ -86,8 +87,6 @@ function initializeDirectionsControl() {
         directionsInitialized = true; // Mark as initialized
     }
 }
-
-
 
 document.addEventListener('DOMContentLoaded', function() {
     // Ensure element exists
