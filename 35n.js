@@ -55,10 +55,9 @@ function initializeDirectionsControl() {
 
             directions.on('route', (event) => {
                 const routes = event.route;
-                const profile = directions.options.profile; // Get the current profile
                 if (routes && routes.length > 0) {
                     const bestRoute = routes[0];
-                    addRouteLabels(bestRoute, profile); // New functionality
+                    addRouteLabels(bestRoute, directions.options.profile); // Pass the profile directly
                 }
             });
         } else {
