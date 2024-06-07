@@ -136,7 +136,7 @@ function showRoutePopup(route, coordinates, profile) {
 
     const popupContent = `
         <div style="display: flex; align-items: center; padding: 5px; background: rgba(255, 255, 255, 0.75); border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); font-family: Arial, sans-serif; width: ${popupSize.width}; height: ${popupSize.height}; overflow: hidden;">
-            <div style="width: 30%; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding-bottom: 2px;">
+            <div style="width: 30%; display: flex; justify-content: center; align-items: center;">
                 <img src="${modeIcon}" alt="Mode" style="width: ${iconSize.width}; height: ${iconSize.height};">
             </div>
             <div style="width: 70%; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding-left: 3px;">
