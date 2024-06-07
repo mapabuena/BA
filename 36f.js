@@ -180,10 +180,13 @@ function displayRouteAlternatives(routes, profile) {
         const bestRoute = routes[0];
         const secondBestRoute = routes[1];
 
+        console.log("Displaying best route popup"); // Debug log
         const bestRouteCoordinates = bestRoute.geometry.coordinates[Math.floor(bestRoute.geometry.coordinates.length / 2)];
         const secondBestRouteCoordinates = secondBestRoute.geometry.coordinates[Math.floor(secondBestRoute.geometry.coordinates.length / 2)];
 
         showRoutePopup(bestRoute, bestRouteCoordinates, profile, true);
+
+        console.log("Displaying second-best route popup"); // Debug log
         showRoutePopup(secondBestRoute, secondBestRouteCoordinates, profile, false);
     } else if (routes && routes.length > 0) {
         const bestRoute = routes[0];
@@ -193,26 +196,11 @@ function displayRouteAlternatives(routes, profile) {
     }
 }
 
-document.getElementById('drive-profile').addEventListener('click', () => {
-    directions.setProfile('mapbox/driving');
-    directions.on('route', (e) => {
-        displayRouteAlternatives(e.route, 'mapbox/driving');
-    });
-});
-
-document.getElementById('walk-profile').addEventListener('click', () => {
-    directions.setProfile('mapbox/walking');
-    directions.on('route', (e) => {
-        displayRouteAlternatives(e.route, 'mapbox/walking');
-    });
-});
-
-document.getElementById('cycle-profile').addEventListener('click', () => {
-    directions.setProfile('mapbox/cycling');
-    directions.on('route', (e) => {
-        displayRouteAlternatives(e.route, 'mapbox/cycling');
-    });
-});
+// Sample function call to display route alternatives
+function onRoutesReceived(routes) {
+    const profile = 'mapbox/driving'; // Example profile, replace with actual profile
+    displayRouteAlternatives(routes, profile);
+}
 
 
 document.addEventListener('DOMContentLoaded', function() {
