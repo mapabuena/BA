@@ -104,37 +104,42 @@ function showRoutePopup(route, coordinates, profile) {
     const formattedDistance = (route.distance / 1000).toFixed(2) + ' km';
     const formattedTravelTime = Math.round(route.duration / 60) + ' mins';
 
-    // Define the icon based on the transport mode
+    // Define the icon and popup size based on the transport mode
     let modeIcon;
     let iconSize = { width: '24px', height: '24px' }; // Default icon size
+    let popupSize = { width: '300px', height: 'auto' }; // Default popup size
 
     switch (profile) {
         case 'mapbox/driving':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/car.svg';
             iconSize = { width: '32px', height: '32px' }; // Example size for car icon
+            popupSize = { width: '320px', height: 'auto' }; // Example size for car popup
             break;
         case 'mapbox/walking':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/walking.svg';
-            iconSize = { width: '24px', height: '50px' }; // Example size for walking icon
+            iconSize = { width: '24px', height: '24px' }; // Example size for walking icon
+            popupSize = { width: '280px', height: 'auto' }; // Example size for walking popup
             break;
         case 'mapbox/cycling':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/cycling.svg';
-            iconSize = { width: '40px', height: '25px' }; // Example size for cycling icon
+            iconSize = { width: '28px', height: '28px' }; // Example size for cycling icon
+            popupSize = { width: '300px', height: 'auto' }; // Example size for cycling popup
             break;
         default:
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/default.svg';
-            iconSize = { width: '32px', height: '32px' }; // Default size for other icons
+            iconSize = { width: '24px', height: '24px' }; // Default size for other icons
+            popupSize = { width: '300px', height: 'auto' }; // Default size for other popups
     }
 
     console.log("Route profile:", profile); // Log the profile to verify the switch case
     console.log("Mode icon URL:", modeIcon); // Log the icon URL to ensure it's being set correctly
 
     const popupContent = `
-        <div style="display: flex; align-items: center; padding: 5px; background: rgba(255, 255, 255, 0.80); border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); font-family: Arial, sans-serif; width: 300px;">
-            <div style="width: 35%; display: flex; justify-content: center; align-items: center;">
+        <div style="display: flex; align-items: center; padding: 5px; background: rgba(255, 255, 255, 0.85); border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); font-family: Arial, sans-serif; width: ${popupSize.width}; height: ${popupSize.height};">
+            <div style="width: 30%; display: flex; justify-content: center; align-items: center; height: 100%;">
                 <img src="${modeIcon}" alt="Mode" style="width: ${iconSize.width}; height: ${iconSize.height};">
             </div>
-            <div style="width: 65%; display: flex; flex-direction: column; align-items: flex-start; padding-left: 5px;">
+            <div style="width: 70%; display: flex; flex-direction: column; align-items: flex-start; padding-left: 5px; justify-content: center;">
                 <p style="margin: 0; font-size: 14px; font-weight: bold; color: green;">${formattedTravelTime}</p>
                 <p style="margin: 0; font-size: 12px; font-weight: bold; color: #333;">${formattedDistance}</p>
             </div>
