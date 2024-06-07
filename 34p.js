@@ -76,58 +76,68 @@ function initializeDirectionsControl() {
 }
 
 function addRouteLabels(route) {
-    const formattedDistance = (route.distance / 1000).toFixed(2) + ' km';
-    const formattedTravelTime = Math.round(route.duration / 60) + ' mins';
-    const routeCenter = getRouteCenter(route.geometry.coordinates);
+    if (route.geometry && route.geometry.coordinates) {
+        const coordinates = route.geometry.coordinates;
+        const formattedDistance = (route.distance / 1000).toFixed(2) + ' km';
+        const formattedTravelTime = Math.round(route.duration / 60) + ' mins';
+        const routeCenter = getRouteCenter(coordinates);
 
-    // Create a label object
-    const distanceLabels = {
-        "type": "FeatureCollection",
-        "features": [
-            {
-                "type": "Feature",
-                "properties": {
-                    "distance": formattedDistance,
-                    "duration": formattedTravelTime
-                },
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": routeCenter
+        // Create a label object
+        const distanceLabels = {
+            "type": "FeatureCollection",
+            "features": [
+                {
+                    "type": "Feature",
+                    "properties": {
+                        "distance": formattedDistance,
+                        "duration": formattedTravelTime
+                    },
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": routeCenter
+                    }
                 }
-            }
-        ]
-    };
+            ]
+        };
 
-    // Add the label object as a source
-    if (map.getSource('distanceLabels')) {
-        map.getSource('distanceLabels').setData(distanceLabels);
+        // Add the label object as a source
+        if (map.getSource('distanceLabels')) {
+            map.getSource('distanceLabels').setData(distanceLabels);
+        } else {
+            map.addSource('distanceLabels', {
+                "type": "geojson",
+                "data": distanceLabels
+            });
+
+            // Add a layer that uses the source
+            map.addLayer({
+                "id": "distanceLabels",
+                "type": "symbol",
+                "source": "distanceLabels",
+                "layout": {
+                    "text-field": "{distance}\n{duration}",
+                    "text-size": 12,
+                    "text-offset": [0, 1.5],
+                    "text-anchor": "top"
+                },
+                "paint": {
+                    "text-color": "#000000"
+                }
+            });
+        }
     } else {
-        map.addSource('distanceLabels', {
-            "type": "geojson",
-            "data": distanceLabels
-        });
-
-        // Add a layer that uses the source
-        map.addLayer({
-            "id": "distanceLabels",
-            "type": "symbol",
-            "source": "distanceLabels",
-            "layout": {
-                "text-field": "{distance}\n{duration}",
-                "text-size": 12,
-                "text-offset": [0, 1.5],
-                "text-anchor": "top"
-            },
-            "paint": {
-                "text-color": "#000000"
-            }
-        });
+        console.error("Route geometry or coordinates are undefined.");
     }
 }
 
 function getRouteCenter(coordinates) {
-    const midIndex = Math.floor(coordinates.length / 2);
-    return coordinates[midIndex];
+    if (coordinates && coordinates.length > 0) {
+        const midIndex = Math.floor(coordinates.length / 2);
+        return coordinates[midIndex];
+    } else {
+        console.error("Coordinates are undefined or empty.");
+        return [0, 0]; // Return a default value or handle appropriately
+    }
 }
 
 function displayRouteAlternatives(routes) {
