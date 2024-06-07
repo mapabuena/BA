@@ -57,8 +57,8 @@ function initializeDirectionsControl() {
                 const routes = event.route;
                 if (routes && routes.length > 0) {
                     const bestRoute = routes[0];
-                    const profile = directions.getProfile();
-                    console.log("Profile from getProfile:", profile); // Log the profile to ensure it's being set correctly
+                    const profile = directions.options.profile;
+                    console.log("Profile from options:", profile); // Log the profile to ensure it's being set correctly
                     addRouteLabels(bestRoute, profile); // Pass the profile directly
                 }
             });
