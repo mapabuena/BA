@@ -66,6 +66,7 @@ function initializeDirectionsControl() {
     }
 }
 
+
 function displayRouteAlternatives(routes) {
     if (routes && routes.length > 1) {
         const bestRoute = routes[0];
@@ -176,7 +177,7 @@ function setupDirectionsButton() {
                         "coordinates": [validLng, validLat]
                     },
                     "properties": {
-                        "title": sidebarheader || `${validLat}, ${validLng}`
+                        "title": sidebarheader || `${validLat, validLng}`
                     }
                 };
 
@@ -204,6 +205,77 @@ function setupDirectionsButton() {
     } else {
         console.error("Element with ID 'get-directions' not found.");
     }
+
+    const destinationButton = document.getElementById('set-destination');
+    if (destinationButton) {
+        destinationButton.addEventListener('click', function() {
+            const selectedMarker = markers.find(marker => 
+                marker.marker.getElement().getAttribute('data-is-selected') === 'true'
+            );
+
+            if (selectedMarker) {
+                const { lat, lng, sidebarheader } = selectedMarker.data;
+                console.log("Selected marker data:", selectedMarker.data); // Log the selected marker data
+
+                // Validate coordinates
+                const validLat = parseFloat(lat);
+                const validLng = parseFloat(lng);
+
+                if (isNaN(validLat) || isNaN(validLng)) {
+                    console.error("Invalid coordinates:", lat, lng);
+                    alert('Invalid coordinates for the selected marker.');
+                    return;
+                }
+
+                const destination = {
+                    "type": "Feature",
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [validLng, validLat]
+                    },
+                    "properties": {
+                        "title": sidebarheader || `${validLat, validLng}`
+                    }
+                };
+
+                console.log("Setting destination with:", JSON.stringify(destination));
+
+                try {
+                    directions.setDestination([validLng, validLat]); // Set the custom destination object
+                    console.log("Destination set to:", [validLng, validLat]);
+
+                    // Set the input fields with the custom text
+                    setDirectionsInputFields('', destination.properties.title);
+
+                    console.log("Destination set successfully.");
+                } catch (error) {
+                    console.error("Error setting destination:", error);
+                    alert('Error setting destination.');
+                }
+
+                document.getElementById('directions-container').style.display = 'block';
+            } else {
+                console.error('No marker selected.');
+                alert('Please select a marker first.');
+            }
+        });
+    } else {
+        console.error("Element with ID 'set-destination' not found.");
+    }
+
+    // Profile switcher event listeners
+    document.getElementById('drive-profile').addEventListener('click', () => {
+        directions.setProfile('mapbox/driving');
+    });
+
+    document.getElementById('walk-profile').addEventListener('click', () => {
+        directions.setProfile('mapbox/walking');
+    });
+
+    document.getElementById('cycle-profile').addEventListener('click', () => {
+        directions.setProfile('mapbox/cycling');
+    });
+}
 
     const destinationButton = document.getElementById('set-destination');
     if (destinationButton) {
