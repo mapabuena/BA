@@ -132,10 +132,10 @@ function setDirectionsInputFields(originTitle, destinationTitle) {
     }
 }
 // Add this function to set up the directions button event listener
-function setupDirectionsButton() {
-    const directionsButton = document.getElementById('get-directions');
-    if (directionsButton) {
-        directionsButton.addEventListener('click', function() {
+function setupDestinationButton() {
+    const destinationButton = document.getElementById('set-destination');
+    if (destinationButton) {
+        destinationButton.addEventListener('click', function() {
             const selectedMarker = markers.find(marker => 
                 marker.marker.getElement().getAttribute('data-is-selected') === 'true'
             );
@@ -153,13 +153,7 @@ function setupDirectionsButton() {
                     return;
                 }
 
-                if (!directionsInitialized) {
-                    initializeDirectionsControl();
-                }
-
-                directions.removeRoutes();
-
-                const origin = {
+                const destination = {
                     "type": "Feature",
                     "geometry": {
                         "type": "Point",
@@ -170,18 +164,18 @@ function setupDirectionsButton() {
                     }
                 };
 
-                console.log("Setting origin with:", JSON.stringify(origin));
+                console.log("Setting destination with:", JSON.stringify(destination));
 
                 try {
-                    directions.setOrigin([validLng, validLat]);
-                    console.log("Origin set to:", [validLng, validLat]);
+                    directions.setDestination([validLng, validLat]);
+                    console.log("Destination set to:", [validLng, validLat]);
 
-                    setDirectionsInputFields(origin.properties.title, '');
+                    setDirectionsInputFields('', destination.properties.title);
 
-                    console.log("Origin set successfully.");
+                    console.log("Destination set successfully.");
                 } catch (error) {
-                    console.error("Error setting origin:", error);
-                    alert('Error setting origin.');
+                    console.error("Error setting destination:", error);
+                    alert('Error setting destination.');
                 }
 
                 document.getElementById('directions-container').style.display = 'block';
@@ -191,7 +185,7 @@ function setupDirectionsButton() {
             }
         });
     } else {
-        console.error("Element with ID 'get-directions' not found.");
+        console.error("Element with ID 'set-destination' not found.");
     }
 }
 
