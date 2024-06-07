@@ -53,15 +53,15 @@ function initializeDirectionsControl() {
                 }
             });
 
-            directions.on('route', (event) => {
-                const routes = event.route;
-                const profile = directions.options.profile; // Get the current profile
-                console.log("Profile from options:", profile); // Log the profile to ensure it's being set correctly
-                if (routes && routes.length > 0) {
-                    const bestRoute = routes[0];
-                    addRouteLabels(bestRoute, profile); // Pass the profile directly
-                }
-            });
+      directions.on('route', (event) => {
+    const routes = event.route;
+    const profile = directions.options.profile; // Get the current profile
+    console.log("Profile from options:", profile); // Log the profile to ensure it's being set correctly
+    if (routes && routes.length > 0) {
+        onRoutesReceived(routes, profile); // Pass the routes and profile
+    }
+});
+
 
             // Listen for profile change
             document.querySelectorAll('.mapbox-directions-profile input').forEach(input => {
@@ -176,6 +176,7 @@ function showRoutePopup(route, coordinates, profile, isBestRoute = true) {
 }
 
 function displayRouteAlternatives(routes, profile) {
+    console.log("Routes received:", routes); // Debug log for routes received
     if (routes && routes.length > 1) {
         const bestRoute = routes[0];
         const secondBestRoute = routes[1];
@@ -193,12 +194,14 @@ function displayRouteAlternatives(routes, profile) {
         const bestRouteCoordinates = bestRoute.geometry.coordinates[Math.floor(bestRoute.geometry.coordinates.length / 2)];
 
         showRoutePopup(bestRoute, bestRouteCoordinates, profile, true);
+    } else {
+        console.warn("No routes available to display"); // Warn if no routes are available
     }
 }
 
 // Sample function call to display route alternatives
-function onRoutesReceived(routes) {
-    const profile = 'mapbox/driving'; // Example profile, replace with actual profile
+function onRoutesReceived(routes, profile) {
+    console.log("Routes received for profile:", profile); // Debug log for profile
     displayRouteAlternatives(routes, profile);
 }
 
