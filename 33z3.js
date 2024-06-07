@@ -39,17 +39,29 @@ function initializeDirectionsControl() {
             console.log('Appending directions control to the map.');
             directionsControlElement.appendChild(directions.onAdd(map));
 
-            directions.on('origin', () => {
-                const originMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="A"]');
-                if (originMarker) {
-                    originMarker.style.backgroundColor = '#c62026'; // Change this to your desired color
+            directions.on('origin', (e) => {
+                console.log("Setting origin with:", e.feature);
+                if (e.feature && e.feature.geometry && e.feature.geometry.coordinates) {
+                    const [lng, lat] = e.feature.geometry.coordinates;
+                    const selectedMarker = markers.find(marker => 
+                        marker.data.lat === lat && marker.data.lng === lng
+                    );
+                    if (selectedMarker) {
+                        setDirectionsInputFields(selectedMarker.data.sidebarheader, '');
+                    }
                 }
             });
 
-            directions.on('destination', () => {
-                const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
-                if (destinationMarker) {
-                    destinationMarker.style.backgroundColor = '#26617f'; // Change this to your desired color
+            directions.on('destination', (e) => {
+                console.log("Setting destination with:", e.feature);
+                if (e.feature && e.feature.geometry && e.feature.geometry.coordinates) {
+                    const [lng, lat] = e.feature.geometry.coordinates;
+                    const selectedMarker = markers.find(marker => 
+                        marker.data.lat === lat && marker.data.lng === lng
+                    );
+                    if (selectedMarker) {
+                        setDirectionsInputFields('', selectedMarker.data.sidebarheader);
+                    }
                 }
             });
 
@@ -68,7 +80,6 @@ function initializeDirectionsControl() {
         directionsInitialized = true; // Mark as initialized
     }
 }
-
 
 document.addEventListener('DOMContentLoaded', function() {
     // Ensure element exists
@@ -107,6 +118,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+
 function setDirectionsInputFields(originTitle, destinationTitle) {
     const originInput = document.querySelector('.mapbox-directions-origin input');
     const destinationInput = document.querySelector('.mapbox-directions-destination input');
@@ -130,9 +142,8 @@ function setupDirectionsButton() {
 
             if (selectedMarker) {
                 const { lat, lng, sidebarheader } = selectedMarker.data;
-                console.log("Selected marker data:", selectedMarker.data); // Log the selected marker data
+                console.log("Selected marker data:", selectedMarker.data);
 
-                // Validate coordinates
                 const validLat = parseFloat(lat);
                 const validLng = parseFloat(lng);
 
@@ -146,7 +157,7 @@ function setupDirectionsButton() {
                     initializeDirectionsControl();
                 }
 
-                directions.removeRoutes(); // Clear any existing routes
+                directions.removeRoutes();
 
                 const origin = {
                     "type": "Feature",
@@ -162,10 +173,9 @@ function setupDirectionsButton() {
                 console.log("Setting origin with:", JSON.stringify(origin));
 
                 try {
-                    directions.setOrigin([validLng, validLat]); // Set the custom origin object
+                    directions.setOrigin([validLng, validLat]);
                     console.log("Origin set to:", [validLng, validLat]);
 
-                    // Set the input fields with the custom text
                     setDirectionsInputFields(origin.properties.title, '');
 
                     console.log("Origin set successfully.");
@@ -183,7 +193,10 @@ function setupDirectionsButton() {
     } else {
         console.error("Element with ID 'get-directions' not found.");
     }
+}
 
+// Initialize the event listeners for the buttons
+setupDirectionsButton();
     const destinationButton = document.getElementById('set-destination');
     if (destinationButton) {
         destinationButton.addEventListener('click', function() {
