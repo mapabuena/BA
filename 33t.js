@@ -626,9 +626,9 @@ function processCSVData(csvData) {
 
                             // Check if parsed recurringSchedule is an array
                             if (Array.isArray(recurringSchedule)) {
-                                console.log("recurring_schedule is a valid array:", recurringSchedule);
+                    
                             } else {
-                                console.error("Parsed recurring_schedule is not an array:", recurringSchedule);
+                        
                                 recurringSchedule = [];
                             }
                         } catch (error) {
@@ -674,8 +674,6 @@ function processCSVData(csvData) {
                         tags: data.tags,
                         favorite: data.favorite
                     };
-
-                    console.log(`Marker Data for ${data.address}:`, markerData);
                     createMarker(markerData);
                 });
 
