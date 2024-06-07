@@ -121,7 +121,7 @@ function setupDirectionsButton() {
                 console.log("Selected marker data:", selectedMarker.data); // Log the selected marker data
 
                 // Validate coordinates
-                if (isNaN(lat) || isNaN(lng)) {
+                if (typeof lat !== 'number' || typeof lng !== 'number' || isNaN(lat) || isNaN(lng)) {
                     console.error("Invalid coordinates:", lat, lng);
                     alert('Invalid coordinates for the selected marker.');
                     return;
@@ -144,15 +144,17 @@ function setupDirectionsButton() {
                     }
                 };
 
-                console.log("Setting origin with:", origin);
+                console.log("Setting origin with:", JSON.stringify(origin));
 
                 try {
                     directions.setOrigin(origin); // Set the custom origin object
+                    directions.setDestination(''); // Clear the destination
+                    console.log("Origin and destination set successfully.");
                 } catch (error) {
-                    console.error("Error setting origin:", error);
+                    console.error("Error setting origin or destination:", error);
+                    alert('Error setting origin or destination.');
                 }
 
-                directions.setDestination(''); // Clear the destination
                 document.getElementById('directions-container').style.display = 'block';
             } else {
                 console.error('No marker selected.');
