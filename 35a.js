@@ -60,7 +60,7 @@ function initializeDirectionsControl() {
     if (routes && routes.length > 0) {
         const bestRoute = routes[0];
         displayRouteAlternatives(routes); // Existing functionality
-        addRouteLabels(bestRoute); // New functionality
+        Labels(bestRoute); // New functionality
 
         const bestRouteInfo = `Best route: ${bestRoute.distance / 1000} km, ${Math.round(bestRoute.duration / 60)} mins`;
         console.log(bestRouteInfo);
@@ -94,7 +94,7 @@ function addRouteLabels(route) {
 function getRouteCenter(coordinates) {
     if (coordinates && coordinates.length > 0) {
         const midIndex = Math.floor(coordinates.length / 2);
-        return coordinates[midIndex].reverse(); // Reverse to [lng, lat]
+        return [coordinates[midIndex][1], coordinates[midIndex][0]]; // Ensure the order is [lng, lat]
     } else {
         console.error("Coordinates are undefined or empty.");
         return [0, 0]; // Return a default value or handle appropriately
@@ -131,7 +131,7 @@ function showRoutePopup(route, coordinates) {
         </div>
     `;
 
-    const popup = new mapboxgl.Popup()
+    new mapboxgl.Popup()
         .setLngLat(coordinates)
         .setHTML(popupContent)
         .addTo(map);
