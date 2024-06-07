@@ -104,6 +104,19 @@ function getRouteCenter(coordinates) {
 let currentPopup = null;
 let secondPopup = null;
 
+// Add CSS styles dynamically
+const style = document.createElement('style');
+style.innerHTML = `
+    .best-route-popup {
+        z-index: 9999 !important;
+    }
+
+    .second-route-popup {
+        z-index: 9998 !important;
+    }
+`;
+document.head.appendChild(style);
+
 function showRoutePopup(route, coordinates, profile, isBestRoute = true) {
     const formattedDistance = (route.distance / 1000).toFixed(2) + ' km';
     const formattedTravelTime = Math.round(route.duration / 60) + ' mins';
@@ -144,10 +157,10 @@ function showRoutePopup(route, coordinates, profile, isBestRoute = true) {
     console.log("Mode icon URL:", modeIcon); // Log the icon URL to ensure it's being set correctly
 
     const backgroundColor = isBestRoute ? 'rgba(255, 255, 255, 0.75)' : 'rgba(169, 169, 169, 0.75)'; // White for best route, gray for second-best
-    const zIndex = isBestRoute ? 9999 : 9998; // Higher z-index for the best route
+    const popupClass = isBestRoute ? 'best-route-popup' : 'second-route-popup'; // Set class based on the route type
 
     const popupContent = `
-        <div style="display: flex; align-items: center; padding: 5px; background: ${backgroundColor}; border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); font-family: Arial, sans-serif; width: ${popupSize.width}; height: ${popupSize.height}; overflow: hidden; z-index: ${zIndex};">
+        <div class="${popupClass}" style="display: flex; align-items: center; padding: 5px; background: ${backgroundColor}; border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); font-family: Arial, sans-serif; width: ${popupSize.width}; height: ${popupSize.height}; overflow: hidden;">
             <div style="width: 30%; display: flex; justify-content: center; align-items: center; padding-bottom: ${iconPaddingBottom};">
                 <img src="${modeIcon}" alt="Mode" style="width: ${iconSize.width}; height: ${iconSize.height};">
             </div>
