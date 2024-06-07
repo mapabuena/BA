@@ -89,6 +89,7 @@ function getRouteCenter(coordinates) {
     }
 }
 
+let currentPopup = null;
 
 function showRoutePopup(route, coordinates, profile) {
     const formattedDistance = (route.distance / 1000).toFixed(2) + ' km';
