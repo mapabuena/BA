@@ -28,7 +28,7 @@ function initializeDirectionsControl() {
             accessToken: mapboxgl.accessToken,
             unit: 'metric',
             profile: 'mapbox/driving',
-            alternatives: true, // Enable alternative routes
+            alternatives: true,
             controls: {
                 inputs: true,
                 instructions: true,
@@ -54,20 +54,20 @@ function initializeDirectionsControl() {
                 }
             });
 
-       directions.on('route', (event) => {
-    const routes = event.route;
-    console.log("Routes:", routes); // Log the routes for debugging
-    if (routes && routes.length > 0) {
-        const bestRoute = routes[0];
-        displayRouteAlternatives(routes); // Existing functionality
-        addRouteLabels(bestRoute); // New functionality
+            directions.on('route', (event) => {
+                const routes = event.route;
+                console.log("Routes:", routes); // Log the routes for debugging
+                if (routes && routes.length > 0) {
+                    const bestRoute = routes[0];
+                    displayRouteAlternatives(routes); // Existing functionality
+                    addRouteLabels(bestRoute); // New functionality
 
-        const bestRouteInfo = `Best route: ${bestRoute.distance / 1000} km, ${Math.round(bestRoute.duration / 60)} mins`;
-        console.log(bestRouteInfo);
+                    const bestRouteInfo = `Best route: ${bestRoute.distance / 1000} km, ${Math.round(bestRoute.duration / 60)} mins`;
+                    console.log(bestRouteInfo);
 
-        document.getElementById('route-info').innerHTML = `<p>${bestRouteInfo}</p>`;
-    }
-});
+                    document.getElementById('route-info').innerHTML = `<p>${bestRouteInfo}</p>`;
+                }
+            });
         } else {
             console.error("Element with ID 'directions-control' not found.");
         }
@@ -79,7 +79,7 @@ function initializeDirectionsControl() {
 function addRouteLabels(route) {
     console.log("Route data received:", route); // Log the route for debugging
     if (route.geometry && route.geometry.coordinates) {
-        const coordinates = route.geometry.coordinates;
+        const coordinates = polyline.decode(route.geometry); // Decode the polyline string
         console.log("Coordinates:", coordinates); // Log the coordinates for debugging
 
         const formattedDistance = (route.distance / 1000).toFixed(2) + ' km';
