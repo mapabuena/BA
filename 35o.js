@@ -57,7 +57,9 @@ function initializeDirectionsControl() {
                 const routes = event.route;
                 if (routes && routes.length > 0) {
                     const bestRoute = routes[0];
-                    addRouteLabels(bestRoute, directions.options.profile); // Pass the profile directly
+                    const profile = directions.options.profile;
+                    console.log("Profile:", profile); // Log the profile to ensure it's being set correctly
+                    addRouteLabels(bestRoute, profile); // Pass the profile directly
                 }
             });
         } else {
@@ -109,6 +111,9 @@ function showRoutePopup(route, coordinates, profile) {
         default:
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/default.svg';
     }
+
+    console.log("Route profile:", profile); // Log the profile to verify the switch case
+    console.log("Mode icon URL:", modeIcon); // Log the icon URL to ensure it's being set correctly
 
     const popupContent = `
         <div style="display: flex; align-items: center; padding: 5px; background: rgba(255, 255, 255, 0.85); border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); font-family: Arial, sans-serif;">
