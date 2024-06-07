@@ -28,11 +28,10 @@ function initializeDirectionsControl() {
             accessToken: mapboxgl.accessToken,
             unit: 'metric',
             profile: 'mapbox/driving',
-            alternatives: true, // Enable alternatives to get multiple routes
+            alternatives: true, // Enable alternative routes
             controls: {
                 inputs: true,
                 instructions: true,
-                profileSwitcher: true, // Enable profile switcher to toggle between driving, walking, and cycling
             }
         });
 
@@ -55,8 +54,13 @@ function initializeDirectionsControl() {
                 }
             });
 
-            directions.on('route', (e) => {
-                displayRouteAlternatives(e.route);
+            directions.on('route', () => {
+                const layerId = 'directions-route-line-alt';
+                if (map.getLayer(layerId)) {
+                    console.log(`Layer ${layerId} exists and ready to be used.`);
+                } else {
+                    console.warn(`Layer ${layerId} does not exist.`);
+                }
             });
         } else {
             console.error("Element with ID 'directions-control' not found.");
@@ -65,7 +69,6 @@ function initializeDirectionsControl() {
         directionsInitialized = true; // Mark as initialized
     }
 }
-
 
 function displayRouteAlternatives(routes) {
     if (routes && routes.length > 1) {
