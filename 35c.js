@@ -60,7 +60,7 @@ function initializeDirectionsControl() {
     if (routes && routes.length > 0) {
         const bestRoute = routes[0];
         displayRouteAlternatives(routes); // Existing functionality
-        Labels(bestRoute); // New functionality
+         addRouteLabels(bestRoute); // Replaced Labels with addRouteLabels
 
         const bestRouteInfo = `Best route: ${bestRoute.distance / 1000} km, ${Math.round(bestRoute.duration / 60)} mins`;
         console.log(bestRouteInfo);
