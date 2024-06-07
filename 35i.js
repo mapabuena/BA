@@ -107,7 +107,7 @@ function showRoutePopup(route, coordinates) {
 
     // Define the icon based on the transport mode
     let modeIcon;
-    switch (directions.getProfile()) {
+    switch (route.request.profile) {
         case 'mapbox/driving':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/car.svg'; // Use your car icon path
             break;
