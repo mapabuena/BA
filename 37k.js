@@ -200,7 +200,7 @@ document.head.appendChild(style);
 
 function showRoutePopup(route, coordinates, profile, isBestRoute = true) {
     const formattedDistance = (route.distance / 1000).toFixed(2) + ' km';
-    const formattedTravelTime = Math.round(route.duration / 60) + ' mins';
+    const formattedTravelTime = Math.round(route.duration / 60) + ' min';
 
     // Define the icon and popup size based on the transport mode
     let modeIcon;
@@ -211,14 +211,14 @@ function showRoutePopup(route, coordinates, profile, isBestRoute = true) {
     switch (profile) {
         case 'mapbox/driving':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/car.svg';
-            iconSize = { width: '25px', height: '25px' };
-            popupSize = { width: '120px', height: '38px' };
-            iconPaddingBottom = '29px';
+            iconSize = { width: '22px', height: '22px' };
+            popupSize = { width: '100px', height: '28px' };
+            iconPaddingBottom = '27px';
             break;
         case 'mapbox/walking':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/walking.svg';
-            iconSize = { width: '55px', height: '55px' };
-            popupSize = { width: '95px', height: '55px' };
+            iconSize = { width: '32px', height: '45px' };
+            popupSize = { width: '95px', height: '50px' };
             iconPaddingBottom = '14px';
             break;
         case 'mapbox/cycling':
@@ -229,8 +229,8 @@ function showRoutePopup(route, coordinates, profile, isBestRoute = true) {
             break;
         default:
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/default.svg';
-            iconSize = { width: '32px', height: '32px' };
-            popupSize = { width: '120px', height: '40px' };
+            iconSize = { width: '22px', height: '22px' };
+            popupSize = { width: '95px', height: '28px' };
             iconPaddingBottom = '15px';
     }
 
