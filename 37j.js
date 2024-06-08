@@ -43,7 +43,7 @@ function initializeDirectionsControl() {
             'source': 'directions',
             'paint': {
                 'circle-radius': 18,
-                'circle-color': '#26617f' // Custom color for the end marker
+                'circle-color': '#000000' // Custom color for the end marker
             },
             'filter': [
                 'all',
