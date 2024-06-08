@@ -22,6 +22,24 @@ let selectedMarkerIndex = null; // Variable to keep track of the selected marker
 let directions; // Declare the directions variable here
 let directionsInitialized = false;
 
+function applyRouteInfoStyles() {
+    const routeInfo = document.querySelector('.route-info');
+    if (routeInfo) {
+        if (window.innerWidth <= 479) {
+            routeInfo.style.maxHeight = '15vh';
+        } else if (window.innerWidth > 479 && window.innerWidth < 769) {
+            routeInfo.style.maxHeight = '20vh';
+        } else if (window.innerWidth >= 769 && window.innerWidth < 1280) {
+            routeInfo.style.maxHeight = '30vh';
+        } else {
+            routeInfo.style.maxHeight = '40vh';
+        }
+    }
+}
+window.addEventListener('resize', applyRouteInfoStyles);
+document.addEventListener('DOMContentLoaded', applyRouteInfoStyles);
+
+
 function initializeDirectionsControl() {
     if (!directions) {
         const customStyles = [{
