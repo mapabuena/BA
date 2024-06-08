@@ -77,7 +77,60 @@ directions.on('route', (event) => {
         directionsInitialized = true; // Mark as initialized
     }
 }
+function deactivateDirections() {
+    clearAllPopups();
+    if (directions) {
+        directions.removeRoutes(); // Clear routes
+        directions.setOrigin(''); // Clear the origin
+        directions.setDestination(''); // Clear the destination
+        map.removeControl(directions); // Remove the directions control from the map
+        directionsInitialized = false; // Mark as not initialized
+        directions = null; // Reset the directions object
+    }
+    map.off('click', setDestinationOnClick); // Remove map click event listener for setting destination
+}
 
+function clearAllPopups() {
+    if (currentPopup) {
+        currentPopup.remove();
+        currentPopup = null;
+    }
+    if (secondPopup) {
+        secondPopup.remove();
+        secondPopup = null;
+    }
+}
+
+function setDestinationOnClick(e) {
+    const { lng, lat } = e.lngLat;
+    console.log("Map clicked at:", lng, lat);
+
+    const destination = {
+        "type": "Feature",
+        "geometry": {
+            "type": "Point",
+            "coordinates": [lng, lat]
+        },
+        "properties": {
+            "title": `${lat}, ${lng}`
+        }
+    };
+
+    console.log("Setting destination with:", JSON.stringify(destination));
+
+    try {
+        directions.setDestination([lng, lat]); // Set the custom destination object
+        console.log("Destination set to:", [lng, lat]);
+
+        // Set the input fields with the custom text
+        setDirectionsInputFields('', destination.properties.title);
+
+        console.log("Destination set successfully.");
+    } catch (error) {
+        console.error("Error setting destination:", error);
+        alert('Error setting destination.');
+    }
+}
 function addRouteLabels(route, profile) {
     if (route.geometry) {
         const coordinates = polyline.decode(route.geometry); // Decode the polyline string
@@ -237,24 +290,24 @@ document.addEventListener('DOMContentLoaded', function() {
     setupInfoItemHoverEffects();
     setupDirectionsButton();
 
-     const closeDirectionsButton = document.getElementById('close-directions');
+    const closeDirectionsButton = document.getElementById('close-directions');
     if (closeDirectionsButton) {
         closeDirectionsButton.addEventListener('click', function() {
             document.getElementById('directions-container').style.display = 'none';
-            clearAllPopups();
-            if (directions) {
-                directions.removeRoutes(); // Clear routes
-                directions.setOrigin(''); // Clear the origin
-                directions.setDestination(''); // Clear the destination
-                map.removeControl(directions); // Remove the directions control from the map
-                map.off('click'); // Remove map click event listener for setting destination
-                directionsInitialized = false; // Mark as not initialized
-                directions = null; // Reset the directions object
-            }
+            deactivateDirections();
         });
     } else {
         console.error("Element with ID 'close-directions' not found.");
     }
+
+    // Call this function to set up the directions button event
+    if (directionsButton) {
+        setupDirectionsButton();
+    } else {
+        console.error("Element with ID 'get-directions' not found.");
+    }
+});
+
 
     // Call this function to set up the directions button event
     if (directionsButton) {
@@ -345,37 +398,7 @@ function setupDirectionsButton() {
                 document.getElementById('directions-container').style.display = 'block';
 
                 // Add click event listener to the map for setting the destination
-                map.on('click', function(e) {
-                    const { lng, lat } = e.lngLat;
-                    console.log("Map clicked at:", lng, lat);
-
-                    const destination = {
-                        "type": "Feature",
-                        "geometry": {
-                            "type": "Point",
-                            "coordinates": [lng, lat]
-                        },
-                        "properties": {
-                            "title": `${lat}, ${lng}`
-                        }
-                    };
-
-                    console.log("Setting destination with:", JSON.stringify(destination));
-
-                    try {
-                        directions.setDestination([lng, lat]); // Set the custom destination object
-                        console.log("Destination set to:", [lng, lat]);
-
-                        // Set the input fields with the custom text
-                        setDirectionsInputFields('', destination.properties.title);
-
-                        console.log("Destination set successfully.");
-                    } catch (error) {
-                        console.error("Error setting destination:", error);
-                        alert('Error setting destination.');
-                    }
-                });
-
+                map.on('click', setDestinationOnClick);
             } else {
                 console.error('No marker selected.');
                 alert('Please select a marker first.');
@@ -384,9 +407,7 @@ function setupDirectionsButton() {
     } else {
         console.error("Element with ID 'get-directions' not found.");
     }
-
 }
-
 document.getElementById('nightmode').addEventListener('click', () => {
     isNightMode = !isNightMode;
     map.setStyle(isNightMode ? nightStyle : originalStyle);
