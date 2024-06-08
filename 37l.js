@@ -237,17 +237,17 @@ function showRoutePopup(route, coordinates, profile, isBestRoute = true) {
     const backgroundColor = isBestRoute ? 'rgba(255, 255, 255, 0.75)' : 'rgba(169, 169, 169, 0.75)'; // White for best route, gray for second-best
     const popupClass = isBestRoute ? 'best-route-popup' : 'second-route-popup'; // Set class based on the route type
 
-    const popupContent = `
-        <div class="${popupClass}" style="display: flex; align-items: center; padding: 5px; background: ${backgroundColor}; border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); font-family: Arial, sans-serif; width: ${popupSize.width}; height: ${popupSize.height}; overflow: hidden;">
-            <div style="width: 30%; display: flex; justify-content: center; align-items: center; padding-bottom: ${iconPaddingBottom};">
-                <img src="${modeIcon}" alt="Mode" style="width: ${iconSize.width}; height: ${iconSize.height};">
-            </div>
-            <div style="width: 70%; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding-left: 5px;">
-                <p style="margin: 0; font-size: 14px; font-weight: bold; color: green;">${formattedTravelTime}</p>
-                <p style="margin: 0; font-size: 12px; font-weight: bold; color: #333;">${formattedDistance}</p>
-            </div>
+const popupContent = `
+    <div class="${popupClass}" style="display: flex; align-items: center; padding: 5px; background: ${backgroundColor}; border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); font-family: Arial, sans-serif; width: ${popupSize.width}; height: ${popupSize.height}; overflow: hidden;">
+        <div style="width: 30%; display: flex; justify-content: center; align-items: center; padding-bottom: ${iconPaddingBottom};">
+            <img src="${modeIcon}" alt="Mode" style="width: ${iconSize.width}; height: ${iconSize.height};">
         </div>
-    `;
+        <div style="width: 70%; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding-left: 5px;">
+            <p style="margin: 0; font-size: 14px; font-weight: bold; color: green; line-height: 1;">${formattedTravelTime}</p>
+            <p style="margin: 0; font-size: 12px; font-weight: bold; color: #333; line-height: 1;">${formattedDistance}</p>
+        </div>
+    </div>
+`;
 
     const popup = new mapboxgl.Popup({ closeButton: false })
         .setLngLat(coordinates)
