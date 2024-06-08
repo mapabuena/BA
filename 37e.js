@@ -130,14 +130,14 @@ function showRoutePopup(route, coordinates, profile, isBestRoute = true) {
     switch (profile) {
         case 'mapbox/driving':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/car.svg';
-            iconSize = { width: '28px', height: '28px' };
-            popupSize = { width: '120px', height: '32px' };
-            iconPaddingBottom = '26px';
+            iconSize = { width: '25px', height: '25px' };
+            popupSize = { width: '120px', height: '38px' };
+            iconPaddingBottom = '29px';
             break;
         case 'mapbox/walking':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/walking.svg';
             iconSize = { width: '55px', height: '55px' };
-            popupSize = { width: '120px', height: '60px' };
+            popupSize = { width: '95px', height: '55px' };
             iconPaddingBottom = '14px';
             break;
         case 'mapbox/cycling':
@@ -161,7 +161,7 @@ function showRoutePopup(route, coordinates, profile, isBestRoute = true) {
             <div style="width: 30%; display: flex; justify-content: center; align-items: center; padding-bottom: ${iconPaddingBottom};">
                 <img src="${modeIcon}" alt="Mode" style="width: ${iconSize.width}; height: ${iconSize.height};">
             </div>
-            <div style="width: 70%; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding-left: 3px;">
+            <div style="width: 70%; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding-left: 5px;">
                 <p style="margin: 0; font-size: 14px; font-weight: bold; color: green;">${formattedTravelTime}</p>
                 <p style="margin: 0; font-size: 12px; font-weight: bold; color: #333;">${formattedDistance}</p>
             </div>
