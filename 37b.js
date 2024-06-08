@@ -117,6 +117,22 @@ style.innerHTML = `
 `;
 document.head.appendChild(style);
 
+let currentPopup = null;
+let secondPopup = null;
+
+// Add CSS styles dynamically
+const style = document.createElement('style');
+style.innerHTML = `
+    .best-route-popup {
+        z-index: 9999 !important;
+    }
+
+    .second-route-popup {
+        z-index: 9998 !important;
+    }
+`;
+document.head.appendChild(style);
+
 function showRoutePopup(route, coordinates, profile, isBestRoute = true) {
     const formattedDistance = (route.distance / 1000).toFixed(2) + ' km';
     const formattedTravelTime = Math.round(route.duration / 60) + ' mins';
@@ -155,7 +171,6 @@ function showRoutePopup(route, coordinates, profile, isBestRoute = true) {
 
     const backgroundColor = isBestRoute ? 'rgba(255, 255, 255, 0.75)' : 'rgba(169, 169, 169, 0.75)'; // White for best route, gray for second-best
     const popupClass = isBestRoute ? 'best-route-popup' : 'second-route-popup'; // Set class based on the route type
-    const offset = isBestRoute ? { 'bottom': [0, -15] } : { 'bottom': [0, -30] }; // Higher offset for best route
 
     const popupContent = `
         <div class="${popupClass}" style="display: flex; align-items: center; padding: 5px; background: ${backgroundColor}; border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); font-family: Arial, sans-serif; width: ${popupSize.width}; height: ${popupSize.height}; overflow: hidden;">
@@ -169,9 +184,15 @@ function showRoutePopup(route, coordinates, profile, isBestRoute = true) {
         </div>
     `;
 
-    const popup = new mapboxgl.Popup({ closeButton: false, offset })
+    const popup = new mapboxgl.Popup({ closeButton: false })
         .setLngLat(coordinates)
-        .setHTML(popupContent);
+        .setHTML(popupContent)
+        .addTo(map);
+
+    setTimeout(() => {
+        const popupElement = popup.getElement();
+        popupElement.style.zIndex = isBestRoute ? '9999' : '9998';
+    }, 100); // Delay to ensure the popup is added to the map
 
     if (isBestRoute) {
         if (currentPopup) {
@@ -184,8 +205,6 @@ function showRoutePopup(route, coordinates, profile, isBestRoute = true) {
         }
         secondPopup = popup;
     }
-
-    popup.addTo(map);
 }
 function displayRouteAlternatives(routes, profile) {
     console.log("Routes received:", routes); // Debug log for routes received
