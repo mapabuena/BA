@@ -176,7 +176,11 @@ function setDestinationOnClick(e) {
         console.error("Error setting destination:", error);
         alert('Error setting destination.');
     }
+
+    // Apply styles to .route-info after the destination is set
+    setTimeout(applyRouteInfoStyles, 100);
 }
+
 function addRouteLabels(route, profile) {
     if (route.geometry) {
         const coordinates = polyline.decode(route.geometry); // Decode the polyline string
