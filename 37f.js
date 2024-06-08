@@ -241,11 +241,13 @@ document.addEventListener('DOMContentLoaded', function() {
     if (closeDirectionsButton) {
         closeDirectionsButton.addEventListener('click', function() {
             document.getElementById('directions-container').style.display = 'none';
+            clearAllPopups();
             if (directions) {
                 directions.removeRoutes(); // Clear routes
                 directions.setOrigin(''); // Clear the origin
                 directions.setDestination(''); // Clear the destination
                 map.removeControl(directions); // Remove the directions control from the map
+                map.off('click'); // Remove map click event listener for setting destination
                 directionsInitialized = false; // Mark as not initialized
                 directions = null; // Reset the directions object
             }
@@ -261,6 +263,17 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Element with ID 'get-directions' not found.");
     }
 });
+
+function clearAllPopups() {
+    if (currentPopup) {
+        currentPopup.remove();
+        currentPopup = null;
+    }
+    if (secondPopup) {
+        secondPopup.remove();
+        secondPopup = null;
+    }
+}
 
 function setDirectionsInputFields(originTitle, destinationTitle) {
     const originInput = document.querySelector('.mapbox-directions-origin input');
