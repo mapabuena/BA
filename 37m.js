@@ -212,25 +212,25 @@ function showRoutePopup(route, coordinates, profile, isBestRoute = true) {
         case 'mapbox/driving':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/car.svg';
             iconSize = { width: '22px', height: '22px' };
-            popupSize = { width: '100px', height: '28px' };
+            popupSize = { width: '100px', height: '30px' };
             iconPaddingBottom = '27px';
             break;
         case 'mapbox/walking':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/walking.svg';
             iconSize = { width: '32px', height: '45px' };
-            popupSize = { width: '95px', height: '50px' };
+            popupSize = { width: '95px', height: '38px' };
             iconPaddingBottom = '14px';
             break;
         case 'mapbox/cycling':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/cycling.svg';
             iconSize = { width: '32px', height: '32px' };
-            popupSize = { width: '110px', height: '52px' };
+            popupSize = { width: '86px', height: '38px' };
             iconPaddingBottom = '25px';
             break;
         default:
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/default.svg';
             iconSize = { width: '22px', height: '22px' };
-            popupSize = { width: '95px', height: '28px' };
+            popupSize = { width: '95px', height: '30px' };
             iconPaddingBottom = '15px';
     }
 
