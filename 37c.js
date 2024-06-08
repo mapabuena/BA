@@ -117,22 +117,6 @@ style.innerHTML = `
 `;
 document.head.appendChild(style);
 
-let currentPopup = null;
-let secondPopup = null;
-
-// Add CSS styles dynamically
-const style = document.createElement('style');
-style.innerHTML = `
-    .best-route-popup {
-        z-index: 9999 !important;
-    }
-
-    .second-route-popup {
-        z-index: 9998 !important;
-    }
-`;
-document.head.appendChild(style);
-
 function showRoutePopup(route, coordinates, profile, isBestRoute = true) {
     const formattedDistance = (route.distance / 1000).toFixed(2) + ' km';
     const formattedTravelTime = Math.round(route.duration / 60) + ' mins';
@@ -206,6 +190,7 @@ function showRoutePopup(route, coordinates, profile, isBestRoute = true) {
         secondPopup = popup;
     }
 }
+
 function displayRouteAlternatives(routes, profile) {
     console.log("Routes received:", routes); // Debug log for routes received
     if (routes && routes.length > 1) {
