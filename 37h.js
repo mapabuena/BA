@@ -309,14 +309,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-    // Call this function to set up the directions button event
-    if (directionsButton) {
-        setupDirectionsButton();
-    } else {
-        console.error("Element with ID 'get-directions' not found.");
-    }
-});
-
 function clearAllPopups() {
     if (currentPopup) {
         currentPopup.remove();
