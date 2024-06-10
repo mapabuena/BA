@@ -50,7 +50,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Function to set the profile and update the active div
     function setProfile(profile) {
-        directions.setProfile(profile);
+        if (directions) {
+            directions.setProfile(profile);
+        } else {
+            directions = new MapboxDirections({
+                accessToken: mapboxgl.accessToken,
+                unit: 'metric',
+                profile: profile,
+                alternatives: true,
+                controls: {
+                    inputs: true,
+                    instructions: true,
+                }
+            });
+        }
 
         // Remove active class from all divs
         trafficDiv.classList.remove('active');
@@ -67,6 +80,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Clear the input to reset the directions
+        directions.removeRoutes();
         directions.setOrigin('');
         directions.setDestination('');
     }
