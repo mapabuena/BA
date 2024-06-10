@@ -50,7 +50,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Function to set the profile and update the active div
     function setProfile(profile) {
+        // Store current origin and destination
+        const currentOrigin = directions.getOrigin();
+        const currentDestination = directions.getDestination();
+
+        // Clear previous popups
+        clearAllPopups();
+
+        // Initialize the directions control with the new profile
         initializeDirectionsControl(profile);
+
+        // Set the origin and destination with stored values
+        if (currentOrigin && currentOrigin.geometry) {
+            directions.setOrigin(currentOrigin.geometry.coordinates);
+        }
+        if (currentDestination && currentDestination.geometry) {
+            directions.setDestination(currentDestination.geometry.coordinates);
+        }
 
         // Remove active class from all divs
         trafficDiv.classList.remove('active');
@@ -65,11 +81,6 @@ document.addEventListener('DOMContentLoaded', function() {
         } else if (profile === 'mapbox/cycling') {
             cyclingDiv.classList.add('active');
         }
-
-        // Clear the input to reset the directions
-        directions.removeRoutes();
-        directions.setOrigin('');
-        directions.setDestination('');
     }
 
     // Event listeners for the custom divs
