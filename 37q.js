@@ -9,7 +9,7 @@ let map = new mapboxgl.Map({
 let markers = [];
 let activeFilters = {
     category: [],
-};
+}; 
 
 const nightStyle = 'mapbox://styles/n31ld/clwo829pt03rh01ql4z379sp2';
 const originalStyle = 'mapbox://styles/n31ld/clwocpejw03s201ql6pto7fh9';
@@ -100,6 +100,7 @@ function initializeDirectionsControl() {
                 }
             });
 
+const customDirectionsDiv = document.getElementById('custom-directions');
        // Event listener for routes
 directions.on('route', (event) => {
     const routes = event.route;
