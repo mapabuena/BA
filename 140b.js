@@ -39,7 +39,6 @@ function applyRouteInfoStyles() {
 window.addEventListener('resize', applyRouteInfoStyles);
 document.addEventListener('DOMContentLoaded', applyRouteInfoStyles);
 
-
 function initializeDirectionsControl() {
     if (!directions) {
         const customStyles = [{
@@ -160,7 +159,14 @@ function setDestinationOnClick(e) {
         alert('Error setting destination.');
     }
 
-    setTimeout(applyRouteInfoStyles, 100);
+    setTimeout(() => {
+        const directionsContainer = document.getElementById('directions-container');
+        if (directionsContainer) {
+            directionsContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, 500);
+
+    map.off('click', setDestinationOnClick);
 }
 
 function addRouteLabels(route, profile) {
@@ -364,10 +370,10 @@ function setDirectionsInputFields(originTitle, destinationTitle) {
         destinationInput.value = destinationTitle;
     }
 }
-
 document.getElementById('custom-traffic').addEventListener('click', () => updateProfile('mapbox/driving-traffic'));
 document.getElementById('custom-cycling').addEventListener('click', () => updateProfile('mapbox/cycling'));
 document.getElementById('custom-walking').addEventListener('click', () => updateProfile('mapbox/walking'));
+
 
 function updateProfile(profile) {
     if (directions && directions.getOrigin() && directions.getDestination()) {
@@ -442,6 +448,8 @@ function setupDirectionsButton() {
         console.error("Element with ID 'get-directions' not found.");
     }
 }
+
+
 document.getElementById('nightmode').addEventListener('click', () => {
     isNightMode = !isNightMode;
     map.setStyle(isNightMode ? nightStyle : originalStyle);
