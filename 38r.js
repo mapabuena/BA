@@ -46,40 +46,47 @@ document.addEventListener('DOMContentLoaded', function() {
     const walkingDiv = document.getElementById('custom-walking');
     const cyclingDiv = document.getElementById('custom-cycling');
 
- function setProfile(profile) {
-    const currentOrigin = directions.getOrigin();
-    const currentDestination = directions.getDestination();
+    function setProfile(profile) {
+        const currentOrigin = directions.getOrigin();
+        const currentDestination = directions.getDestination();
 
-    console.log("Current Origin:", currentOrigin);
-    console.log("Current Destination:", currentDestination);
+        console.log("Current Origin:", currentOrigin);
+        console.log("Current Destination:", currentDestination);
 
-    initializeDirectionsControl(profile);
+        initializeDirectionsControl(profile);
 
-    if (currentOrigin && currentOrigin.geometry && currentOrigin.geometry.coordinates.length > 0) {
-        directions.setOrigin(currentOrigin.geometry.coordinates);
+        if (currentOrigin && currentOrigin.geometry && currentOrigin.geometry.coordinates.length > 0) {
+            directions.setOrigin(currentOrigin.geometry.coordinates);
+        }
+        if (currentDestination && currentDestination.geometry && currentDestination.geometry.coordinates.length > 0) {
+            directions.setDestination(currentDestination.geometry.coordinates);
+        }
+
+        trafficDiv.classList.remove('active');
+        walkingDiv.classList.remove('active');
+        cyclingDiv.classList.remove('active');
+
+        if (profile === 'mapbox/driving-traffic') {
+            trafficDiv.classList.add('active');
+        } else if (profile === 'mapbox/walking') {
+            walkingDiv.classList.add('active');
+        } else if (profile === 'mapbox/cycling') {
+            cyclingDiv.classList.add('active');
+        }
+
+        // Set input fields
+        setDirectionsInputFields(
+            currentOrigin && currentOrigin.geometry && currentOrigin.geometry.coordinates.length > 0 ? currentOrigin.place_name || `${currentOrigin.geometry.coordinates[1]}, ${currentOrigin.geometry.coordinates[0]}` : '',
+            currentDestination && currentDestination.geometry && currentDestination.geometry.coordinates.length > 0 ? currentDestination.place_name || `${currentDestination.geometry.coordinates[1]}, ${currentDestination.geometry.coordinates[0]}` : ''
+        );
     }
-    if (currentDestination && currentDestination.geometry && currentDestination.geometry.coordinates.length > 0) {
-        directions.setDestination(currentDestination.geometry.coordinates);
-    }
 
-    trafficDiv.classList.remove('active');
-    walkingDiv.classList.remove('active');
-    cyclingDiv.classList.remove('active');
+    trafficDiv.addEventListener('click', () => setProfile('mapbox/driving-traffic'));
+    walkingDiv.addEventListener('click', () => setProfile('mapbox/walking'));
+    cyclingDiv.addEventListener('click', () => setProfile('mapbox/cycling'));
 
-    if (profile === 'mapbox/driving-traffic') {
-        trafficDiv.classList.add('active');
-    } else if (profile === 'mapbox/walking') {
-        walkingDiv.classList.add('active');
-    } else if (profile === 'mapbox/cycling') {
-        cyclingDiv.classList.add('active');
-    }
-
-    // Set input fields
-    setDirectionsInputFields(
-        currentOrigin && currentOrigin.geometry && currentOrigin.geometry.coordinates.length > 0 ? currentOrigin.place_name || `${currentOrigin.geometry.coordinates[1]}, ${currentOrigin.geometry.coordinates[0]}` : '',
-        currentDestination && currentDestination.geometry && currentDestination.geometry.coordinates.length > 0 ? currentDestination.place_name || `${currentDestination.geometry.coordinates[1]}, ${currentDestination.geometry.coordinates[0]}` : ''
-    );
-}
+    setProfile('mapbox/driving-traffic');
+});
 
 function initializeDirectionsControl(profile) {
     if (directions) {
