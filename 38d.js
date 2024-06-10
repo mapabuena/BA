@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Function to set the profile and update the active div
     function setProfile(profile) {
-        directions.options.profile = profile;
+        directions.setProfile(profile);
 
         // Remove active class from all divs
         trafficDiv.classList.remove('active');
