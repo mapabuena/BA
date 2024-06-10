@@ -49,39 +49,39 @@ document.addEventListener('DOMContentLoaded', function() {
     const cyclingDiv = document.getElementById('custom-cycling');
 
     // Function to set the profile and update the active div
- function setProfile(profile) {
-    // Store current origin and destination
-    const currentOrigin = directions.getOrigin();
-    const currentDestination = directions.getDestination();
+    function setProfile(profile) {
+        // Initialize the directions control with the new profile
+        initializeDirectionsControl(profile);
 
-    // Clear previous popups
-    clearAllPopups();
+        // Clear previous popups
+        clearAllPopups();
 
-    // Initialize the directions control with the new profile
-    initializeDirectionsControl(profile);
+        // Store current origin and destination
+        const currentOrigin = directions.getOrigin();
+        const currentDestination = directions.getDestination();
 
-    // Set the origin and destination with stored values
-    if (currentOrigin && currentOrigin.geometry && currentOrigin.geometry.coordinates.length > 0) {
-        directions.setOrigin(currentOrigin.geometry.coordinates);
+        // Set the origin and destination with stored values
+        if (currentOrigin && currentOrigin.geometry && currentOrigin.geometry.coordinates.length > 0) {
+            directions.setOrigin(currentOrigin.geometry.coordinates);
+        }
+        if (currentDestination && currentDestination.geometry && currentDestination.geometry.coordinates.length > 0) {
+            directions.setDestination(currentDestination.geometry.coordinates);
+        }
+
+        // Remove active class from all divs
+        trafficDiv.classList.remove('active');
+        walkingDiv.classList.remove('active');
+        cyclingDiv.classList.remove('active');
+
+        // Add active class to the clicked div
+        if (profile === 'mapbox/driving-traffic') {
+            trafficDiv.classList.add('active');
+        } else if (profile === 'mapbox/walking') {
+            walkingDiv.classList.add('active');
+        } else if (profile === 'mapbox/cycling') {
+            cyclingDiv.classList.add('active');
+        }
     }
-    if (currentDestination && currentDestination.geometry && currentDestination.geometry.coordinates.length > 0) {
-        directions.setDestination(currentDestination.geometry.coordinates);
-    }
-
-    // Remove active class from all divs
-    trafficDiv.classList.remove('active');
-    walkingDiv.classList.remove('active');
-    cyclingDiv.classList.remove('active');
-
-    // Add active class to the clicked div
-    if (profile === 'mapbox/driving-traffic') {
-        trafficDiv.classList.add('active');
-    } else if (profile === 'mapbox/walking') {
-        walkingDiv.classList.add('active');
-    } else if (profile === 'mapbox/cycling') {
-        cyclingDiv.classList.add('active');
-    }
-}
 
     // Event listeners for the custom divs
     trafficDiv.addEventListener('click', () => setProfile('mapbox/driving-traffic'));
@@ -170,6 +170,7 @@ function initializeDirectionsControl(profile) {
 
     directionsInitialized = true; // Mark as initialized
 }
+
 
 function deactivateDirections() {
     clearAllPopups();
@@ -324,14 +325,14 @@ function showRoutePopup(route, coordinates, profile, isBestRoute = true) {
         .setHTML(popupContent)
         .addTo(map);
 
-    setTimeout(() => {
+    popup.on('open', () => {
         const popupElement = popup.getElement();
-        if (popupElement) { // Add this check
+        if (popupElement) {
             popupElement.style.zIndex = isBestRoute ? '9999' : '9998';
         } else {
             console.error("Popup element is undefined");
         }
-    }, 100); // Delay to ensure the popup is added to the map
+    });
 
     if (isBestRoute) {
         if (currentPopup) {
