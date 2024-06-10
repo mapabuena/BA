@@ -39,7 +39,7 @@ function applyRouteInfoStyles() {
 window.addEventListener('resize', applyRouteInfoStyles);
 document.addEventListener('DOMContentLoaded', applyRouteInfoStyles);
 
-ocument.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
     initializeDirectionsControl('mapbox/driving-traffic');
 
     const trafficDiv = document.getElementById('custom-traffic');
