@@ -46,9 +46,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const walkingDiv = document.getElementById('custom-walking');
     const cyclingDiv = document.getElementById('custom-cycling');
 
-  function setProfile(profile) {
+ function setProfile(profile) {
     const currentOrigin = directions.getOrigin();
     const currentDestination = directions.getDestination();
+
+    console.log("Current Origin:", currentOrigin);
+    console.log("Current Destination:", currentDestination);
 
     initializeDirectionsControl(profile);
 
@@ -70,14 +73,13 @@ document.addEventListener('DOMContentLoaded', function() {
     } else if (profile === 'mapbox/cycling') {
         cyclingDiv.classList.add('active');
     }
+
+    // Set input fields
+    setDirectionsInputFields(
+        currentOrigin && currentOrigin.geometry && currentOrigin.geometry.coordinates.length > 0 ? currentOrigin.place_name || `${currentOrigin.geometry.coordinates[1]}, ${currentOrigin.geometry.coordinates[0]}` : '',
+        currentDestination && currentDestination.geometry && currentDestination.geometry.coordinates.length > 0 ? currentDestination.place_name || `${currentDestination.geometry.coordinates[1]}, ${currentDestination.geometry.coordinates[0]}` : ''
+    );
 }
-    trafficDiv.addEventListener('click', () => setProfile('mapbox/driving-traffic'));
-    walkingDiv.addEventListener('click', () => setProfile('mapbox/walking'));
-    cyclingDiv.addEventListener('click', () => setProfile('mapbox/cycling'));
-
-    setProfile('mapbox/driving-traffic');
-});
-
 
 function initializeDirectionsControl(profile) {
     if (directions) {
@@ -145,8 +147,12 @@ function initializeDirectionsControl(profile) {
         directions.on('route', (event) => {
             const routes = event.route;
             const profile = directions.options.profile; // Get the current profile
+            console.log("Routes received:", routes);
+            console.log("Profile:", profile);
             if (routes && routes.length > 0) {
                 onRoutesReceived(routes, profile); // Pass the routes and profile
+            } else {
+                console.warn("No routes received");
             }
         });
     } else {
@@ -158,7 +164,7 @@ function initializeDirectionsControl(profile) {
     // Ensure the map click event listener is added
     map.on('click', setDestinationOnClick);
 }
-
+    
 function deactivateDirections() {
     clearAllPopups();
     if (directions) {
@@ -185,22 +191,36 @@ function clearAllPopups() {
 
 function setDestinationOnClick(e) {
     const { lng, lat } = e.lngLat;
+    console.log("Map clicked at:", lng, lat);
 
     try {
-        if (directions.getOrigin().geometry && !directions.getDestination().geometry) {
-            directions.setDestination([lng, lat]); // Set the destination
+        if (directions.getOrigin() && !directions.getDestination()) {
+            directions.setDestination([lng, lat]); // Set the custom destination object
+            console.log("Destination set to:", [lng, lat]);
         } else {
-            directions.setOrigin([lng, lat]); // Set the origin
+            directions.setOrigin([lng, lat]); // Set the custom origin object
+            console.log("Origin set to:", [lng, lat]);
         }
     } catch (error) {
-        console.error("Error setting destination or origin:", error);
-        alert('Error setting destination or origin.');
+        console.error("Error setting destination:", error);
+        alert('Error setting destination.');
     }
 
     // Apply styles to .route-info after the destination is set
     setTimeout(applyRouteInfoStyles, 100);
 }
-
+function setDirectionsInputFields(originTitle, destinationTitle) {
+    const originInput = document.querySelector('.mapbox-directions-origin input');
+    const destinationInput = document.querySelector('.mapbox-directions-destination input');
+    
+    if (originInput) {
+        originInput.value = originTitle;
+    }
+    
+    if (destinationInput) {
+        destinationInput.value = destinationTitle;
+    }
+}
 function addRouteLabels(route, profile) {
     if (route.geometry) {
         const coordinates = polyline.decode(route.geometry); // Decode the polyline string
