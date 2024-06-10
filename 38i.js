@@ -49,39 +49,39 @@ document.addEventListener('DOMContentLoaded', function() {
     const cyclingDiv = document.getElementById('custom-cycling');
 
     // Function to set the profile and update the active div
-    function setProfile(profile) {
-        // Store current origin and destination
-        const currentOrigin = directions.getOrigin();
-        const currentDestination = directions.getDestination();
+ function setProfile(profile) {
+    // Store current origin and destination
+    const currentOrigin = directions.getOrigin();
+    const currentDestination = directions.getDestination();
 
-        // Clear previous popups
-        clearAllPopups();
+    // Clear previous popups
+    clearAllPopups();
 
-        // Initialize the directions control with the new profile
-        initializeDirectionsControl(profile);
+    // Initialize the directions control with the new profile
+    initializeDirectionsControl(profile);
 
-        // Set the origin and destination with stored values
-        if (currentOrigin && currentOrigin.geometry) {
-            directions.setOrigin(currentOrigin.geometry.coordinates);
-        }
-        if (currentDestination && currentDestination.geometry) {
-            directions.setDestination(currentDestination.geometry.coordinates);
-        }
-
-        // Remove active class from all divs
-        trafficDiv.classList.remove('active');
-        walkingDiv.classList.remove('active');
-        cyclingDiv.classList.remove('active');
-
-        // Add active class to the clicked div
-        if (profile === 'mapbox/driving-traffic') {
-            trafficDiv.classList.add('active');
-        } else if (profile === 'mapbox/walking') {
-            walkingDiv.classList.add('active');
-        } else if (profile === 'mapbox/cycling') {
-            cyclingDiv.classList.add('active');
-        }
+    // Set the origin and destination with stored values
+    if (currentOrigin && currentOrigin.geometry && currentOrigin.geometry.coordinates.length > 0) {
+        directions.setOrigin(currentOrigin.geometry.coordinates);
     }
+    if (currentDestination && currentDestination.geometry && currentDestination.geometry.coordinates.length > 0) {
+        directions.setDestination(currentDestination.geometry.coordinates);
+    }
+
+    // Remove active class from all divs
+    trafficDiv.classList.remove('active');
+    walkingDiv.classList.remove('active');
+    cyclingDiv.classList.remove('active');
+
+    // Add active class to the clicked div
+    if (profile === 'mapbox/driving-traffic') {
+        trafficDiv.classList.add('active');
+    } else if (profile === 'mapbox/walking') {
+        walkingDiv.classList.add('active');
+    } else if (profile === 'mapbox/cycling') {
+        cyclingDiv.classList.add('active');
+    }
+}
 
     // Event listeners for the custom divs
     trafficDiv.addEventListener('click', () => setProfile('mapbox/driving-traffic'));
@@ -307,17 +307,17 @@ function showRoutePopup(route, coordinates, profile, isBestRoute = true) {
     const backgroundColor = isBestRoute ? 'rgba(255, 255, 255, 0.75)' : 'rgba(169, 169, 169, 0.75)'; // White for best route, gray for second-best
     const popupClass = isBestRoute ? 'best-route-popup' : 'second-route-popup'; // Set class based on the route type
 
-const popupContent = `
-    <div class="${popupClass}" style="display: flex; align-items: center; padding: 5px; background: ${backgroundColor}; border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); font-family: Arial, sans-serif; width: ${popupSize.width}; height: ${popupSize.height}; overflow: hidden;">
-        <div style="width: 30%; display: flex; justify-content: center; align-items: center; padding-bottom: ${iconPaddingBottom};">
-            <img src="${modeIcon}" alt="Mode" style="width: ${iconSize.width}; height: ${iconSize.height};">
+    const popupContent = `
+        <div class="${popupClass}" style="display: flex; align-items: center; padding: 5px; background: ${backgroundColor}; border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); font-family: Arial, sans-serif; width: ${popupSize.width}; height: ${popupSize.height}; overflow: hidden;">
+            <div style="width: 30%; display: flex; justify-content: center; align-items: center; padding-bottom: ${iconPaddingBottom};">
+                <img src="${modeIcon}" alt="Mode" style="width: ${iconSize.width}; height: ${iconSize.height};">
+            </div>
+            <div style="width: 70%; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding-left: 5px;">
+                <p style="margin: 0; font-size: 14px; font-weight: bold; color: green; line-height: 1;">${formattedTravelTime}</p>
+                <p style="margin: 0; font-size: 12px; font-weight: bold; color: #333; line-height: 1;">${formattedDistance}</p>
+            </div>
         </div>
-        <div style="width: 70%; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding-left: 5px;">
-            <p style="margin: 0; font-size: 14px; font-weight: bold; color: green; line-height: 1;">${formattedTravelTime}</p>
-            <p style="margin: 0; font-size: 12px; font-weight: bold; color: #333; line-height: 1;">${formattedDistance}</p>
-        </div>
-    </div>
-`;
+    `;
 
     const popup = new mapboxgl.Popup({ closeButton: false })
         .setLngLat(coordinates)
@@ -326,7 +326,11 @@ const popupContent = `
 
     setTimeout(() => {
         const popupElement = popup.getElement();
-        popupElement.style.zIndex = isBestRoute ? '9999' : '9998';
+        if (popupElement) { // Add this check
+            popupElement.style.zIndex = isBestRoute ? '9999' : '9998';
+        } else {
+            console.error("Popup element is undefined");
+        }
     }, 100); // Delay to ensure the popup is added to the map
 
     if (isBestRoute) {
