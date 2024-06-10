@@ -46,32 +46,31 @@ document.addEventListener('DOMContentLoaded', function() {
     const walkingDiv = document.getElementById('custom-walking');
     const cyclingDiv = document.getElementById('custom-cycling');
 
-    function setProfile(profile) {
-        const currentOrigin = directions.getOrigin();
-        const currentDestination = directions.getDestination();
+  function setProfile(profile) {
+    const currentOrigin = directions.getOrigin();
+    const currentDestination = directions.getDestination();
 
-        initializeDirectionsControl(profile);
+    initializeDirectionsControl(profile);
 
-        if (currentOrigin && currentOrigin.geometry && currentOrigin.geometry.coordinates.length > 0) {
-            directions.setOrigin(currentOrigin.geometry.coordinates);
-        }
-        if (currentDestination && currentDestination.geometry && currentDestination.geometry.coordinates.length > 0) {
-            directions.setDestination(currentDestination.geometry.coordinates);
-        }
-
-        trafficDiv.classList.remove('active');
-        walkingDiv.classList.remove('active');
-        cyclingDiv.classList.remove('active');
-
-        if (profile === 'mapbox/driving-traffic') {
-            trafficDiv.classList.add('active');
-        } else if (profile === 'mapbox/walking') {
-            walkingDiv.classList.add('active');
-        } else if (profile === 'mapbox/cycling') {
-            cyclingDiv.classList.add('active');
-        }
+    if (currentOrigin && currentOrigin.geometry && currentOrigin.geometry.coordinates.length > 0) {
+        directions.setOrigin(currentOrigin.geometry.coordinates);
+    }
+    if (currentDestination && currentDestination.geometry && currentDestination.geometry.coordinates.length > 0) {
+        directions.setDestination(currentDestination.geometry.coordinates);
     }
 
+    trafficDiv.classList.remove('active');
+    walkingDiv.classList.remove('active');
+    cyclingDiv.classList.remove('active');
+
+    if (profile === 'mapbox/driving-traffic') {
+        trafficDiv.classList.add('active');
+    } else if (profile === 'mapbox/walking') {
+        walkingDiv.classList.add('active');
+    } else if (profile === 'mapbox/cycling') {
+        cyclingDiv.classList.add('active');
+    }
+}
     trafficDiv.addEventListener('click', () => setProfile('mapbox/driving-traffic'));
     walkingDiv.addEventListener('click', () => setProfile('mapbox/walking'));
     cyclingDiv.addEventListener('click', () => setProfile('mapbox/cycling'));
@@ -155,6 +154,9 @@ function initializeDirectionsControl(profile) {
     }
 
     directionsInitialized = true; // Mark as initialized
+
+    // Ensure the map click event listener is added
+    map.on('click', setDestinationOnClick);
 }
 
 function deactivateDirections() {
@@ -184,26 +186,15 @@ function clearAllPopups() {
 function setDestinationOnClick(e) {
     const { lng, lat } = e.lngLat;
 
-    const destination = {
-        "type": "Feature",
-        "geometry": {
-            "type": "Point",
-            "coordinates": [lng, lat]
-        },
-        "properties": {
-            "title": `${lat}, ${lng}`
-        }
-    };
-
     try {
-        if (directions.getOrigin() && !directions.getDestination()) {
-            directions.setDestination([lng, lat]); // Set the custom destination object
+        if (directions.getOrigin().geometry && !directions.getDestination().geometry) {
+            directions.setDestination([lng, lat]); // Set the destination
         } else {
-            directions.setOrigin([lng, lat]); // Set the custom origin object
+            directions.setOrigin([lng, lat]); // Set the origin
         }
     } catch (error) {
-        console.error("Error setting destination:", error);
-        alert('Error setting destination.');
+        console.error("Error setting destination or origin:", error);
+        alert('Error setting destination or origin.');
     }
 
     // Apply styles to .route-info after the destination is set
