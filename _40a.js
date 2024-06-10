@@ -73,7 +73,7 @@ function initializeDirectionsControl() {
         directions = new MapboxDirections({
             accessToken: mapboxgl.accessToken,
             unit: 'metric',
-            profile: 'mapbox/driving',
+            profile: 'mapbox/driving-traffic',
             alternatives: true,
             controls: {
                 inputs: true,
@@ -85,6 +85,14 @@ function initializeDirectionsControl() {
         const directionsControlElement = document.getElementById('directions-control');
         if (directionsControlElement) {
             directionsControlElement.appendChild(directions.onAdd(map));
+
+            directions.on('route', (event) => {
+                const routes = event.route;
+                const profile = directions.options.profile; // Get the current profile
+                if (routes && routes.length > 0) {
+                    onRoutesReceived(routes, profile); // Pass the routes and profile
+                }
+            });
 
             directions.on('origin', () => {
                 const originMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="A"]');
@@ -100,27 +108,10 @@ function initializeDirectionsControl() {
                 }
             });
 
-            directions.on('route', (event) => {
-                const routes = event.route;
-                const profile = directions.options.profile; // Get the current profile
-                console.log("Profile from options:", profile); // Log the profile to ensure it's being set correctly
-                if (routes && routes.length > 0) {
-                    onRoutesReceived(routes, profile); // Pass the routes and profile
-                }
-            });
-
-            // Listen for profile change
-            document.querySelectorAll('.mapbox-directions-profile input').forEach(input => {
-                input.addEventListener('change', (e) => {
-                    console.log("Profile changed to:", e.target.value);
-                    directions.options.profile = e.target.value; // Update the profile in directions options
-                });
-            });
+            directionsInitialized = true; // Mark as initialized
         } else {
             console.error("Element with ID 'directions-control' not found.");
         }
-
-        directionsInitialized = true; // Mark as initialized
     }
 }
 function deactivateDirections() {
@@ -149,7 +140,6 @@ function clearAllPopups() {
 
 function setDestinationOnClick(e) {
     const { lng, lat } = e.lngLat;
-    console.log("Map clicked at:", lng, lat);
 
     const destination = {
         "type": "Feature",
@@ -162,22 +152,14 @@ function setDestinationOnClick(e) {
         }
     };
 
-    console.log("Setting destination with:", JSON.stringify(destination));
-
     try {
-        directions.setDestination([lng, lat]); // Set the custom destination object
-        console.log("Destination set to:", [lng, lat]);
-
-        // Set the input fields with the custom text
+        directions.setDestination([lng, lat]);
         setDirectionsInputFields('', destination.properties.title);
-
-        console.log("Destination set successfully.");
     } catch (error) {
         console.error("Error setting destination:", error);
         alert('Error setting destination.');
     }
 
-    // Apply styles to .route-info after the destination is set
     setTimeout(applyRouteInfoStyles, 100);
 }
 
@@ -382,6 +364,23 @@ function setDirectionsInputFields(originTitle, destinationTitle) {
         destinationInput.value = destinationTitle;
     }
 }
+
+document.getElementById('custom-traffic').addEventListener('click', () => updateProfile('mapbox/driving-traffic'));
+document.getElementById('custom-cycling').addEventListener('click', () => updateProfile('mapbox/cycling'));
+document.getElementById('custom-walking').addEventListener('click', () => updateProfile('mapbox/walking'));
+
+function updateProfile(profile) {
+    if (directions && directions.getOrigin() && directions.getDestination()) {
+        const origin = directions.getOrigin();
+        const destination = directions.getDestination();
+        
+        directions.setProfile(profile);
+        directions.setOrigin(origin.geometry.coordinates);
+        directions.setDestination(destination.geometry.coordinates);
+
+        setDirectionsInputFields(origin.place_name, destination.place_name);
+    }
+}
 // Add this function to set up the directions button event listener
 function setupDirectionsButton() {
     const directionsButton = document.getElementById('get-directions');
@@ -393,9 +392,8 @@ function setupDirectionsButton() {
 
             if (selectedMarker) {
                 const { lat, lng, sidebarheader } = selectedMarker.data;
-                console.log("Selected marker data:", selectedMarker.data); // Log the selected marker data
+                console.log("Selected marker data:", selectedMarker.data);
 
-                // Validate coordinates
                 const validLat = parseFloat(lat);
                 const validLng = parseFloat(lng);
 
@@ -409,7 +407,7 @@ function setupDirectionsButton() {
                     initializeDirectionsControl();
                 }
 
-                directions.removeRoutes(); // Clear any existing routes
+                directions.removeRoutes();
 
                 const origin = {
                     "type": "Feature",
@@ -422,13 +420,8 @@ function setupDirectionsButton() {
                     }
                 };
 
-                console.log("Setting origin with:", JSON.stringify(origin));
-
                 try {
-                    directions.setOrigin([validLng, validLat]); // Set the custom origin object
-                    console.log("Origin set to:", [validLng, validLat]);
-
-                    // Set the input fields with the custom text
+                    directions.setOrigin([validLng, validLat]);
                     setDirectionsInputFields(origin.properties.title, '');
 
                     console.log("Origin set successfully.");
@@ -439,7 +432,6 @@ function setupDirectionsButton() {
 
                 document.getElementById('directions-container').style.display = 'block';
 
-                // Add click event listener to the map for setting the destination
                 map.on('click', setDestinationOnClick);
             } else {
                 console.error('No marker selected.');
@@ -458,7 +450,7 @@ document.getElementById('nightmode').addEventListener('click', () => {
         initializeDirectionsControl();
     });
 
-     const h4Elements = document.querySelectorAll('.info-item h4');
+    const h4Elements = document.querySelectorAll('.info-item h4');
     h4Elements.forEach(h4 => {
         if (isNightMode) {
             h4.classList.remove('daymode-text');
@@ -468,12 +460,12 @@ document.getElementById('nightmode').addEventListener('click', () => {
             h4.classList.add('daymode-text');
         }
     });
-  
+
     document.querySelectorAll('.some-div').forEach(div => {
         div.style.backgroundColor = isNightMode ? 'darkgray' : 'white';
     });
 
- const nightModeButton = document.getElementById('nightmode');
+    const nightModeButton = document.getElementById('nightmode');
     if (isNightMode) {
         nightModeButton.classList.add('nightmode-active');
     } else {
@@ -481,7 +473,6 @@ document.getElementById('nightmode').addEventListener('click', () => {
     }
 });
 
-// Call this function to set up the button event
 setupDirectionsButton();
 
 // Function to set directions in Mapbox Directions API
