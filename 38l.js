@@ -170,8 +170,6 @@ function initializeDirectionsControl(profile) {
     directionsInitialized = true; // Mark as initialized
 }
 
-
-
 function deactivateDirections() {
     clearAllPopups();
     if (directions) {
