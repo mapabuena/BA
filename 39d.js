@@ -176,6 +176,8 @@ if (directionsControlElement) {
 }
 
 directionsInitialized = true; // Mark as initialized
+}
+
 
 function deactivateDirections() {
     clearAllPopups();
