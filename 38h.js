@@ -91,6 +91,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Set initial profile
     setProfile('mapbox/driving-traffic');
 });
+
+
 function initializeDirectionsControl(profile) {
     if (directions) {
         map.removeControl(directions);
@@ -168,6 +170,7 @@ function initializeDirectionsControl(profile) {
 
     directionsInitialized = true; // Mark as initialized
 }
+
 function deactivateDirections() {
     clearAllPopups();
     if (directions) {
