@@ -49,49 +49,52 @@ document.addEventListener('DOMContentLoaded', function() {
     const cyclingDiv = document.getElementById('custom-cycling');
 
     // Function to set the profile and update the active div
- function setProfile(profile) {
-    // Store current origin and destination
-    const currentOrigin = directions.getOrigin();
-    const currentDestination = directions.getDestination();
+    function setProfile(profile) {
+        // Store current origin and destination
+        const currentOrigin = directions.getOrigin();
+        const currentDestination = directions.getDestination();
 
-    console.log('Current Origin:', currentOrigin);
-    console.log('Current Destination:', currentDestination);
+        console.log('Current Origin:', currentOrigin);
+        console.log('Current Destination:', currentDestination);
 
-    // Clear previous popups
-    clearAllPopups();
+        // Clear previous popups and routes
+        clearAllPopups();
+        if (directions) {
+            directions.removeRoutes();
+        }
 
-    // Initialize the directions control with the new profile
-    initializeDirectionsControl(profile);
+        // Initialize the directions control with the new profile
+        initializeDirectionsControl(profile);
 
-    // Set the origin and destination with stored values
-    if (currentOrigin && currentOrigin.geometry) {
-        directions.setOrigin(currentOrigin.geometry.coordinates);
-        setDirectionsInputFields(currentOrigin.properties.title || '', '');
+        // Set the origin and destination with stored values
+        if (currentOrigin && currentOrigin.geometry) {
+            directions.setOrigin(currentOrigin.geometry.coordinates);
+            setDirectionsInputFields(currentOrigin.properties.title || '', '');
+        }
+        if (currentDestination && currentDestination.geometry) {
+            directions.setDestination(currentDestination.geometry.coordinates);
+            setDirectionsInputFields('', currentDestination.properties.title || '');
+        }
+
+        console.log('New Origin:', directions.getOrigin());
+        console.log('New Destination:', directions.getDestination());
+
+        // Remove active class from all divs
+        trafficDiv.classList.remove('active');
+        walkingDiv.classList.remove('active');
+        cyclingDiv.classList.remove('active');
+
+        // Add active class to the clicked div
+        if (profile === 'mapbox/driving-traffic') {
+            trafficDiv.classList.add('active');
+        } else if (profile === 'mapbox/walking') {
+            walkingDiv.classList.add('active');
+        } else if (profile === 'mapbox/cycling') {
+            cyclingDiv.classList.add('active');
+        }
+
+        checkAndDrawRoutes(profile); // Ensure routes are drawn when switching profiles
     }
-    if (currentDestination && currentDestination.geometry) {
-        directions.setDestination(currentDestination.geometry.coordinates);
-        setDirectionsInputFields('', currentDestination.properties.title || '');
-    }
-
-    console.log('New Origin:', directions.getOrigin());
-    console.log('New Destination:', directions.getDestination());
-
-    // Remove active class from all divs
-    trafficDiv.classList.remove('active');
-    walkingDiv.classList.remove('active');
-    cyclingDiv.classList.remove('active');
-
-    // Add active class to the clicked div
-    if (profile === 'mapbox/driving-traffic') {
-        trafficDiv.classList.add('active');
-    } else if (profile === 'mapbox/walking') {
-        walkingDiv.classList.add('active');
-    } else if (profile === 'mapbox/cycling') {
-        cyclingDiv.classList.add('active');
-    }
-
-    checkAndDrawRoutes(profile); // Ensure routes are drawn when switching profiles
-}
 
     // Event listeners for the custom divs
     trafficDiv.addEventListener('click', () => setProfile('mapbox/driving-traffic'));
@@ -101,6 +104,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Set initial profile
     setProfile('mapbox/driving-traffic');
 });
+
 
   
 function initializeDirectionsControl(profile) {
