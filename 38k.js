@@ -50,15 +50,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Function to set the profile and update the active div
     function setProfile(profile) {
+        // Store current origin and destination
+        const currentOrigin = directions.getOrigin();
+        const currentDestination = directions.getDestination();
+
         // Initialize the directions control with the new profile
         initializeDirectionsControl(profile);
 
         // Clear previous popups
         clearAllPopups();
-
-        // Store current origin and destination
-        const currentOrigin = directions.getOrigin();
-        const currentDestination = directions.getDestination();
 
         // Set the origin and destination with stored values
         if (currentOrigin && currentOrigin.geometry && currentOrigin.geometry.coordinates.length > 0) {
@@ -159,7 +159,6 @@ function initializeDirectionsControl(profile) {
         directions.on('route', (event) => {
             const routes = event.route;
             const profile = directions.options.profile; // Get the current profile
-            console.log("Profile from options:", profile); // Log the profile to ensure it's being set correctly
             if (routes && routes.length > 0) {
                 onRoutesReceived(routes, profile); // Pass the routes and profile
             }
@@ -170,6 +169,7 @@ function initializeDirectionsControl(profile) {
 
     directionsInitialized = true; // Mark as initialized
 }
+
 
 
 function deactivateDirections() {
@@ -198,7 +198,6 @@ function clearAllPopups() {
 
 function setDestinationOnClick(e) {
     const { lng, lat } = e.lngLat;
-    console.log("Map clicked at:", lng, lat);
 
     const destination = {
         "type": "Feature",
@@ -211,16 +210,12 @@ function setDestinationOnClick(e) {
         }
     };
 
-    console.log("Setting destination with:", JSON.stringify(destination));
-
     try {
-        directions.setDestination([lng, lat]); // Set the custom destination object
-        console.log("Destination set to:", [lng, lat]);
-
-        // Set the input fields with the custom text
-        setDirectionsInputFields('', destination.properties.title);
-
-        console.log("Destination set successfully.");
+        if (directions.getOrigin() && !directions.getDestination()) {
+            directions.setDestination([lng, lat]); // Set the custom destination object
+        } else {
+            directions.setOrigin([lng, lat]); // Set the custom origin object
+        }
     } catch (error) {
         console.error("Error setting destination:", error);
         alert('Error setting destination.');
