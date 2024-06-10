@@ -40,8 +40,8 @@ window.addEventListener('resize', applyRouteInfoStyles);
 document.addEventListener('DOMContentLoaded', applyRouteInfoStyles);
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize the Mapbox Directions control
-    initializeDirectionsControl();
+    // Initialize the Mapbox Directions control with the default profile
+    initializeDirectionsControl('mapbox/driving-traffic');
 
     // Custom divs acting as buttons
     const trafficDiv = document.getElementById('custom-traffic');
@@ -50,20 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Function to set the profile and update the active div
     function setProfile(profile) {
-        if (directions) {
-            directions.setProfile(profile);
-        } else {
-            directions = new MapboxDirections({
-                accessToken: mapboxgl.accessToken,
-                unit: 'metric',
-                profile: profile,
-                alternatives: true,
-                controls: {
-                    inputs: true,
-                    instructions: true,
-                }
-            });
-        }
+        initializeDirectionsControl(profile);
 
         // Remove active class from all divs
         trafficDiv.classList.remove('active');
@@ -93,88 +80,82 @@ document.addEventListener('DOMContentLoaded', function() {
     // Set initial profile
     setProfile('mapbox/driving-traffic');
 });
-function initializeDirectionsControl() {
-    if (!directions) {
-        const customStyles = [{
-            'id': 'directions-origin-point',
-            'type': 'circle',
-            'source': 'directions',
-            'paint': {
-                'circle-radius': 18,
-                'circle-color': '#c62026' // Custom color for the start marker
-            },
-            'filter': [
-                'all',
-                ['in', '$type', 'Point'],
-                ['in', 'marker-symbol', 'A']
-            ]
-        }, {
-            'id': 'directions-destination-point',
-            'type': 'circle',
-            'source': 'directions',
-            'paint': {
-                'circle-radius': 18,
-                'circle-color': '#000000' // Custom color for the end marker
-            },
-            'filter': [
-                'all',
-                ['in', '$type', 'Point'],
-                ['in', 'marker-symbol', 'B']
-            ]
-        }];
+function initializeDirectionsControl(profile) {
+    if (directions) {
+        map.removeControl(directions);
+    }
 
-        directions = new MapboxDirections({
-            accessToken: mapboxgl.accessToken,
-            unit: 'metric',
-            profile: 'mapbox/driving-traffic',
-            alternatives: true,
-            controls: {
-                inputs: true,
-                instructions: true,
-            },
-            styles: customStyles // Apply the custom styles
+    const customStyles = [{
+        'id': 'directions-origin-point',
+        'type': 'circle',
+        'source': 'directions',
+        'paint': {
+            'circle-radius': 18,
+            'circle-color': '#c62026' // Custom color for the start marker
+        },
+        'filter': [
+            'all',
+            ['in', '$type', 'Point'],
+            ['in', 'marker-symbol', 'A']
+        ]
+    }, {
+        'id': 'directions-destination-point',
+        'type': 'circle',
+        'source': 'directions',
+        'paint': {
+            'circle-radius': 18,
+            'circle-color': '#000000' // Custom color for the end marker
+        },
+        'filter': [
+            'all',
+            ['in', '$type', 'Point'],
+            ['in', 'marker-symbol', 'B']
+        ]
+    }];
+
+    directions = new MapboxDirections({
+        accessToken: mapboxgl.accessToken,
+        unit: 'metric',
+        profile: profile,
+        alternatives: true,
+        controls: {
+            inputs: true,
+            instructions: true,
+        },
+        styles: customStyles // Apply the custom styles
+    });
+
+    const directionsControlElement = document.getElementById('directions-control');
+    if (directionsControlElement) {
+        directionsControlElement.appendChild(directions.onAdd(map));
+
+        directions.on('origin', () => {
+            const originMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="A"]');
+            if (originMarker) {
+                originMarker.style.backgroundColor = '#c62026'; // Change this to your desired color
+            }
         });
 
-        const directionsControlElement = document.getElementById('directions-control');
-        if (directionsControlElement) {
-            directionsControlElement.appendChild(directions.onAdd(map));
+        directions.on('destination', () => {
+            const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
+            if (destinationMarker) {
+                destinationMarker.style.backgroundColor = '#26617f'; // Change this to your desired color
+            }
+        });
 
-            directions.on('origin', () => {
-                const originMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="A"]');
-                if (originMarker) {
-                    originMarker.style.backgroundColor = '#c62026'; // Change this to your desired color
-                }
-            });
-
-            directions.on('destination', () => {
-                const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
-                if (destinationMarker) {
-                    destinationMarker.style.backgroundColor = '#26617f'; // Change this to your desired color
-                }
-            });
-
-            directions.on('route', (event) => {
-                const routes = event.route;
-                const profile = directions.options.profile; // Get the current profile
-                console.log("Profile from options:", profile); // Log the profile to ensure it's being set correctly
-                if (routes && routes.length > 0) {
-                    onRoutesReceived(routes, profile); // Pass the routes and profile
-                }
-            });
-
-            // Listen for profile change
-            document.querySelectorAll('.mapbox-directions-profile input').forEach(input => {
-                input.addEventListener('change', (e) => {
-                    console.log("Profile changed to:", e.target.value);
-                    directions.options.profile = e.target.value; // Update the profile in directions options
-                });
-            });
-        } else {
-            console.error("Element with ID 'directions-control' not found.");
-        }
-
-        directionsInitialized = true; // Mark as initialized
+        directions.on('route', (event) => {
+            const routes = event.route;
+            const profile = directions.options.profile; // Get the current profile
+            console.log("Profile from options:", profile); // Log the profile to ensure it's being set correctly
+            if (routes && routes.length > 0) {
+                onRoutesReceived(routes, profile); // Pass the routes and profile
+            }
+        });
+    } else {
+        console.error("Element with ID 'directions-control' not found.");
     }
+
+    directionsInitialized = true; // Mark as initialized
 }
 function deactivateDirections() {
     clearAllPopups();
