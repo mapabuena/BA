@@ -392,20 +392,32 @@ function updateProfile(profile) {
         const requestUrl = `https://api.mapbox.com/directions/v5/${profile}/${originCoords};${destinationCoords}?geometries=geojson&access_token=YOUR_MAPBOX_ACCESS_TOKEN`;
 
         // Fetch new directions with the updated profile
-        fetch(requestUrl)
-            .then(response => response.json())
-            .then(data => {
-                if (data.routes && data.routes.length > 0) {
-                    directions.setRoutes(data.routes);
-                } else {
-                    console.error('No routes found');
-                }
-            })
-            .catch(error => console.error('Error fetching directions:', error));
+        fetch(requestUrl, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+        })
+        .then(data => {
+            if (data.routes && data.routes.length > 0) {
+                directions.setRoutes(data.routes);
+            } else {
+                console.error('No routes found');
+            }
+        })
+        .catch(error => console.error('Error fetching directions:', error));
     } else {
         console.error('Origin and destination must be set to update the profile');
     }
 }
+
 // Add this function to set up the directions button event listener
 function setupDirectionsButton() {
     const directionsButton = document.getElementById('get-directions');
