@@ -194,6 +194,7 @@ function addRouteLabels(route, profile) {
 // Function to get the center of the route
 function getRouteCenter(coordinates) {
     if (coordinates && coordinates.length > 0) {
+        console.log("Coordinates array:", coordinates);
         const midIndex = Math.floor(coordinates.length / 2);
         return coordinates[midIndex]; // Coordinates are already [lng, lat]
     } else {
@@ -201,7 +202,6 @@ function getRouteCenter(coordinates) {
         return [0, 0]; // Return a default value or handle appropriately
     }
 }
-
 let currentPopup = null;
 let secondPopup = null;
 
@@ -324,7 +324,6 @@ function displayRouteAlternatives(routes, profile) {
     }
 }
 
-
 // Function to manually add routes to the map
 function onRoutesReceived(routes, profile) {
     console.log("Routes received for profile:", profile); // Debug log for profile
@@ -392,8 +391,6 @@ document.getElementById('custom-cycling').addEventListener('click', () => update
 document.getElementById('custom-walking').addEventListener('click', () => updateProfile('mapbox/walking'));
 
 
-// Function to update the profile and fetch new directions
-// Function to update the profile and fetch new directions
 // Function to update the profile and fetch new directions
 function updateProfile(profile) {
     if (originCoordinates && destinationCoordinates) {
