@@ -191,10 +191,11 @@ function addRouteLabels(route, profile) {
     }
 }
 
+// Function to get the center of the route
 function getRouteCenter(coordinates) {
     if (coordinates && coordinates.length > 0) {
         const midIndex = Math.floor(coordinates.length / 2);
-        return [coordinates[midIndex][1], coordinates[midIndex][0]]; // Ensure the order is [lng, lat]
+        return [coordinates[midIndex][0], coordinates[midIndex][1]]; // Ensure the order is [lng, lat]
     } else {
         console.error("Coordinates are undefined or empty.");
         return [0, 0]; // Return a default value or handle appropriately
@@ -229,6 +230,7 @@ function showRoutePopup(route, coordinates, profile, isBestRoute = true) {
 
     switch (profile) {
         case 'mapbox/driving':
+        case 'mapbox/driving-traffic':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/car.svg';
             iconSize = { width: '22px', height: '22px' };
             popupSize = { width: '100px', height: '30px' };
@@ -256,17 +258,17 @@ function showRoutePopup(route, coordinates, profile, isBestRoute = true) {
     const backgroundColor = isBestRoute ? 'rgba(255, 255, 255, 0.75)' : 'rgba(169, 169, 169, 0.75)'; // White for best route, gray for second-best
     const popupClass = isBestRoute ? 'best-route-popup' : 'second-route-popup'; // Set class based on the route type
 
-const popupContent = `
-    <div class="${popupClass}" style="display: flex; align-items: center; padding: 5px; background: ${backgroundColor}; border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); font-family: Arial, sans-serif; width: ${popupSize.width}; height: ${popupSize.height}; overflow: hidden;">
-        <div style="width: 30%; display: flex; justify-content: center; align-items: center; padding-bottom: ${iconPaddingBottom};">
-            <img src="${modeIcon}" alt="Mode" style="width: ${iconSize.width}; height: ${iconSize.height};">
+    const popupContent = `
+        <div class="${popupClass}" style="display: flex; align-items: center; padding: 5px; background: ${backgroundColor}; border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); font-family: Arial, sans-serif; width: ${popupSize.width}; height: ${popupSize.height}; overflow: hidden;">
+            <div style="width: 30%; display: flex; justify-content: center; align-items: center; padding-bottom: ${iconPaddingBottom};">
+                <img src="${modeIcon}" alt="Mode" style="width: ${iconSize.width}; height: ${iconSize.height};">
+            </div>
+            <div style="width: 70%; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding-left: 5px;">
+                <p style="margin: 0; font-size: 14px; font-weight: bold; color: green; line-height: 1;">${formattedTravelTime}</p>
+                <p style="margin: 0; font-size: 12px; font-weight: bold; color: #333; line-height: 1;">${formattedDistance}</p>
+            </div>
         </div>
-        <div style="width: 70%; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding-left: 5px;">
-            <p style="margin: 0; font-size: 14px; font-weight: bold; color: green; line-height: 1;">${formattedTravelTime}</p>
-            <p style="margin: 0; font-size: 12px; font-weight: bold; color: #333; line-height: 1;">${formattedDistance}</p>
-        </div>
-    </div>
-`;
+    `;
 
     const popup = new mapboxgl.Popup({ closeButton: false })
         .setLngLat(coordinates)
@@ -297,20 +299,17 @@ function displayRouteAlternatives(routes, profile) {
         const bestRoute = routes[0];
         const secondBestRoute = routes[1];
 
-        console.log("Displaying best route popup"); // Debug log
-        const bestRouteCoordinates = getRouteCenter(polyline.decode(bestRoute.geometry));
-        const secondBestRouteCoordinates = getRouteCenter(polyline.decode(secondBestRoute.geometry));
+        const bestRouteCoordinates = getRouteCenter(bestRoute.geometry.coordinates);
+        const secondBestRouteCoordinates = getRouteCenter(secondBestRoute.geometry.coordinates);
 
         console.log("Best route coordinates:", bestRouteCoordinates); // Debug log
         console.log("Second-best route coordinates:", secondBestRouteCoordinates); // Debug log
 
         showRoutePopup(bestRoute, bestRouteCoordinates, profile, true);
-
-        console.log("Displaying second-best route popup"); // Debug log
         showRoutePopup(secondBestRoute, secondBestRouteCoordinates, profile, false);
     } else if (routes && routes.length > 0) {
         const bestRoute = routes[0];
-        const bestRouteCoordinates = getRouteCenter(polyline.decode(bestRoute.geometry));
+        const bestRouteCoordinates = getRouteCenter(bestRoute.geometry.coordinates);
 
         console.log("Best route coordinates:", bestRouteCoordinates); // Debug log
 
@@ -319,6 +318,7 @@ function displayRouteAlternatives(routes, profile) {
         console.warn("No routes available to display"); // Warn if no routes are available
     }
 }
+
 
 // Function to manually add routes to the map
 function onRoutesReceived(routes, profile) {
