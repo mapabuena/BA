@@ -20,7 +20,11 @@ let currentCSV = 'https://raw.githubusercontent.com/mapabuena/BA/main/NewYorkPin
 let isDataLoading = false;
 let selectedMarkerIndex = null; // Variable to keep track of the selected marker index
 
-let directions; // Declare the directions variable here
+// Initialize the directions object without specifying a profile
+const directions = new MapboxDirections({
+    accessToken: 'pk.eyJ1IjoibjMxbGQiLCJhIjoiY2x0NHc5NjVpMDdzaDJscGE5Y2gyYnQ5MyJ9.zfzXUlLbNlVbr9pt4naycw', // Make sure this token is valid and has appropriate permissions
+    unit: 'metric'
+});
 let directionsInitialized = false;
 
 map.addControl(directions, 'top-left');
