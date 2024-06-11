@@ -23,8 +23,6 @@ let selectedMarkerIndex = null; // Variable to keep track of the selected marker
 let directionsInitialized = false;
 let directions; // Define the directions variable here
 
-map.addControl(directions, 'top-left');
-
 
 function applyRouteInfoStyles() {
     const routeInfo = document.querySelector('.route-info');
@@ -85,39 +83,35 @@ function initializeDirectionsControl() {
             },
             styles: customStyles // Apply the custom styles
         });
+     map.addControl(directions, 'top-left');
+       directions.on('route', (event) => {
+            const routes = event.route;
+            const profile = directions.options.profile; // Get the current profile
+            if (routes && routes.length > 0) {
+                onRoutesReceived(routes, profile); // Pass the routes and profile
+            }
+        });
 
-       const directionsControlElement = document.getElementById('directions-control');
-        if (directionsControlElement) {
-            directionsControlElement.appendChild(directions.onAdd(map));
+        directions.on('origin', () => {
+            const originMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="A"]');
+            if (originMarker) {
+                originMarker.style.backgroundColor = '#c62026'; // Change this to your desired color
+            }
+        });
 
-            directions.on('route', (event) => {
-                const routes = event.route;
-                const profile = directions.options.profile; // Get the current profile
-                if (routes && routes.length > 0) {
-                    onRoutesReceived(routes, profile); // Pass the routes and profile
-                }
-            });
+        directions.on('destination', () => {
+            const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
+            if (destinationMarker) {
+                destinationMarker.style.backgroundColor = '#26617f'; // Change this to your desired color
+            }
+        });
 
-            directions.on('origin', () => {
-                const originMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="A"]');
-                if (originMarker) {
-                    originMarker.style.backgroundColor = '#c62026'; // Change this to your desired color
-                }
-            });
-
-            directions.on('destination', () => {
-                const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
-                if (destinationMarker) {
-                    destinationMarker.style.backgroundColor = '#26617f'; // Change this to your desired color
-                }
-            });
-
-            directionsInitialized = true; // Mark as initialized
-        } else {
-            console.error("Element with ID 'directions-control' not found.");
-        }
+        directionsInitialized = true; // Mark as initialized
     }
 }
+
+initializeDirectionsControl();
+
 function deactivateDirections() {
     clearAllPopups();
     if (directions) {
@@ -391,7 +385,7 @@ function updateProfile(profile) {
     const origin = directions.getOrigin();
     const destination = directions.getDestination();
 
-    if (origin && destination) {
+    if (origin && destination && origin.geometry && destination.geometry) {
         const originCoords = `${origin.geometry.coordinates[0]},${origin.geometry.coordinates[1]}`;
         const destinationCoords = `${destination.geometry.coordinates[0]},${destination.geometry.coordinates[1]}`;
 
