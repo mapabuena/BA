@@ -195,7 +195,7 @@ function addRouteLabels(route, profile) {
 function getRouteCenter(coordinates) {
     if (coordinates && coordinates.length > 0) {
         const midIndex = Math.floor(coordinates.length / 2);
-        return [coordinates[midIndex][0], coordinates[midIndex][1]]; // Ensure the order is [lng, lat]
+        return coordinates[midIndex]; // Coordinates are already [lng, lat]
     } else {
         console.error("Coordinates are undefined or empty.");
         return [0, 0]; // Return a default value or handle appropriately
@@ -218,6 +218,7 @@ style.innerHTML = `
 `;
 document.head.appendChild(style);
 
+// Function to show route popup
 function showRoutePopup(route, coordinates, profile, isBestRoute = true) {
     const formattedDistance = (route.distance / 1000).toFixed(2) + ' km';
     const formattedTravelTime = Math.round(route.duration / 60) + ' min';
@@ -276,7 +277,11 @@ function showRoutePopup(route, coordinates, profile, isBestRoute = true) {
 
     setTimeout(() => {
         const popupElement = popup.getElement();
-        popupElement.style.zIndex = isBestRoute ? '9999' : '9998';
+        if (popupElement) {
+            popupElement.style.zIndex = isBestRoute ? '9999' : '9998';
+        } else {
+            console.error('Popup element not found for setting zIndex');
+        }
     }, 100); // Delay to ensure the popup is added to the map
 
     if (isBestRoute) {
@@ -292,29 +297,32 @@ function showRoutePopup(route, coordinates, profile, isBestRoute = true) {
     }
 }
 
+// Function to display route alternatives
 function displayRouteAlternatives(routes, profile) {
     console.log("Routes received:", routes); // Debug log for routes received
-    if (routes && routes.length > 0) {
+    if (routes && routes.length > 1) {
+        const bestRoute = routes[0];
+        const secondBestRoute = routes[1];
+
+        const bestRouteCoordinates = getRouteCenter(bestRoute.geometry.coordinates);
+        const secondBestRouteCoordinates = getRouteCenter(secondBestRoute.geometry.coordinates);
+
+        console.log("Best route coordinates:", bestRouteCoordinates); // Debug log
+        console.log("Second-best route coordinates:", secondBestRouteCoordinates); // Debug log
+
+        showRoutePopup(bestRoute, bestRouteCoordinates, profile, true);
+        showRoutePopup(secondBestRoute, secondBestRouteCoordinates, profile, false);
+    } else if (routes && routes.length > 0) {
         const bestRoute = routes[0];
         const bestRouteCoordinates = getRouteCenter(bestRoute.geometry.coordinates);
 
         console.log("Best route coordinates:", bestRouteCoordinates); // Debug log
 
         showRoutePopup(bestRoute, bestRouteCoordinates, profile, true);
-
-        if (routes.length > 1) {
-            const secondBestRoute = routes[1];
-            const secondBestRouteCoordinates = getRouteCenter(secondBestRoute.geometry.coordinates);
-
-            console.log("Second-best route coordinates:", secondBestRouteCoordinates); // Debug log
-
-            showRoutePopup(secondBestRoute, secondBestRouteCoordinates, profile, false);
-        }
     } else {
         console.warn("No routes available to display"); // Warn if no routes are available
     }
 }
-
 
 
 // Function to manually add routes to the map
