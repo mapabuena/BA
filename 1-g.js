@@ -198,7 +198,6 @@ function addRouteLabels(route, profile) {
     }
 }
 
-// Function to get the center of the route
 function getRouteCenter(coordinates) {
     if (coordinates && coordinates.length > 0) {
         console.log("Coordinates array:", coordinates);
@@ -307,8 +306,10 @@ function showRoutePopup(route, coordinates, profile, isBestRoute = true) {
 
 // Function to display route alternatives
 // Function to display route alternatives
+// Function to display route alternatives
 function displayRouteAlternatives(routes, profile) {
     console.log("Routes received:", routes); // Debug log for routes received
+
     if (routes && routes.length > 1) {
         const bestRoute = routes[0];
         const secondBestRoute = routes[1];
@@ -317,8 +318,8 @@ function displayRouteAlternatives(routes, profile) {
         let secondBestRouteCoordinates = [];
 
         try {
-            bestRouteCoordinates = bestRoute.geometry.coordinates;
-            secondBestRouteCoordinates = secondBestRoute.geometry.coordinates;
+            bestRouteCoordinates = polyline.decode(bestRoute.geometry); // Decode the polyline string
+            secondBestRouteCoordinates = polyline.decode(secondBestRoute.geometry); // Decode the polyline string
         } catch (error) {
             console.error("Error decoding polyline:", error);
         }
@@ -344,7 +345,7 @@ function displayRouteAlternatives(routes, profile) {
         let bestRouteCoordinates = [];
 
         try {
-            bestRouteCoordinates = bestRoute.geometry.coordinates;
+            bestRouteCoordinates = polyline.decode(bestRoute.geometry); // Decode the polyline string
         } catch (error) {
             console.error("Error decoding polyline:", error);
         }
@@ -366,6 +367,7 @@ function displayRouteAlternatives(routes, profile) {
         console.warn("No routes available to display"); // Warn if no routes are available
     }
 }
+
 function validateCoordinates(coords) {
     if (!Array.isArray(coords) || coords.length !== 2) {
         console.error('Invalid coordinates format:', coords);
