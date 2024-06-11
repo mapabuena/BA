@@ -389,7 +389,8 @@ function updateProfile(profile) {
         const originCoords = `${origin.geometry.coordinates[0]},${origin.geometry.coordinates[1]}`;
         const destinationCoords = `${destination.geometry.coordinates[0]},${destination.geometry.coordinates[1]}`;
 
-        const requestUrl = `https://api.mapbox.com/directions/v5/mapbox/${profile}/${originCoords};${destinationCoords}?geometries=geojson&access_token=${mapboxgl.accessToken}`;
+        // Corrected URL structure
+        const requestUrl = `https://api.mapbox.com/directions/v5/mapbox/${profile}/${originCoords};${destinationCoords}?geometries=geojson&alternatives=true&steps=true&overview=full&access_token=${mapboxgl.accessToken}`;
 
         console.log(`Fetching directions with URL: ${requestUrl}`);
 
