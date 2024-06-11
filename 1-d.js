@@ -194,9 +194,14 @@ function addRouteLabels(route, profile) {
 // Function to get the center of the route
 function getRouteCenter(coordinates) {
     if (coordinates && coordinates.length > 0) {
-        console.log("Coordinates array:", coordinates);
         const midIndex = Math.floor(coordinates.length / 2);
-        return coordinates[midIndex]; // Coordinates are already [lng, lat]
+        const midCoordinates = coordinates[midIndex];
+        if (validateCoordinates(midCoordinates)) {
+            return midCoordinates;
+        } else {
+            console.error("Mid route coordinates are invalid, using default.");
+            return coordinates[0]; // Use the first coordinate as a fallback
+        }
     } else {
         console.error("Coordinates are undefined or empty.");
         return [0, 0]; // Return a default value or handle appropriately
@@ -297,7 +302,6 @@ function showRoutePopup(route, coordinates, profile, isBestRoute = true) {
     }
 }
 
-// Function to display route alternatives
 function displayRouteAlternatives(routes, profile) {
     console.log("Routes received:", routes); // Debug log for routes received
     if (routes && routes.length > 1) {
@@ -307,24 +311,46 @@ function displayRouteAlternatives(routes, profile) {
         const bestRouteCoordinates = getRouteCenter(bestRoute.geometry.coordinates);
         const secondBestRouteCoordinates = getRouteCenter(secondBestRoute.geometry.coordinates);
 
-        console.log("Best route coordinates:", bestRouteCoordinates); // Debug log
-        console.log("Second-best route coordinates:", secondBestRouteCoordinates); // Debug log
+        if (validateCoordinates(bestRouteCoordinates)) {
+            console.log("Best route coordinates:", bestRouteCoordinates); // Debug log
+            showRoutePopup(bestRoute, bestRouteCoordinates, profile, true);
+        } else {
+            console.error("Best route coordinates are invalid.");
+        }
 
-        showRoutePopup(bestRoute, bestRouteCoordinates, profile, true);
-        showRoutePopup(secondBestRoute, secondBestRouteCoordinates, profile, false);
+        if (validateCoordinates(secondBestRouteCoordinates)) {
+            console.log("Second-best route coordinates:", secondBestRouteCoordinates); // Debug log
+            showRoutePopup(secondBestRoute, secondBestRouteCoordinates, profile, false);
+        } else {
+            console.error("Second-best route coordinates are invalid.");
+        }
     } else if (routes && routes.length > 0) {
         const bestRoute = routes[0];
         const bestRouteCoordinates = getRouteCenter(bestRoute.geometry.coordinates);
 
-        console.log("Best route coordinates:", bestRouteCoordinates); // Debug log
-
-        showRoutePopup(bestRoute, bestRouteCoordinates, profile, true);
+        if (validateCoordinates(bestRouteCoordinates)) {
+            console.log("Best route coordinates:", bestRouteCoordinates); // Debug log
+            showRoutePopup(bestRoute, bestRouteCoordinates, profile, true);
+        } else {
+            console.error("Best route coordinates are invalid.");
+        }
     } else {
         console.warn("No routes available to display"); // Warn if no routes are available
     }
 }
+function validateCoordinates(coords) {
+    if (!Array.isArray(coords) || coords.length !== 2) {
+        console.error('Invalid coordinates format:', coords);
+        return false;
+    }
+    const [lng, lat] = coords;
+    if (typeof lng !== 'number' || typeof lat !== 'number' || isNaN(lng) || isNaN(lat)) {
+        console.error('Invalid coordinate values:', coords);
+        return false;
+    }
+    return true;
+}
 
-// Function to manually add routes to the map
 function onRoutesReceived(routes, profile) {
     console.log("Routes received for profile:", profile); // Debug log for profile
     displayRouteAlternatives(routes, profile);
@@ -397,7 +423,7 @@ function updateProfile(profile) {
         const originCoords = `${originCoordinates[0]},${originCoordinates[1]}`;
         const destinationCoords = `${destinationCoordinates[0]},${destinationCoordinates[1]}`;
 
-        const requestUrl = `https://api.mapbox.com/directions/v5/${profile}/${originCoords};${destinationCoords}?geometries=geojson&alternatives=true&steps=true&overview=full&access_token=${mapboxgl.accessToken}`;
+        const requestUrl = `https://api.mapbox.com/directions/v5/mapbox/${profile}/${originCoords};${destinationCoords}?geometries=geojson&alternatives=true&steps=true&overview=full&access_token=${mapboxgl.accessToken}`;
 
         console.log(`Fetching directions with URL: ${requestUrl}`);
 
