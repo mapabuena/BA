@@ -1,11 +1,11 @@
 mapboxgl.accessToken = 'pk.eyJ1IjoibjMxbGQiLCJhIjoiY2x0NHc5NjVpMDdzaDJscGE5Y2gyYnQ5MyJ9.zfzXUlLbNlVbr9pt4naycw'; // Replace with your actual access token
+
 let map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/n31ld/clwocpejw03s201ql6pto7fh9',
     center: [-73.985428, 40.748817],
     zoom: 11
 });
-
 
 let markers = [];
 let activeFilters = {
@@ -25,9 +25,11 @@ const directions = new MapboxDirections({
     accessToken: 'pk.eyJ1IjoibjMxbGQiLCJhIjoiY2x0NHc5NjVpMDdzaDJscGE5Y2gyYnQ5MyJ9.zfzXUlLbNlVbr9pt4naycw', // Make sure this token is valid and has appropriate permissions
     unit: 'metric'
 });
+
 let directionsInitialized = false;
 
 map.addControl(directions, 'top-left');
+
 
 function applyRouteInfoStyles() {
     const routeInfo = document.querySelector('.route-info');
@@ -384,6 +386,7 @@ document.getElementById('custom-walking').addEventListener('click', () => update
 
 
 // Function to update the profile and fetch new directions
+// Function to update the profile and fetch new directions
 function updateProfile(profile) {
     const origin = directions.getOrigin();
     const destination = directions.getDestination();
@@ -393,7 +396,7 @@ function updateProfile(profile) {
         const originCoords = `${origin.geometry.coordinates[0]},${origin.geometry.coordinates[1]}`;
         const destinationCoords = `${destination.geometry.coordinates[0]},${destination.geometry.coordinates[1]}`;
 
-        const requestUrl = `https://api.mapbox.com/directions/v5/${profile}/${originCoords};${destinationCoords}?geometries=geojson&access_token='pk.eyJ1IjoibjMxbGQiLCJhIjoiY2x0NHc5NjVpMDdzaDJscGE5Y2gyYnQ5MyJ9.zfzXUlLbNlVbr9pt4naycw`;
+        const requestUrl = `https://api.mapbox.com/directions/v5/${profile}/${originCoords};${destinationCoords}?geometries=geojson&access_token=pk.eyJ1IjoibjMxbGQiLCJhIjoiY2x0NHc5NjVpMDdzaDJscGE5Y2gyYnQ5MyJ9.zfzXUlLbNlVbr9pt4naycw`;
 
         // Fetch new directions with the updated profile
         fetch(requestUrl, {
