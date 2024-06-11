@@ -508,7 +508,7 @@ function updateProfile(profile) {
                 directions = new MapboxDirections({
                     accessToken: mapboxgl.accessToken,
                     unit: 'metric',
-                    profile: `mapbox/${profile}`,
+                    profile: `${profile}`,
                     alternatives: true,
                     controls: {
                         inputs: true,
@@ -533,7 +533,7 @@ function updateProfile(profile) {
                     destinationInput.value = `${destinationCoordinates[1]}, ${destinationCoordinates[0]}`;
                 }
 
-                onRoutesReceived(data.routes, `mapbox/${profile}`);
+                onRoutesReceived(data.routes, `${profile}`);
             } else {
                 console.error('No routes found');
             }
