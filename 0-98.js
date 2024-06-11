@@ -148,7 +148,6 @@ function initializeDirectionsControl() {
     }
 }
 
-
 function deactivateDirections() {
     clearAllPopups();
     if (directions) {
@@ -432,7 +431,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setupInfoItemHoverEffects();
     setupDirectionsButton();
  
-    const closeDirectionsButton = document.getElementById('close-directions');
+     const closeDirectionsButton = document.getElementById('close-directions');
     if (closeDirectionsButton) {
         closeDirectionsButton.addEventListener('click', function() {
             document.getElementById('directions-container').style.display = 'none';
