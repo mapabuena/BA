@@ -5,8 +5,7 @@ let map = new mapboxgl.Map({
     center: [-73.985428, 40.748817],
     zoom: 11
 });
-// Add the directions control to the map
-map.addControl(directions, 'top-left');
+
 
 let markers = [];
 let activeFilters = {
@@ -24,6 +23,8 @@ let selectedMarkerIndex = null; // Variable to keep track of the selected marker
 let directions; // Declare the directions variable here
 let directionsInitialized = false;
 
+map.addControl(directions, 'top-left');
+
 function applyRouteInfoStyles() {
     const routeInfo = document.querySelector('.route-info');
     if (routeInfo) {
@@ -40,6 +41,7 @@ function applyRouteInfoStyles() {
 }
 window.addEventListener('resize', applyRouteInfoStyles);
 document.addEventListener('DOMContentLoaded', applyRouteInfoStyles);
+
 
 function initializeDirectionsControl() {
     if (!directions) {
