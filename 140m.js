@@ -21,6 +21,7 @@ let isDataLoading = false;
 let selectedMarkerIndex = null; // Variable to keep track of the selected marker index
 
 let directionsInitialized = false;
+let directions; // Define the directions variable here
 
 map.addControl(directions, 'top-left');
 
