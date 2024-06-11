@@ -199,7 +199,6 @@ function addRouteLabels(route, profile) {
 }
 
 // Function to get the center of the route
-// Function to get the center of the route
 function getRouteCenter(coordinates) {
     if (coordinates && coordinates.length > 0) {
         console.log("Coordinates array:", coordinates);
@@ -307,34 +306,61 @@ function showRoutePopup(route, coordinates, profile, isBestRoute = true) {
 }
 
 // Function to display route alternatives
+// Function to display route alternatives
 function displayRouteAlternatives(routes, profile) {
     console.log("Routes received:", routes); // Debug log for routes received
     if (routes && routes.length > 1) {
         const bestRoute = routes[0];
         const secondBestRoute = routes[1];
 
-        const bestRouteCoordinates = getRouteCenter(bestRoute.geometry.coordinates);
-        const secondBestRouteCoordinates = getRouteCenter(secondBestRoute.geometry.coordinates);
+        let bestRouteCoordinates = [];
+        let secondBestRouteCoordinates = [];
 
-        if (bestRouteCoordinates && secondBestRouteCoordinates) {
+        try {
+            bestRouteCoordinates = bestRoute.geometry.coordinates;
+            secondBestRouteCoordinates = secondBestRoute.geometry.coordinates;
+        } catch (error) {
+            console.error("Error decoding polyline:", error);
+        }
+
+        if (bestRouteCoordinates.length > 0 && secondBestRouteCoordinates.length > 0) {
             console.log("Best route coordinates:", bestRouteCoordinates); // Debug log
             console.log("Second-best route coordinates:", secondBestRouteCoordinates); // Debug log
 
-            showRoutePopup(bestRoute, bestRouteCoordinates, profile, true);
-            showRoutePopup(secondBestRoute, secondBestRouteCoordinates, profile, false);
+            const bestRouteCenter = getRouteCenter(bestRouteCoordinates);
+            const secondBestRouteCenter = getRouteCenter(secondBestRouteCoordinates);
+
+            if (bestRouteCenter && secondBestRouteCenter) {
+                showRoutePopup(bestRoute, bestRouteCenter, profile, true);
+                showRoutePopup(secondBestRoute, secondBestRouteCenter, profile, false);
+            } else {
+                console.error("Invalid route center coordinates.");
+            }
         } else {
-            console.error("Invalid route center coordinates.");
+            console.error("Decoded coordinates are empty or invalid.");
         }
     } else if (routes && routes.length > 0) {
         const bestRoute = routes[0];
-        const bestRouteCoordinates = getRouteCenter(bestRoute.geometry.coordinates);
+        let bestRouteCoordinates = [];
 
-        if (bestRouteCoordinates) {
+        try {
+            bestRouteCoordinates = bestRoute.geometry.coordinates;
+        } catch (error) {
+            console.error("Error decoding polyline:", error);
+        }
+
+        if (bestRouteCoordinates.length > 0) {
             console.log("Best route coordinates:", bestRouteCoordinates); // Debug log
 
-            showRoutePopup(bestRoute, bestRouteCoordinates, profile, true);
+            const bestRouteCenter = getRouteCenter(bestRouteCoordinates);
+
+            if (bestRouteCenter) {
+                showRoutePopup(bestRoute, bestRouteCenter, profile, true);
+            } else {
+                console.error("Invalid route center coordinates.");
+            }
         } else {
-            console.error("Invalid route center coordinates.");
+            console.error("Decoded coordinates are empty or invalid.");
         }
     } else {
         console.warn("No routes available to display"); // Warn if no routes are available
