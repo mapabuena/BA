@@ -416,8 +416,6 @@ function onRoutesReceived(routes, profile) {
     console.log("Routes received for profile:", profile); // Debug log for profile
     displayRouteAlternatives(routes, profile);
 }
-// Initialize directions control
-initializeDirectionsControl();
 
 document.addEventListener('DOMContentLoaded', function() {
     setupDatePickers();
