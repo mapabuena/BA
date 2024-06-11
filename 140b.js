@@ -5,6 +5,8 @@ let map = new mapboxgl.Map({
     center: [-73.985428, 40.748817],
     zoom: 11
 });
+// Add the directions control to the map
+map.addControl(directions, 'top-left');
 
 let markers = [];
 let activeFilters = {
@@ -375,16 +377,31 @@ document.getElementById('custom-cycling').addEventListener('click', () => update
 document.getElementById('custom-walking').addEventListener('click', () => updateProfile('mapbox/walking'));
 
 
+// Function to update the profile and fetch new directions
 function updateProfile(profile) {
-    if (directions && directions.getOrigin() && directions.getDestination()) {
-        const origin = directions.getOrigin();
-        const destination = directions.getDestination();
-        
-        directions.setProfile(profile);
-        directions.setOrigin(origin.geometry.coordinates);
-        directions.setDestination(destination.geometry.coordinates);
+    const origin = directions.getOrigin();
+    const destination = directions.getDestination();
 
-        setDirectionsInputFields(origin.place_name, destination.place_name);
+    // Check if origin and destination are set
+    if (origin && destination) {
+        const originCoords = `${origin.geometry.coordinates[0]},${origin.geometry.coordinates[1]}`;
+        const destinationCoords = `${destination.geometry.coordinates[0]},${destination.geometry.coordinates[1]}`;
+
+        const requestUrl = `https://api.mapbox.com/directions/v5/${profile}/${originCoords};${destinationCoords}?geometries=geojson&access_token=YOUR_MAPBOX_ACCESS_TOKEN`;
+
+        // Fetch new directions with the updated profile
+        fetch(requestUrl)
+            .then(response => response.json())
+            .then(data => {
+                if (data.routes && data.routes.length > 0) {
+                    directions.setRoutes(data.routes);
+                } else {
+                    console.error('No routes found');
+                }
+            })
+            .catch(error => console.error('Error fetching directions:', error));
+    } else {
+        console.error('Origin and destination must be set to update the profile');
     }
 }
 // Add this function to set up the directions button event listener
