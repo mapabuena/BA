@@ -464,7 +464,6 @@ document.getElementById('custom-traffic').addEventListener('click', () => update
 document.getElementById('custom-cycling').addEventListener('click', () => updateProfile('mapbox/cycling'));
 document.getElementById('custom-walking').addEventListener('click', () => updateProfile('mapbox/walking'));
 
-
 function updateProfile(profile) {
     if (!originCoordinates || !destinationCoordinates) {
         const { origin, destination } = getCoordinatesFromLocalStorage();
@@ -499,7 +498,11 @@ function updateProfile(profile) {
             if (data.routes && data.routes.length > 0) {
                 // Remove the existing directions control if it exists
                 if (directions && directions._map) {
-                    map.removeControl(directions);
+                    try {
+                        map.removeControl(directions);
+                    } catch (error) {
+                        console.error('Error removing directions control:', error);
+                    }
                 }
 
                 // Create a new directions control with the updated profile
@@ -526,7 +529,11 @@ function updateProfile(profile) {
                 if (directionsContainer) {
                     directionsContainer.innerHTML = ''; // Clear any existing content
                     directions.onAdd(map); // Initialize the directions control
-                    directionsContainer.appendChild(directions._container); // Append it to the specified div
+                    if (directions._container) {
+                        directionsContainer.appendChild(directions._container); // Append it to the specified div
+                    } else {
+                        console.error('Directions control container not found.');
+                    }
                 } else {
                     console.error('Element with ID "directions-control" not found.');
                 }
@@ -575,6 +582,7 @@ function updateProfile(profile) {
         alert('Please set both origin and destination before updating the profile.');
     }
 }
+
 
 
 
