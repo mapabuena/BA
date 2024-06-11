@@ -391,7 +391,6 @@ document.getElementById('custom-walking').addEventListener('click', () => update
 
 
 // Function to update the profile and fetch new directions
-// Function to update the profile and fetch new directions
 function updateProfile(profile) {
     const origin = directions.getOrigin();
     const destination = directions.getDestination();
@@ -401,7 +400,7 @@ function updateProfile(profile) {
         const originCoords = `${origin.geometry.coordinates[0]},${origin.geometry.coordinates[1]}`;
         const destinationCoords = `${destination.geometry.coordinates[0]},${destination.geometry.coordinates[1]}`;
 
-        const requestUrl = `https://api.mapbox.com/directions/v5/${profile}/${originCoords};${destinationCoords}?geometries=geojson&access_token=pk.eyJ1IjoibjMxbGQiLCJhIjoiY2x0NHc5NjVpMDdzaDJscGE5Y2gyYnQ5MyJ9.zfzXUlLbNlVbr9pt4naycw`;
+        const requestUrl = `https://api.mapbox.com/directions/v5/${profile}/${originCoords};${destinationCoords}?geometries=geojson&access_token=${mapboxgl.accessToken}`;
 
         // Fetch new directions with the updated profile
         fetch(requestUrl, {
@@ -419,7 +418,14 @@ function updateProfile(profile) {
         })
         .then(data => {
             if (data.routes && data.routes.length > 0) {
-                directions.setRoutes(data.routes);
+                // Remove the current directions
+                directions.removeRoutes();
+                // Set the new profile and origin/destination
+                directions.setProfile(profile);
+                directions.setOrigin(origin.geometry.coordinates);
+                directions.setDestination(destination.geometry.coordinates);
+                // Add the new route
+                data.routes.forEach(route => directions.addRoute(route));
             } else {
                 console.error('No routes found');
             }
@@ -429,7 +435,6 @@ function updateProfile(profile) {
         console.error('Origin and destination must be set to update the profile');
     }
 }
-
 // Add this function to set up the directions button event listener
 function setupDirectionsButton() {
     const directionsButton = document.getElementById('get-directions');
