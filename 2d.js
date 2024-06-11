@@ -1,11 +1,13 @@
 mapboxgl.accessToken = 'pk.eyJ1IjoibjMxbGQiLCJhIjoiY2x0NHc5NjVpMDdzaDJscGE5Y2gyYnQ5MyJ9.zfzXUlLbNlVbr9pt4naycw'; // Replace with your actual access token
 
-let map = new mapboxgl.Map({
-    container: 'map',
-    style: 'mapbox://styles/n31ld/clwocpejw03s201ql6pto7fh9',
-    center: [-73.985428, 40.748817],
-    zoom: 11
-});
+if (typeof map === 'undefined') {
+    var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/n31ld/clwocpejw03s201ql6pto7fh9',
+        center: [-73.985428, 40.748817],
+        zoom: 11
+    });
+}
 
 let markers = [];
 let activeFilters = {
@@ -621,6 +623,20 @@ function deactivateDirections() {
     map.off('click', setDestinationOnClick); // Remove map click event listener for setting destination
 }
 
+function removeDirectionsSource() {
+    const sourceId = 'directions';
+    const layersUsingSource = ['directions-origin-point', 'directions-destination-point'];
+    
+    layersUsingSource.forEach(layerId => {
+        if (map.getLayer(layerId)) {
+            map.removeLayer(layerId);
+        }
+    });
+
+    if (map.getSource(sourceId)) {
+        map.removeSource(sourceId);
+    }
+}
 function clearAllPopups() {
     if (currentPopup) {
         currentPopup.remove();
