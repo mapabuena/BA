@@ -423,7 +423,8 @@ function updateProfile(profile) {
     } else {
         console.error('Origin and destination must be set to update the profile');
     }
-}function updateProfile(profile) {
+}
+function updateProfile(profile) {
     const origin = directions.getOrigin();
     const destination = directions.getDestination();
 
