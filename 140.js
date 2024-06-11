@@ -20,8 +20,7 @@ let currentCSV = 'https://raw.githubusercontent.com/mapabuena/BA/main/NewYorkPin
 let isDataLoading = false;
 let selectedMarkerIndex = null; // Variable to keep track of the selected marker index
 
-// Initialize the directions object without specifying a profile
-const directions = new MapboxDirections({
+let directions = new MapboxDirections({
     accessToken: 'pk.eyJ1IjoibjMxbGQiLCJhIjoiY2x0NHc5NjVpMDdzaDJscGE5Y2gyYnQ5MyJ9.zfzXUlLbNlVbr9pt4naycw', // Make sure this token is valid and has appropriate permissions
     unit: 'metric'
 });
@@ -50,7 +49,7 @@ document.addEventListener('DOMContentLoaded', applyRouteInfoStyles);
 
 
 function initializeDirectionsControl() {
-    if (!directions) {
+    if (!directionsInitialized) {
         const customStyles = [{
             'id': 'directions-origin-point',
             'type': 'circle',
@@ -129,7 +128,13 @@ function deactivateDirections() {
         directions.removeRoutes(); // Clear routes
         directions.setOrigin(''); // Clear the origin
         directions.setDestination(''); // Clear the destination
-        map.removeControl(directions); // Remove the directions control from the map
+        try {
+            if (directions._map) { // Check if directions is still added to the map
+                map.removeControl(directions); // Remove the directions control from the map
+            }
+        } catch (error) {
+            console.error("Error removing directions control:", error);
+        }
         directionsInitialized = false; // Mark as not initialized
         directions = null; // Reset the directions object
     }
