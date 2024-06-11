@@ -25,7 +25,11 @@ let destinationCoordinates = null;
 let directionsInitialized = false;
 let directions; // Define the directions variable here
 
-
+if (typeof polyline === 'undefined') {
+    console.error("Polyline library is not loaded!");
+} else {
+    console.log("Polyline library loaded successfully.");
+}
 function applyRouteInfoStyles() {
     const routeInfo = document.querySelector('.route-info');
     if (routeInfo) {
@@ -208,7 +212,6 @@ function getRouteCenter(coordinates) {
         return null; // Return null to handle appropriately
     }
 }
-
 let currentPopup = null;
 let secondPopup = null;
 
@@ -227,6 +230,10 @@ document.head.appendChild(style);
 
 // Function to show route popup
 function showRoutePopup(route, coordinates, profile, isBestRoute = true) {
+    if (!coordinates || coordinates.length !== 2 || typeof coordinates[0] !== 'number' || typeof coordinates[1] !== 'number') {
+        console.error("Invalid coordinates for route popup:", coordinates);
+        return; // Exit if coordinates are invalid
+    }
     const formattedDistance = (route.distance / 1000).toFixed(2) + ' km';
     const formattedTravelTime = Math.round(route.duration / 60) + ' min';
 
