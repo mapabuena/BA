@@ -375,9 +375,9 @@ function setDirectionsInputFields(originTitle, destinationTitle) {
         destinationInput.value = destinationTitle;
     }
 }
-document.getElementById('custom-traffic').addEventListener('click', () => updateProfile('driving-traffic'));
-document.getElementById('custom-cycling').addEventListener('click', () => updateProfile('cycling'));
-document.getElementById('custom-walking').addEventListener('click', () => updateProfile('walking'));
+document.getElementById('custom-traffic').addEventListener('click', () => updateProfile('mapbox/driving-traffic'));
+document.getElementById('custom-cycling').addEventListener('click', () => updateProfile('mapbox/cycling'));
+document.getElementById('custom-walking').addEventListener('click', () => updateProfile('mapbox/walking'));
 
 
 // Function to update the profile and fetch new directions
@@ -390,7 +390,7 @@ function updateProfile(profile) {
         const destinationCoords = `${destination.geometry.coordinates[0]},${destination.geometry.coordinates[1]}`;
 
         // Corrected URL structure with mapbox profile prefix
-        const requestUrl = `https://api.mapbox.com/directions/v5/mapbox/${profile}/${originCoords};${destinationCoords}?geometries=geojson&alternatives=true&steps=true&overview=full&access_token=${mapboxgl.accessToken}`;
+        const requestUrl = `https://api.mapbox.com/directions/v5/${profile}/${originCoords};${destinationCoords}?geometries=geojson&alternatives=true&steps=true&overview=full&access_token=${mapboxgl.accessToken}`;
 
         console.log(`Fetching directions with URL: ${requestUrl}`);
 
