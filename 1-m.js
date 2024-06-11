@@ -497,10 +497,40 @@ function updateProfile(profile) {
         .then(data => {
             console.log('Directions API response data:', data);
             if (data.routes && data.routes.length > 0) {
-                directions.setProfile(`mapbox/${profile}`);
-                directions.removeRoutes();
+                // Remove the existing directions control
+                if (directions) {
+                    map.removeControl(directions);
+                }
+
+                // Create a new directions control with the updated profile
+                directions = new MapboxDirections({
+                    accessToken: mapboxgl.accessToken,
+                    unit: 'metric',
+                    profile: `mapbox/${profile}`,
+                    alternatives: true,
+                    controls: {
+                        inputs: true,
+                        instructions: true,
+                    },
+                    styles: customStyles // Apply the custom styles
+                });
+
+                map.addControl(directions, 'top-left');
+
                 directions.setOrigin(originCoordinates);
                 directions.setDestination(destinationCoordinates);
+
+                const originInput = document.querySelector('.mapbox-directions-origin input');
+                const destinationInput = document.querySelector('.mapbox-directions-destination input');
+                
+                if (originInput) {
+                    originInput.value = `${originCoordinates[1]}, ${originCoordinates[0]}`;
+                }
+
+                if (destinationInput) {
+                    destinationInput.value = `${destinationCoordinates[1]}, ${destinationCoordinates[0]}`;
+                }
+
                 onRoutesReceived(data.routes, `mapbox/${profile}`);
             } else {
                 console.error('No routes found');
@@ -512,6 +542,7 @@ function updateProfile(profile) {
         alert('Please set both origin and destination before updating the profile.');
     }
 }
+
 
 
 // Add this function to set up the directions button event listener
