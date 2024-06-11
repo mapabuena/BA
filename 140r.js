@@ -423,6 +423,48 @@ function updateProfile(profile) {
     } else {
         console.error('Origin and destination must be set to update the profile');
     }
+}function updateProfile(profile) {
+    const origin = directions.getOrigin();
+    const destination = directions.getDestination();
+
+    if (origin && destination && origin.geometry && destination.geometry) {
+        const originCoords = `${origin.geometry.coordinates[0]},${origin.geometry.coordinates[1]}`;
+        const destinationCoords = `${destination.geometry.coordinates[0]},${destination.geometry.coordinates[1]}`;
+
+        // Corrected URL structure with mapbox profile prefix
+        const requestUrl = `https://api.mapbox.com/directions/v5/mapbox/${profile}/${originCoords};${destinationCoords}?geometries=geojson&alternatives=true&steps=true&overview=full&access_token=${mapboxgl.accessToken}`;
+
+        console.log(`Fetching directions with URL: ${requestUrl}`);
+
+        fetch(requestUrl, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            console.log(`Response status: ${response.status}`);
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+        })
+        .then(data => {
+            console.log('Directions API response data:', data);
+            if (data.routes && data.routes.length > 0) {
+                directions.removeRoutes();
+                directions.setOrigin(origin.geometry.coordinates);
+                directions.setDestination(destination.geometry.coordinates);
+                data.routes.forEach(route => directions.addRoute(route));
+            } else {
+                console.error('No routes found');
+            }
+        })
+        .catch(error => console.error('Error fetching directions:', error));
+    } else {
+        console.error('Origin and destination must be set to update the profile');
+    }
 }
 // Add this function to set up the directions button event listener
 function setupDirectionsButton() {
