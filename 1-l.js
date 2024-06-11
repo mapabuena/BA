@@ -497,10 +497,11 @@ function updateProfile(profile) {
         .then(data => {
             console.log('Directions API response data:', data);
             if (data.routes && data.routes.length > 0) {
+                directions.setProfile(`mapbox/${profile}`);
                 directions.removeRoutes();
                 directions.setOrigin(originCoordinates);
                 directions.setDestination(destinationCoordinates);
-                onRoutesReceived(data.routes, profile);
+                onRoutesReceived(data.routes, `mapbox/${profile}`);
             } else {
                 console.error('No routes found');
             }
@@ -511,6 +512,7 @@ function updateProfile(profile) {
         alert('Please set both origin and destination before updating the profile.');
     }
 }
+
 
 // Add this function to set up the directions button event listener
 function setupDirectionsButton() {
