@@ -500,9 +500,20 @@ function updateProfile(profile) {
                 if (directions && directions._map) {
                     try {
                         map.removeControl(directions);
+                        directions = null; // Reset the directions object
                     } catch (error) {
                         console.error('Error removing directions control:', error);
                     }
+                }
+
+                // Remove the existing source if it exists
+                if (map.getSource('directions')) {
+                    map.removeSource('directions');
+                }
+
+                // Remove the existing layer if it exists
+                if (map.getLayer('directions-route')) {
+                    map.removeLayer('directions-route');
                 }
 
                 // Create a new directions control with the updated profile
@@ -582,8 +593,6 @@ function updateProfile(profile) {
         alert('Please set both origin and destination before updating the profile.');
     }
 }
-
-
 
 
 
