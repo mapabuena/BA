@@ -420,7 +420,6 @@ function onRoutesReceived(routes, profile) {
 initializeDirectionsControl();
 
 document.addEventListener('DOMContentLoaded', function() {
-    initializeDirectionsControl();
     setupDatePickers();
     setupCityButtons();
     setupFormHandlers();
