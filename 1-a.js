@@ -222,7 +222,6 @@ function showRoutePopup(route, coordinates, profile, isBestRoute = true) {
     const formattedDistance = (route.distance / 1000).toFixed(2) + ' km';
     const formattedTravelTime = Math.round(route.duration / 60) + ' min';
 
-    // Define the icon and popup size based on the transport mode
     let modeIcon;
     let iconSize = { width: '24px', height: '24px' }; // Default icon size
     let popupSize = { width: '120px', height: '32px' }; // Default popup size
@@ -255,8 +254,8 @@ function showRoutePopup(route, coordinates, profile, isBestRoute = true) {
             iconPaddingBottom = '15px';
     }
 
-    const backgroundColor = isBestRoute ? 'rgba(255, 255, 255, 0.75)' : 'rgba(169, 169, 169, 0.75)'; // White for best route, gray for second-best
-    const popupClass = isBestRoute ? 'best-route-popup' : 'second-route-popup'; // Set class based on the route type
+    const backgroundColor = isBestRoute ? 'rgba(255, 255, 255, 0.75)' : 'rgba(169, 169, 169, 0.75)';
+    const popupClass = isBestRoute ? 'best-route-popup' : 'second-route-popup';
 
     const popupContent = `
         <div class="${popupClass}" style="display: flex; align-items: center; padding: 5px; background: ${backgroundColor}; border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); font-family: Arial, sans-serif; width: ${popupSize.width}; height: ${popupSize.height}; overflow: hidden;">
@@ -295,29 +294,27 @@ function showRoutePopup(route, coordinates, profile, isBestRoute = true) {
 
 function displayRouteAlternatives(routes, profile) {
     console.log("Routes received:", routes); // Debug log for routes received
-    if (routes && routes.length > 1) {
-        const bestRoute = routes[0];
-        const secondBestRoute = routes[1];
-
-        const bestRouteCoordinates = getRouteCenter(bestRoute.geometry.coordinates);
-        const secondBestRouteCoordinates = getRouteCenter(secondBestRoute.geometry.coordinates);
-
-        console.log("Best route coordinates:", bestRouteCoordinates); // Debug log
-        console.log("Second-best route coordinates:", secondBestRouteCoordinates); // Debug log
-
-        showRoutePopup(bestRoute, bestRouteCoordinates, profile, true);
-        showRoutePopup(secondBestRoute, secondBestRouteCoordinates, profile, false);
-    } else if (routes && routes.length > 0) {
+    if (routes && routes.length > 0) {
         const bestRoute = routes[0];
         const bestRouteCoordinates = getRouteCenter(bestRoute.geometry.coordinates);
 
         console.log("Best route coordinates:", bestRouteCoordinates); // Debug log
 
         showRoutePopup(bestRoute, bestRouteCoordinates, profile, true);
+
+        if (routes.length > 1) {
+            const secondBestRoute = routes[1];
+            const secondBestRouteCoordinates = getRouteCenter(secondBestRoute.geometry.coordinates);
+
+            console.log("Second-best route coordinates:", secondBestRouteCoordinates); // Debug log
+
+            showRoutePopup(secondBestRoute, secondBestRouteCoordinates, profile, false);
+        }
     } else {
         console.warn("No routes available to display"); // Warn if no routes are available
     }
 }
+
 
 
 // Function to manually add routes to the map
@@ -387,6 +384,7 @@ document.getElementById('custom-cycling').addEventListener('click', () => update
 document.getElementById('custom-walking').addEventListener('click', () => updateProfile('mapbox/walking'));
 
 
+// Function to update the profile and fetch new directions
 // Function to update the profile and fetch new directions
 // Function to update the profile and fetch new directions
 function updateProfile(profile) {
