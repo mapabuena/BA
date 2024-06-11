@@ -86,13 +86,20 @@ function initializeDirectionsControl() {
             styles: customStyles // Apply the custom styles
         });
      map.addControl(directions, 'top-left');
-       directions.on('route', (event) => {
-            const routes = event.route;
-            const profile = directions.options.profile; // Get the current profile
-            if (routes && routes.length > 0) {
-                onRoutesReceived(routes, profile); // Pass the routes and profile
-            }
-        });
+directions.on('route', (event) => {
+    const routes = event.route;
+    const profile = directions.options.profile; // Get the current profile
+    if (routes && routes.length > 0) {
+        onRoutesReceived(routes, profile); // Pass the routes and profile
+    } else {
+        console.error("No routes received from Directions API.");
+    }
+});
+
+function onRoutesReceived(routes, profile) {
+    console.log("Routes received for profile:", profile); // Debug log for profile
+    displayRouteAlternatives(routes, profile);
+}
 
         directions.on('origin', () => {
             const originMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="A"]');
@@ -192,21 +199,18 @@ function addRouteLabels(route, profile) {
 }
 
 // Function to get the center of the route
+// Function to get the center of the route
 function getRouteCenter(coordinates) {
     if (coordinates && coordinates.length > 0) {
+        console.log("Coordinates array:", coordinates);
         const midIndex = Math.floor(coordinates.length / 2);
-        const midCoordinates = coordinates[midIndex];
-        if (validateCoordinates(midCoordinates)) {
-            return midCoordinates;
-        } else {
-            console.error("Mid route coordinates are invalid, using default.");
-            return coordinates[0]; // Use the first coordinate as a fallback
-        }
+        return coordinates[midIndex]; // Coordinates are already [lng, lat]
     } else {
         console.error("Coordinates are undefined or empty.");
-        return [0, 0]; // Return a default value or handle appropriately
+        return null; // Return null to handle appropriately
     }
 }
+
 let currentPopup = null;
 let secondPopup = null;
 
@@ -302,6 +306,7 @@ function showRoutePopup(route, coordinates, profile, isBestRoute = true) {
     }
 }
 
+// Function to display route alternatives
 function displayRouteAlternatives(routes, profile) {
     console.log("Routes received:", routes); // Debug log for routes received
     if (routes && routes.length > 1) {
@@ -311,28 +316,25 @@ function displayRouteAlternatives(routes, profile) {
         const bestRouteCoordinates = getRouteCenter(bestRoute.geometry.coordinates);
         const secondBestRouteCoordinates = getRouteCenter(secondBestRoute.geometry.coordinates);
 
-        if (validateCoordinates(bestRouteCoordinates)) {
+        if (bestRouteCoordinates && secondBestRouteCoordinates) {
             console.log("Best route coordinates:", bestRouteCoordinates); // Debug log
-            showRoutePopup(bestRoute, bestRouteCoordinates, profile, true);
-        } else {
-            console.error("Best route coordinates are invalid.");
-        }
-
-        if (validateCoordinates(secondBestRouteCoordinates)) {
             console.log("Second-best route coordinates:", secondBestRouteCoordinates); // Debug log
+
+            showRoutePopup(bestRoute, bestRouteCoordinates, profile, true);
             showRoutePopup(secondBestRoute, secondBestRouteCoordinates, profile, false);
         } else {
-            console.error("Second-best route coordinates are invalid.");
+            console.error("Invalid route center coordinates.");
         }
     } else if (routes && routes.length > 0) {
         const bestRoute = routes[0];
         const bestRouteCoordinates = getRouteCenter(bestRoute.geometry.coordinates);
 
-        if (validateCoordinates(bestRouteCoordinates)) {
+        if (bestRouteCoordinates) {
             console.log("Best route coordinates:", bestRouteCoordinates); // Debug log
+
             showRoutePopup(bestRoute, bestRouteCoordinates, profile, true);
         } else {
-            console.error("Best route coordinates are invalid.");
+            console.error("Invalid route center coordinates.");
         }
     } else {
         console.warn("No routes available to display"); // Warn if no routes are available
@@ -417,7 +419,6 @@ document.getElementById('custom-cycling').addEventListener('click', () => update
 document.getElementById('custom-walking').addEventListener('click', () => updateProfile('mapbox/walking'));
 
 
-// Function to update the profile and fetch new directions
 function updateProfile(profile) {
     if (originCoordinates && destinationCoordinates) {
         const originCoords = `${originCoordinates[0]},${originCoordinates[1]}`;
