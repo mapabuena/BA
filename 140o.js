@@ -397,17 +397,10 @@ function updateProfile(profile) {
                 'Content-Type': 'application/json'
             }
         })
-        .then(response => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-        })
+        .then(response => response.json())
         .then(data => {
             if (data.routes && data.routes.length > 0) {
                 directions.removeRoutes();
-                directions.setProfile(profile);
                 directions.setOrigin(origin.geometry.coordinates);
                 directions.setDestination(destination.geometry.coordinates);
                 data.routes.forEach(route => directions.addRoute(route));
