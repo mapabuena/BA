@@ -106,9 +106,9 @@ function initializeDirectionsControl() {
         const directionsContainer = document.getElementById('directions-control');
         if (directionsContainer) {
             directionsContainer.innerHTML = ''; // Clear any existing content
-            directions.onAdd(map); // Initialize the directions control
-            if (directions._container) {
-                directionsContainer.appendChild(directions._container); // Append it to the specified div
+            const directionsControlContainer = directions.onAdd(map); // Initialize the directions control and get the container
+            if (directionsControlContainer) {
+                directionsContainer.appendChild(directionsControlContainer); // Append it to the specified div
             } else {
                 console.error('Directions control container not found.');
             }
@@ -431,7 +431,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setupMapEvents();
     setupInfoItemHoverEffects();
     setupDirectionsButton();
-
+ 
     const closeDirectionsButton = document.getElementById('close-directions');
     if (closeDirectionsButton) {
         closeDirectionsButton.addEventListener('click', function() {
@@ -442,7 +442,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Element with ID 'close-directions' not found.");
     }
 
-    // Call this function to set up the directions button event
+    const directionsButton = document.getElementById('get-directions');
     if (directionsButton) {
         setupDirectionsButton();
     } else {
@@ -514,6 +514,10 @@ function updateProfile(profile) {
                     directions.removeRoutes();
                     directions.setOrigin('');
                     directions.setDestination('');
+                    const directionsContainer = document.getElementById('directions-control');
+                    if (directionsContainer && directions._container) {
+                        directionsContainer.removeChild(directions._container); // Remove the current container
+                    }
                 }
 
                 directions = new MapboxDirections({
@@ -532,9 +536,9 @@ function updateProfile(profile) {
                 const directionsContainer = document.getElementById('directions-control');
                 if (directionsContainer) {
                     directionsContainer.innerHTML = ''; // Clear any existing content
-                    directions.onAdd(map); // Initialize the directions control
-                    if (directions._container) {
-                        directionsContainer.appendChild(directions._container); // Append it to the specified div
+                    const directionsControlContainer = directions.onAdd(map); // Initialize the directions control and get the container
+                    if (directionsControlContainer) {
+                        directionsContainer.appendChild(directionsControlContainer); // Append it to the specified div
                     } else {
                         console.error('Directions control container not found.');
                     }
