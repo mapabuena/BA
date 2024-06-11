@@ -24,6 +24,35 @@ let destinationCoordinates = null;
 
 let directionsInitialized = false;
 let directions; // Define the directions variable here
+// Define customStyles globally if not already defined
+
+const customStyles = [{
+    'id': 'directions-origin-point',
+    'type': 'circle',
+    'source': 'directions',
+    'paint': {
+        'circle-radius': 18,
+        'circle-color': '#c62026' // Custom color for the start marker
+    },
+    'filter': [
+        'all',
+        ['in', '$type', 'Point'],
+        ['in', 'marker-symbol', 'A']
+    ]
+}, {
+    'id': 'directions-destination-point',
+    'type': 'circle',
+    'source': 'directions',
+    'paint': {
+        'circle-radius': 18,
+        'circle-color': '#000000' // Custom color for the end marker
+    },
+    'filter': [
+        'all',
+        ['in', '$type', 'Point'],
+        ['in', 'marker-symbol', 'B']
+    ]
+}];
 
 if (typeof polyline === 'undefined') {
     console.error("Polyline library is not loaded!");
@@ -61,34 +90,7 @@ function getCoordinatesFromLocalStorage() {
 
 function initializeDirectionsControl() {
     if (!directionsInitialized) {
-        const customStyles = [{
-            'id': 'directions-origin-point',
-            'type': 'circle',
-            'source': 'directions',
-            'paint': {
-                'circle-radius': 18,
-                'circle-color': '#c62026' // Custom color for the start marker
-            },
-            'filter': [
-                'all',
-                ['in', '$type', 'Point'],
-                ['in', 'marker-symbol', 'A']
-            ]
-        }, {
-            'id': 'directions-destination-point',
-            'type': 'circle',
-            'source': 'directions',
-            'paint': {
-                'circle-radius': 18,
-                'circle-color': '#000000' // Custom color for the end marker
-            },
-            'filter': [
-                'all',
-                ['in', '$type', 'Point'],
-                ['in', 'marker-symbol', 'B']
-            ]
-        }];
-
+    
         directions = new MapboxDirections({
             accessToken: mapboxgl.accessToken,
             unit: 'metric',
