@@ -420,9 +420,6 @@ function onRoutesReceived(routes, profile) {
 initializeDirectionsControl();
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Ensure element exists
-    const directionsButton = document.getElementById('get-directions');
-    console.log(directionsButton ? "get-directions button found." : "get-directions button NOT found.");
     initializeDirectionsControl();
     setupDatePickers();
     setupCityButtons();
