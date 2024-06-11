@@ -498,24 +498,20 @@ function updateProfile(profile) {
         .then(data => {
             console.log('Directions API response data:', data);
             if (data.routes && data.routes.length > 0) {
-                // Create a new directions control with the updated profile
-                directions = new MapboxDirections({
-                    accessToken: mapboxgl.accessToken,
-                    unit: 'metric',
-                    profile: `${profile}`,
-                    alternatives: true,
-                    controls: {
-                        inputs: true,
-                        instructions: true,
-                    },
-                    styles: customStyles // Apply the custom styles
-                });
+                // Update the profile of the existing directions control
+                directions.setProfile(profile);
 
-                map.addControl(directions, 'top-left');
+                // Remove existing routes if any
+                directions.removeRoutes();
 
+                // Set the new origin and destination
                 directions.setOrigin(originCoordinates);
                 directions.setDestination(destinationCoordinates);
 
+                // Add the new route
+                data.routes.forEach(route => directions.addRoute(route));
+
+                // Set the directions input fields
                 const originInput = document.querySelector('.mapbox-directions-origin input');
                 const destinationInput = document.querySelector('.mapbox-directions-destination input');
 
@@ -526,9 +522,6 @@ function updateProfile(profile) {
                 if (destinationInput) {
                     destinationInput.value = `${destinationCoordinates[1]}, ${destinationCoordinates[0]}`;
                 }
-
-                // Draw the new route
-                onRoutesReceived(data.routes, `${profile}`);
             } else {
                 console.error('No routes found');
             }
@@ -539,6 +532,7 @@ function updateProfile(profile) {
         alert('Please set both origin and destination before updating the profile.');
     }
 }
+
 
 
 // Add this function to set up the directions button event listener
