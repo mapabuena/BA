@@ -47,6 +47,17 @@ function applyRouteInfoStyles() {
 window.addEventListener('resize', applyRouteInfoStyles);
 document.addEventListener('DOMContentLoaded', applyRouteInfoStyles);
 
+function saveCoordinatesToLocalStorage(origin, destination) {
+    localStorage.setItem('originCoordinates', JSON.stringify(origin));
+    localStorage.setItem('destinationCoordinates', JSON.stringify(destination));
+}
+
+function getCoordinatesFromLocalStorage() {
+    const origin = JSON.parse(localStorage.getItem('originCoordinates'));
+    const destination = JSON.parse(localStorage.getItem('destinationCoordinates'));
+    return { origin, destination };
+}
+
 
 function initializeDirectionsControl() {
     if (!directionsInitialized) {
@@ -89,30 +100,30 @@ function initializeDirectionsControl() {
             },
             styles: customStyles // Apply the custom styles
         });
-     map.addControl(directions, 'top-left');
-directions.on('route', (event) => {
-    const routes = event.route;
-    const profile = directions.options.profile; // Get the current profile
-    if (routes && routes.length > 0) {
-        onRoutesReceived(routes, profile); // Pass the routes and profile
-    } else {
-        console.error("No routes received from Directions API.");
-    }
-});
+        map.addControl(directions, 'top-left');
 
-function onRoutesReceived(routes, profile) {
-    console.log("Routes received for profile:", profile); // Debug log for profile
-    displayRouteAlternatives(routes, profile);
-}
+        directions.on('route', (event) => {
+            const routes = event.route;
+            const profile = directions.options.profile; // Get the current profile
+            if (routes && routes.length > 0) {
+                onRoutesReceived(routes, profile); // Pass the routes and profile
+            } else {
+                console.error("No routes received from Directions API.");
+            }
+        });
 
-        directions.on('origin', () => {
+        directions.on('origin', (event) => {
+            originCoordinates = event.feature.geometry.coordinates;
+            saveCoordinatesToLocalStorage(originCoordinates, destinationCoordinates);
             const originMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="A"]');
             if (originMarker) {
                 originMarker.style.backgroundColor = '#c62026'; // Change this to your desired color
             }
         });
 
-        directions.on('destination', () => {
+        directions.on('destination', (event) => {
+            destinationCoordinates = event.feature.geometry.coordinates;
+            saveCoordinatesToLocalStorage(originCoordinates, destinationCoordinates);
             const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
             if (destinationMarker) {
                 destinationMarker.style.backgroundColor = '#26617f'; // Change this to your desired color
@@ -455,6 +466,12 @@ document.getElementById('custom-walking').addEventListener('click', () => update
 
 
 function updateProfile(profile) {
+    if (!originCoordinates || !destinationCoordinates) {
+        const { origin, destination } = getCoordinatesFromLocalStorage();
+        originCoordinates = origin || originCoordinates;
+        destinationCoordinates = destination || destinationCoordinates;
+    }
+
     if (originCoordinates && destinationCoordinates) {
         const originCoords = `${originCoordinates[0]},${originCoordinates[1]}`;
         const destinationCoords = `${destinationCoordinates[0]},${destinationCoordinates[1]}`;
