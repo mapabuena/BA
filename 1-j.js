@@ -189,6 +189,7 @@ function setDestinationOnClick(e) {
     map.off('click', setDestinationOnClick);
 }
 
+
 function addRouteLabels(route, profile) {
     if (route.geometry) {
         const coordinates = polyline.decode(route.geometry); // Decode the polyline string
@@ -436,7 +437,6 @@ function clearAllPopups() {
         secondPopup = null;
     }
 }
-
 function setDirectionsInputFields(originTitle, destinationTitle) {
     const originInput = document.querySelector('.mapbox-directions-origin input');
     const destinationInput = document.querySelector('.mapbox-directions-destination input');
@@ -459,7 +459,7 @@ function updateProfile(profile) {
         const originCoords = `${originCoordinates[0]},${originCoordinates[1]}`;
         const destinationCoords = `${destinationCoordinates[0]},${destinationCoordinates[1]}`;
 
-        const requestUrl = `https://api.mapbox.com/directions/v5/${profile}/${originCoords};${destinationCoords}?geometries=geojson&alternatives=true&steps=true&overview=full&access_token=${mapboxgl.accessToken}`;
+        const requestUrl = `https://api.mapbox.com/directions/v5/${profile}/${originCoords};${destinationCoords}?geometries=polyline&alternatives=true&steps=true&overview=full&access_token=${mapboxgl.accessToken}`;
 
         console.log(`Fetching directions with URL: ${requestUrl}`);
 
@@ -491,11 +491,10 @@ function updateProfile(profile) {
         .catch(error => console.error('Error fetching directions:', error));
     } else {
         console.error('Origin and destination must be set to update the profile');
+        alert('Please set both origin and destination before updating the profile.');
     }
 }
 
-// Add this function to set up the directions button event listener
-// Call this function to set up the directions button event listener
 // Add this function to set up the directions button event listener
 function setupDirectionsButton() {
     const directionsButton = document.getElementById('get-directions');
