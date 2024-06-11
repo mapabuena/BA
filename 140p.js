@@ -391,14 +391,24 @@ function updateProfile(profile) {
 
         const requestUrl = `https://api.mapbox.com/directions/v5/mapbox/${profile}/${originCoords};${destinationCoords}?geometries=geojson&access_token=${mapboxgl.accessToken}`;
 
+        console.log(`Fetching directions with URL: ${requestUrl}`);
+
         fetch(requestUrl, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
             }
         })
-        .then(response => response.json())
+        .then(response => {
+            console.log(`Response status: ${response.status}`);
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+        })
         .then(data => {
+            console.log('Directions API response data:', data);
             if (data.routes && data.routes.length > 0) {
                 directions.removeRoutes();
                 directions.setOrigin(origin.geometry.coordinates);
