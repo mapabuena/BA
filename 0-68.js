@@ -195,11 +195,7 @@ function clearAllPopups() {
     }
 }
 
-function setDestinationOnClick(e) {
-    const selectedMarker = markers.find(marker => 
-        marker.marker.getElement().getAttribute('data-is-selected') === 'true'
-    );
-
+function setDestinationOnClick() {
     if (selectedMarker) {
         const { lng, lat, sidebarheader, address, description, cost } = selectedMarker.data;
         console.log("Selected marker found:", selectedMarker.data);
@@ -260,6 +256,7 @@ function setDestinationOnClick(e) {
             console.error('Directions container not found.');
         }
     }, 500);
+}
 
     map.off('click', setDestinationOnClick);
 }
@@ -814,16 +811,12 @@ function setupDirectionsButton() {
 }
 
 function setDestinationOnClick(e) {
-    const selectedMarker = markers.find(marker => 
-        marker.marker.getElement().getAttribute('data-is-selected') === 'true'
-    );
-
     if (selectedMarker) {
         const { lng, lat, sidebarheader, address, description, cost } = selectedMarker.data;
-        console.log("Selected marker found:", selectedMarker.data); // Log selected marker data
+        console.log("Selected marker found:", selectedMarker.data);
         destinationCoordinates = [lng, lat];
         destinationSidebarHeader = sidebarheader || `${lat}, ${lng}`;
-        console.log("Setting destination with sidebarheader:", sidebarheader); // Log the sidebarheader
+        console.log("Setting destination with sidebarheader:", sidebarheader);
 
         const destination = {
             "type": "Feature",
@@ -841,14 +834,31 @@ function setDestinationOnClick(e) {
 
         try {
             directions.setDestination(destinationCoordinates);
-            setDirectionsInputFields('', destination.properties.title);
-            console.log("Destination set successfully with properties:", destination.properties); // Log destination properties
+
+            // Set up MutationObserver to watch for changes to the destination input field
+            const destinationInput = document.querySelector('.mapbox-directions-destination input');
+            const observer = new MutationObserver(() => {
+                if (destinationInput.value !== destinationSidebarHeader) {
+                    destinationInput.value = destinationSidebarHeader;
+                    console.log("Reapplied destination sidebarheader:", destinationSidebarHeader);
+                }
+            });
+
+            observer.observe(destinationInput, {
+                attributes: true,
+                attributeFilter: ['value'],
+                childList: true,
+                subtree: true,
+                characterData: true
+            });
+
+            console.log("Destination set successfully with properties:", destination.properties);
         } catch (error) {
             console.error("Error setting destination:", error);
             alert('Error setting destination.');
         }
     } else {
-        console.log("No marker is selected."); // Log if no marker is selected
+        console.log("No marker is selected.");
         alert('Please select a marker first.');
     }
 
@@ -856,15 +866,12 @@ function setDestinationOnClick(e) {
         const directionsContainer = document.getElementById('directions-container');
         if (directionsContainer) {
             directionsContainer.scrollIntoView({ behavior: 'smooth' });
-            console.log("Scrolled to directions container."); // Log the scroll action
+            console.log("Scrolled to directions container.");
         } else {
             console.error('Directions container not found.');
         }
     }, 500);
-
-    map.off('click', setDestinationOnClick);
 }
-
 
 document.getElementById('nightmode').addEventListener('click', () => {
     isNightMode = !isNightMode;
@@ -1447,14 +1454,6 @@ function getNextOccurrences(dayOfWeek, startTime, endTime, startDate, endDate) {
 
 // Function to create markers
 
-
-function resetMarkerStyles() {
-    markers.forEach(({ marker, data }) => {
-        const el = marker.getElement();
-        el.style.backgroundImage = `url(${data.icon_url})`;
-    });
-}
-
 function createMarker(data) {
     const el = document.createElement('div');
     el.className = 'marker';
@@ -1482,22 +1481,30 @@ function createMarker(data) {
 
         selectedMarker = marker; // Track the selected marker
 
-          el.style.backgroundImage = `url(${data.icon2_url})`;
-    el.setAttribute('data-is-selected', 'true'); // Mark as selected
+        el.style.backgroundImage = `url(${data.icon2_url})`;
+        el.setAttribute('data-is-selected', 'true'); // Mark as selected
 
-    document.getElementById('sidebarimage').innerHTML = `<img src="${data.sidebarimage}" alt="Sidebar Image" style="width: 100%;">`;
-    document.getElementById('sidebarheader').innerText = data.sidebarheader;
-    document.getElementById('sidebardescription').innerText = data.description;
-    document.getElementById('sidebarheader2').innerText = data.sidebarheader2 || '';
+        document.getElementById('sidebarimage').innerHTML = `<img src="${data.sidebarimage}" alt="Sidebar Image" style="width: 100%;">`;
+        document.getElementById('sidebarheader').innerText = data.sidebarheader;
+        document.getElementById('sidebardescription').innerText = data.description;
+        document.getElementById('sidebarheader2').innerText = data.sidebarheader2 || '';
 
-    document.getElementById('sidebaropener').click();
+        document.getElementById('sidebaropener').click();
 
-    recenterMap(lng, lat); // Recenter map with offset
+        recenterMap(lng, lat); // Recenter map with offset
     });
 
     markers.push({
         marker: marker,
         data: data
+    });
+}
+
+function resetMarkerStyles() {
+    markers.forEach(({ marker, data }) => {
+        const el = marker.getElement();
+        el.style.backgroundImage = `url(${data.icon_url})`;
+        el.setAttribute('data-is-selected', 'false'); // Reset the selected state
     });
 }
 
