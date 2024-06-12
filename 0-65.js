@@ -8,6 +8,8 @@ let map = new mapboxgl.Map({
 });
 
 let markers = [];
+let selectedMarker = null; // Define this globally
+
 let activeFilters = {
     category: [],
 };
@@ -195,10 +197,18 @@ function clearAllPopups() {
     }
 }
 
-function setDestinationOnClick() {
-    if (selectedMarker) {
+function setDestinationOnClick(e) {
+    console.log("setDestinationOnClick invoked");
+
+    if (selectedMarker && selectedMarker.data) {
         const { lng, lat, sidebarheader, address, description, cost } = selectedMarker.data;
-        console.log("Selected marker found:", selectedMarker.data);
+        console.log("Selected marker data:", selectedMarker.data);
+
+        if (lng === undefined || lat === undefined) {
+            console.error("Selected marker data is missing required properties:", selectedMarker.data);
+            return;
+        }
+
         destinationCoordinates = [lng, lat];
         destinationSidebarHeader = sidebarheader || `${lat}, ${lng}`;
         console.log("Setting destination with sidebarheader:", sidebarheader);
@@ -243,7 +253,7 @@ function setDestinationOnClick() {
             alert('Error setting destination.');
         }
     } else {
-        console.log("No marker is selected.");
+        console.error("No marker is selected or selected marker data is undefined.");
         alert('Please select a marker first.');
     }
 
@@ -257,7 +267,6 @@ function setDestinationOnClick() {
         }
     }, 500);
 }
-
 
 function setDirectionsInputFields(originTitle, destinationTitle) {
     const originInput = document.querySelector('.mapbox-directions-origin input');
@@ -809,13 +818,17 @@ function setupDirectionsButton() {
 }
 
 function setDestinationOnClick(e) {
-    if (selectedMarker) {
-        const { lng, lat, sidebarheader, address, description, cost } = selectedMarker.data || {};
+    console.log("setDestinationOnClick invoked");
+
+    if (selectedMarker && selectedMarker.data) {
+        const { lng, lat, sidebarheader, address, description, cost } = selectedMarker.data;
+        console.log("Selected marker data:", selectedMarker.data);
+
         if (!lng || !lat) {
             console.error("Selected marker data is missing required properties:", selectedMarker.data);
             return;
         }
-        console.log("Selected marker found:", selectedMarker.data);
+
         destinationCoordinates = [lng, lat];
         destinationSidebarHeader = sidebarheader || `${lat}, ${lng}`;
         console.log("Setting destination with sidebarheader:", sidebarheader);
@@ -860,7 +873,7 @@ function setDestinationOnClick(e) {
             alert('Error setting destination.');
         }
     } else {
-        console.log("No marker is selected.");
+        console.error("No marker is selected or selected marker data is undefined.");
         alert('Please select a marker first.');
     }
 
