@@ -108,13 +108,12 @@ function initializeDirectionsControl() {
             styles: customStyles // Apply the custom styles
         });
 
-        // Append the directions control to the specified div
         const directionsContainer = document.getElementById('directions-control');
         if (directionsContainer) {
-            directionsContainer.innerHTML = ''; // Clear any existing content
-            const directionsControlContainer = directions.onAdd(map); // Initialize the directions control and get the container
+            directionsContainer.innerHTML = '';
+            const directionsControlContainer = directions.onAdd(map);
             if (directionsControlContainer) {
-                directionsContainer.appendChild(directionsControlContainer); // Append it to the specified div
+                directionsContainer.appendChild(directionsControlContainer);
             } else {
                 console.error('Directions control container not found.');
             }
@@ -124,9 +123,9 @@ function initializeDirectionsControl() {
 
         directions.on('route', (event) => {
             const routes = event.route;
-            const profile = directions.options.profile; // Get the current profile
+            const profile = directions.options.profile;
             if (routes && routes.length > 0) {
-                onRoutesReceived(routes, profile); // Pass the routes and profile
+                onRoutesReceived(routes, profile);
             } else {
                 console.error("No routes received from Directions API.");
             }
