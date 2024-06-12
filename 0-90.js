@@ -487,7 +487,7 @@ function updateProfile(profile) {
         const originCoords = `${originCoordinates[0]},${originCoordinates[1]}`;
         const destinationCoords = `${destinationCoordinates[0]},${destinationCoordinates[1]}`;
 
-        const requestUrl = `https://api.mapbox.com/directions/v5/mapbox/${profile}/${originCoords};${destinationCoords}?geometries=polyline&alternatives=true&steps=true&overview=full&access_token=${mapboxgl.accessToken}`;
+        const requestUrl = `https://api.mapbox.com/directions/v5/${profile}/${originCoords};${destinationCoords}?geometries=polyline&alternatives=true&steps=true&overview=full&access_token=${mapboxgl.accessToken}`;
 
         console.log(`Fetching directions with URL: ${requestUrl}`);
 
