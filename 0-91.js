@@ -487,7 +487,7 @@ function updateProfile(profile) {
         const originCoords = `${originCoordinates[0]},${originCoordinates[1]}`;
         const destinationCoords = `${destinationCoordinates[0]},${destinationCoordinates[1]}`;
 
-        const requestUrl = `https://api.mapbox.com/directions/v5/${profile}/${originCoords};${destinationCoords}?geometries=polyline&alternatives=true&steps=true&overview=full&access_token=${mapboxgl.accessToken}`;
+        const requestUrl = `https://api.mapbox.com/directions/v5/mapbox/${profile}/${originCoords};${destinationCoords}?geometries=polyline&alternatives=true&steps=true&overview=full&access_token=${mapboxgl.accessToken}`;
 
         console.log(`Fetching directions with URL: ${requestUrl}`);
 
@@ -549,16 +549,9 @@ function updateProfile(profile) {
                 directions.setOrigin(originCoordinates);
                 directions.setDestination(destinationCoordinates);
 
-                const originInput = document.querySelector('.mapbox-directions-origin input');
-                const destinationInput = document.querySelector('.mapbox-directions-destination input');
-
-                if (originInput) {
-                    originInput.value = `${originCoordinates[1]}, ${originCoordinates[0]}`;
-                }
-
-                if (destinationInput) {
-                    destinationInput.value = `${destinationCoordinates[1]}, ${destinationCoordinates[0]}`;
-                }
+                // Use the last known sidebarheaders or default to coordinates
+                setDirectionsInputFields(originSidebarHeader || `${originCoordinates[1]}, ${originCoordinates[0]}`,
+                                         destinationSidebarHeader || `${destinationCoordinates[1]}, ${destinationCoordinates[0]}`);
 
                 // Prevent the map from flying to a new location
                 map.jumpTo({
@@ -654,6 +647,7 @@ function setupDirectionsButton() {
     }
 }
 
+
 function findMarkerByCoordinates(lng, lat) {
     return markers.find(marker => {
         const markerLngLat = marker.marker.getLngLat();
@@ -723,7 +717,6 @@ function setDestinationOnClick(e) {
 
     map.off('click', setDestinationOnClick);
 }
-
 
 
 document.getElementById('nightmode').addEventListener('click', () => {
