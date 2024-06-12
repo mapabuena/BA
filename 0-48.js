@@ -221,18 +221,20 @@ function clearAllPopups() {
 }
 
 function setDestinationOnClick(e) {
-    const { lng, lat } = e.lngLat;
-
-    if (!originCoordinates) {
-        alert('Please set an origin first.');
-        return;
-    }
+    console.log("setDestinationOnClick invoked");
 
     if (selectedMarker && selectedMarker.data) {
-        const { sidebarheader, address, description, cost } = selectedMarker.data;
+        const { lng, lat, sidebarheader, address, description, cost } = selectedMarker.data;
+        console.log("Selected marker data:", selectedMarker.data);
+
+        if (!lng || !lat) {
+            console.error("Selected marker data is missing required properties:", selectedMarker.data);
+            return;
+        }
 
         destinationCoordinates = [lng, lat];
         destinationSidebarHeader = sidebarheader || `${lat}, ${lng}`;
+        console.log("Setting destination with sidebarheader:", sidebarheader);
 
         const destination = {
             "type": "Feature",
@@ -251,18 +253,48 @@ function setDestinationOnClick(e) {
         try {
             directions.setDestination(destinationCoordinates);
 
+            // Directly set the input value to ensure it is not reverted
             const destinationInput = document.querySelector('.mapbox-directions-destination input');
             destinationInput.value = destinationSidebarHeader;
 
+            // Update the input fields to reflect the new destination
             setDirectionsInputFields('', destination.properties.title);
 
+            // Use MutationObserver to ensure the input value stays correct
+            const observer = new MutationObserver(() => {
+                if (destinationInput.value !== destinationSidebarHeader) {
+                    destinationInput.value = destinationSidebarHeader;
+                    console.log("Reapplied destination sidebarheader:", destinationSidebarHeader);
+                }
+            });
+
+            observer.observe(destinationInput, {
+                attributes: true,
+                attributeFilter: ['value'],
+                childList: true,
+                subtree: true,
+                characterData: true
+            });
+
+            console.log("Destination set successfully with properties:", destination.properties);
         } catch (error) {
             console.error("Error setting destination:", error);
             alert('Error setting destination.');
         }
     } else {
+        console.error("No marker is selected or selected marker data is undefined.");
         alert('Please select a marker first.');
     }
+
+    setTimeout(() => {
+        const directionsContainer = document.getElementById('directions-container');
+        if (directionsContainer) {
+            directionsContainer.scrollIntoView({ behavior: 'smooth' });
+            console.log("Scrolled to directions container.");
+        } else {
+            console.error('Directions container not found.');
+        }
+    }, 500);
 }
 
 function setDirectionsInputFields(originTitle, destinationTitle) {
