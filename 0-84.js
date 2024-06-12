@@ -470,8 +470,8 @@ document.addEventListener('DOMContentLoaded', function() {
     setupMapEvents();
     setupInfoItemHoverEffects();
     setupDirectionsButton();
- 
-  const closeDirectionsButton = document.getElementById('close-directions');
+
+    const closeDirectionsButton = document.getElementById('close-directions');
     if (closeDirectionsButton) {
         closeDirectionsButton.addEventListener('click', function() {
             document.getElementById('directions-container').style.display = 'none';
@@ -489,7 +489,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Add event listeners for clearing origin and destination inputs
-  const originInput = document.querySelector('.mapbox-directions-origin input');
+    const originInput = document.querySelector('.mapbox-directions-origin input');
     const destinationInput = document.querySelector('.mapbox-directions-destination input');
     const originClearButton = document.querySelector('.mapbox-directions-origin .geocoder-icon-close');
     const destinationClearButton = document.querySelector('.mapbox-directions-destination .geocoder-icon-close');
@@ -539,19 +539,8 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.removeItem('destinationSidebarHeader');
         }
     });
-  });
 
-    // Event listener for manually entering destination address
-    destinationInput.addEventListener('input', function() {
-        if (destinationInput.value) {
-            // Implement logic to set and save destinationCoordinates and destinationSidebarHeader
-        } else {
-            destinationCoordinates = null;
-            destinationSidebarHeader = null;
-            localStorage.removeItem('destinationCoordinates');
-        }
-    });
-      // Map click event to set destination
+    // Map click event to set origin or destination
     map.on('click', function(e) {
         const { lng, lat } = e.lngLat;
         const activeInput = document.activeElement;
@@ -568,7 +557,8 @@ document.addEventListener('DOMContentLoaded', function() {
             saveCoordinatesToLocalStorage(originCoordinates, destinationCoordinates);
         }
     });
-  });
+});
+
 
 function clearAllPopups() {
     if (currentPopup) {
