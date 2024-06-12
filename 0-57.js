@@ -579,7 +579,6 @@ function validateCoordinates(coords) {
 function onRoutesReceived(routes, profile) {
     displayRouteAlternatives(routes, profile);
 }
-
 document.addEventListener('DOMContentLoaded', function() {
     setupDatePickers();
     setupCityButtons();
@@ -674,30 +673,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Call monitorDestinationInput() here to ensure it's monitoring the field
         monitorDestinationInput();
-
-        // Map click event to set origin or destination
-        map.on('click', function(e) {
-            const { lng, lat } = e.lngLat;
-            const activeInput = document.activeElement;
-
-            if (activeInput === originInput) {
-                originCoordinates = [lng, lat];
-                originSidebarHeader = `${lat}, ${lng}`;
-                setDirectionsInputFields(originSidebarHeader, destinationInput.value);
-                saveCoordinatesToLocalStorage(originCoordinates, destinationCoordinates);
-            } else if (activeInput === destinationInput) {
-                destinationCoordinates = [lng, lat];
-                destinationSidebarHeader = `${lat}, ${lng}`;
-                setDirectionsInputFields(originInput.value, destinationSidebarHeader);
-                saveCoordinatesToLocalStorage(originCoordinates, destinationCoordinates);
-            }
-            updateInputFields();
-        });
-    } else {
-        console.error("Elements with class '.mapbox-directions-origin input' or '.mapbox-directions-destination input' not found.");
-    }
-});
-
 
         // Map click event to set origin or destination
         map.on('click', function(e) {
