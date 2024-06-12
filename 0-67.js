@@ -258,8 +258,6 @@ function setDestinationOnClick() {
     }, 500);
 }
 
-    map.off('click', setDestinationOnClick);
-}
 
 function setDirectionsInputFields(originTitle, destinationTitle) {
     const originInput = document.querySelector('.mapbox-directions-origin input');
