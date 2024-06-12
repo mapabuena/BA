@@ -105,7 +105,7 @@ function initializeDirectionsControl() {
                 inputs: true,
                 instructions: true,
             },
-            styles: customStyles // Apply the custom styles
+            styles: customStyles
         });
 
         const directionsContainer = document.getElementById('directions-control');
@@ -136,7 +136,7 @@ function initializeDirectionsControl() {
             saveCoordinatesToLocalStorage(originCoordinates, destinationCoordinates);
             const originMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="A"]');
             if (originMarker) {
-                originMarker.style.backgroundColor = '#c62026'; // Change this to your desired color
+                originMarker.style.backgroundColor = '#c62026';
             }
         });
 
@@ -145,11 +145,11 @@ function initializeDirectionsControl() {
             saveCoordinatesToLocalStorage(originCoordinates, destinationCoordinates);
             const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
             if (destinationMarker) {
-                destinationMarker.style.backgroundColor = '#26617f'; // Change this to your desired color
+                destinationMarker.style.backgroundColor = '#26617f';
             }
         });
 
-        directionsInitialized = true; // Mark as initialized
+        directionsInitialized = true;
     }
 }
 // Function to set directions input fields
@@ -202,10 +202,10 @@ function setDestinationOnClick(e) {
 
     if (selectedMarker) {
         const { lng, lat, sidebarheader, address, description, cost } = selectedMarker.data;
-        console.log("Selected marker found:", selectedMarker.data); // Log selected marker data
+        console.log("Selected marker found:", selectedMarker.data);
         destinationCoordinates = [lng, lat];
         destinationSidebarHeader = sidebarheader || `${lat}, ${lng}`;
-        console.log("Setting destination with sidebarheader:", sidebarheader); // Log the sidebarheader
+        console.log("Setting destination with sidebarheader:", sidebarheader);
 
         const destination = {
             "type": "Feature",
@@ -224,19 +224,30 @@ function setDestinationOnClick(e) {
         try {
             directions.setDestination(destinationCoordinates);
 
-            // Listen for the destination event to update input fields
-            directions.on('destination', () => {
-                setDirectionsInputFields('', destination.properties.title);
-                console.log("Input fields updated after destination event.");
+            // Set up MutationObserver to watch for changes to the destination input field
+            const destinationInput = document.querySelector('.mapbox-directions-destination input');
+            const observer = new MutationObserver(() => {
+                if (destinationInput.value !== destinationSidebarHeader) {
+                    destinationInput.value = destinationSidebarHeader;
+                    console.log("Reapplied destination sidebarheader:", destinationSidebarHeader);
+                }
             });
 
-            console.log("Destination set successfully with properties:", destination.properties); // Log destination properties
+            observer.observe(destinationInput, {
+                attributes: true,
+                attributeFilter: ['value'],
+                childList: true,
+                subtree: true,
+                characterData: true
+            });
+
+            console.log("Destination set successfully with properties:", destination.properties);
         } catch (error) {
             console.error("Error setting destination:", error);
             alert('Error setting destination.');
         }
     } else {
-        console.log("No marker is selected."); // Log if no marker is selected
+        console.log("No marker is selected.");
         alert('Please select a marker first.');
     }
 
@@ -244,7 +255,7 @@ function setDestinationOnClick(e) {
         const directionsContainer = document.getElementById('directions-container');
         if (directionsContainer) {
             directionsContainer.scrollIntoView({ behavior: 'smooth' });
-            console.log("Scrolled to directions container."); // Log the scroll action
+            console.log("Scrolled to directions container.");
         } else {
             console.error('Directions container not found.');
         }
@@ -653,11 +664,11 @@ function clearAllPopups() {
 function setDirectionsInputFields(originTitle, destinationTitle) {
     const originInput = document.querySelector('.mapbox-directions-origin input');
     const destinationInput = document.querySelector('.mapbox-directions-destination input');
-    
+
+    console.log("Updating input fields with:", { originTitle, destinationTitle });
     if (originTitle && originInput) {
         originInput.value = originTitle;
     }
-    
     if (destinationTitle && destinationInput) {
         destinationInput.value = destinationTitle;
     }
