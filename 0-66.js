@@ -810,7 +810,11 @@ function setupDirectionsButton() {
 
 function setDestinationOnClick(e) {
     if (selectedMarker) {
-        const { lng, lat, sidebarheader, address, description, cost } = selectedMarker.data;
+        const { lng, lat, sidebarheader, address, description, cost } = selectedMarker.data || {};
+        if (!lng || !lat) {
+            console.error("Selected marker data is missing required properties:", selectedMarker.data);
+            return;
+        }
         console.log("Selected marker found:", selectedMarker.data);
         destinationCoordinates = [lng, lat];
         destinationSidebarHeader = sidebarheader || `${lat}, ${lng}`;
@@ -1452,6 +1456,7 @@ function getNextOccurrences(dayOfWeek, startTime, endTime, startDate, endDate) {
 
 // Function to create markers
 
+// Ensure selectedMarker is properly set when a marker is clicked
 function createMarker(data) {
     const el = document.createElement('div');
     el.className = 'marker';
