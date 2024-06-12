@@ -754,12 +754,15 @@ function findMarkerByCoordinates(lng, lat) {
 
 function setDestinationOnClick(e) {
     const { lng, lat } = e.lngLat;
+    console.log("Clicked coordinates:", lng, lat); // Log the coordinates of the click
     const clickedMarker = findMarkerByCoordinates(lng, lat);
 
     if (clickedMarker) {
-        const { sidebarheader } = clickedMarker.data;
+        const { sidebarheader, address, description, cost } = clickedMarker.data;
+        console.log("Marker found:", clickedMarker.data); // Log all marker data
         destinationCoordinates = [lng, lat];
         destinationSidebarHeader = sidebarheader || `${lat}, ${lng}`;
+        console.log("Setting destination with sidebarheader:", sidebarheader); // Log the sidebarheader
 
         const destination = {
             "type": "Feature",
@@ -768,22 +771,26 @@ function setDestinationOnClick(e) {
                 "coordinates": destinationCoordinates
             },
             "properties": {
-                "title": destinationSidebarHeader
+                "title": destinationSidebarHeader,
+                "address": address,
+                "description": description,
+                "cost": cost
             }
         };
 
         try {
             directions.setDestination(destinationCoordinates);
             setDirectionsInputFields('', destination.properties.title);
-
-            console.log("Destination set successfully.");
+            console.log("Destination set successfully with properties:", destination.properties); // Log destination properties
         } catch (error) {
             console.error("Error setting destination:", error);
             alert('Error setting destination.');
         }
     } else {
+        console.log("No marker found at clicked coordinates."); // Log if no marker is found
         destinationCoordinates = [lng, lat];
         destinationSidebarHeader = `${lat}, ${lng}`;
+        console.log("Setting destination with default coordinates:", destinationSidebarHeader); // Log the default coordinates
 
         const destination = {
             "type": "Feature",
@@ -799,8 +806,7 @@ function setDestinationOnClick(e) {
         try {
             directions.setDestination(destinationCoordinates);
             setDirectionsInputFields('', destination.properties.title);
-
-            console.log("Destination set successfully.");
+            console.log("Destination set successfully with default properties:", destination.properties); // Log default properties
         } catch (error) {
             console.error("Error setting destination:", error);
             alert('Error setting destination.');
@@ -811,6 +817,9 @@ function setDestinationOnClick(e) {
         const directionsContainer = document.getElementById('directions-container');
         if (directionsContainer) {
             directionsContainer.scrollIntoView({ behavior: 'smooth' });
+            console.log("Scrolled to directions container."); // Log the scroll action
+        } else {
+            console.error('Directions container not found.');
         }
     }, 500);
 
