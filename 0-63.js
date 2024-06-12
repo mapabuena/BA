@@ -759,12 +759,12 @@ function setupDirectionsButton() {
     const directionsButton = document.getElementById('get-directions');
     if (directionsButton) {
         directionsButton.addEventListener('click', function() {
-            const selectedMarker = markers.find(marker => 
+            const selectedMarkerData = markers.find(marker => 
                 marker.marker.getElement().getAttribute('data-is-selected') === 'true'
             );
 
-            if (selectedMarker) {
-                const { lat, lng, sidebarheader } = selectedMarker.data;
+            if (selectedMarkerData) {
+                const { lat, lng, sidebarheader } = selectedMarkerData.data;
 
                 originCoordinates = [lng, lat];
                 originSidebarHeader = sidebarheader || `${lat}, ${lng}`;
