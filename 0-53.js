@@ -293,7 +293,7 @@ function setDestinationOnClick(e) {
         } else {
             console.error('Directions container not found.');
         }
-    }, 900);
+    }, 500);
 }
 
 function setDirectionsInputFields(originTitle, destinationTitle) {
@@ -893,14 +893,18 @@ function setDestinationOnClick(e) {
 
         try {
             directions.setDestination(destinationCoordinates);
-             setDirectionsInputFields('', destination.properties.title);
 
             // Set up MutationObserver to watch for changes to the destination input field
             const destinationInput = document.querySelector('.mapbox-directions-destination input');
-            const observer = new MutationObserver(() => {
-                if (destinationInput.value !== destinationSidebarHeader) {
-                    destinationInput.value = destinationSidebarHeader;
-                    console.log("Reapplied destination sidebarheader:", destinationSidebarHeader);
+            const observer = new MutationObserver((mutationsList) => {
+                for (const mutation of mutationsList) {
+                    if (mutation.type === 'attributes' && mutation.attributeName === 'value') {
+                        console.log(`Destination input changed to: ${destinationInput.value}`);
+                        if (destinationInput.value !== destinationSidebarHeader) {
+                            destinationInput.value = destinationSidebarHeader;
+                            console.log("Reapplied destination sidebarheader:", destinationSidebarHeader);
+                        }
+                    }
                 }
             });
 
@@ -911,6 +915,9 @@ function setDestinationOnClick(e) {
                 subtree: true,
                 characterData: true
             });
+
+            // Directly set the input value to ensure it is not reverted
+            destinationInput.value = destinationSidebarHeader;
 
             console.log("Destination set successfully with properties:", destination.properties);
         } catch (error) {
@@ -932,6 +939,7 @@ function setDestinationOnClick(e) {
         }
     }, 500);
 }
+
 
 document.getElementById('nightmode').addEventListener('click', () => {
     isNightMode = !isNightMode;
