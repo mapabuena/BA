@@ -568,29 +568,6 @@ document.addEventListener('DOMContentLoaded', function() {
         updateInputFields();
     });
 });
-  
-
-    // Map click event to set origin or destination
-    map.on('click', function(e) {
-        const { lng, lat } = e.lngLat;
-        const activeInput = document.activeElement;
-
-        if (activeInput === originInput) {
-            originCoordinates = [lng, lat];
-            originSidebarHeader = `${lat}, ${lng}`;
-            setDirectionsInputFields(originSidebarHeader, destinationInput.value);
-            saveCoordinatesToLocalStorage(originCoordinates, destinationCoordinates);
-            console.log("Origin set via map click:", originSidebarHeader);
-        } else if (activeInput === destinationInput) {
-            destinationCoordinates = [lng, lat];
-            destinationSidebarHeader = `${lat}, ${lng}`;
-            setDirectionsInputFields(originInput.value, destinationSidebarHeader);
-            saveCoordinatesToLocalStorage(originCoordinates, destinationCoordinates);
-            console.log("Destination set via map click:", destinationSidebarHeader);
-        }
-        updateInputFields();
-    });
-});
 
 
 function clearAllPopups() {
