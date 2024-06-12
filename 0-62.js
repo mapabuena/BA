@@ -198,10 +198,17 @@ function clearAllPopups() {
 }
 
 function setDestinationOnClick(e) {
-    console.log('setDestinationOnClick invoked');
+    console.log("setDestinationOnClick invoked");
+
     if (selectedMarker && selectedMarker.data) {
         const { lng, lat, sidebarheader, address, description, cost } = selectedMarker.data;
-        console.log("Selected marker found:", selectedMarker.data);
+        console.log("Selected marker data:", selectedMarker.data);
+
+        if (!lng || !lat) {
+            console.error("Selected marker data is missing required properties:", selectedMarker.data);
+            return;
+        }
+
         destinationCoordinates = [lng, lat];
         destinationSidebarHeader = sidebarheader || `${lat}, ${lng}`;
         console.log("Setting destination with sidebarheader:", sidebarheader);
@@ -246,7 +253,7 @@ function setDestinationOnClick(e) {
             alert('Error setting destination.');
         }
     } else {
-        console.log("No marker is selected or selected marker data is undefined.");
+        console.error("No marker is selected or selected marker data is undefined.");
         alert('Please select a marker first.');
     }
 
@@ -260,6 +267,7 @@ function setDestinationOnClick(e) {
         }
     }, 500);
 }
+
 function setDirectionsInputFields(originTitle, destinationTitle) {
     const originInput = document.querySelector('.mapbox-directions-origin input');
     const destinationInput = document.querySelector('.mapbox-directions-destination input');
@@ -1487,7 +1495,7 @@ function createMarker(data) {
     marker.getElement().addEventListener('click', () => {
         resetMarkerStyles(); // Reset all marker styles
 
-        selectedMarker = marker; // Track the selected marker
+        selectedMarker = { marker, data }; // Track the selected marker
 
         el.style.backgroundImage = `url(${data.icon2_url})`;
         el.setAttribute('data-is-selected', 'true'); // Mark as selected
@@ -1507,7 +1515,6 @@ function createMarker(data) {
         data: data
     });
 }
-
 function resetMarkerStyles() {
     markers.forEach(({ marker, data }) => {
         const el = marker.getElement();
