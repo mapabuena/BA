@@ -94,6 +94,30 @@ function getCoordinatesFromLocalStorage() {
     const destination = JSON.parse(localStorage.getItem('destinationCoordinates'));
     return { origin, destination };
 }
+function monitorDestinationInput() {
+    const destinationInput = document.querySelector('.mapbox-directions-destination input');
+    if (destinationInput) {
+        const observer = new MutationObserver(mutations => {
+            mutations.forEach(mutation => {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'value') {
+                    console.log("Destination input value changed to:", destinationInput.value);
+                }
+            });
+        });
+
+        observer.observe(destinationInput, {
+            attributes: true,
+            attributeFilter: ['value'],
+            childList: true,
+            subtree: true,
+            characterData: true
+        });
+
+        console.log("Started monitoring destination input field.");
+    } else {
+        console.error("Destination input field not found.");
+    }
+}
 
 // Function to initialize directions control
 function initializeDirectionsControl() {
@@ -149,6 +173,8 @@ function initializeDirectionsControl() {
             if (destinationMarker) {
                 destinationMarker.style.backgroundColor = '#26617f';
             }
+             // Call the monitorDestinationInput function to observe changes
+            monitorDestinationInput();
         });
 
         directionsInitialized = true;
@@ -165,6 +191,9 @@ function setDirectionsInputFields(originTitle, destinationTitle) {
     if (destinationTitle && destinationInput) {
         destinationInput.value = destinationTitle;
     }
+
+    // Log the current value of the destination input field
+    console.log("Destination input field value:", destinationInput.value);
 }
 function deactivateDirections() {
     clearAllPopups();
@@ -641,7 +670,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 localStorage.removeItem('destinationSidebarHeader');
             }
             updateInputFields();
+            
         });
+                // Call monitorDestinationInput() here to ensure it's monitoring the field
+        monitorDestinationInput();
+    } else {
+        console.error("Elements with class '.mapbox-directions-origin input' or '.mapbox-directions-destination input' not found.");
+    }
+});
 
         // Map click event to set origin or destination
         map.on('click', function(e) {
