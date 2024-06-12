@@ -198,17 +198,10 @@ function clearAllPopups() {
 }
 
 function setDestinationOnClick(e) {
-    console.log("setDestinationOnClick invoked");
-
+    console.log('setDestinationOnClick invoked');
     if (selectedMarker && selectedMarker.data) {
         const { lng, lat, sidebarheader, address, description, cost } = selectedMarker.data;
-        console.log("Selected marker data:", selectedMarker.data);
-
-        if (lng === undefined || lat === undefined) {
-            console.error("Selected marker data is missing required properties:", selectedMarker.data);
-            return;
-        }
-
+        console.log("Selected marker found:", selectedMarker.data);
         destinationCoordinates = [lng, lat];
         destinationSidebarHeader = sidebarheader || `${lat}, ${lng}`;
         console.log("Setting destination with sidebarheader:", sidebarheader);
@@ -253,7 +246,7 @@ function setDestinationOnClick(e) {
             alert('Error setting destination.');
         }
     } else {
-        console.error("No marker is selected or selected marker data is undefined.");
+        console.log("No marker is selected or selected marker data is undefined.");
         alert('Please select a marker first.');
     }
 
@@ -267,7 +260,6 @@ function setDestinationOnClick(e) {
         }
     }, 500);
 }
-
 function setDirectionsInputFields(originTitle, destinationTitle) {
     const originInput = document.querySelector('.mapbox-directions-origin input');
     const destinationInput = document.querySelector('.mapbox-directions-destination input');
