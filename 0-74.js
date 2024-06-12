@@ -198,15 +198,16 @@ function clearAllPopups() {
 }
 
 function setDestinationOnClick(e) {
-    const { lng, lat } = e.lngLat;
-    const clickedMarker = findMarkerByCoordinates(lng, lat);
+    const selectedMarker = markers.find(marker => 
+        marker.marker.getElement().getAttribute('data-is-selected') === 'true'
+    );
 
-    if (clickedMarker) {
-        const { sidebarheader } = clickedMarker.data;
+    if (selectedMarker) {
+        const { lng, lat, sidebarheader, address, description, cost } = selectedMarker.data;
+        console.log("Selected marker found:", selectedMarker.data); // Log selected marker data
         destinationCoordinates = [lng, lat];
         destinationSidebarHeader = sidebarheader || `${lat}, ${lng}`;
-
-        console.log("Clicked marker found. Setting destination with sidebarheader:", destinationSidebarHeader);
+        console.log("Setting destination with sidebarheader:", sidebarheader); // Log the sidebarheader
 
         const destination = {
             "type": "Feature",
@@ -215,57 +216,38 @@ function setDestinationOnClick(e) {
                 "coordinates": destinationCoordinates
             },
             "properties": {
-                "title": destinationSidebarHeader
+                "title": destinationSidebarHeader,
+                "address": address,
+                "description": description,
+                "cost": cost
             }
         };
 
         try {
             directions.setDestination(destinationCoordinates);
             setDirectionsInputFields('', destination.properties.title);
-
-            console.log("Destination set successfully with properties:", destination.properties);
+            console.log("Destination set successfully with properties:", destination.properties); // Log destination properties
         } catch (error) {
             console.error("Error setting destination:", error);
             alert('Error setting destination.');
         }
     } else {
-        destinationCoordinates = [lng, lat];
-        destinationSidebarHeader = `${lat}, ${lng}`;
-
-        console.log("No marker found. Setting destination with default coordinates:", destinationSidebarHeader);
-
-        const destination = {
-            "type": "Feature",
-            "geometry": {
-                "type": "Point",
-                "coordinates": destinationCoordinates
-            },
-            "properties": {
-                "title": destinationSidebarHeader
-            }
-        };
-
-        try {
-            directions.setDestination(destinationCoordinates);
-            setDirectionsInputFields('', destination.properties.title);
-
-            console.log("Destination set successfully with default properties:", destination.properties);
-        } catch (error) {
-            console.error("Error setting destination:", error);
-            alert('Error setting destination.');
-        }
+        console.log("No marker is selected."); // Log if no marker is selected
+        alert('Please select a marker first.');
     }
 
     setTimeout(() => {
         const directionsContainer = document.getElementById('directions-container');
         if (directionsContainer) {
             directionsContainer.scrollIntoView({ behavior: 'smooth' });
+            console.log("Scrolled to directions container."); // Log the scroll action
+        } else {
+            console.error('Directions container not found.');
         }
     }, 500);
 
     map.off('click', setDestinationOnClick);
 }
-
 
 
 function addRouteLabels(route, profile) {
