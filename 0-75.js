@@ -746,9 +746,13 @@ function setupDirectionsButton() {
 
 
 function findMarkerByCoordinates(lng, lat) {
+    const tolerance = 0.0001; // Define a small tolerance
+    console.log("Searching for marker with coordinates:", lng, lat); // Log the coordinates being searched for
     return markers.find(marker => {
         const markerLngLat = marker.marker.getLngLat();
-        return markerLngLat.lng === lng && markerLngLat.lat === lat;
+        const match = Math.abs(markerLngLat.lng - lng) < tolerance && Math.abs(markerLngLat.lat - lat) < tolerance;
+        console.log(`Checking marker at ${markerLngLat.lng}, ${markerLngLat.lat} - Match: ${match}`); // Log each marker's coordinates and match result
+        return match;
     });
 }
 
