@@ -612,6 +612,7 @@ function setupDirectionsButton() {
                 directions.removeRoutes();
 
                 originCoordinates = [validLng, validLat];
+                originSidebarHeader = sidebarheader || `${validLat}, ${validLng}`;
 
                 const origin = {
                     "type": "Feature",
@@ -620,7 +621,7 @@ function setupDirectionsButton() {
                         "coordinates": originCoordinates
                     },
                     "properties": {
-                        "title": sidebarheader || `${validLat}, ${validLng}`
+                        "title": originSidebarHeader
                     }
                 };
 
@@ -662,6 +663,7 @@ function setDestinationOnClick(e) {
     if (clickedMarker) {
         const { sidebarheader } = clickedMarker.data;
         destinationCoordinates = [lng, lat];
+        destinationSidebarHeader = sidebarheader || `${lat}, ${lng}`;
 
         const destination = {
             "type": "Feature",
@@ -670,7 +672,7 @@ function setDestinationOnClick(e) {
                 "coordinates": destinationCoordinates
             },
             "properties": {
-                "title": sidebarheader || `${lat}, ${lng}`
+                "title": destinationSidebarHeader
             }
         };
 
@@ -685,6 +687,7 @@ function setDestinationOnClick(e) {
         }
     } else {
         destinationCoordinates = [lng, lat];
+        destinationSidebarHeader = `${lat}, ${lng}`;
 
         const destination = {
             "type": "Feature",
@@ -693,7 +696,7 @@ function setDestinationOnClick(e) {
                 "coordinates": destinationCoordinates
             },
             "properties": {
-                "title": `${lat}, ${lng}`
+                "title": destinationSidebarHeader
             }
         };
 
