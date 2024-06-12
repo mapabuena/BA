@@ -205,7 +205,6 @@ function setDirectionsInputFields(originTitle, destinationTitle) {
     }
 }
 
-
 function deactivateDirections() {
     clearAllPopups();
     if (directions) {
@@ -277,6 +276,7 @@ function setDestinationOnClick(e) {
             // Update the input fields to reflect the new destination
             setDirectionsInputFields('', destination.properties.title);
 
+            // Log current destination input value
             console.log("Destination input field value after setting:", destinationInput.value);
 
             // Use MutationObserver to ensure the input value stays correct
@@ -395,11 +395,13 @@ function initializeDirectionsControl() {
         directionsInitialized = true;
     }
 }
+
 // Function to save destination title to localStorage
-function getDestinationTitleFromLocalStorage() {
-    const destinationTitle = localStorage.getItem('destinationTitle');
-    console.log("Retrieved destination title from localStorage:", destinationTitle);
-    return destinationTitle;
+function saveDestinationTitleToLocalStorage(destinationTitle) {
+    if (destinationTitle) {
+        localStorage.setItem('destinationTitle', destinationTitle);
+        console.log("Saved destination title to localStorage:", destinationTitle);
+    }
 }
 
 // Function to get destination title from localStorage
@@ -976,7 +978,6 @@ function setDestinationOnClick(e) {
             // Update the input fields to reflect the new destination
             setDirectionsInputFields('', destination.properties.title);
 
-            // Log current destination input value
             console.log("Destination input field value after setting:", destinationInput.value);
 
             // Use MutationObserver to ensure the input value stays correct
@@ -1015,6 +1016,7 @@ function setDestinationOnClick(e) {
         }
     }, 500);
 }
+
 
 
 
