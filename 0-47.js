@@ -260,6 +260,9 @@ function setDestinationOnClick(e) {
             // Update the input fields to reflect the new destination
             setDirectionsInputFields('', destination.properties.title);
 
+            // Log current destination input value
+            console.log("Destination input field value after setting:", destinationInput.value);
+
             // Use MutationObserver to ensure the input value stays correct
             const observer = new MutationObserver(() => {
                 if (destinationInput.value !== destinationSidebarHeader) {
@@ -755,7 +758,6 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Elements with class '.mapbox-directions-origin input' or '.mapbox-directions-destination input' not found.");
     }
 });
-
 
 function clearAllPopups() {
     if (currentPopup) {
