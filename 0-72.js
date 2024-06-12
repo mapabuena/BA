@@ -726,26 +726,14 @@ function setupDirectionsButton() {
     }
 }
 
-
-function findMarkerByCoordinates(lng, lat) {
-    const tolerance = 0.0001; // Define a small tolerance
-    console.log("Searching for marker with coordinates:", lng, lat); // Log the coordinates being searched for
-    return markers.find(marker => {
-        const markerLngLat = marker.marker.getLngLat();
-        const match = Math.abs(markerLngLat.lng - lng) < tolerance && Math.abs(markerLngLat.lat - lat) < tolerance;
-        console.log(`Checking marker at ${markerLngLat.lng}, ${markerLngLat.lat} - Match: ${match}`); // Log each marker's coordinates and match result
-        return match;
-    });
-}
-
 function setDestinationOnClick(e) {
-    const { lng, lat } = e.lngLat;
-    console.log("Clicked coordinates:", lng, lat); // Log the coordinates of the click
-    const clickedMarker = findMarkerByCoordinates(lng, lat);
+    const selectedMarker = markers.find(marker => 
+        marker.marker.getElement().getAttribute('data-is-selected') === 'true'
+    );
 
-    if (clickedMarker) {
-        const { sidebarheader, address, description, cost } = clickedMarker.data;
-        console.log("Marker found:", clickedMarker.data); // Log all marker data
+    if (selectedMarker) {
+        const { lng, lat, sidebarheader, address, description, cost } = selectedMarker.data;
+        console.log("Selected marker found:", selectedMarker.data); // Log selected marker data
         destinationCoordinates = [lng, lat];
         destinationSidebarHeader = sidebarheader || `${lat}, ${lng}`;
         console.log("Setting destination with sidebarheader:", sidebarheader); // Log the sidebarheader
@@ -773,30 +761,8 @@ function setDestinationOnClick(e) {
             alert('Error setting destination.');
         }
     } else {
-        console.log("No marker found at clicked coordinates."); // Log if no marker is found
-        destinationCoordinates = [lng, lat];
-        destinationSidebarHeader = `${lat}, ${lng}`;
-        console.log("Setting destination with default coordinates:", destinationSidebarHeader); // Log the default coordinates
-
-        const destination = {
-            "type": "Feature",
-            "geometry": {
-                "type": "Point",
-                "coordinates": destinationCoordinates
-            },
-            "properties": {
-                "title": destinationSidebarHeader
-            }
-        };
-
-        try {
-            directions.setDestination(destinationCoordinates);
-            setDirectionsInputFields('', destination.properties.title);
-            console.log("Destination set successfully with default properties:", destination.properties); // Log default properties
-        } catch (error) {
-            console.error("Error setting destination:", error);
-            alert('Error setting destination.');
-        }
+        console.log("No marker is selected."); // Log if no marker is selected
+        alert('Please select a marker first.');
     }
 
     setTimeout(() => {
