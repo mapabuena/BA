@@ -893,7 +893,7 @@ function setDestinationOnClick(e) {
 
         try {
             directions.setDestination(destinationCoordinates);
-             setDirectionsInputFields(destination.properties.title, '');
+             setDirectionsInputFields('', destination.properties.title);
 
             // Set up MutationObserver to watch for changes to the destination input field
             const destinationInput = document.querySelector('.mapbox-directions-destination input');
