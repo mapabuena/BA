@@ -698,6 +698,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+
         // Map click event to set origin or destination
         map.on('click', function(e) {
             const { lng, lat } = e.lngLat;
