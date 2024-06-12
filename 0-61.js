@@ -154,7 +154,6 @@ function initializeDirectionsControl() {
         directionsInitialized = true;
     }
 }
-// Function to set directions input fields
 function setDirectionsInputFields(originTitle, destinationTitle) {
     const originInput = document.querySelector('.mapbox-directions-origin input');
     const destinationInput = document.querySelector('.mapbox-directions-destination input');
@@ -328,19 +327,33 @@ function initializeDirectionsControl() {
             }
         });
 
-        directions.on('destination', (event) => {
-            destinationCoordinates = event.feature.geometry.coordinates;
-            saveCoordinatesToLocalStorage(originCoordinates, destinationCoordinates);
-            const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
-            if (destinationMarker) {
-                destinationMarker.style.backgroundColor = '#26617f'; // Change this to your desired color
-            }
-        });
+directions.on('destination', (event) => {
+    destinationCoordinates = event.feature.geometry.coordinates;
+    const destinationProperties = event.feature.properties;
+    const destinationTitle = destinationProperties && destinationProperties.title ? destinationProperties.title : '';
 
+    saveCoordinatesToLocalStorage(originCoordinates, destinationCoordinates);
+    saveDestinationTitleToLocalStorage(destinationTitle);
+
+    const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
+    if (destinationMarker) {
+        destinationMarker.style.backgroundColor = '#26617f'; // Change this to your desired color
+    }
+});
         directionsInitialized = true; // Mark as initialized
     }
 }
+// Function to save destination title to localStorage
+function saveDestinationTitleToLocalStorage(destinationTitle) {
+    if (destinationTitle) {
+        localStorage.setItem('destinationTitle', destinationTitle);
+    }
+}
 
+// Function to get destination title from localStorage
+function getDestinationTitleFromLocalStorage() {
+    return localStorage.getItem('destinationTitle');
+}
 function addRouteLabels(route, profile) {
     if (route.geometry) {
         const coordinates = polyline.decode(route.geometry); // Decode the polyline string
@@ -735,7 +748,7 @@ function updateProfile(profile) {
                 directions.setDestination(destination);
 
                 const originSidebarHeader = localStorage.getItem('originSidebarHeader') || `${origin[1]}, ${origin[0]}`;
-                const destinationSidebarHeader = localStorage.getItem('destinationSidebarHeader') || `${destination[1]}, ${destination[0]}`;
+                const destinationSidebarHeader = getDestinationTitleFromLocalStorage() || `${destination[1]}, ${destination[0]}`;
 
                 setDirectionsInputFields(originSidebarHeader, destinationSidebarHeader);
 
