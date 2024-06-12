@@ -91,6 +91,7 @@ function getLocationFromLocalStorage(type) {
 
 
 // Function to initialize directions control
+// Function to initialize directions control
 function initializeDirectionsControl() {
     if (!directionsInitialized) {
         directions = new MapboxDirections({
@@ -121,31 +122,25 @@ function initializeDirectionsControl() {
         });
 
         directions.on('origin', (event) => {
-            origin = {
-                coordinates: event.feature.geometry.coordinates,
-                properties: event.feature.properties
-            };
-            saveLocationToLocalStorage('origin', origin);
+            originCoordinates = event.feature.geometry.coordinates;
+            saveLocationToLocalStorage('origin', { coordinates: originCoordinates });
         });
 
         directions.on('destination', (event) => {
-            destination = {
-                coordinates: event.feature.geometry.coordinates,
-                properties: event.feature.properties
-            };
-            saveLocationToLocalStorage('destination', destination);
+            destinationCoordinates = event.feature.geometry.coordinates;
+            saveLocationToLocalStorage('destination', { coordinates: destinationCoordinates });
 
             const destinationInput = document.querySelector('.mapbox-directions-destination input');
-            if (destinationInput && destinationInput.value !== destination?.properties?.title) {
-                destinationInput.value = destination?.properties?.title || '';
+            if (destinationInput && destinationInput.value !== event.feature.properties?.title) {
+                destinationInput.value = event.feature.properties?.title || '';
             }
-
-            monitorDestinationInput();
+            setDirectionsInputFields('', event.feature.properties?.title);
         });
 
         directionsInitialized = true;
     }
 }
+
 
 function setDirectionsInputFields(originTitle, destinationTitle) {
     const originInput = document.querySelector('.mapbox-directions-origin input');
@@ -157,6 +152,7 @@ function setDirectionsInputFields(originTitle, destinationTitle) {
     if (destinationTitle && destinationInput) {
         destinationInput.value = destinationTitle;
     }
+    console.log("Updating input fields with:", { originTitle, destinationTitle });
 }
 function deactivateDirections() {
     if (directions) {
@@ -841,66 +837,34 @@ function setupDirectionsButton() {
 }
 
 function setDestinationOnClick(e) {
-    console.log("setDestinationOnClick invoked");
-
     if (selectedMarker && selectedMarker.data) {
         const { lng, lat, sidebarheader, address, description, cost } = selectedMarker.data;
-        console.log("Selected marker data:", selectedMarker.data);
-
-        if (!lng || !lat) {
-            console.error("Selected marker data is missing required properties:", selectedMarker.data);
-            return;
-        }
 
         destinationCoordinates = [lng, lat];
-        destinationSidebarHeader = sidebarheader || `${lat}, ${lng}`;
-        console.log("Setting destination with sidebarheader:", sidebarheader);
-
         const destination = {
-            "type": "Feature",
-            "geometry": {
-                "type": "Point",
-                "coordinates": destinationCoordinates
-            },
-            "properties": {
-                "title": destinationSidebarHeader,
-                "address": address,
-                "description": description,
-                "cost": cost
+            coordinates: destinationCoordinates,
+            properties: {
+                title: sidebarheader || `${lat}, ${lng}`,
+                address: address,
+                description: description,
+                cost: cost
             }
         };
+        saveLocationToLocalStorage('destination', destination);
 
         try {
-            directions.setDestination(destinationCoordinates);
-
-            // Directly set the input value to ensure it is not reverted
-            const destinationInput = document.querySelector('.mapbox-directions-destination input');
-            destinationInput.value = destinationSidebarHeader;
-
-            // Update the input fields to reflect the new destination
+            directions.setDestination(destination.coordinates);
             setDirectionsInputFields('', destination.properties.title);
-
-            console.log("Destination set successfully with properties:", destination.properties);
+            const destinationInput = document.querySelector('.mapbox-directions-destination input');
+            destinationInput.value = destination.properties.title;
         } catch (error) {
             console.error("Error setting destination:", error);
             alert('Error setting destination.');
         }
     } else {
-        console.error("No marker is selected or selected marker data is undefined.");
         alert('Please select a marker first.');
     }
-
-    setTimeout(() => {
-        const directionsContainer = document.getElementById('directions-container');
-        if (directionsContainer) {
-            directionsContainer.scrollIntoView({ behavior: 'smooth' });
-            console.log("Scrolled to directions container.");
-        } else {
-            console.error('Directions container not found.');
-        }
-    }, 500);
 }
-
 
 
 document.getElementById('nightmode').addEventListener('click', () => {
