@@ -223,7 +223,13 @@ function setDestinationOnClick(e) {
 
         try {
             directions.setDestination(destinationCoordinates);
-            setDirectionsInputFields('', destination.properties.title);
+
+            // Listen for the destination event to update input fields
+            directions.on('destination', () => {
+                setDirectionsInputFields('', destination.properties.title);
+                console.log("Input fields updated after destination event.");
+            });
+
             console.log("Destination set successfully with properties:", destination.properties); // Log destination properties
         } catch (error) {
             console.error("Error setting destination:", error);
@@ -245,6 +251,79 @@ function setDestinationOnClick(e) {
     }, 500);
 
     map.off('click', setDestinationOnClick);
+}
+
+function setDirectionsInputFields(originTitle, destinationTitle) {
+    const originInput = document.querySelector('.mapbox-directions-origin input');
+    const destinationInput = document.querySelector('.mapbox-directions-destination input');
+
+    console.log("Updating input fields with:", { originTitle, destinationTitle }); // Log the input field update
+    if (originTitle && originInput) {
+        originInput.value = originTitle;
+    }
+    if (destinationTitle && destinationInput) {
+        destinationInput.value = destinationTitle;
+    }
+}
+
+// Ensure event listeners are added after initializing directions
+function initializeDirectionsControl() {
+    if (!directionsInitialized) {
+        directions = new MapboxDirections({
+            accessToken: mapboxgl.accessToken,
+            unit: 'metric',
+            profile: 'mapbox/driving-traffic',
+            alternatives: true,
+            controls: {
+                inputs: true,
+                instructions: true,
+            },
+            styles: customStyles
+        });
+
+        const directionsContainer = document.getElementById('directions-control');
+        if (directionsContainer) {
+            directionsContainer.innerHTML = '';
+            const directionsControlContainer = directions.onAdd(map);
+            if (directionsControlContainer) {
+                directionsContainer.appendChild(directionsControlContainer);
+            } else {
+                console.error('Directions control container not found.');
+            }
+        } else {
+            console.error('Element with ID "directions-control" not found.');
+        }
+
+        directions.on('route', (event) => {
+            const routes = event.route;
+            const profile = directions.options.profile; // Get the current profile
+            if (routes && routes.length > 0) {
+                onRoutesReceived(routes, profile); // Pass the routes and profile
+            } else {
+                console.error("No routes received from Directions API.");
+            }
+        });
+
+        directions.on('origin', (event) => {
+            originCoordinates = event.feature.geometry.coordinates;
+            saveCoordinatesToLocalStorage(originCoordinates, destinationCoordinates);
+            const originMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="A"]');
+            if (originMarker) {
+                originMarker.style.backgroundColor = '#c62026'; // Change this to your desired color
+            }
+        });
+
+        directions.on('destination', (event) => {
+            destinationCoordinates = event.feature.geometry.coordinates;
+            saveCoordinatesToLocalStorage(originCoordinates, destinationCoordinates);
+            const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
+            if (destinationMarker) {
+                destinationMarker.style.backgroundColor = '#26617f'; // Change this to your desired color
+            }
+        });
+
+        directionsInitialized = true; // Mark as initialized
+    }
 }
 
 function addRouteLabels(route, profile) {
