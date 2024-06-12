@@ -237,6 +237,10 @@ function setDestinationOnClick(e) {
             return;
         }
 
+        // Ensure the origin is cleared before setting the destination
+        directions.setOrigin(null);
+        originCoordinates = null;
+
         destinationCoordinates = [lng, lat];
         destinationSidebarHeader = sidebarheader || `${lat}, ${lng}`;
         console.log("Setting destination with sidebarheader:", sidebarheader);
@@ -696,7 +700,6 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Elements with class '.mapbox-directions-origin input' or '.mapbox-directions-destination input' not found.");
     }
 });
-
 
 
 function clearAllPopups() {
