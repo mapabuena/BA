@@ -78,31 +78,26 @@ function applyRouteInfoStyles() {
 window.addEventListener('resize', applyRouteInfoStyles);
 document.addEventListener('DOMContentLoaded', applyRouteInfoStyles);
 
-// Function to save coordinates to localStorage
-function saveCoordinatesToLocalStorage(origin, destination) {
-    if (origin) {
-        localStorage.setItem('originCoordinates', JSON.stringify(origin));
-    }
-    if (destination) {
-        localStorage.setItem('destinationCoordinates', JSON.stringify(destination));
+function saveLocationToLocalStorage(type, location) {
+    if (location) {
+        localStorage.setItem(type, JSON.stringify(location));
     }
 }
 
-// Function to get coordinates from localStorage
-function getCoordinatesFromLocalStorage() {
-    const origin = JSON.parse(localStorage.getItem('originCoordinates'));
-    const destination = JSON.parse(localStorage.getItem('destinationCoordinates'));
-    return { origin, destination };
+function getLocationFromLocalStorage(type) {
+    return JSON.parse(localStorage.getItem(type));
 }
+
+
 function monitorDestinationInput() {
     const destinationInput = document.querySelector('.mapbox-directions-destination input');
     if (destinationInput) {
         const observer = new MutationObserver(mutations => {
             mutations.forEach(mutation => {
                 if (mutation.type === 'attributes' && mutation.attributeName === 'value') {
-                    const storedDestinationTitle = getDestinationTitleFromLocalStorage();
-                    if (destinationInput.value !== storedDestinationTitle) {
-                        destinationInput.value = storedDestinationTitle;
+                    const storedDestination = getLocationFromLocalStorage('destination');
+                    if (destinationInput.value !== storedDestination?.properties?.title) {
+                        destinationInput.value = storedDestination?.properties?.title || '';
                     }
                 }
             });
@@ -137,13 +132,7 @@ function initializeDirectionsControl() {
         if (directionsContainer) {
             directionsContainer.innerHTML = '';
             const directionsControlContainer = directions.onAdd(map);
-            if (directionsControlContainer) {
-                directionsContainer.appendChild(directionsControlContainer);
-            } else {
-                console.error('Directions control container not found.');
-            }
-        } else {
-            console.error('Element with ID "directions-control" not found.');
+            directionsContainer.appendChild(directionsControlContainer);
         }
 
         directions.on('route', (event) => {
@@ -151,34 +140,36 @@ function initializeDirectionsControl() {
             const profile = directions.options.profile;
             if (routes && routes.length > 0) {
                 onRoutesReceived(routes, profile);
-            } else {
-                console.error("No routes received from Directions API.");
             }
         });
 
         directions.on('origin', (event) => {
-            originCoordinates = event.feature.geometry.coordinates;
-            saveCoordinatesToLocalStorage(originCoordinates, destinationCoordinates);
-            const originMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="A"]');
-            if (originMarker) {
-                originMarker.style.backgroundColor = '#c62026';
-            }
+            origin = {
+                coordinates: event.feature.geometry.coordinates,
+                properties: event.feature.properties
+            };
+            saveLocationToLocalStorage('origin', origin);
         });
 
         directions.on('destination', (event) => {
-            destinationCoordinates = event.feature.geometry.coordinates;
-            saveCoordinatesToLocalStorage(originCoordinates, destinationCoordinates);
-            const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
-            if (destinationMarker) {
-                destinationMarker.style.backgroundColor = '#26617f';
+            destination = {
+                coordinates: event.feature.geometry.coordinates,
+                properties: event.feature.properties
+            };
+            saveLocationToLocalStorage('destination', destination);
+
+            const destinationInput = document.querySelector('.mapbox-directions-destination input');
+            if (destinationInput && destinationInput.value !== destination?.properties?.title) {
+                destinationInput.value = destination?.properties?.title || '';
             }
-             // Call the monitorDestinationInput function to observe changes
+
             monitorDestinationInput();
         });
 
         directionsInitialized = true;
     }
 }
+
 function setDirectionsInputFields(originTitle, destinationTitle) {
     const originInput = document.querySelector('.mapbox-directions-origin input');
     const destinationInput = document.querySelector('.mapbox-directions-destination input');
@@ -191,22 +182,17 @@ function setDirectionsInputFields(originTitle, destinationTitle) {
     }
 }
 function deactivateDirections() {
-    clearAllPopups();
     if (directions) {
-        directions.removeRoutes(); // Clear routes
-        directions.setOrigin(''); // Clear the origin
-        directions.setDestination(''); // Clear the destination
-        try {
-            if (directions._map) { // Check if directions is still added to the map
-                map.removeControl(directions); // Remove the directions control from the map
-            }
-        } catch (error) {
-            console.error("Error removing directions control:", error);
+        directions.removeRoutes();
+        directions.setOrigin('');
+        directions.setDestination('');
+        if (directions._map) {
+            map.removeControl(directions);
         }
-        directionsInitialized = false; // Mark as not initialized
-        directions = null; // Reset the directions object
+        directionsInitialized = false;
+        directions = null;
     }
-    map.off('click', setDestinationOnClick); // Remove map click event listener for setting destination
+    map.off('click', setDestinationOnClick);
 }
 
 function clearAllPopups() {
@@ -221,53 +207,31 @@ function clearAllPopups() {
 }
 
 function setDestinationOnClick(e) {
-    console.log("setDestinationOnClick invoked");
-
     if (selectedMarker && selectedMarker.data) {
         const { lng, lat, sidebarheader, address, description, cost } = selectedMarker.data;
-        console.log("Selected marker data:", selectedMarker.data);
 
-        if (!lng || !lat) {
-            console.error("Selected marker data is missing required properties:", selectedMarker.data);
-            return;
-        }
-
-        destinationCoordinates = [lng, lat];
-        destinationSidebarHeader = sidebarheader || `${lat}, ${lng}`;
-        console.log("Setting destination with sidebarheader:", sidebarheader);
-
-        const destination = {
-            "type": "Feature",
-            "geometry": {
-                "type": "Point",
-                "coordinates": destinationCoordinates
-            },
-            "properties": {
-                "title": destinationSidebarHeader,
-                "address": address,
-                "description": description,
-                "cost": cost
+        destination = {
+            coordinates: [lng, lat],
+            properties: {
+                title: sidebarheader || `${lat}, ${lng}`,
+                address: address,
+                description: description,
+                cost: cost
             }
         };
+        saveLocationToLocalStorage('destination', destination);
 
         try {
-            directions.setDestination(destinationCoordinates);
+            directions.setDestination(destination.coordinates);
 
-            // Directly set the input value to ensure it is not reverted
             const destinationInput = document.querySelector('.mapbox-directions-destination input');
-            destinationInput.value = destinationSidebarHeader;
+            destinationInput.value = destination.properties.title;
 
-            // Update the input fields to reflect the new destination
             setDirectionsInputFields('', destination.properties.title);
 
-            // Log current destination input value
-            console.log("Destination input field value after setting:", destinationInput.value);
-
-            // Use MutationObserver to ensure the input value stays correct
             const observer = new MutationObserver(() => {
-                if (destinationInput.value !== destinationSidebarHeader) {
-                    destinationInput.value = destinationSidebarHeader;
-                    console.log("Reapplied destination sidebarheader:", destinationSidebarHeader);
+                if (destinationInput.value !== destination.properties.title) {
+                    destinationInput.value = destination.properties.title;
                 }
             });
 
@@ -279,25 +243,13 @@ function setDestinationOnClick(e) {
                 characterData: true
             });
 
-            console.log("Destination set successfully with properties:", destination.properties);
         } catch (error) {
             console.error("Error setting destination:", error);
             alert('Error setting destination.');
         }
     } else {
-        console.error("No marker is selected or selected marker data is undefined.");
         alert('Please select a marker first.');
     }
-
-    setTimeout(() => {
-        const directionsContainer = document.getElementById('directions-container');
-        if (directionsContainer) {
-            directionsContainer.scrollIntoView({ behavior: 'smooth' });
-            console.log("Scrolled to directions container.");
-        } else {
-            console.error('Directions container not found.');
-        }
-    }, 500);
 }
 
 function setDirectionsInputFields(originTitle, destinationTitle) {
@@ -598,17 +550,16 @@ document.addEventListener('DOMContentLoaded', function() {
     setupInfoItemHoverEffects();
     setupDirectionsButton();
 
-    const closeDirectionsButton = document.getElementById('close-directions');
+     const closeDirectionsButton = document.getElementById('close-directions');
     if (closeDirectionsButton) {
         closeDirectionsButton.addEventListener('click', function() {
             document.getElementById('directions-container').style.display = 'none';
             deactivateDirections();
         });
-    } else {
-        console.error("Element with ID 'close-directions' not found.");
     }
+});
 
-    const directionsButton = document.getElementById('get-directions');
+   const directionsButton = document.getElementById('get-directions');
     if (directionsButton) {
         directionsButton.addEventListener('click', function() {
             if (!selectedMarker) {
@@ -617,9 +568,13 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             const { lat, lng, sidebarheader } = selectedMarker.data;
-
-            originCoordinates = [lng, lat];
-            originSidebarHeader = sidebarheader || `${lat}, ${lng}`;
+            origin = {
+                coordinates: [lng, lat],
+                properties: {
+                    title: sidebarheader || `${lat}, ${lng}`
+                }
+            };
+            saveLocationToLocalStorage('origin', origin);
 
             if (!directionsInitialized) {
                 initializeDirectionsControl();
@@ -627,31 +582,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
             directions.removeRoutes();
 
-            const origin = {
-                "type": "Feature",
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": originCoordinates
-                },
-                "properties": {
-                    "title": originSidebarHeader
-                }
-            };
-
             try {
-                directions.setOrigin(originCoordinates);
+                directions.setOrigin(origin.coordinates);
                 setDirectionsInputFields(origin.properties.title, '');
 
             } catch (error) {
-                console.error("Error setting origin:", error);
                 alert('Error setting origin.');
             }
 
             document.getElementById('directions-container').style.display = 'block';
             map.on('click', setDestinationOnClick);
         });
-    } else {
-        console.error("Element with ID 'get-directions' not found.");
     }
 
     const originInput = document.querySelector('.mapbox-directions-origin input');
