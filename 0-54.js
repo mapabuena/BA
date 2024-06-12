@@ -293,7 +293,7 @@ function setDestinationOnClick(e) {
         } else {
             console.error('Directions container not found.');
         }
-    }, 500);
+    }, 900);
 }
 
 function setDirectionsInputFields(originTitle, destinationTitle) {
