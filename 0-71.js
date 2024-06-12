@@ -156,15 +156,13 @@ function initializeDirectionsControl() {
 function setDirectionsInputFields(originTitle, destinationTitle) {
     const originInput = document.querySelector('.mapbox-directions-origin input');
     const destinationInput = document.querySelector('.mapbox-directions-destination input');
-    
+
+    console.log("Updating input fields with:", { originTitle, destinationTitle }); // Log the input field update
     if (originTitle && originInput) {
         originInput.value = originTitle;
-        console.log("Setting origin input field:", originTitle);
     }
-    
     if (destinationTitle && destinationInput) {
         destinationInput.value = destinationTitle;
-        console.log("Setting destination input field:", destinationTitle);
     }
 }
 function deactivateDirections() {
@@ -248,7 +246,6 @@ function setDestinationOnClick(e) {
 
     map.off('click', setDestinationOnClick);
 }
-
 
 function addRouteLabels(route, profile) {
     if (route.geometry) {
