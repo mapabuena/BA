@@ -360,19 +360,26 @@ function initializeDirectionsControl() {
             }
         });
 
-directions.on('destination', (event) => {
-    destinationCoordinates = event.feature.geometry.coordinates;
-    const destinationProperties = event.feature.properties;
-    const destinationTitle = destinationProperties && destinationProperties.title ? destinationProperties.title : '';
+        directions.on('destination', (event) => {
+            destinationCoordinates = event.feature.geometry.coordinates;
+            const destinationProperties = event.feature.properties;
+            const destinationTitle = destinationProperties && destinationProperties.title ? destinationProperties.title : '';
 
-    saveCoordinatesToLocalStorage(originCoordinates, destinationCoordinates);
-    saveDestinationTitleToLocalStorage(destinationTitle);
+            saveCoordinatesToLocalStorage(originCoordinates, destinationCoordinates);
+            saveDestinationTitleToLocalStorage(destinationTitle);
 
-    const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
-    if (destinationMarker) {
-        destinationMarker.style.backgroundColor = '#26617f'; // Change this to your desired color
-    }
-});
+            const destinationInput = document.querySelector('.mapbox-directions-destination input');
+            if (destinationInput && destinationInput.value !== destinationTitle) {
+                destinationInput.value = destinationTitle;
+                console.log("Destination set successfully with properties:", destinationProperties);
+            }
+
+            const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
+            if (destinationMarker) {
+                destinationMarker.style.backgroundColor = '#26617f'; // Change this to your desired color
+            }
+        });
+
         directionsInitialized = true; // Mark as initialized
     }
 }
@@ -896,32 +903,13 @@ function setDestinationOnClick(e) {
 
         try {
             directions.setDestination(destinationCoordinates);
-              setDirectionsInputFields('', destination.properties.title);
-
-            // Set up MutationObserver to watch for changes to the destination input field
-            const destinationInput = document.querySelector('.mapbox-directions-destination input');
-            const observer = new MutationObserver((mutationsList) => {
-                for (const mutation of mutationsList) {
-                    if (mutation.type === 'attributes' && mutation.attributeName === 'value') {
-                        console.log(`Destination input changed to: ${destinationInput.value}`);
-                        if (destinationInput.value !== destinationSidebarHeader) {
-                            destinationInput.value = destinationSidebarHeader;
-                            console.log("Reapplied destination sidebarheader:", destinationSidebarHeader);
-                        }
-                    }
-                }
-            });
-
-            observer.observe(destinationInput, {
-                attributes: true,
-                attributeFilter: ['value'],
-                childList: true,
-                subtree: true,
-                characterData: true
-            });
 
             // Directly set the input value to ensure it is not reverted
+            const destinationInput = document.querySelector('.mapbox-directions-destination input');
             destinationInput.value = destinationSidebarHeader;
+
+            // Update the input fields to reflect the new destination
+            setDirectionsInputFields('', destination.properties.title);
 
             console.log("Destination set successfully with properties:", destination.properties);
         } catch (error) {
@@ -943,6 +931,7 @@ function setDestinationOnClick(e) {
         }
     }, 500);
 }
+
 
 
 document.getElementById('nightmode').addEventListener('click', () => {
