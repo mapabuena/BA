@@ -34,7 +34,7 @@ const customStyles = [{
     'source': 'directions',
     'paint': {
         'circle-radius': 18,
-        'circle-color': '#c62026' // Custom color for the start marker
+        'circle-color': '#c62026'
     },
     'filter': [
         'all',
@@ -47,7 +47,7 @@ const customStyles = [{
     'source': 'directions',
     'paint': {
         'circle-radius': 18,
-        'circle-color': '#000000' // Custom color for the end marker
+        'circle-color': '#000000'
     },
     'filter': [
         'all',
@@ -100,7 +100,10 @@ function monitorDestinationInput() {
         const observer = new MutationObserver(mutations => {
             mutations.forEach(mutation => {
                 if (mutation.type === 'attributes' && mutation.attributeName === 'value') {
-                    console.log("Destination input value changed to:", destinationInput.value);
+                    const storedDestinationTitle = getDestinationTitleFromLocalStorage();
+                    if (destinationInput.value !== storedDestinationTitle) {
+                        destinationInput.value = storedDestinationTitle;
+                    }
                 }
             });
         });
@@ -112,10 +115,6 @@ function monitorDestinationInput() {
             subtree: true,
             characterData: true
         });
-
-        console.log("Started monitoring destination input field.");
-    } else {
-        console.error("Destination input field not found.");
     }
 }
 
@@ -184,16 +183,12 @@ function setDirectionsInputFields(originTitle, destinationTitle) {
     const originInput = document.querySelector('.mapbox-directions-origin input');
     const destinationInput = document.querySelector('.mapbox-directions-destination input');
 
-    console.log("Updating input fields with:", { originTitle, destinationTitle }); // Log the input field update
     if (originTitle && originInput) {
         originInput.value = originTitle;
     }
     if (destinationTitle && destinationInput) {
         destinationInput.value = destinationTitle;
     }
-
-    // Log the current value of the destination input field
-    console.log("Destination input field value:", destinationInput.value);
 }
 function deactivateDirections() {
     clearAllPopups();
@@ -226,24 +221,18 @@ function clearAllPopups() {
 }
 
 function setDestinationOnClick(e) {
-    console.log("setDestinationOnClick invoked");
+    const { lng, lat } = e.lngLat;
+
+    if (!originCoordinates) {
+        alert('Please set an origin first.');
+        return;
+    }
 
     if (selectedMarker && selectedMarker.data) {
-        const { lng, lat, sidebarheader, address, description, cost } = selectedMarker.data;
-        console.log("Selected marker data:", selectedMarker.data);
-
-        if (!lng || !lat) {
-            console.error("Selected marker data is missing required properties:", selectedMarker.data);
-            return;
-        }
-
-        // Ensure the origin is cleared before setting the destination
-        directions.setOrigin(null);
-        originCoordinates = null;
+        const { sidebarheader, address, description, cost } = selectedMarker.data;
 
         destinationCoordinates = [lng, lat];
         destinationSidebarHeader = sidebarheader || `${lat}, ${lng}`;
-        console.log("Setting destination with sidebarheader:", sidebarheader);
 
         const destination = {
             "type": "Feature",
@@ -262,42 +251,18 @@ function setDestinationOnClick(e) {
         try {
             directions.setDestination(destinationCoordinates);
 
-            // Set up MutationObserver to watch for changes to the destination input field
             const destinationInput = document.querySelector('.mapbox-directions-destination input');
-            const observer = new MutationObserver(() => {
-                if (destinationInput.value !== destinationSidebarHeader) {
-                    destinationInput.value = destinationSidebarHeader;
-                    console.log("Reapplied destination sidebarheader:", destinationSidebarHeader);
-                }
-            });
+            destinationInput.value = destinationSidebarHeader;
 
-            observer.observe(destinationInput, {
-                attributes: true,
-                attributeFilter: ['value'],
-                childList: true,
-                subtree: true,
-                characterData: true
-            });
+            setDirectionsInputFields('', destination.properties.title);
 
-            console.log("Destination set successfully with properties:", destination.properties);
         } catch (error) {
             console.error("Error setting destination:", error);
             alert('Error setting destination.');
         }
     } else {
-        console.error("No marker is selected or selected marker data is undefined.");
         alert('Please select a marker first.');
     }
-
-    setTimeout(() => {
-        const directionsContainer = document.getElementById('directions-container');
-        if (directionsContainer) {
-            directionsContainer.scrollIntoView({ behavior: 'smooth' });
-            console.log("Scrolled to directions container.");
-        } else {
-            console.error('Directions container not found.');
-        }
-    }, 500);
 }
 
 function setDirectionsInputFields(originTitle, destinationTitle) {
@@ -610,7 +575,46 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const directionsButton = document.getElementById('get-directions');
     if (directionsButton) {
-        setupDirectionsButton();
+        directionsButton.addEventListener('click', function() {
+            if (!selectedMarker) {
+                alert('Please select a marker first.');
+                return;
+            }
+
+            const { lat, lng, sidebarheader } = selectedMarker.data;
+
+            originCoordinates = [lng, lat];
+            originSidebarHeader = sidebarheader || `${lat}, ${lng}`;
+
+            if (!directionsInitialized) {
+                initializeDirectionsControl();
+            }
+
+            directions.removeRoutes();
+
+            const origin = {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": originCoordinates
+                },
+                "properties": {
+                    "title": originSidebarHeader
+                }
+            };
+
+            try {
+                directions.setOrigin(originCoordinates);
+                setDirectionsInputFields(origin.properties.title, '');
+
+            } catch (error) {
+                console.error("Error setting origin:", error);
+                alert('Error setting origin.');
+            }
+
+            document.getElementById('directions-container').style.display = 'block';
+            map.on('click', setDestinationOnClick);
+        });
     } else {
         console.error("Element with ID 'get-directions' not found.");
     }
@@ -620,41 +624,49 @@ document.addEventListener('DOMContentLoaded', function() {
     const originClearButton = document.querySelector('.mapbox-directions-origin .geocoder-icon-close');
     const destinationClearButton = document.querySelector('.mapbox-directions-destination .geocoder-icon-close');
 
-    if (originInput && destinationInput) {
-        function updateInputFields() {
+    function updateInputFields() {
+        if (originInput) {
             originInput.placeholder = originSidebarHeader || 'Choose a starting place';
+        }
+        if (destinationInput) {
             destinationInput.placeholder = destinationSidebarHeader || 'Choose destination';
         }
+    }
 
-        // Event listener for clearing origin input
-        if (originClearButton) {
-            originClearButton.addEventListener('click', function() {
+    // Event listener for clearing origin input
+    if (originClearButton) {
+        originClearButton.addEventListener('click', function() {
+            if (originInput) {
                 originInput.value = '';
-                originCoordinates = null;
-                originSidebarHeader = null;
-                localStorage.removeItem('originCoordinates');
-                localStorage.removeItem('originSidebarHeader');
-                updateInputFields();
-            });
-        } else {
-            console.error("Element with class '.mapbox-directions-origin .geocoder-icon-close' not found.");
-        }
+            }
+            originCoordinates = null;
+            originSidebarHeader = null;
+            localStorage.removeItem('originCoordinates');
+            localStorage.removeItem('originSidebarHeader');
+            updateInputFields();
+        });
+    } else {
+        console.error("Element with class '.mapbox-directions-origin .geocoder-icon-close' not found.");
+    }
 
-        // Event listener for clearing destination input
-        if (destinationClearButton) {
-            destinationClearButton.addEventListener('click', function() {
+    // Event listener for clearing destination input
+    if (destinationClearButton) {
+        destinationClearButton.addEventListener('click', function() {
+            if (destinationInput) {
                 destinationInput.value = '';
-                destinationCoordinates = null;
-                destinationSidebarHeader = null;
-                localStorage.removeItem('destinationCoordinates');
-                localStorage.removeItem('destinationSidebarHeader');
-                updateInputFields();
-            });
-        } else {
-            console.error("Element with class '.mapbox-directions-destination .geocoder-icon-close' not found.");
-        }
+            }
+            destinationCoordinates = null;
+            destinationSidebarHeader = null;
+            localStorage.removeItem('destinationCoordinates');
+            localStorage.removeItem('destinationSidebarHeader');
+            updateInputFields();
+        });
+    } else {
+        console.error("Element with class '.mapbox-directions-destination .geocoder-icon-close' not found.");
+    }
 
-        // Event listener for manually entering origin address
+    // Event listener for manually entering origin address
+    if (originInput) {
         originInput.addEventListener('input', function() {
             if (originInput.value) {
                 originSidebarHeader = originInput.value;
@@ -667,8 +679,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             updateInputFields();
         });
+    }
 
-        // Event listener for manually entering destination address
+    // Event listener for manually entering destination address
+    if (destinationInput) {
         destinationInput.addEventListener('input', function() {
             if (destinationInput.value) {
                 destinationSidebarHeader = destinationInput.value;
@@ -681,11 +695,13 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             updateInputFields();
         });
+    }
 
-        // Call monitorDestinationInput() here to ensure it's monitoring the field
-        monitorDestinationInput();
+    // Call monitorDestinationInput() to ensure it's monitoring the field
+    monitorDestinationInput();
 
-        // Map click event to set origin or destination
+    // Map click event to set origin or destination
+    if (originInput && destinationInput) {
         map.on('click', function(e) {
             const { lng, lat } = e.lngLat;
             const activeInput = document.activeElement;
