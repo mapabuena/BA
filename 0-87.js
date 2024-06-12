@@ -153,10 +153,12 @@ function setDirectionsInputFields(originTitle, destinationTitle) {
     
     if (originTitle && originInput) {
         originInput.value = originTitle;
+        console.log("Setting origin input field:", originTitle);
     }
     
     if (destinationTitle && destinationInput) {
         destinationInput.value = destinationTitle;
+        console.log("Setting destination input field:", destinationTitle);
     }
 }
 function deactivateDirections() {
@@ -467,7 +469,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setupInfoItemHoverEffects();
     setupDirectionsButton();
  
-     const closeDirectionsButton = document.getElementById('close-directions');
+  const closeDirectionsButton = document.getElementById('close-directions');
     if (closeDirectionsButton) {
         closeDirectionsButton.addEventListener('click', function() {
             document.getElementById('directions-container').style.display = 'none';
@@ -483,6 +485,26 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         console.error("Element with ID 'get-directions' not found.");
     }
+
+    // Add event listeners for clearing origin and destination inputs
+    const originInput = document.querySelector('.mapbox-directions-origin input');
+    const destinationInput = document.querySelector('.mapbox-directions-destination input');
+
+    originInput.addEventListener('input', function() {
+        if (!originInput.value) {
+            originCoordinates = null;
+            originSidebarHeader = null;
+            localStorage.removeItem('originCoordinates');
+        }
+    });
+
+    destinationInput.addEventListener('input', function() {
+        if (!destinationInput.value) {
+            destinationCoordinates = null;
+            destinationSidebarHeader = null;
+            localStorage.removeItem('destinationCoordinates');
+        }
+    });
 });
 
 
@@ -623,6 +645,7 @@ function updateProfile(profile) {
         alert('Please set both origin and destination before updating the profile.');
     }
 }
+
 // Add this function to set up the directions button event listener
 function setupDirectionsButton() {
     const directionsButton = document.getElementById('get-directions');
