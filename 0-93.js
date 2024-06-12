@@ -228,7 +228,6 @@ function addRouteLabels(route, profile) {
 
 function getRouteCenter(coordinates) {
     if (coordinates && coordinates.length > 0) {
-        console.log("Coordinates array:", coordinates);
         const midIndex = Math.floor(coordinates.length / 2);
         return coordinates[midIndex]; // Coordinates are already [lng, lat]
     } else {
@@ -339,7 +338,6 @@ function showRoutePopup(route, coordinates, profile, isBestRoute = true) {
 // Function to display route alternatives
 // Function to display route alternatives
 function displayRouteAlternatives(routes, profile) {
-    console.log("Routes received:", routes); // Debug log for routes received
 
     if (routes && routes.length > 1) {
         const bestRoute = routes[0];
@@ -356,9 +354,7 @@ function displayRouteAlternatives(routes, profile) {
         }
 
         if (bestRouteCoordinates.length > 0 && secondBestRouteCoordinates.length > 0) {
-            console.log("Best route coordinates:", bestRouteCoordinates); // Debug log
-            console.log("Second-best route coordinates:", secondBestRouteCoordinates); // Debug log
-
+    
             const bestRouteCenter = getRouteCenter(bestRouteCoordinates);
             const secondBestRouteCenter = getRouteCenter(secondBestRouteCoordinates);
 
@@ -413,7 +409,6 @@ function validateCoordinates(coords) {
 }
 
 function onRoutesReceived(routes, profile) {
-    console.log("Routes received for profile:", profile); // Debug log for profile
     displayRouteAlternatives(routes, profile);
 }
 
