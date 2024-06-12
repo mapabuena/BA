@@ -84,6 +84,7 @@ function saveCoordinatesToLocalStorage(origin, destination) {
     if (destination) {
         localStorage.setItem('destinationCoordinates', JSON.stringify(destination));
     }
+}
 
 // Function to get coordinates from localStorage
 function getCoordinatesFromLocalStorage() {
