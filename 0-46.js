@@ -88,7 +88,6 @@ function getLocationFromLocalStorage(type) {
     return JSON.parse(localStorage.getItem(type));
 }
 
-
 function monitorDestinationInput() {
     const destinationInput = document.querySelector('.mapbox-directions-destination input');
     if (destinationInput) {
@@ -284,57 +283,44 @@ function initializeDirectionsControl() {
         if (directionsContainer) {
             directionsContainer.innerHTML = '';
             const directionsControlContainer = directions.onAdd(map);
-            if (directionsControlContainer) {
-                directionsContainer.appendChild(directionsControlContainer);
-            } else {
-                console.error('Directions control container not found.');
-            }
-        } else {
-            console.error('Element with ID "directions-control" not found.');
+            directionsContainer.appendChild(directionsControlContainer);
         }
 
         directions.on('route', (event) => {
             const routes = event.route;
-            const profile = directions.options.profile; // Get the current profile
+            const profile = directions.options.profile;
             if (routes && routes.length > 0) {
-                onRoutesReceived(routes, profile); // Pass the routes and profile
-            } else {
-                console.error("No routes received from Directions API.");
+                onRoutesReceived(routes, profile);
             }
         });
 
         directions.on('origin', (event) => {
-            originCoordinates = event.feature.geometry.coordinates;
-            saveCoordinatesToLocalStorage(originCoordinates, destinationCoordinates);
-            const originMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="A"]');
-            if (originMarker) {
-                originMarker.style.backgroundColor = '#c62026'; // Change this to your desired color
-            }
+            origin = {
+                coordinates: event.feature.geometry.coordinates,
+                properties: event.feature.properties
+            };
+            saveLocationToLocalStorage('origin', origin);
         });
 
         directions.on('destination', (event) => {
-            destinationCoordinates = event.feature.geometry.coordinates;
-            const destinationProperties = event.feature.properties;
-            const destinationTitle = destinationProperties && destinationProperties.title ? destinationProperties.title : '';
-
-            saveCoordinatesToLocalStorage(originCoordinates, destinationCoordinates);
-            saveDestinationTitleToLocalStorage(destinationTitle);
+            destination = {
+                coordinates: event.feature.geometry.coordinates,
+                properties: event.feature.properties
+            };
+            saveLocationToLocalStorage('destination', destination);
 
             const destinationInput = document.querySelector('.mapbox-directions-destination input');
-            if (destinationInput && destinationInput.value !== destinationTitle) {
-                destinationInput.value = destinationTitle;
-                console.log("Destination set successfully with properties:", destinationProperties);
+            if (destinationInput && destinationInput.value !== destination?.properties?.title) {
+                destinationInput.value = destination?.properties?.title || '';
             }
 
-            const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
-            if (destinationMarker) {
-                destinationMarker.style.backgroundColor = '#26617f'; // Change this to your desired color
-            }
+            monitorDestinationInput();
         });
 
-        directionsInitialized = true; // Mark as initialized
+        directionsInitialized = true;
     }
 }
+
 // Function to save destination title to localStorage
 function saveDestinationTitleToLocalStorage(destinationTitle) {
     if (destinationTitle) {
