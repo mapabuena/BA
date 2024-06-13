@@ -240,6 +240,8 @@ function setDirectionsInputFields(originTitle, destinationTitle) {
     if (originTitle && originInput) {
         originInput.value = originTitle;
         console.log("Origin input field set to:", originTitle);
+        localStorage.setItem('originTitle', originTitle); // Save to local storage
+        console.log("Saved origin title to localStorage:", originTitle);
     } else {
         console.log("Origin title or input is missing.");
     }
@@ -247,6 +249,8 @@ function setDirectionsInputFields(originTitle, destinationTitle) {
     if (destinationTitle && destinationInput) {
         destinationInput.value = destinationTitle;
         console.log("Destination input field set to:", destinationTitle);
+        localStorage.setItem('destinationTitle', destinationTitle); // Save to local storage
+        console.log("Saved destination title to localStorage:", destinationTitle);
     } else {
         console.log("Destination title or input is missing.");
     }
