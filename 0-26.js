@@ -158,27 +158,37 @@ function initializeDirectionsControl() {
         });
 
         // Place the origin event listener here
-        directions.on('origin', (event) => {
-            originCoordinates = event.feature.geometry.coordinates;
-            const originProperties = event.feature.properties || {};
-            const originTitle = originProperties.title || getOriginTitleFromLocalStorage() || '';
+directions.on('origin', (event) => {
+    originCoordinates = event.feature.geometry.coordinates;
+    const originProperties = event.feature.properties || {};
+    let originTitle = originProperties.title || getOriginTitleFromLocalStorage() || '';
 
-            console.log("Initial origin properties:", originProperties);
+    console.log("Initial origin properties:", originProperties);
 
-            saveCoordinatesToLocalStorage(originCoordinates, destinationCoordinates);
-            saveOriginTitleToLocalStorage(originTitle);
+    if (!originTitle) {
+        console.log("Origin title is empty, retrieving from localStorage.");
+        originTitle = getOriginTitleFromLocalStorage() || '';
+    }
 
-            const originInput = document.querySelector('.mapbox-directions-origin input');
-            if (originInput && originInput.value !== originTitle) {
-                originInput.value = originTitle;
-                console.log("Origin title set:", originTitle);
-            }
+    if (originTitle && originTitle.trim() !== '') {
+        saveCoordinatesToLocalStorage(originCoordinates, destinationCoordinates);
+        saveOriginTitleToLocalStorage(originTitle);
+    } else {
+        console.log("Origin title is empty or invalid, not saving to localStorage.");
+    }
 
-            const originMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="A"]');
-            if (originMarker) {
-                originMarker.style.backgroundColor = '#c62026';
-            }
-        });
+    const originInput = document.querySelector('.mapbox-directions-origin input');
+    if (originInput && originInput.value !== originTitle) {
+        originInput.value = originTitle;
+        console.log("Origin title set:", originTitle);
+    }
+
+    const originMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="A"]');
+    if (originMarker) {
+        originMarker.style.backgroundColor = '#c62026';
+    }
+});
+
 
         directions.on('destination', (event) => {
             destinationCoordinates = event.feature.geometry.coordinates;
@@ -219,6 +229,7 @@ function saveOriginTitleToLocalStorage(originTitle) {
         console.log("Origin title is empty or invalid, not saving to localStorage.");
     }
 }
+
 
 function setDirectionsInputFields(originTitle, destinationTitle) {
     const originInput = document.querySelector('.mapbox-directions-origin input');
