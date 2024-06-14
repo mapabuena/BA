@@ -70,6 +70,7 @@ map.on('load', function () {
             }
         }
     });
+}); 
 
 if (typeof polyline === 'undefined') {
     console.error("Polyline library is not loaded!");
