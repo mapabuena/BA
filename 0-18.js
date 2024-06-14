@@ -119,8 +119,7 @@ function monitorDestinationInput() {
     }
 }
 
-// Function to initialize directions control
-function initializeDirectionsControl(origin) {
+function initializeDirectionsControl() {
     if (!directionsInitialized) {
         directions = new MapboxDirections({
             accessToken: mapboxgl.accessToken,
@@ -200,48 +199,6 @@ function initializeDirectionsControl(origin) {
     setDirectionsInputFields(origin.properties.title, '');
     saveOriginTitleToLocalStorage(origin.properties.title);
 }
-
-
-        directions.on('destination', (event) => {
-            destinationCoordinates = event.feature.geometry.coordinates;
-            const destinationProperties = event.feature.properties || {};
-            const destinationTitle = destinationProperties.title || getDestinationTitleFromLocalStorage() || '';
-
-            console.log("Initial destination properties:", destinationProperties);
-
-            saveCoordinatesToLocalStorage(originCoordinates, destinationCoordinates);
-            saveDestinationTitleToLocalStorage(destinationTitle);
-
-            const destinationInput = document.querySelector('.mapbox-directions-destination input');
-            if (destinationInput && destinationInput.value !== destinationTitle) {
-                destinationInput.value = destinationTitle;
-                console.log("Destination title set:", destinationTitle);
-            }
-
-            const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
-            if (destinationMarker) {
-                destinationMarker.style.backgroundColor = '#26617f';
-            }
-
-            // Ensure both input fields are updated
-            const originTitle = getOriginTitleFromLocalStorage();
-            setDirectionsInputFields(originTitle, destinationTitle);
-        });
-
-        directionsInitialized = true;
-    }
-}
-
-// Function to save origin title to localStorage
-function saveOriginTitleToLocalStorage(originTitle) {
-    if (originTitle && originTitle.trim() !== '') {
-        localStorage.setItem('originTitle', originTitle);
-        console.log("Saved origin title to localStorage:", originTitle);
-    } else {
-        console.log("Origin title is empty or invalid, not saving to localStorage.");
-    }
-}
-
 
 function setDirectionsInputFields(originTitle, destinationTitle) {
     const originInput = document.querySelector('.mapbox-directions-origin input');
