@@ -204,19 +204,6 @@ function initializeDirectionsControl() {
     }
 }
 
-    const destinationInput = document.querySelector('.mapbox-directions-destination input');
-    if (destinationInput) {
-        destinationInput.value = destinationTitle;
-        console.log("Destination title set:", destinationTitle);
-    }
-
-    const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
-    if (destinationMarker) {
-        destinationMarker.style.backgroundColor = '#26617f';
-    }
-});
-
-directionsInitialized = true;
 
 // Function to save origin title to localStorage
 function saveOriginTitleToLocalStorage(originTitle) {
