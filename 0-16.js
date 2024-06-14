@@ -200,6 +200,16 @@ function initializeDirectionsControl() {
     saveOriginTitleToLocalStorage(origin.properties.title);
 }
 
+// Function to save origin title to localStorage
+function saveOriginTitleToLocalStorage(originTitle) {
+    if (originTitle && originTitle.trim() !== '') {
+        localStorage.setItem('originTitle', originTitle);
+        console.log("Saved origin title to localStorage:", originTitle);
+    } else {
+        console.log("Origin title is empty or invalid, not saving to localStorage.");
+    }
+}
+
 function setDirectionsInputFields(originTitle, destinationTitle) {
     const originInput = document.querySelector('.mapbox-directions-origin input');
     const destinationInput = document.querySelector('.mapbox-directions-destination input');
