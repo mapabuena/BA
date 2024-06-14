@@ -161,8 +161,10 @@ function initializeDirectionsControl() {
             const originCoordinates = event.feature.geometry ? event.feature.geometry.coordinates : null;
 
             if (originCoordinates) {
-                // Use coordinates as title if title is not present
-                const originTitle = originProperties.title ? originProperties.title : `${originCoordinates[1]}, ${originCoordinates[0]}`;
+                const originTitle = originProperties.title && originProperties.title.trim() !== ''
+                    ? originProperties.title
+                    : `${originCoordinates[1]}, ${originCoordinates[0]}`;
+
                 console.log("Initial origin properties:", originProperties);
 
                 if (!originProperties.id) originProperties.id = 'origin';
@@ -178,6 +180,8 @@ function initializeDirectionsControl() {
                 if (originMarker) {
                     originMarker.style.backgroundColor = '#c62026';
                 }
+            } else {
+                console.log("No origin coordinates, properties not affecting the title.");
             }
         });
 
@@ -186,8 +190,10 @@ function initializeDirectionsControl() {
             const destinationCoordinates = event.feature.geometry ? event.feature.geometry.coordinates : null;
 
             if (destinationCoordinates) {
-                // Use coordinates as title if title is not present
-                const destinationTitle = destinationProperties.title ? destinationProperties.title : `${destinationCoordinates[1]}, ${destinationCoordinates[0]}`;
+                const destinationTitle = destinationProperties.title && destinationProperties.title.trim() !== ''
+                    ? destinationProperties.title
+                    : `${destinationCoordinates[1]}, ${destinationCoordinates[0]}`;
+
                 console.log("Initial destination properties:", destinationProperties);
 
                 if (!destinationProperties.id) destinationProperties.id = 'destination';
@@ -203,14 +209,14 @@ function initializeDirectionsControl() {
                 if (destinationMarker) {
                     destinationMarker.style.backgroundColor = '#26617f';
                 }
+            } else {
+                console.log("No destination coordinates, properties not affecting the title.");
             }
         });
 
         directionsInitialized = true;
     }
 }
-
-
 
 // Function to save origin title to localStorage
 function saveOriginTitleToLocalStorage(originTitle) {
