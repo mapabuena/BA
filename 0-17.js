@@ -972,7 +972,7 @@ function setupDirectionsButton() {
                         setDirectionsInputFields(origin.properties.title, '');
                         saveOriginTitleToLocalStorage(origin.properties.title);
                         console.log("Origin set successfully.");
-                    } catch (error) {e
+                    } catch (error) {
                         console.error("Error setting origin:", error);
                         alert('Error setting origin.');
                     }
