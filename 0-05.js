@@ -259,88 +259,6 @@ function clearAllPopups() {
     }
 }
 
-function setDestinationOnClick(e) {
-    console.log("setDestinationOnClick invoked");
-
-    if (selectedMarker && selectedMarker.data) {
-        const { lng, lat, sidebarheader, address, description, cost } = selectedMarker.data;
-        console.log("Selected marker data:", selectedMarker.data);
-
-        if (!lng || !lat) {
-            console.error("Selected marker data is missing required properties:", selectedMarker.data);
-            return;
-        }
-
-        destinationCoordinates = [lng, lat];
-        destinationSidebarHeader = sidebarheader || `${lat}, ${lng}`;
-        console.log("Setting destination with sidebarheader:", sidebarheader);
-
-        const destination = {
-            "type": "Feature",
-            "geometry": {
-                "type": "Point",
-                "coordinates": destinationCoordinates
-            },
-            "properties": {
-                "title": destinationSidebarHeader,
-                "address": address,
-                "description": description,
-                "cost": cost
-            }
-        };
-
-        try {
-            directions.setDestination(destination);
-
-            // Directly set the input value to ensure it is not reverted
-            const destinationInput = document.querySelector('.mapbox-directions-destination input');
-            destinationInput.value = destinationSidebarHeader;
-            console.log("Directly setting destination input value:", destinationSidebarHeader);
-
-            // Update the input fields to reflect the new destination
-            setDirectionsInputFields('', destination.properties.title);
-
-            // Log current destination input value
-            console.log("Destination input field value after setting:", destinationInput.value);
-
-            // Use MutationObserver to ensure the input value stays correct
-            const observer = new MutationObserver(() => {
-                if (destinationInput.value !== destinationSidebarHeader) {
-                    destinationInput.value = destinationSidebarHeader;
-                    console.log("Reapplied destination sidebarheader:", destinationSidebarHeader);
-                }
-            });
-
-            observer.observe(destinationInput, {
-                attributes: true,
-                attributeFilter: ['value'],
-                childList: true,
-                subtree: true,
-                characterData: true
-            });
-
-            console.log("Destination set successfully with properties:", destination.properties);
-        } catch (error) {
-            console.error("Error setting destination:", error);
-            alert('Error setting destination.');
-        }
-    } else {
-        console.error("No marker is selected or selected marker data is undefined.");
-        alert('Please select a marker first.');
-    }
-
-    setTimeout(() => {
-        const directionsContainer = document.getElementById('directions-container');
-        if (directionsContainer) {
-            directionsContainer.scrollIntoView({ behavior: 'smooth' });
-            console.log("Scrolled to directions container.");
-        } else {
-            console.error('Directions container not found.');
-        }
-    }, 500);
-}
-
-
 // Ensure event listeners are added after initializing directions
 function initializeDirectionsControl() {
     if (!directionsInitialized) {
@@ -1008,7 +926,10 @@ function setDestinationOnClick(e) {
             // Update the input fields to reflect the new destination
             setDirectionsInputFields('', destination.properties.title);
 
-            // Ensure the value stays correct
+            // Log current destination input value
+            console.log("Destination input field value after setting:", destinationInput.value);
+
+            // Use MutationObserver to ensure the input value stays correct
             const observer = new MutationObserver(() => {
                 if (destinationInput.value !== destinationSidebarHeader) {
                     destinationInput.value = destinationSidebarHeader;
@@ -1043,6 +964,8 @@ function setDestinationOnClick(e) {
             console.error('Directions container not found.');
         }
     }, 500);
+}
+
 
 document.getElementById('nightmode').addEventListener('click', () => {
     isNightMode = !isNightMode;
