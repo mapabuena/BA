@@ -28,49 +28,6 @@ let directionsInitialized = false;
 let directions; // Define the directions variable here
 // Define customStyles globally if not already defined
 
-map.on('load', function () {
-    // Ensure customStyles is defined
-    const customStyles = [
-        {
-            'id': 'directions-origin-point',
-            'type': 'circle',
-            'source': 'directions',
-            'paint': {
-                'circle-radius': 10,
-                'circle-color': '#c62026'
-            },
-            'filter': [
-                'all',
-                ['==', 'type', 'origin']
-            ]
-        },
-        {
-            'id': 'directions-destination-point',
-            'type': 'circle',
-            'source': 'directions',
-            'paint': {
-                'circle-radius': 10,
-                'circle-color': '#000000'
-            },
-            'filter': [
-                'all',
-                ['==', 'type', 'destination']
-            ]
-        }
-    ];
-
-    // Add the custom styles
-    customStyles.forEach(style => {
-        if (!map.getLayer(style.id)) {
-            // Add the layer, ensuring it is added before 'directions-route-line' if it exists
-            if (map.getLayer('directions-route-line')) {
-                map.addLayer(style, 'directions-route-line');
-            } else {
-                map.addLayer(style);
-            }
-        }
-    });
-}); 
 
 if (typeof polyline === 'undefined') {
     console.error("Polyline library is not loaded!");
@@ -137,7 +94,48 @@ function monitorDestinationInput() {
 
 // Function to initialize directions control
 function initializeDirectionsControl() {
-    if (!directionsInitialized) {
+    if (!directionsInitialized) { 
+    const customStyles = [
+            {
+                'id': 'directions-origin-point',
+                'type': 'circle',
+                'source': 'directions',
+                'paint': {
+                    'circle-radius': 10,
+                    'circle-color': '#c62026'
+                },
+                'filter': [
+                    'all',
+                    ['==', 'type', 'origin']
+                ]
+            },
+            {
+                'id': 'directions-destination-point',
+                'type': 'circle',
+                'source': 'directions',
+                'paint': {
+                    'circle-radius': 10,
+                    'circle-color': '#000000'
+                },
+                'filter': [
+                    'all',
+                    ['==', 'type', 'destination']
+                ]
+            }
+        ];
+
+        // Add the custom styles
+        customStyles.forEach(style => {
+            if (!map.getLayer(style.id)) {
+                // Add the layer, ensuring it is added before 'directions-route-line' if it exists
+                if (map.getLayer('directions-route-line')) {
+                    map.addLayer(style, 'directions-route-line');
+                } else {
+                    map.addLayer(style);
+                }
+            }
+        });
+     
         directions = new MapboxDirections({
             accessToken: mapboxgl.accessToken,
             unit: 'metric',
