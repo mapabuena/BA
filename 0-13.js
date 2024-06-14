@@ -396,12 +396,10 @@ function initializeDirectionsControl() {
         directions.on('origin', (event) => {
             originCoordinates = event.feature.geometry.coordinates;
             const originProperties = event.feature.properties || {};
-            const originTitle = originProperties.title || getOriginTitleFromLocalStorage() || '';
+            const originTitle = originProperties.title || '';
 
             console.log("Initial origin properties:", originProperties);
 
-            saveCoordinatesToLocalStorage(originCoordinates, destinationCoordinates);
-            saveOriginTitleToLocalStorage(originTitle);
 
             const originInput = document.querySelector('.mapbox-directions-origin input');
             if (originInput && originInput.value !== originTitle) {
@@ -418,12 +416,11 @@ function initializeDirectionsControl() {
         directions.on('destination', (event) => {
             destinationCoordinates = event.feature.geometry.coordinates;
             const destinationProperties = event.feature.properties || {};
-            const destinationTitle = destinationProperties.title || getDestinationTitleFromLocalStorage() || '';
+            const destinationTitle = destinationProperties.title || '';
 
             console.log("Initial destination properties:", destinationProperties);
 
-            saveCoordinatesToLocalStorage(originCoordinates, destinationCoordinates);
-            saveDestinationTitleToLocalStorage(destinationTitle);
+
 
             const destinationInput = document.querySelector('.mapbox-directions-destination input');
             if (destinationInput && destinationInput.value !== destinationTitle) {
@@ -436,9 +433,8 @@ function initializeDirectionsControl() {
                 destinationMarker.style.backgroundColor = '#26617f';
             }
 
-            // Ensure both input fields are updated
-            const originTitle = getOriginTitleFromLocalStorage();
-            setDirectionsInputFields(originTitle, destinationTitle);
+
+            setDirectionsInputFields('', destinationTitle);
         });
 
         directionsInitialized = true;
