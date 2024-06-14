@@ -173,7 +173,7 @@ function initializeDirectionsControl() {
             }
         });
 
-  directions.on('destination', (event) => {
+directions.on('destination', (event) => {
     destinationCoordinates = event.feature.geometry.coordinates;
     const destinationProperties = event.feature.properties || {};
 
@@ -193,17 +193,14 @@ function initializeDirectionsControl() {
         destinationInput.value = destinationTitle;
         console.log("Destination title set:", destinationTitle);
     }
+
+    const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
+    if (destinationMarker) {
+        destinationMarker.style.backgroundColor = '#26617f';
+    }
 });
 
-            const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
-            if (destinationMarker) {
-                destinationMarker.style.backgroundColor = '#26617f';
-            }    
-        });
-
-        directionsInitialized = true;
-    }
-}
+directionsInitialized = true;
 
 // Function to save origin title to localStorage
 function saveOriginTitleToLocalStorage(originTitle) {
