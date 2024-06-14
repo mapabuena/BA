@@ -176,13 +176,24 @@ function initializeDirectionsControl() {
   directions.on('destination', (event) => {
     destinationCoordinates = event.feature.geometry.coordinates;
     const destinationProperties = event.feature.properties || {};
-    const destinationTitle = destinationProperties.title || '';
 
-    // Update the destination input field with the title
+    // Check if the destinationProperties has a title
+    if (destinationProperties.title) {
+        destinationTitle = destinationProperties.title;
+    } else if (selectedMarker && selectedMarker.data.sidebarheader) {
+        destinationTitle = selectedMarker.data.sidebarheader;
+    } else {
+        destinationTitle = `${destinationCoordinates[1]}, ${destinationCoordinates[0]}`;
+    }
+
+    console.log("Initial destination properties:", destinationProperties);
+
     const destinationInput = document.querySelector('.mapbox-directions-destination input');
     if (destinationInput) {
         destinationInput.value = destinationTitle;
+        console.log("Destination title set:", destinationTitle);
     }
+});
 
             const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
             if (destinationMarker) {
