@@ -292,7 +292,7 @@ function setDestinationOnClick(e) {
         };
 
         try {
-            directions.setDestination(destinationCoordinates);
+            directions.setDestination(destination);
 
             // Directly set the input value to ensure it is not reverted
             const destinationInput = document.querySelector('.mapbox-directions-destination input');
@@ -300,7 +300,7 @@ function setDestinationOnClick(e) {
             console.log("Directly setting destination input value:", destinationSidebarHeader);
 
             // Update the input fields to reflect the new destination
-            setDirectionsInputFields('origin.properties.title', destination.properties.title);
+            setDirectionsInputFields('', destination.properties.title);
 
             // Log current destination input value
             console.log("Destination input field value after setting:", destinationInput.value);
