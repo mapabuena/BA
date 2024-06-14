@@ -27,7 +27,7 @@ function initializeDirectionsControl() {
         directions = new MapboxDirections({
             accessToken: mapboxgl.accessToken,
             unit: 'metric',
-            profile: 'mapbox/driving',
+            profile: 'mapbox/driving-traffic',
             alternatives: true,
             controls: {
                 inputs: true,
