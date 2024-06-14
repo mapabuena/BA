@@ -159,10 +159,18 @@ function initializeDirectionsControl() {
         directions.on('origin', (event) => {
             originCoordinates = event.feature.geometry.coordinates;
             const originProperties = event.feature.properties || {};
-            const originTitle = originProperties.title || '';
+
+            // Check if the originProperties has a title, otherwise use previously set originSidebarHeader or coordinates
+            const originTitle = (originProperties.title && originProperties.title.trim() !== '') 
+                ? originProperties.title 
+                : (originSidebarHeader && originSidebarHeader.trim() !== '') 
+                ? originSidebarHeader 
+                : `${originCoordinates[1]}, ${originCoordinates[0]}`;
+
+            console.log("Initial origin properties:", originProperties);
 
             const originInput = document.querySelector('.mapbox-directions-origin input');
-            if (originInput && originInput.value !== originTitle && !originInput.value) {
+            if (originInput && originInput.value !== originTitle) {
                 originInput.value = originTitle;
                 console.log("Origin title set:", originTitle);
             }
@@ -177,19 +185,17 @@ function initializeDirectionsControl() {
             destinationCoordinates = event.feature.geometry.coordinates;
             const destinationProperties = event.feature.properties || {};
 
-            // Check if the destinationProperties has a title
-            if (destinationProperties.title) {
-                destinationTitle = destinationProperties.title;
-            } else if (selectedMarker && selectedMarker.data.sidebarheader) {
-                destinationTitle = selectedMarker.data.sidebarheader;
-            } else {
-                destinationTitle = `${destinationCoordinates[1]}, ${destinationCoordinates[0]}`;
-            }
+            // Check if the destinationProperties has a title, otherwise use previously set selectedMarker data or coordinates
+            const destinationTitle = (destinationProperties.title && destinationProperties.title.trim() !== '') 
+                ? destinationProperties.title 
+                : (selectedMarker && selectedMarker.data.sidebarheader && selectedMarker.data.sidebarheader.trim() !== '') 
+                ? selectedMarker.data.sidebarheader 
+                : `${destinationCoordinates[1]}, ${destinationCoordinates[0]}`;
 
             console.log("Initial destination properties:", destinationProperties);
 
             const destinationInput = document.querySelector('.mapbox-directions-destination input');
-            if (destinationInput) {
+            if (destinationInput && destinationInput.value !== destinationTitle) {
                 destinationInput.value = destinationTitle;
                 console.log("Destination title set:", destinationTitle);
             }
