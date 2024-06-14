@@ -157,15 +157,12 @@ function initializeDirectionsControl() {
         });
 
         directions.on('origin', (event) => {
-            const originCoordinates = event.feature.geometry.coordinates;
+            originCoordinates = event.feature.geometry.coordinates;
             const originProperties = event.feature.properties || {};
-            const originTitle = originProperties.title || getOriginTitleFromLocalStorage() || '';
-
-            saveCoordinatesToLocalStorage(originCoordinates, destinationCoordinates);
-            saveOriginTitleToLocalStorage(originTitle);
+            const originTitle = originProperties.title || '';
 
             const originInput = document.querySelector('.mapbox-directions-origin input');
-            if (originInput && !originInput.value) {
+            if (originInput && originInput.value !== originTitle && !originInput.value) {
                 originInput.value = originTitle;
                 console.log("Origin title set:", originTitle);
             }
@@ -177,15 +174,12 @@ function initializeDirectionsControl() {
         });
 
         directions.on('destination', (event) => {
-            const destinationCoordinates = event.feature.geometry.coordinates;
+            destinationCoordinates = event.feature.geometry.coordinates;
             const destinationProperties = event.feature.properties || {};
-            const destinationTitle = destinationProperties.title || getDestinationTitleFromLocalStorage() || '';
-
-            saveCoordinatesToLocalStorage(originCoordinates, destinationCoordinates);
-            saveDestinationTitleToLocalStorage(destinationTitle);
+            const destinationTitle = destinationProperties.title || '';
 
             const destinationInput = document.querySelector('.mapbox-directions-destination input');
-            if (destinationInput && !destinationInput.value) {
+            if (destinationInput && destinationInput.value !== destinationTitle && !destinationInput.value) {
                 destinationInput.value = destinationTitle;
                 console.log("Destination title set:", destinationTitle);
             }
@@ -195,8 +189,7 @@ function initializeDirectionsControl() {
                 destinationMarker.style.backgroundColor = '#26617f';
             }
 
-            const originTitle = getOriginTitleFromLocalStorage();
-            setDirectionsInputFields(originTitle, destinationTitle);
+            setDirectionsInputFields('', destinationTitle);
         });
 
         directionsInitialized = true;
@@ -992,7 +985,6 @@ function setupDirectionsButton() {
                 try {
                     directions.setOrigin(originCoordinates);
                     setDirectionsInputFields(origin.properties.title, '');
-                    saveOriginTitleToLocalStorage(origin.properties.title);
 
                     console.log("Origin set successfully.");
                 } catch (error) {
@@ -1059,16 +1051,27 @@ function setDestinationOnClick(e) {
 
             // Directly set the input value to ensure it is not reverted
             const destinationInput = document.querySelector('.mapbox-directions-destination input');
-            if (destinationInput && !destinationInput.value) {
-                destinationInput.value = destinationSidebarHeader;
-                console.log("Directly setting destination input value:", destinationSidebarHeader);
-            }
+            destinationInput.value = destinationSidebarHeader;
+            console.log("Directly setting destination input value:", destinationSidebarHeader);
 
             // Update the input fields to reflect the new destination
             setDirectionsInputFields('', destination.properties.title);
-            saveDestinationTitleToLocalStorage(destination.properties.title);
 
-            console.log("Destination input field value after setting:", destinationInput.value);
+            // Ensure the value stays correct
+            const observer = new MutationObserver(() => {
+                if (destinationInput.value !== destinationSidebarHeader) {
+                    destinationInput.value = destinationSidebarHeader;
+                    console.log("Reapplied destination sidebarheader:", destinationSidebarHeader);
+                }
+            });
+
+            observer.observe(destinationInput, {
+                attributes: true,
+                attributeFilter: ['value'],
+                childList: true,
+                subtree: true,
+                characterData: true
+            });
 
             console.log("Destination set successfully with properties:", destination.properties);
         } catch (error) {
