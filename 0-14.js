@@ -148,15 +148,10 @@ function initializeDirectionsControl() {
         directions.on('origin', (event) => {
             const originCoordinates = event.feature.geometry.coordinates;
             const originProperties = event.feature.properties || {};
-            let originTitle = originProperties.title || getOriginTitleFromLocalStorage() || '';
+            let originTitle = originProperties.title || '';
 
             if (!originTitle) {
-                originTitle = getOriginTitleFromLocalStorage() || '';
-            }
-
-            if (originTitle && originTitle.trim() !== '') {
-                saveCoordinatesToLocalStorage(originCoordinates, destinationCoordinates);
-                saveOriginTitleToLocalStorage(originTitle);
+                originTitle = '';
             }
 
             const originInput = document.querySelector('.mapbox-directions-origin input');
@@ -173,11 +168,9 @@ function initializeDirectionsControl() {
         directions.on('destination', (event) => {
             const destinationCoordinates = event.feature.geometry.coordinates;
             const destinationProperties = event.feature.properties || {};
-            const destinationTitle = destinationProperties.title || getDestinationTitleFromLocalStorage() || '';
+            const destinationTitle = destinationProperties.title || '';
 
-            saveCoordinatesToLocalStorage(originCoordinates, destinationCoordinates);
-            saveDestinationTitleToLocalStorage(destinationTitle);
-
+    
             const destinationInput = document.querySelector('.mapbox-directions-destination input');
             if (destinationInput && destinationInput.value !== destinationTitle) {
                 destinationInput.value = destinationTitle;
@@ -188,8 +181,8 @@ function initializeDirectionsControl() {
                 destinationMarker.style.backgroundColor = '#26617f';
             }
 
-            const originTitle = getOriginTitleFromLocalStorage();
-            setDirectionsInputFields(originTitle, destinationTitle);
+       
+            setDirectionsInputFields('', destinationTitle);
         });
 
         directionsInitialized = true;
@@ -876,17 +869,88 @@ document.getElementById('custom-walking').addEventListener('click', () => update
 
 // Function to update the profile and retrieve origin and destination titles from localStorage
 function updateProfile(profile) {
-    const { origin, destination } = getCoordinatesFromLocalStorage();
+    // Save current origin and destination data to localStorage
+    const originInput = document.querySelector('.mapbox-directions-origin input');
+    const destinationInput = document.querySelector('.mapbox-directions-destination input');
 
+    if (originInput) {
+        const originTitle = originInput.value;
+        saveOriginTitleToLocalStorage(originTitle);
+    }
+
+    if (destinationInput) {
+        const destinationTitle = destinationInput.value;
+        saveDestinationTitleToLocalStorage(destinationTitle);
+    }
+
+    if (originCoordinates) {
+        saveCoordinatesToLocalStorage(originCoordinates, destinationCoordinates);
+    }
+
+    // Retrieve saved data from localStorage
+    const { origin, destination } = getCoordinatesFromLocalStorage();
     const originTitle = getOriginTitleFromLocalStorage();
     const destinationTitle = getDestinationTitleFromLocalStorage();
 
-    if (origin && destination) {
-        const originCoords = `${origin[0]},${origin[1]}`;
-        const destinationCoords = `${destination[0]},${destination[1]}`;
+    let originCoords = origin ? `${origin[0]},${origin[1]}` : null;
+    let destinationCoords = destination ? `${destination[0]},${destination[1]}` : null;
 
+    // Initialize directions control with the new profile
+    if (directions) {
+        directions.removeRoutes();
+        directions.setOrigin('');
+        directions.setDestination('');
+    }
+
+    directions = new MapboxDirections({
+        accessToken: mapboxgl.accessToken,
+        unit: 'metric',
+        profile: profile,
+        alternatives: true,
+        controls: { inputs: true, instructions: true },
+        styles: customStyles
+    });
+
+    const directionsContainer = document.getElementById('directions-control');
+    if (directionsContainer) {
+        directionsContainer.innerHTML = '';
+        const directionsControlContainer = directions.onAdd(map);
+        if (directionsControlContainer) {
+            directionsContainer.appendChild(directionsControlContainer);
+        } else {
+            console.error('Directions control container not found.');
+        }
+    }
+
+    if (origin) {
+        directions.setOrigin(origin);
+    }
+    if (destination) {
+        directions.setDestination(destination);
+    }
+
+    setDirectionsInputFields(originTitle, destinationTitle);
+
+    directions.on('route', (event) => {
+        const routes = event.route;
+        const profile = directions.options.profile;
+        if (routes && routes.length > 0) {
+            onRoutesReceived(routes, profile);
+        } else {
+            console.error("No routes received from Directions API.");
+        }
+    });
+
+    // If both origin and destination are missing, just initialize the directions control
+    if (!originCoords && !destinationCoords) {
+        console.warn('Both origin and destination are missing. Initializing directions control with no origin or destination.');
+        return;
+    }
+
+    // Request directions if both coordinates are available
+    if (originCoords && destinationCoords) {
         const requestUrl = `https://api.mapbox.com/directions/v5/${profile}/${originCoords};${destinationCoords}?geometries=polyline&alternatives=true&steps=true&overview=full&access_token=${mapboxgl.accessToken}`;
-
+        
         fetch(requestUrl, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
@@ -894,56 +958,12 @@ function updateProfile(profile) {
         .then(response => response.json())
         .then(data => {
             if (data.routes && data.routes.length > 0) {
-                if (directions) {
-                    directions.removeRoutes();
-                    directions.setOrigin('');
-                    directions.setDestination('');
-                }
-
-                directions = new MapboxDirections({
-                    accessToken: mapboxgl.accessToken,
-                    unit: 'metric',
-                    profile: profile,
-                    alternatives: true,
-                    controls: { inputs: true, instructions: true },
-                    styles: customStyles
-                });
-
-                const directionsContainer = document.getElementById('directions-control');
-                if (directionsContainer) {
-                    directionsContainer.innerHTML = '';
-                    const directionsControlContainer = directions.onAdd(map);
-                    if (directionsControlContainer) {
-                        directionsContainer.appendChild(directionsControlContainer);
-                    } else {
-                        console.error('Directions control container not found.');
-                    }
-                }
-
-                directions.setOrigin(origin);
-                directions.setDestination(destination);
-
-                setDirectionsInputFields(originTitle, destinationTitle);
-
-                directions.on('route', (event) => {
-                    const routes = event.route;
-                    const profile = directions.options.profile;
-                    if (routes && routes.length > 0) {
-                        onRoutesReceived(routes, profile);
-                    } else {
-                        console.error("No routes received from Directions API.");
-                    }
-                });
-
                 onRoutesReceived(data.routes, profile);
             } else {
                 console.error('No routes found');
             }
         })
         .catch(error => console.error('Error fetching directions:', error));
-    } else {
-        console.error('Origin and destination must be set to update the profile');
-        alert('Please set both origin and destination before updating the profile.');
     }
 }
 // Add this function to set up the directions button event listener
@@ -980,7 +1000,6 @@ function setupDirectionsButton() {
                     try {
                         directions.setOrigin(origin.geometry.coordinates);
                         setDirectionsInputFields(origin.properties.title, '');
-                        saveOriginTitleToLocalStorage(origin.properties.title);
                         console.log("Origin set successfully.");
                     } catch (error) {
                         console.error("Error setting origin:", error);
@@ -1051,7 +1070,7 @@ function setDestinationOnClick(e) {
 
             // Update the input fields to reflect the new destination
             setDirectionsInputFields('', destination.properties.title);
-            saveDestinationTitleToLocalStorage(destination.properties.title);
+        
 
             console.log("Destination input field value after setting:", destinationInput.value);
 
