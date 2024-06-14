@@ -157,60 +157,52 @@ function initializeDirectionsControl() {
         });
 
         directions.on('origin', (event) => {
-            originCoordinates = event.feature.geometry.coordinates;
             const originProperties = event.feature.properties || {};
+            const originCoordinates = event.feature.geometry ? event.feature.geometry.coordinates : null;
 
-            // Add default properties if they do not exist
-            if (!originProperties.id) originProperties.id = 'origin';
-            if (!originProperties['marker-symbol']) originProperties['marker-symbol'] = 'A';
+            if (originCoordinates) {
+                // Use coordinates as title if title is not present
+                const originTitle = originProperties.title ? originProperties.title : `${originCoordinates[1]}, ${originCoordinates[0]}`;
+                console.log("Initial origin properties:", originProperties);
 
-            // Check if the originProperties has a title, otherwise use previously set originSidebarHeader or coordinates
-            const originTitle = originProperties.title && originProperties.title.trim() !== ''
-                ? originProperties.title
-                : originSidebarHeader && originSidebarHeader.trim() !== ''
-                ? originSidebarHeader
-                : `${originCoordinates[1]}, ${originCoordinates[0]}`;
+                if (!originProperties.id) originProperties.id = 'origin';
+                if (!originProperties['marker-symbol']) originProperties['marker-symbol'] = 'A';
 
-            console.log("Initial origin properties:", originProperties);
+                const originInput = document.querySelector('.mapbox-directions-origin input');
+                if (originInput && originInput.value !== originTitle) {
+                    originInput.value = originTitle;
+                    console.log("Origin title set:", originTitle);
+                }
 
-            const originInput = document.querySelector('.mapbox-directions-origin input');
-            if (originInput && originInput.value !== originTitle) {
-                originInput.value = originTitle;
-                console.log("Origin title set:", originTitle);
-            }
-
-            const originMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="A"]');
-            if (originMarker) {
-                originMarker.style.backgroundColor = '#c62026';
+                const originMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="A"]');
+                if (originMarker) {
+                    originMarker.style.backgroundColor = '#c62026';
+                }
             }
         });
 
         directions.on('destination', (event) => {
-            destinationCoordinates = event.feature.geometry.coordinates;
             const destinationProperties = event.feature.properties || {};
+            const destinationCoordinates = event.feature.geometry ? event.feature.geometry.coordinates : null;
 
-            // Add default properties if they do not exist
-            if (!destinationProperties.id) destinationProperties.id = 'destination';
-            if (!destinationProperties['marker-symbol']) destinationProperties['marker-symbol'] = 'B';
+            if (destinationCoordinates) {
+                // Use coordinates as title if title is not present
+                const destinationTitle = destinationProperties.title ? destinationProperties.title : `${destinationCoordinates[1]}, ${destinationCoordinates[0]}`;
+                console.log("Initial destination properties:", destinationProperties);
 
-            // Check if the destinationProperties has a title, otherwise use previously set selectedMarker data or coordinates
-            const destinationTitle = destinationProperties.title && destinationProperties.title.trim() !== ''
-                ? destinationProperties.title
-                : selectedMarker && selectedMarker.data.sidebarheader && selectedMarker.data.sidebarheader.trim() !== ''
-                ? selectedMarker.data.sidebarheader
-                : `${destinationCoordinates[1]}, ${destinationCoordinates[0]}`;
+                if (!destinationProperties.id) destinationProperties.id = 'destination';
+                if (!destinationProperties['marker-symbol']) destinationProperties['marker-symbol'] = 'B';
 
-            console.log("Initial destination properties:", destinationProperties);
+                const destinationInput = document.querySelector('.mapbox-directions-destination input');
+                if (destinationInput && destinationInput.value !== destinationTitle) {
+                    destinationInput.value = destinationTitle;
+                    console.log("Destination title set:", destinationTitle);
+                }
 
-            const destinationInput = document.querySelector('.mapbox-directions-destination input');
-            if (destinationInput && destinationInput.value !== destinationTitle) {
-                destinationInput.value = destinationTitle;
-                console.log("Destination title set:", destinationTitle);
-            }
-
-            const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
-            if (destinationMarker) {
-                destinationMarker.style.backgroundColor = '#26617f';
+                const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
+                if (destinationMarker) {
+                    destinationMarker.style.backgroundColor = '#26617f';
+                }
             }
         });
 
