@@ -160,11 +160,15 @@ function initializeDirectionsControl() {
             originCoordinates = event.feature.geometry.coordinates;
             const originProperties = event.feature.properties || {};
 
+            // Add default properties if they do not exist
+            if (!originProperties.id) originProperties.id = 'origin';
+            if (!originProperties['marker-symbol']) originProperties['marker-symbol'] = 'A';
+
             // Check if the originProperties has a title, otherwise use previously set originSidebarHeader or coordinates
-            const originTitle = (originProperties.title && originProperties.title.trim() !== '') 
-                ? originProperties.title 
-                : (originSidebarHeader && originSidebarHeader.trim() !== '') 
-                ? originSidebarHeader 
+            const originTitle = originProperties.title && originProperties.title.trim() !== ''
+                ? originProperties.title
+                : originSidebarHeader && originSidebarHeader.trim() !== ''
+                ? originSidebarHeader
                 : `${originCoordinates[1]}, ${originCoordinates[0]}`;
 
             console.log("Initial origin properties:", originProperties);
@@ -185,11 +189,15 @@ function initializeDirectionsControl() {
             destinationCoordinates = event.feature.geometry.coordinates;
             const destinationProperties = event.feature.properties || {};
 
+            // Add default properties if they do not exist
+            if (!destinationProperties.id) destinationProperties.id = 'destination';
+            if (!destinationProperties['marker-symbol']) destinationProperties['marker-symbol'] = 'B';
+
             // Check if the destinationProperties has a title, otherwise use previously set selectedMarker data or coordinates
-            const destinationTitle = (destinationProperties.title && destinationProperties.title.trim() !== '') 
-                ? destinationProperties.title 
-                : (selectedMarker && selectedMarker.data.sidebarheader && selectedMarker.data.sidebarheader.trim() !== '') 
-                ? selectedMarker.data.sidebarheader 
+            const destinationTitle = destinationProperties.title && destinationProperties.title.trim() !== ''
+                ? destinationProperties.title
+                : selectedMarker && selectedMarker.data.sidebarheader && selectedMarker.data.sidebarheader.trim() !== ''
+                ? selectedMarker.data.sidebarheader
                 : `${destinationCoordinates[1]}, ${destinationCoordinates[0]}`;
 
             console.log("Initial destination properties:", destinationProperties);
@@ -209,6 +217,7 @@ function initializeDirectionsControl() {
         directionsInitialized = true;
     }
 }
+
 
 
 // Function to save origin title to localStorage
