@@ -162,27 +162,23 @@ function initializeDirectionsControl() {
 
             console.log("Origin event received:", event);
             console.log("Initial origin properties:", originProperties);
-            logAllProperties(originProperties, 'Origin Properties');
-            logAllProperties(event.feature, 'Origin Feature');
-            
+
             if (originCoordinates) {
                 if (!originProperties.id) originProperties.id = 'origin';
                 if (!originProperties['marker-symbol']) originProperties['marker-symbol'] = 'A';
 
-                const existingOriginTitle = localStorage.getItem('originTitle');
                 const originTitle = originProperties.title && originProperties.title.trim() !== ''
                     ? originProperties.title
-                    : existingOriginTitle || `${originCoordinates[1]}, ${originCoordinates[0]}`;
+                    : `${originCoordinates[1]}, ${originCoordinates[0]}`;
 
                 console.log("Computed origin title:", originTitle);
 
                 const originInput = document.querySelector('.mapbox-directions-origin input');
                 if (originInput && originInput.value !== originTitle) {
                     originInput.value = originTitle;
-                    localStorage.setItem('originTitle', originTitle); // Save to local storage
                     console.log("Origin title set:", originTitle);
                 } else {
-                    console.log("Origin title not set because it already exists:", existingOriginTitle);
+                    console.log("Origin title not set because it already exists.");
                 }
 
                 const originMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="A"]');
@@ -200,27 +196,23 @@ function initializeDirectionsControl() {
 
             console.log("Destination event received:", event);
             console.log("Initial destination properties:", destinationProperties);
-            logAllProperties(destinationProperties, 'Destination Properties');
-            logAllProperties(event.feature, 'Destination Feature');
-            
+
             if (destinationCoordinates) {
                 if (!destinationProperties.id) destinationProperties.id = 'destination';
                 if (!destinationProperties['marker-symbol']) destinationProperties['marker-symbol'] = 'B';
 
-                const existingDestinationTitle = localStorage.getItem('destinationTitle');
                 const destinationTitle = destinationProperties.title && destinationProperties.title.trim() !== ''
                     ? destinationProperties.title
-                    : existingDestinationTitle || `${destinationCoordinates[1]}, ${destinationCoordinates[0]}`;
+                    : `${destinationCoordinates[1]}, ${destinationCoordinates[0]}`;
 
                 console.log("Computed destination title:", destinationTitle);
 
                 const destinationInput = document.querySelector('.mapbox-directions-destination input');
                 if (destinationInput && destinationInput.value !== destinationTitle) {
                     destinationInput.value = destinationTitle;
-                    localStorage.setItem('destinationTitle', destinationTitle); // Save to local storage
                     console.log("Destination title set:", destinationTitle);
                 } else {
-                    console.log("Destination title not set because it already exists:", existingDestinationTitle);
+                    console.log("Destination title not set because it already exists.");
                 }
 
                 const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
