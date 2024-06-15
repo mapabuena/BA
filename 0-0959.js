@@ -180,7 +180,7 @@ function initializeDirectionsControl() {
             const originProperties = event.feature.properties || {};
             const originCoordinates = event.feature.geometry ? event.feature.geometry.coordinates : null;
 
-            if (originCoordinates) {
+            if (origin) {
                 if (!originProperties.id) originProperties.id = 'origin';
                 if (!originProperties['marker-symbol']) originProperties['marker-symbol'] = 'A';
 
@@ -202,7 +202,7 @@ function initializeDirectionsControl() {
             const destinationProperties = event.feature.properties || {};
             const destinationCoordinates = event.feature.geometry ? event.feature.geometry.coordinates : null;
 
-            if (destinationCoordinates) {
+            if (destination) {
                 if (!destinationProperties.id) destinationProperties.id = 'destination';
                 if (!destinationProperties['marker-symbol']) destinationProperties['marker-symbol'] = 'B';
 
