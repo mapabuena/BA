@@ -889,7 +889,7 @@ function setDestinationOnClick(e) {
         };
 
         try {
-            directions.setDestination(destination);
+            directions.setDestination(destinationCoordinates);
 
             const destinationInput = document.querySelector('.mapbox-directions-destination input');
             destinationInput.value = destinationSidebarHeader;
