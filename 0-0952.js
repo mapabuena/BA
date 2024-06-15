@@ -180,13 +180,16 @@ function initializeDirectionsControl() {
             const originProperties = event.feature.properties || {};
             const originCoordinates = event.feature.geometry ? event.feature.geometry.coordinates : null;
 
-            if (originCoordinates) { // Ensure we are checking for coordinates
+            console.log("Origin event triggered:", originProperties, originCoordinates);
+
+            if (originCoordinates) {
                 if (!originProperties.id) originProperties.id = 'origin';
                 if (!originProperties['marker-symbol']) originProperties['marker-symbol'] = 'A';
 
                 const originInput = document.querySelector('.mapbox-directions-origin input');
                 if (originInput) {
                     originInput.placeholder = originProperties.title || 'Choose a starting place';
+                    console.log("Origin input placeholder set to:", originInput.placeholder);
                 }
 
                 const originMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="A"]');
@@ -202,13 +205,16 @@ function initializeDirectionsControl() {
             const destinationProperties = event.feature.properties || {};
             const destinationCoordinates = event.feature.geometry ? event.feature.geometry.coordinates : null;
 
-            if (destinationCoordinates) { // Ensure we are checking for coordinates
+            console.log("Destination event triggered:", destinationProperties, destinationCoordinates);
+
+            if (destinationCoordinates) {
                 if (!destinationProperties.id) destinationProperties.id = 'destination';
                 if (!destinationProperties['marker-symbol']) destinationProperties['marker-symbol'] = 'B';
 
                 const destinationInput = document.querySelector('.mapbox-directions-destination input');
                 if (destinationInput) {
                     destinationInput.placeholder = destinationProperties.title || 'Choose destination';
+                    console.log("Destination input placeholder set to:", destinationInput.placeholder);
                 }
 
                 const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
@@ -220,7 +226,6 @@ function initializeDirectionsControl() {
             }
         });
 
-        // Add event listener to the destination clear button
         const destinationClearButton = document.querySelector('.mapbox-directions-destination .geocoder-icon-close');
         if (destinationClearButton) {
             destinationClearButton.addEventListener('click', () => {
@@ -237,7 +242,6 @@ function initializeDirectionsControl() {
             });
         }
 
-        // Add event listener to the origin clear button
         const originClearButton = document.querySelector('.mapbox-directions-origin .geocoder-icon-close');
         if (originClearButton) {
             originClearButton.addEventListener('click', function() {
@@ -865,7 +869,7 @@ function setDestinationOnClick(e) {
     console.log("setDestinationOnClick invoked");
 
     if (selectedMarker && selectedMarker.data) {
-        const { lng, lat, sidebarheader } = selectedMarker.data;
+        const { lng, lat, sidebarheader, address, description, cost } = selectedMarker.data;
         console.log("Selected marker data:", selectedMarker.data);
 
         if (!lng || !lat) {
@@ -884,7 +888,10 @@ function setDestinationOnClick(e) {
                 "coordinates": destinationCoordinates
             },
             "properties": {
-                "title": destinationSidebarHeader
+                "title": destinationSidebarHeader,
+                "address": address,
+                "description": description,
+                "cost": cost
             }
         };
 
@@ -941,7 +948,6 @@ function setDestinationOnClick(e) {
     // Deselect marker at the end
     deselectMarker();
 }
-
 // Function to save destination title to localStorage
 function saveDestinationTitleToLocalStorage(destinationTitle) {
     if (destinationTitle) {
