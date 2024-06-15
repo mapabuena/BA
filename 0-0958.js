@@ -837,7 +837,7 @@ function setupDirectionsButton() {
                 };
 
                 try {
-                    directions.setOrigin(origin);
+                    directions.setOrigin(originCoordinates);
                 } catch (error) {
                     console.error("Error setting origin:", error);
                     alert('Error setting origin.');
