@@ -180,13 +180,10 @@ function initializeDirectionsControl() {
             const originProperties = event.feature.properties || {};
             const originCoordinates = event.feature.geometry ? event.feature.geometry.coordinates : null;
 
-            if (origin) {
-                if (!originProperties.id) originProperties.id = 'origin';
-                if (!originProperties['marker-symbol']) originProperties['marker-symbol'] = 'A';
-
+    
                 const originInput = document.querySelector('.mapbox-directions-origin input');
                 if (originInput) {
-                    originInput.placeholder = originProperties.title || 'Choose a starting place';
+                    originInput.placeholder = originProperties.title || originCoordinates || 'Choose a starting place';
                 }
 
                 const originMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="A"]');
@@ -202,13 +199,10 @@ function initializeDirectionsControl() {
             const destinationProperties = event.feature.properties || {};
             const destinationCoordinates = event.feature.geometry ? event.feature.geometry.coordinates : null;
 
-            if (destination) {
-                if (!destinationProperties.id) destinationProperties.id = 'destination';
-                if (!destinationProperties['marker-symbol']) destinationProperties['marker-symbol'] = 'B';
 
                 const destinationInput = document.querySelector('.mapbox-directions-destination input');
                 if (destinationInput) {
-                    destinationInput.placeholder = destinationProperties.title || 'Choose destination';
+                    destinationInput.placeholder = destinationProperties.title || destinationCoordinates || 'Choose destination';
                 }
 
                 const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
