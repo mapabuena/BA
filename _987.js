@@ -156,69 +156,70 @@ function initializeDirectionsControl() {
             }
         });
 
-directions.on('origin', (event) => {
-    const originProperties = event.feature.properties || {};
-    const originCoordinates = event.feature.geometry ? event.feature.geometry.coordinates : null;
+        directions.on('origin', (event) => {
+            const originProperties = event.feature.properties || {};
+            const originCoordinates = event.feature.geometry ? event.feature.geometry.coordinates : null;
 
-    if (originCoordinates) {
-        if (!originProperties.id) originProperties.id = 'origin';
-        if (!originProperties['marker-symbol']) originProperties['marker-symbol'] = 'A';
+            if (originCoordinates) {
+                if (!originProperties.id) originProperties.id = 'origin';
+                if (!originProperties['marker-symbol']) originProperties['marker-symbol'] = 'A';
 
-        // Use the existing title if available, otherwise, use the coordinate as a fallback
-        const originTitle = originProperties.title && originProperties.title.trim() !== ''
-            ? originProperties.title
-            : (localStorage.getItem('originTitle') || `${originCoordinates[1]}, ${originCoordinates[0]}`);
+                const originTitle = originProperties.title && originProperties.title.trim() !== ''
+                    ? originProperties.title
+                    : localStorage.getItem('originTitle') || `${originCoordinates[1]}, ${originCoordinates[0]}`;
 
-        console.log("Initial origin properties:", originProperties);
+                console.log("Initial origin properties:", originProperties);
 
-        const originInput = document.querySelector('.mapbox-directions-origin input');
-        if (originInput && originInput.value !== originTitle) {
-            originInput.value = originTitle;
-            console.log("Origin title set:", originTitle);
-        }
+                const originInput = document.querySelector('.mapbox-directions-origin input');
+                if (originInput && originInput.value !== originTitle) {
+                    originInput.value = originTitle;
+                    localStorage.setItem('originTitle', originTitle); // Save to local storage
+                    console.log("Origin title set:", originTitle);
+                }
 
-        const originMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="A"]');
-        if (originMarker) {
-            originMarker.style.backgroundColor = '#c62026';
-        }
-    } else {
-        console.log("No origin coordinates, properties not affecting the title.");
-    }
-});
+                const originMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="A"]');
+                if (originMarker) {
+                    originMarker.style.backgroundColor = '#c62026';
+                }
+            } else {
+                console.log("No origin coordinates, properties not affecting the title.");
+            }
+        });
 
-   directions.on('destination', (event) => {
-    const destinationProperties = event.feature.properties || {};
-    const destinationCoordinates = event.feature.geometry ? event.feature.geometry.coordinates : null;
+        directions.on('destination', (event) => {
+            const destinationProperties = event.feature.properties || {};
+            const destinationCoordinates = event.feature.geometry ? event.feature.geometry.coordinates : null;
 
-    if (destinationCoordinates) {
-        if (!destinationProperties.id) destinationProperties.id = 'destination';
-        if (!destinationProperties['marker-symbol']) destinationProperties['marker-symbol'] = 'B';
+            if (destinationCoordinates) {
+                if (!destinationProperties.id) destinationProperties.id = 'destination';
+                if (!destinationProperties['marker-symbol']) destinationProperties['marker-symbol'] = 'B';
 
-        // Use the existing title if available, otherwise, use the coordinate as a fallback
-        const destinationTitle = destinationProperties.title && destinationProperties.title.trim() !== ''
-            ? destinationProperties.title
-            : (localStorage.getItem('destinationTitle') || `${destinationCoordinates[1]}, ${destinationCoordinates[0]}`);
+                const destinationTitle = destinationProperties.title && destinationProperties.title.trim() !== ''
+                    ? destinationProperties.title
+                    : localStorage.getItem('destinationTitle') || `${destinationCoordinates[1]}, ${destinationCoordinates[0]}`;
 
-        console.log("Initial destination properties:", destinationProperties);
+                console.log("Initial destination properties:", destinationProperties);
 
-        const destinationInput = document.querySelector('.mapbox-directions-destination input');
-        if (destinationInput && destinationInput.value !== destinationTitle) {
-            destinationInput.value = destinationTitle;
-            console.log("Destination title set:", destinationTitle);
-        }
+                const destinationInput = document.querySelector('.mapbox-directions-destination input');
+                if (destinationInput && destinationInput.value !== destinationTitle) {
+                    destinationInput.value = destinationTitle;
+                    localStorage.setItem('destinationTitle', destinationTitle); // Save to local storage
+                    console.log("Destination title set:", destinationTitle);
+                }
 
-        const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
-        if (destinationMarker) {
-            destinationMarker.style.backgroundColor = '#26617f';
-        }
-    } else {
-        console.log("No destination coordinates, properties not affecting the title.");
-    }
-});
+                const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
+                if (destinationMarker) {
+                    destinationMarker.style.backgroundColor = '#26617f';
+                }
+            } else {
+                console.log("No destination coordinates, properties not affecting the title.");
+            }
+        });
 
         directionsInitialized = true;
     }
 }
+
 
 // Function to save origin title to localStorage
 function saveOriginTitleToLocalStorage(originTitle) {
