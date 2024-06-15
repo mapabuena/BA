@@ -91,10 +91,10 @@ function updateInputFields() {
     const destinationInput = document.querySelector('.mapbox-directions-destination input');
 
     if (originInput) {
-        originInput.placeholder = originTitle || originCoordinates || 'Choose a starting place';
+        originInput.placeholder = originSidebarHeader || 'Choose a starting place';
     }
     if (destinationInput) {
-        destinationInput.placeholder = destinationTitle || destinationCoordinates || 'Choose destination';
+        destinationInput.placeholder = destinationSidebarHeader || 'Choose destination';
     }
 }
 
@@ -656,7 +656,6 @@ function setDirectionsInputFields(originTitle, destinationTitle) {
 
     if (originTitle && originTitle.trim() !== '' && originInput) {
         originInput.value = originTitle;
-        // localStorage.setItem('originTitle', originTitle); // Remove this line
         console.log("Origin input field set to:", originTitle);
     } else {
         console.log("Origin title or input is missing or invalid.");
@@ -664,7 +663,6 @@ function setDirectionsInputFields(originTitle, destinationTitle) {
 
     if (destinationTitle && destinationTitle.trim() !== '' && destinationInput) {
         destinationInput.value = destinationTitle;
-        // localStorage.setItem('destinationTitle', destinationTitle); // Remove this line
         console.log("Destination input field set to:", destinationTitle);
     } else {
         console.log("Destination title or input is missing or invalid.");
@@ -891,12 +889,20 @@ function setDestinationOnClick(e) {
         };
 
         try {
-            directions.setDestination(destinationCoordinates);
+            directions.setDestination(destination);
 
+            // Directly set the input value to ensure it is not reverted
             const destinationInput = document.querySelector('.mapbox-directions-destination input');
             destinationInput.value = destinationSidebarHeader;
             console.log("Directly setting destination input value:", destinationSidebarHeader);
 
+            // Update the input fields to reflect the new destination
+            setDirectionsInputFields('', destination.properties.title);
+
+            // Log current destination input value
+            console.log("Destination input field value after setting:", destinationInput.value);
+
+            // Use MutationObserver to ensure the input value stays correct
             const observer = new MutationObserver(() => {
                 if (destinationInput.value !== destinationSidebarHeader) {
                     destinationInput.value = destinationSidebarHeader;
