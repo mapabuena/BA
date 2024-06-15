@@ -156,73 +156,75 @@ function initializeDirectionsControl() {
             }
         });
 
-      directions.on('origin', (event) => {
-    console.log("Origin event received:", event);
+        directions.on('origin', (event) => {
+            console.log("Origin event received:", event);
 
-    const originProperties = event.feature.properties || {};
-    const originCoordinates = event.feature.geometry ? event.feature.geometry.coordinates : null;
+            const originProperties = event.feature.properties || {};
+            const originCoordinates = event.feature.geometry ? event.feature.geometry.coordinates : null;
 
-    console.log("Initial origin properties:", originProperties);
-    logAllProperties(originProperties, 'Origin Properties');
-    logAllProperties(event.feature, 'Origin Feature');
+            console.log("Initial origin properties:", originProperties);
+            logAllProperties(originProperties, 'Origin Properties');
+            logAllProperties(event.feature, 'Origin Feature');
 
-    if (originCoordinates) {
-        if (!originProperties.id) originProperties.id = 'origin';
-        if (!originProperties['marker-symbol']) originProperties['marker-symbol'] = 'A';
+            if (originCoordinates) {
+                if (!originProperties.id) originProperties.id = 'origin';
+                if (!originProperties['marker-symbol']) originProperties['marker-symbol'] = 'A';
 
-        const originTitle = originProperties.title && originProperties.title.trim() !== ''
-            ? originProperties.title
-            : `${originCoordinates[1]}, ${originCoordinates[0]}`;
+                const originTitle = originProperties.title && originProperties.title.trim() !== ''
+                    ? originProperties.title
+                    : `${originCoordinates[1]}, ${originCoordinates[0]}`;
 
-        const originInput = document.querySelector('.mapbox-directions-origin input');
-        if (originInput && originInput.value !== originTitle) {
-            originInput.value = originTitle;
-            console.log("Origin title set:", originTitle);
-        }
+                const originInput = document.querySelector('.mapbox-directions-origin input');
+                if (originInput && originInput.value !== originTitle) {
+                    originInput.value = originTitle;
+                    console.log("Origin title set:", originTitle);
+                }
 
-        const originMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="A"]');
-        if (originMarker) {
-            originMarker.style.backgroundColor = '#c62026';
-        }
-    } else {
-        console.log("No origin coordinates, properties not affecting the title.");
+                const originMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="A"]');
+                if (originMarker) {
+                    originMarker.style.backgroundColor = '#c62026';
+                }
+            } else {
+                console.log("No origin coordinates, properties not affecting the title.");
+            }
+        });
+
+        directions.on('destination', (event) => {
+            console.log("Destination event received:", event);
+
+            const destinationProperties = event.feature.properties || {};
+            const destinationCoordinates = event.feature.geometry ? event.feature.geometry.coordinates : null;
+
+            console.log("Initial destination properties:", destinationProperties);
+            logAllProperties(destinationProperties, 'Destination Properties');
+            logAllProperties(event.feature, 'Destination Feature');
+
+            if (destinationCoordinates) {
+                if (!destinationProperties.id) destinationProperties.id = 'destination';
+                if (!destinationProperties['marker-symbol']) destinationProperties['marker-symbol'] = 'B';
+
+                const destinationTitle = destinationProperties.title && destinationProperties.title.trim() !== ''
+                    ? destinationProperties.title
+                    : `${destinationCoordinates[1]}, ${destinationCoordinates[0]}`;
+
+                const destinationInput = document.querySelector('.mapbox-directions-destination input');
+                if (destinationInput && destinationInput.value !== destinationTitle) {
+                    destinationInput.value = destinationTitle;
+                    console.log("Destination title set:", destinationTitle);
+                }
+
+                const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
+                if (destinationMarker) {
+                    destinationMarker.style.backgroundColor = '#26617f';
+                }
+            } else {
+                console.log("No destination coordinates, properties not affecting the title.");
+            }
+        });
+
+        directionsInitialized = true;
     }
-});
-
-      
-directions.on('destination', (event) => {
-    console.log("Destination event received:", event);
-
-    const destinationProperties = event.feature.properties || {};
-    const destinationCoordinates = event.feature.geometry ? event.feature.geometry.coordinates : null;
-
-    console.log("Initial destination properties:", destinationProperties);
-    logAllProperties(destinationProperties, 'Destination Properties');
-    logAllProperties(event.feature, 'Destination Feature');
-
-    if (destinationCoordinates) {
-        if (!destinationProperties.id) destinationProperties.id = 'destination';
-        if (!destinationProperties['marker-symbol']) destinationProperties['marker-symbol'] = 'B';
-
-        const destinationTitle = destinationProperties.title && destinationProperties.title.trim() !== ''
-            ? destinationProperties.title
-            : `${destinationCoordinates[1]}, ${destinationCoordinates[0]}`;
-
-        const destinationInput = document.querySelector('.mapbox-directions-destination input');
-        if (destinationInput && destinationInput.value !== destinationTitle) {
-            destinationInput.value = destinationTitle;
-            console.log("Destination title set:", destinationTitle);
-        }
-
-        const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
-        if (destinationMarker) {
-            destinationMarker.style.backgroundColor = '#26617f';
-        }
-    } else {
-        console.log("No destination coordinates, properties not affecting the title.");
-    }
-});
-
+}
 
 function logAllProperties(obj, objName) {
     console.log(`${objName} properties:`);
@@ -230,6 +232,7 @@ function logAllProperties(obj, objName) {
         console.log(`${key}: ${value}`);
     }
 }
+
 // Function to save origin title to localStorage
 function saveOriginTitleToLocalStorage(originTitle) {
     if (originTitle && originTitle.trim() !== '') {
