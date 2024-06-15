@@ -75,6 +75,15 @@ function applyRouteInfoStyles() {
         }
     }
 }
+
+  function deselectMarker() {
+    if (selectedMarker) {
+        const markerElement = selectedMarker.marker.getElement();
+        markerElement.style.backgroundImage = `url(${selectedMarker.data.icon_url})`;
+        markerElement.setAttribute('data-is-selected', 'false');
+        selectedMarker = null;
+    }
+}
 window.addEventListener('resize', applyRouteInfoStyles);
 document.addEventListener('DOMContentLoaded', applyRouteInfoStyles);
 function updateInputFields() {
@@ -226,14 +235,6 @@ function initializeDirectionsControl() {
             localStorage.removeItem('originSidebarHeader');
             updateInputFields();
         });
-    }
-}
-  function deselectMarker() {
-    if (selectedMarker) {
-        const markerElement = selectedMarker.marker.getElement();
-        markerElement.style.backgroundImage = `url(${selectedMarker.data.icon_url})`;
-        markerElement.setAttribute('data-is-selected', 'false');
-        selectedMarker = null;
     }
 }
         directions.on('destination', (event) => {
