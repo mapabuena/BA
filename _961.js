@@ -176,94 +176,87 @@ function initializeDirectionsControl() {
             }
         });
 
-   directions.on('origin', (event) => {
-    const originProperties = event.feature.properties || {};
-    const originCoordinates = event.feature.geometry ? event.feature.geometry.coordinates : null;
+        directions.on('origin', (event) => {
+            const originProperties = event.feature.properties || {};
+            const originCoordinates = event.feature.geometry ? event.feature.geometry.coordinates : null;
 
-    if (originCoordinates) {
-        if (!originProperties.id) originProperties.id = 'origin';
-        if (!originProperties['marker-symbol']) originProperties['marker-symbol'] = 'A';
+            if (originCoordinates) {
+                if (!originProperties.id) originProperties.id = 'origin';
+                if (!originProperties['marker-symbol']) originProperties['marker-symbol'] = 'A';
 
-        const originTitle = originProperties.title && originProperties.title.trim() !== ''
-            ? originProperties.title
-            : getOriginTitleFromLocalStorage(); // Use stored title
+                const originInput = document.querySelector('.mapbox-directions-origin input');
+                if (originInput) {
+                    originInput.placeholder = originProperties.title || 'Choose a starting place';
+                }
 
-        const originInput = document.querySelector('.mapbox-directions-origin input');
-        if (originInput && originInput.value !== originTitle) {
-            originInput.value = originTitle;
-            console.log("Origin title set:", originTitle);
-        }
-
-        const originMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="A"]');
-        if (originMarker) {
-            originMarker.style.backgroundColor = '#c62026';
-        }
-    } else {
-        console.log("No origin coordinates, properties not affecting the title.");
-    }
-});
-
-  // Add event listener to the destination clear button
-    const destinationClearButton = document.querySelector('.mapbox-directions-destination .geocoder-icon-close');
-    if (destinationClearButton) {
-        destinationClearButton.addEventListener('click', () => {
-            const destinationInput = document.querySelector('.mapbox-directions-destination input');
-            if (destinationInput) {
-                destinationInput.value = '';
+                const originMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="A"]');
+                if (originMarker) {
+                    originMarker.style.backgroundColor = '#c62026';
+                }
+            } else {
+                console.log("No origin coordinates, properties not affecting the title.");
             }
-            deselectMarker();
-            destinationCoordinates = null;
-            destinationSidebarHeader = null;
-            localStorage.removeItem('destinationCoordinates');
-            localStorage.removeItem('destinationSidebarHeader');
-            updateInputFields();
         });
-    }
 
-    // Add event listener to the origin clear button
-    const originClearButton = document.querySelector('.mapbox-directions-origin .geocoder-icon-close');
-if (originClearButton) {
-    originClearButton.addEventListener('click', function() {
-        if (originInput) {
-            originInput.value = '';
-        }
-        originCoordinates = null;
-        originSidebarHeader = null;
-        updateInputFields();
-        setupDirectionsButton();
-    });
-} else {
-    console.error("Element with class '.mapbox-directions-origin .geocoder-icon-close' not found.");
-}
         directions.on('destination', (event) => {
-    const destinationProperties = event.feature.properties || {};
-    const destinationCoordinates = event.feature.geometry ? event.feature.geometry.coordinates : null;
+            const destinationProperties = event.feature.properties || {};
+            const destinationCoordinates = event.feature.geometry ? event.feature.geometry.coordinates : null;
 
-    if (destinationCoordinates) {
-        if (!destinationProperties.id) destinationProperties.id = 'destination';
-        if (!destinationProperties['marker-symbol']) destinationProperties['marker-symbol'] = 'B';
+            if (destinationCoordinates) {
+                if (!destinationProperties.id) destinationProperties.id = 'destination';
+                if (!destinationProperties['marker-symbol']) destinationProperties['marker-symbol'] = 'B';
 
-        const destinationTitle = destinationProperties.title && destinationProperties.title.trim() !== ''
-            ? destinationProperties.title
-            : getDestinationTitleFromLocalStorage(); // Use stored title
+                const destinationInput = document.querySelector('.mapbox-directions-destination input');
+                if (destinationInput) {
+                    destinationInput.placeholder = destinationProperties.title || 'Choose destination';
+                }
 
-        const destinationInput = document.querySelector('.mapbox-directions-destination input');
-        if (destinationInput && destinationInput.value !== destinationTitle) {
-            destinationInput.value = destinationTitle;
-            console.log("Destination title set:", destinationTitle);
-        }
-
-        const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
-        if (destinationMarker) {
-            destinationMarker.style.backgroundColor = '#26617f';
-        }
-    } else {
-        console.log("No destination coordinates, properties not affecting the title.");
-    }
+                const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
+                if (destinationMarker) {
+                    destinationMarker.style.backgroundColor = '#26617f';
+                }
+            } else {
+                console.log("No destination coordinates, properties not affecting the title.");
+            }
         });
+
+        // Add event listener to the destination clear button
+        const destinationClearButton = document.querySelector('.mapbox-directions-destination .geocoder-icon-close');
+        if (destinationClearButton) {
+            destinationClearButton.addEventListener('click', () => {
+                const destinationInput = document.querySelector('.mapbox-directions-destination input');
+                if (destinationInput) {
+                    destinationInput.value = '';
+                }
+                deselectMarker();
+                destinationCoordinates = null;
+                destinationSidebarHeader = null;
+                localStorage.removeItem('destinationCoordinates');
+                localStorage.removeItem('destinationSidebarHeader');
+                updateInputFields();
+            });
+        }
+
+        // Add event listener to the origin clear button
+        const originClearButton = document.querySelector('.mapbox-directions-origin .geocoder-icon-close');
+        if (originClearButton) {
+            originClearButton.addEventListener('click', function() {
+                const originInput = document.querySelector('.mapbox-directions-origin input');
+                if (originInput) {
+                    originInput.value = '';
+                }
+                originCoordinates = null;
+                originSidebarHeader = null;
+                updateInputFields();
+                setupDirectionsButton();
+            });
+        } else {
+            console.error("Element with class '.mapbox-directions-origin .geocoder-icon-close' not found.");
+        }
 
         directionsInitialized = true;
     }
+}
 function logAllProperties(obj, objName) {
     console.log(`${objName} properties:`);
     for (const [key, value] of Object.entries(obj)) {
