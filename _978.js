@@ -170,9 +170,12 @@ function initializeDirectionsControl() {
                 if (!originProperties.id) originProperties.id = 'origin';
                 if (!originProperties['marker-symbol']) originProperties['marker-symbol'] = 'A';
 
-                const originTitle = originProperties.title && originProperties.title.trim() !== ''
-                    ? originProperties.title
-                    : `${originCoordinates[1]}, ${originCoordinates[0]}`;
+                // Preserve the title if it exists and is not empty
+                const existingOriginTitle = originProperties.title && originProperties.title.trim() !== '' 
+                    ? originProperties.title 
+                    : localStorage.getItem('originTitle');
+
+                const originTitle = existingOriginTitle || `${originCoordinates[1]}, ${originCoordinates[0]}`;
 
                 const originInput = document.querySelector('.mapbox-directions-origin input');
                 if (originInput && originInput.value !== originTitle) {
@@ -203,9 +206,12 @@ function initializeDirectionsControl() {
                 if (!destinationProperties.id) destinationProperties.id = 'destination';
                 if (!destinationProperties['marker-symbol']) destinationProperties['marker-symbol'] = 'B';
 
-                const destinationTitle = destinationProperties.title && destinationProperties.title.trim() !== ''
-                    ? destinationProperties.title
-                    : `${destinationCoordinates[1]}, ${destinationCoordinates[0]}`;
+                // Preserve the title if it exists and is not empty
+                const existingDestinationTitle = destinationProperties.title && destinationProperties.title.trim() !== '' 
+                    ? destinationProperties.title 
+                    : localStorage.getItem('destinationTitle');
+
+                const destinationTitle = existingDestinationTitle || `${destinationCoordinates[1]}, ${destinationCoordinates[0]}`;
 
                 const destinationInput = document.querySelector('.mapbox-directions-destination input');
                 if (destinationInput && destinationInput.value !== destinationTitle) {
