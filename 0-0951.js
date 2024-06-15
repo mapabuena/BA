@@ -672,6 +672,7 @@ function setDirectionsInputFields(originTitle, destinationTitle) {
         console.log("Destination title or input is missing or invalid.");
     }
 }
+
 function setOriginAndDestination(origin, destination) {
     const originFeature = {
         type: 'Feature',
