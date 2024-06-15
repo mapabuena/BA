@@ -866,6 +866,9 @@ function setupDirectionsButton() {
     } else {
         console.error("Element with ID 'get-directions' not found.");
     }
+
+    // Deselect marker at the end
+    deselectMarker();
 }
 
 
@@ -958,6 +961,9 @@ function setDestinationOnClick(e) {
             console.error('Directions container not found.');
         }
     }, 500);
+
+    // Deselect marker at the end
+    deselectMarker();
 }
 
 
