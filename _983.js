@@ -162,7 +162,9 @@ function initializeDirectionsControl() {
 
             console.log("Origin event received:", event);
             console.log("Initial origin properties:", originProperties);
-
+            logAllProperties(originProperties, 'Origin Properties');
+            logAllProperties(event.feature, 'Origin Feature');
+            
             if (originCoordinates) {
                 if (!originProperties.id) originProperties.id = 'origin';
                 if (!originProperties['marker-symbol']) originProperties['marker-symbol'] = 'A';
@@ -195,7 +197,9 @@ function initializeDirectionsControl() {
 
             console.log("Destination event received:", event);
             console.log("Initial destination properties:", destinationProperties);
-
+            logAllProperties(destinationProperties, 'Destination Properties');
+            logAllProperties(event.feature, 'Destination Feature');
+            
             if (destinationCoordinates) {
                 if (!destinationProperties.id) destinationProperties.id = 'destination';
                 if (!destinationProperties['marker-symbol']) destinationProperties['marker-symbol'] = 'B';
@@ -226,6 +230,12 @@ function initializeDirectionsControl() {
     }
 }
 
+function logAllProperties(obj, objName) {
+    console.log(`${objName} properties:`);
+    for (const [key, value] of Object.entries(obj)) {
+        console.log(`${key}: ${value}`);
+    }
+}
 // Function to save origin title to localStorage
 function saveOriginTitleToLocalStorage(originTitle) {
     if (originTitle && originTitle.trim() !== '') {
