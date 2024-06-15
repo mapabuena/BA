@@ -897,8 +897,6 @@ function setDestinationOnClick(e) {
             destinationInput.value = destinationSidebarHeader;
             console.log("Directly setting destination input value:", destinationSidebarHeader);
 
-            setDirectionsInputFields('', destination.properties.title);
-
             const observer = new MutationObserver(() => {
                 if (destinationInput.value !== destinationSidebarHeader) {
                     destinationInput.value = destinationSidebarHeader;
