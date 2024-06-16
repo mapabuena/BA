@@ -183,13 +183,10 @@ function initializeDirectionsControl() {
             console.log("Origin event triggered:", originProperties, originCoordinates);
 
             if (originCoordinates) {
-                if (!originProperties.id) originProperties.id = 'origin';
-                if (!originProperties['marker-symbol']) originProperties['marker-symbol'] = 'A';
-
                 const originInput = document.querySelector('.mapbox-directions-origin input');
                 if (originInput) {
                     originInput.placeholder = originProperties.title || 'Choose a starting place';
-                    originInput.value = originProperties.title || '';
+                    originInput.value = originProperties.title || originInput.value || '';
                     console.log("Origin input placeholder and value set to:", originInput.placeholder);
                 }
 
@@ -209,13 +206,10 @@ function initializeDirectionsControl() {
             console.log("Destination event triggered:", destinationProperties, destinationCoordinates);
 
             if (destinationCoordinates) {
-                if (!destinationProperties.id) destinationProperties.id = 'destination';
-                if (!destinationProperties['marker-symbol']) destinationProperties['marker-symbol'] = 'B';
-
                 const destinationInput = document.querySelector('.mapbox-directions-destination input');
                 if (destinationInput) {
                     destinationInput.placeholder = destinationProperties.title || 'Choose destination';
-                    destinationInput.value = destinationProperties.title || '';
+                    destinationInput.value = destinationProperties.title || destinationInput.value || '';
                     console.log("Destination input placeholder and value set to:", destinationInput.placeholder);
                 }
 
@@ -263,7 +257,6 @@ function initializeDirectionsControl() {
         directionsInitialized = true;
     }
 }
-
 
 function logAllProperties(obj, objName) {
     console.log(`${objName} properties:`);
