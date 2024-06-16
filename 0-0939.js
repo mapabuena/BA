@@ -181,16 +181,14 @@ function initializeDirectionsControl() {
             const originCoordinates = event.feature.geometry ? event.feature.geometry.coordinates : null;
 
             console.log("Origin event triggered:", originProperties, originCoordinates);
-            
+
             if (originCoordinates) {
                 const originInput = document.querySelector('.mapbox-directions-origin input');
                 if (originInput) {
-                    originInput.placeholder = 'Choose a starting place';
-                    originInput.value = sidebarheader || originProperties.title || originCoordinates || originInput.value || '';
-                    console.log("Origin input placeholder and value set to:", originInput.placeholder);
+                    originInput.placeholder = originProperties.title || 'Choose a starting place';
+                    originInput.value = originProperties.title || `${originCoordinates[1]}, ${originCoordinates[0]}`;
+                    console.log("Origin input placeholder and value set to:", originInput.placeholder, originInput.value);
                 }
-
-               
             } else {
                 console.log("No origin coordinates, properties not affecting the title.");
             }
@@ -205,14 +203,9 @@ function initializeDirectionsControl() {
             if (destinationCoordinates) {
                 const destinationInput = document.querySelector('.mapbox-directions-destination input');
                 if (destinationInput) {
-                    destinationInput.placeholder =  'Choose destination';
-                    destinationInput.value = sidebarheader || destinationProperties.title || destinationCoordinates || destinationInput.value || '';
-                    console.log("Destination input placeholder and value set to:", destinationInput.placeholder);
-                }
-
-                const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
-                if (destinationMarker) {
-                    destinationMarker.style.backgroundColor = '#26617f';
+                    destinationInput.placeholder = destinationProperties.title || 'Choose destination';
+                    destinationInput.value = destinationProperties.title || `${destinationCoordinates[1]}, ${destinationCoordinates[0]}`;
+                    console.log("Destination input placeholder and value set to:", destinationInput.placeholder, destinationInput.value);
                 }
             } else {
                 console.log("No destination coordinates, properties not affecting the title.");
@@ -252,9 +245,9 @@ function initializeDirectionsControl() {
         }
 
         directionsInitialized = true;
-          setDirectionsInputFields(origin.properties.title, destination.properties.title);
     }
 }
+
 
 function logAllProperties(obj, objName) {
     console.log(`${objName} properties:`);
@@ -835,8 +828,8 @@ function setupDirectionsButton() {
                 };
 
                 try {
-                    directions.setOrigin(originCoordinates);
-                      setDirectionsInputFields(origin.properties.title,'');
+                    directions.setOrigin(origin);
+                    setDirectionsInputFields(origin.properties.title, '');
                 } catch (error) {
                     console.error("Error setting origin:", error);
                     alert('Error setting origin.');
@@ -856,7 +849,6 @@ function setupDirectionsButton() {
         console.error("Element with ID 'get-directions' not found.");
     }
 
-    // Deselect marker at the end
     deselectMarker();
 }
 
@@ -901,33 +893,14 @@ function setDestinationOnClick(e) {
         };
 
         try {
-            directions.setDestination(destinationCoordinates);
+            directions.setDestination(destination);
             setDirectionsInputFields('', destination.properties.title);
 
             const destinationInput = document.querySelector('.mapbox-directions-destination input');
-            destinationInput.value = destinationSidebarHeader;
-            console.log("Directly setting destination input value:", destinationSidebarHeader);
-
-
+            destinationInput.value = destination.properties.title;
+            console.log("Directly setting destination input value:", destination.properties.title);
 
             console.log("Destination input field value after setting:", destinationInput.value);
-
-            const observer = new MutationObserver(() => {
-                if (destinationInput.value !== destinationSidebarHeader) {
-                    destinationInput.value = destinationSidebarHeader;
-                    console.log("Reapplied destination sidebarheader:", destinationSidebarHeader);
-                }
-            });
-
-            observer.observe(destinationInput, {
-                attributes: true,
-                attributeFilter: ['value'],
-                childList: true,
-                subtree: true,
-                characterData: true
-            });
-
-            console.log("Destination set successfully with properties:", destination.properties);
         } catch (error) {
             console.error("Error setting destination:", error);
             alert('Error setting destination.');
@@ -949,7 +922,6 @@ function setDestinationOnClick(e) {
 
     deselectMarker();
 }
-
 document.getElementById('nightmode').addEventListener('click', () => {
     isNightMode = !isNightMode;
     map.setStyle(isNightMode ? nightStyle : originalStyle);
