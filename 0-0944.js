@@ -150,7 +150,6 @@ function initializeDirectionsControl() {
                 inputs: true,
                 instructions: true,
             },
-            styles: 
         });
 
         const directionsContainer = document.getElementById('directions-control');
