@@ -181,19 +181,20 @@ function initializeDirectionsControl() {
             const originCoordinates = event.feature.geometry ? event.feature.geometry.coordinates : null;
 
             console.log("Origin event triggered:", originProperties, originCoordinates);
-
+ const originMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="A"]');
+                if (originMarker) {
+                    originMarker.style.backgroundColor = '#c62026';
+                }
+            
             if (originCoordinates) {
                 const originInput = document.querySelector('.mapbox-directions-origin input');
                 if (originInput) {
-                    originInput.placeholder = originProperties.title || 'Choose a starting place';
+                    originInput.placeholder = originProperties.title || sidebarheader || 'Choose a starting place';
                     originInput.value = originProperties.title || originInput.value || '';
                     console.log("Origin input placeholder and value set to:", originInput.placeholder);
                 }
 
-                const originMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="A"]');
-                if (originMarker) {
-                    originMarker.style.backgroundColor = '#c62026';
-                }
+               
             } else {
                 console.log("No origin coordinates, properties not affecting the title.");
             }
