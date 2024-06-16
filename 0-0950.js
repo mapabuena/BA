@@ -899,18 +899,14 @@ function setDestinationOnClick(e) {
         try {
             directions.setDestination(destination);
 
-            // Directly set the input value to ensure it is not reverted
             const destinationInput = document.querySelector('.mapbox-directions-destination input');
             destinationInput.value = destinationSidebarHeader;
             console.log("Directly setting destination input value:", destinationSidebarHeader);
 
-            // Update the input fields to reflect the new destination
             setDirectionsInputFields('', destination.properties.title);
 
-            // Log current destination input value
             console.log("Destination input field value after setting:", destinationInput.value);
 
-            // Use MutationObserver to ensure the input value stays correct
             const observer = new MutationObserver(() => {
                 if (destinationInput.value !== destinationSidebarHeader) {
                     destinationInput.value = destinationSidebarHeader;
@@ -946,7 +942,6 @@ function setDestinationOnClick(e) {
         }
     }, 500);
 
-    // Deselect marker at the end
     deselectMarker();
 }
 // Function to save destination title to localStorage
