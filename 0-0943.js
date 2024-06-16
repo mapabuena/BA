@@ -150,6 +150,7 @@ function initializeDirectionsControl() {
                 inputs: true,
                 instructions: true,
             },
+            styles: customStyles
         });
 
         const directionsContainer = document.getElementById('directions-control');
@@ -251,6 +252,7 @@ function initializeDirectionsControl() {
         }
 
         directionsInitialized = true;
+          setDirectionsInputFields(origin.properties.title, destination.properties.title);
     }
 }
 
