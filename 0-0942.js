@@ -836,6 +836,7 @@ function setupDirectionsButton() {
 
                 try {
                     directions.setOrigin(originCoordinates);
+                      setDirectionsInputFields(origin.properties.title,'');
                 } catch (error) {
                     console.error("Error setting origin:", error);
                     alert('Error setting origin.');
@@ -900,13 +901,14 @@ function setDestinationOnClick(e) {
         };
 
         try {
-            directions.setDestination(destination);
+            directions.setDestination(destinationCoordinates);
+            setDirectionsInputFields('', destination.properties.title);
 
             const destinationInput = document.querySelector('.mapbox-directions-destination input');
             destinationInput.value = destinationSidebarHeader;
             console.log("Directly setting destination input value:", destinationSidebarHeader);
 
-            setDirectionsInputFields('', destination.properties.title);
+
 
             console.log("Destination input field value after setting:", destinationInput.value);
 
