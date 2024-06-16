@@ -189,7 +189,8 @@ function initializeDirectionsControl() {
                 const originInput = document.querySelector('.mapbox-directions-origin input');
                 if (originInput) {
                     originInput.placeholder = originProperties.title || 'Choose a starting place';
-                    console.log("Origin input placeholder set to:", originInput.placeholder);
+                    originInput.value = originProperties.title || '';
+                    console.log("Origin input placeholder and value set to:", originInput.placeholder);
                 }
 
                 const originMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="A"]');
@@ -214,7 +215,8 @@ function initializeDirectionsControl() {
                 const destinationInput = document.querySelector('.mapbox-directions-destination input');
                 if (destinationInput) {
                     destinationInput.placeholder = destinationProperties.title || 'Choose destination';
-                    console.log("Destination input placeholder set to:", destinationInput.placeholder);
+                    destinationInput.value = destinationProperties.title || '';
+                    console.log("Destination input placeholder and value set to:", destinationInput.placeholder);
                 }
 
                 const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
@@ -866,84 +868,6 @@ function setupDirectionsButton() {
     deselectMarker();
 }
 
-function setDestinationOnClick(e) {
-    console.log("setDestinationOnClick invoked");
-
-    if (selectedMarker && selectedMarker.data) {
-        const { lng, lat, sidebarheader, address, description, cost } = selectedMarker.data;
-        console.log("Selected marker data:", selectedMarker.data);
-
-        if (!lng || !lat) {
-            console.error("Selected marker data is missing required properties:", selectedMarker.data);
-            return;
-        }
-
-        destinationCoordinates = [lng, lat];
-        destinationSidebarHeader = sidebarheader || `${lat}, ${lng}`;
-        console.log("Setting destination with sidebarheader:", sidebarheader);
-
-        const destination = {
-            "type": "Feature",
-            "geometry": {
-                "type": "Point",
-                "coordinates": destinationCoordinates
-            },
-            "properties": {
-                "title": destinationSidebarHeader,
-                "address": address,
-                "description": description,
-                "cost": cost
-            }
-        };
-
-        try {
-            directions.setDestination(destination);
-
-            const destinationInput = document.querySelector('.mapbox-directions-destination input');
-            destinationInput.value = destinationSidebarHeader;
-            console.log("Directly setting destination input value:", destinationSidebarHeader);
-
-            setDirectionsInputFields('', destination.properties.title);
-
-            console.log("Destination input field value after setting:", destinationInput.value);
-
-            const observer = new MutationObserver(() => {
-                if (destinationInput.value !== destinationSidebarHeader) {
-                    destinationInput.value = destinationSidebarHeader;
-                    console.log("Reapplied destination sidebarheader:", destinationSidebarHeader);
-                }
-            });
-
-            observer.observe(destinationInput, {
-                attributes: true,
-                attributeFilter: ['value'],
-                childList: true,
-                subtree: true,
-                characterData: true
-            });
-
-            console.log("Destination set successfully with properties:", destination.properties);
-        } catch (error) {
-            console.error("Error setting destination:", error);
-            alert('Error setting destination.');
-        }
-    } else {
-        console.error("No marker is selected or selected marker data is undefined.");
-        alert('Please select a marker first.');
-    }
-
-    setTimeout(() => {
-        const directionsContainer = document.getElementById('directions-container');
-        if (directionsContainer) {
-            directionsContainer.scrollIntoView({ behavior: 'smooth' });
-            console.log("Scrolled to directions container.");
-        } else {
-            console.error('Directions container not found.');
-        }
-    }, 500);
-
-    deselectMarker();
-}
 // Function to save destination title to localStorage
 function saveDestinationTitleToLocalStorage(destinationTitle) {
     if (destinationTitle) {
@@ -987,18 +911,14 @@ function setDestinationOnClick(e) {
         try {
             directions.setDestination(destination);
 
-            // Directly set the input value to ensure it is not reverted
             const destinationInput = document.querySelector('.mapbox-directions-destination input');
             destinationInput.value = destinationSidebarHeader;
             console.log("Directly setting destination input value:", destinationSidebarHeader);
 
-            // Update the input fields to reflect the new destination
             setDirectionsInputFields('', destination.properties.title);
 
-            // Log current destination input value
             console.log("Destination input field value after setting:", destinationInput.value);
 
-            // Use MutationObserver to ensure the input value stays correct
             const observer = new MutationObserver(() => {
                 if (destinationInput.value !== destinationSidebarHeader) {
                     destinationInput.value = destinationSidebarHeader;
@@ -1034,10 +954,8 @@ function setDestinationOnClick(e) {
         }
     }, 500);
 
-    // Deselect marker at the end
     deselectMarker();
 }
-
 
 document.getElementById('nightmode').addEventListener('click', () => {
     isNightMode = !isNightMode;
