@@ -38,8 +38,7 @@ const customStyles = [{
     },
     'filter': [
         'all',
-        ['in', '$type', 'Point'],
-        ['in', 'marker-symbol', 'A']
+        ['==', 'marker-symbol', 'A']
     ]
 }, {
     'id': 'directions-destination-point',
@@ -51,8 +50,7 @@ const customStyles = [{
     },
     'filter': [
         'all',
-        ['in', '$type', 'Point'],
-        ['in', 'marker-symbol', 'B']
+        ['==', 'marker-symbol', 'B']
     ]
 }];
 
@@ -247,7 +245,6 @@ function initializeDirectionsControl() {
         directionsInitialized = true;
     }
 }
-
 
 function logAllProperties(obj, objName) {
     console.log(`${objName} properties:`);
