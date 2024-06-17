@@ -58,7 +58,7 @@ function createCustomMarker(data, symbol) {
     const el = document.createElement('div');
     el.className = 'marker';
     const iconUrl = symbol === 'A' ? 'https://raw.githubusercontent.com/mapabuena/BA/main/TransparentMapIconRed.svg' : 'https://raw.githubusercontent.com/mapabuena/BA/main/TransparentMapIconBlue.svg';
-    
+
     el.style.backgroundImage = `url(${data.icon_url || iconUrl})`;
     el.style.width = '50px';
     el.style.height = '50px';
@@ -73,6 +73,8 @@ function createCustomMarker(data, symbol) {
         data: data
     });
 
+    console.log(`${symbol === 'A' ? 'Origin' : 'Destination'} marker created at:`, [data.lng, data.lat], marker);
+
     // Set the input fields directly when the marker is created
     if (symbol === 'A') {
         originCoordinates = [data.lng, data.lat];
@@ -84,14 +86,13 @@ function createCustomMarker(data, symbol) {
 
     // Add event listener for setting directions
     el.addEventListener('click', () => {
+        console.log(`Marker with symbol ${symbol} clicked:`, marker);
         if (symbol === 'A') {
             setDirections(data, { coordinates: destinationCoordinates, title: destinationSidebarHeader });
         } else {
             setDirections({ coordinates: originCoordinates, title: originSidebarHeader }, data);
         }
     });
-
-    console.log(`${symbol === 'A' ? 'Origin' : 'Destination'} marker created at:`, [data.lng, data.lat]);
 }
 
 function applyRouteInfoStyles() {
@@ -199,9 +200,10 @@ function initializeDirectionsControl() {
         }
 
         directionsInitialized = true;
-        console.log("Directions control initialized.");
+        console.log("Directions control initialized.", directions);
     }
 }
+
 
 function handleMapClick(e) {
     const { lng, lat } = e.lngLat;
@@ -883,9 +885,12 @@ function setDestinationOnClick(e) {
 // Function to set origin and destination using the custom markers
 function setDirections(originData, destinationData) {
     if (originData && destinationData) {
+        console.log("Setting directions with origin and destination data:", originData, destinationData);
         directions.setOrigin([originData.coordinates[0], originData.coordinates[1]]);
         directions.setDestination([destinationData.coordinates[0], destinationData.coordinates[1]]);
-        console.log("Origin and destination set with coordinates:", originData.coordinates, destinationData.coordinates);
+        console.log("Directions set with origin and destination coordinates:", originData.coordinates, destinationData.coordinates);
+    } else {
+        console.error("Invalid origin or destination data:", originData, destinationData);
     }
 }
 // Example usage when clicking on markers or setting directions
