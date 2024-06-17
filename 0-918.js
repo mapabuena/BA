@@ -53,41 +53,47 @@ const customStyles = [{
         ['==', 'marker-symbol', 'B']
     ]
 }];
-function createCustomMarker(coordinates, symbol, title, iconUrl) {
+
+function createCustomMarker(data, symbol) {
     const el = document.createElement('div');
     el.className = 'marker';
-
-    // Set different styles for origin ('A') and destination ('B')
-    if (symbol === 'A') {
-        el.style.backgroundImage = `url(${iconUrl || 'https://raw.githubusercontent.com/mapabuena/BA/main/TransparentMapIconRed.svg'})`; // Use the provided icon URL or default
-        el.style.width = '50px';
-        el.style.height = '50px';
-    } else if (symbol === 'B') {
-        el.style.backgroundImage = `url(${iconUrl || 'https://raw.githubusercontent.com/mapabuena/BA/main/TransparentMapIconBlue.svg'})`; // Use the provided icon URL or default
-        el.style.width = '50px';
-        el.style.height = '50px';
-    }
-
+    const iconUrl = symbol === 'A' ? 'https://raw.githubusercontent.com/mapabuena/BA/main/TransparentMapIconRed.svg' : 'https://raw.githubusercontent.com/mapabuena/BA/main/TransparentMapIconBlue.svg';
+    
+    el.style.backgroundImage = `url(${data.icon_url || iconUrl})`;
+    el.style.width = '50px';
+    el.style.height = '50px';
     el.style.backgroundSize = 'contain';
 
-    new mapboxgl.Marker(el)
-        .setLngLat(coordinates)
+    const marker = new mapboxgl.Marker(el)
+        .setLngLat([data.lng, data.lat])
         .addTo(map);
 
-    // Select the correct input element based on the symbol
-    const inputSelector = symbol === 'A' ? '.mapbox-directions-origin input' : '.mapbox-directions-destination input';
-    const input = document.querySelector(inputSelector);
+    markers.push({
+        marker: marker,
+        data: data
+    });
 
-    if (input) {
-        input.value = title;
-        input.placeholder = title;
-        console.log(`${symbol === 'A' ? 'Origin' : 'Destination'} marker created at:`, coordinates);
+    // Set the input fields directly when the marker is created
+    if (symbol === 'A') {
+        originCoordinates = [data.lng, data.lat];
+        originSidebarHeader = data.sidebarheader || `${data.lat}, ${data.lng}`;
     } else {
-        console.error(`Input element not found for ${symbol === 'A' ? 'origin' : 'destination'} marker.`);
-        console.log(`Attempted to find input using selector: ${inputSelector}`);
-        console.log(`HTML of directions control: ${document.getElementById('directions-control').innerHTML}`);
+        destinationCoordinates = [data.lng, data.lat];
+        destinationSidebarHeader = data.sidebarheader || `${data.lat}, ${data.lng}`;
     }
+
+    // Add event listener for setting directions
+    el.addEventListener('click', () => {
+        if (symbol === 'A') {
+            setDirections(data, { coordinates: destinationCoordinates, title: destinationSidebarHeader });
+        } else {
+            setDirections({ coordinates: originCoordinates, title: originSidebarHeader }, data);
+        }
+    });
+
+    console.log(`${symbol === 'A' ? 'Origin' : 'Destination'} marker created at:`, [data.lng, data.lat]);
 }
+
 function applyRouteInfoStyles() {
     const routeInfo = document.querySelector('.route-info');
     if (routeInfo) {
@@ -194,9 +200,28 @@ function initializeDirectionsControl() {
         }
 
         directionsInitialized = true;
+
+        // Add click event listener for setting origin and destination
+        map.on('click', handleMapClick);
     }
 }
+function handleMapClick(e) {
+    const { lng, lat } = e.lngLat;
 
+    if (!originCoordinates) {
+        originCoordinates = [lng, lat];
+        originSidebarHeader = `${lat}, ${lng}`;
+        createCustomMarker({ lng, lat, sidebarheader: originSidebarHeader }, 'A');
+        setDirections({ coordinates: originCoordinates, title: originSidebarHeader }, { coordinates: destinationCoordinates, title: destinationSidebarHeader });
+    } else {
+        destinationCoordinates = [lng, lat];
+        destinationSidebarHeader = `${lat}, ${lng}`;
+        createCustomMarker({ lng, lat, sidebarheader: destinationSidebarHeader }, 'B');
+        setDirections({ coordinates: originCoordinates, title: originSidebarHeader }, { coordinates: destinationCoordinates, title: destinationSidebarHeader });
+        // Remove the click event listener after setting the destination
+        map.off('click', handleMapClick);
+    }
+}
 document.getElementById('custom-traffic').addEventListener('click', () => updateProfile('mapbox/driving-traffic'));
 document.getElementById('custom-cycling').addEventListener('click', () => updateProfile('mapbox/cycling'));
 document.getElementById('custom-walking').addEventListener('click', () => updateProfile('mapbox/walking'));
@@ -625,36 +650,9 @@ function setDirectionsInputFields(originTitle, destinationTitle) {
 }
 
 function setOriginAndDestination(origin, destination) {
-    const originFeature = {
-        type: 'Feature',
-        geometry: {
-            type: 'Point',
-            coordinates: origin.coordinates
-        },
-        properties: {
-            id: 'origin',  // Fixed id value
-            'marker-symbol': 'A',
-            title: origin.title
-        }
-    };
-
-    const destinationFeature = {
-        type: 'Feature',
-        geometry: {
-            type: 'Point',
-            coordinates: destination.coordinates
-        },
-        properties: {
-            id: 'destination',  // Fixed id value
-            'marker-symbol': 'B',
-            title: destination.title
-        }
-    };
-
-    directions.setOrigin(originFeature);
-    directions.setDestination(destinationFeature);
-
-    console.log("Origin and destination set with titles:", originFeature, destinationFeature);
+    directions.setOrigin([origin.coordinates[0], origin.coordinates[1]]);
+    directions.setDestination([destination.coordinates[0], destination.coordinates[1]]);
+    console.log("Origin and destination set with coordinates:", origin.coordinates, destination.coordinates);
 }
 
 // Add this function to set up the directions button event listener
@@ -814,12 +812,53 @@ function setDestinationOnClick(e) {
 
     deselectMarker();
 }
-// Function to set directions in Mapbox Directions API
-function setDirections(lat, lng) {
-    directions.setOrigin([lng, lat]);
-    directions.setDestination([lng, lat]);
-    directions.setProfile('mapbox/driving'); // Default to driving, can be changed later
+// Function to set origin and destination using the custom markers
+function setDirections(originData, destinationData) {
+    if (originData && destinationData) {
+        directions.setOrigin([originData.coordinates[0], originData.coordinates[1]]);
+        directions.setDestination([destinationData.coordinates[0], destinationData.coordinates[1]]);
+        console.log("Origin and destination set with coordinates:", originData.coordinates, destinationData.coordinates);
+    }
 }
+// Example usage when clicking on markers or setting directions
+function onMarkerClick(markerData) {
+    if (!originCoordinates) {
+        // Set origin
+        setDirections(markerData, { coordinates: destinationCoordinates, title: destinationSidebarHeader });
+    } else {
+        // Set destination
+        setDirections({ coordinates: originCoordinates, title: originSidebarHeader }, markerData);
+    }
+}
+document.getElementById('set-origin').addEventListener('click', function() {
+    if (!directionsInitialized) {
+        initializeDirectionsControl();
+    }
+    const selectedMarkerData = markers.find(marker => marker.marker.getElement().getAttribute('data-is-selected') === 'true');
+    if (selectedMarkerData) {
+        originCoordinates = [selectedMarkerData.data.lng, selectedMarkerData.data.lat];
+        originSidebarHeader = selectedMarkerData.data.sidebarheader;
+        createCustomMarker(selectedMarkerData.data, 'A');
+        setDirections({ coordinates: originCoordinates, title: originSidebarHeader }, { coordinates: destinationCoordinates, title: destinationSidebarHeader });
+    } else {
+        map.on('click', handleMapClick);
+    }
+});
+
+document.getElementById('set-destination').addEventListener('click', function() {
+    if (!directionsInitialized) {
+        initializeDirectionsControl();
+    }
+    const selectedMarkerData = markers.find(marker => marker.marker.getElement().getAttribute('data-is-selected') === 'true');
+    if (selectedMarkerData) {
+        destinationCoordinates = [selectedMarkerData.data.lng, selectedMarkerData.data.lat];
+        destinationSidebarHeader = selectedMarkerData.data.sidebarheader;
+        createCustomMarker(selectedMarkerData.data, 'B');
+        setDirections({ coordinates: originCoordinates, title: originSidebarHeader }, { coordinates: destinationCoordinates, title: destinationSidebarHeader });
+    } else {
+        map.on('click', handleMapClick);
+    }
+});
 
 function setupInfoItemHoverEffects() {
     document.querySelectorAll('.info-item').forEach(item => {
