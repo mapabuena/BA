@@ -285,7 +285,6 @@ function initializeDirectionsControl() {
         console.log("Directions control initialized.", directions);
     }
 }
-
 function handleMapClick(e) {
     const { lng, lat } = e.lngLat;
 
@@ -931,6 +930,7 @@ function setDirections(originData, destinationData) {
     }
 }
 
+
 // Function to set origin and destination for directions
 function setOriginAndDestination(originData, destinationData) {
     if (!validateCoordinates(originData.coordinates) || !validateCoordinates(destinationData.coordinates)) {
@@ -943,28 +943,20 @@ function setOriginAndDestination(originData, destinationData) {
     console.log("Origin and destination set with coordinates:", originData.coordinates, destinationData.coordinates);
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    setupDirectionsButton();
-
-    const setOriginButton = document.getElementById('set-origin');
-    const setDestinationButton = document.getElementById('set-destination');
-
-    if (setOriginButton) {
-        setOriginButton.addEventListener('click', function() {
-            handleSetOrigin();
-        });
-    } else {
-        console.error("Element with ID 'set-origin' not found.");
+// Ensure validateCoordinates is defined
+function validateCoordinates(coords) {
+    if (!Array.isArray(coords) || coords.length !== 2) {
+        console.error('Invalid coordinates format:', coords);
+        return false;
     }
-
-    if (setDestinationButton) {
-        setDestinationButton.addEventListener('click', function() {
-            handleSetDestination();
-        });
-    } else {
-        console.error("Element with ID 'set-destination' not found.");
+    const [lng, lat] = coords;
+    if (typeof lng !== 'number' || typeof lat !== 'number' || isNaN(lng) || isNaN(lat)) {
+        console.error('Invalid coordinate values:', coords);
+        return false;
     }
-});
+    return true;
+}
+
 // Function to save destination title to localStorage
 function saveDestinationTitleToLocalStorage(destinationTitle) {
     if (destinationTitle) {
