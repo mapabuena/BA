@@ -502,7 +502,17 @@ function displayRouteAlternatives(routes, profile) {
     }
 }
 
+function setDirectionsInputFields(originTitle, destinationTitle) {
+    const originInput = document.querySelector('.mapbox-directions-origin input');
+    const destinationInput = document.querySelector('.mapbox-directions-destination input');
 
+    if (originInput) {
+        originInput.value = originTitle || '';
+    }
+    if (destinationInput) {
+        destinationInput.value = destinationTitle || '';
+    }
+}
 // Ensure validateCoordinates is defined
 function validateCoordinates(coords) {
     if (!Array.isArray(coords) || coords.length !== 2) {
@@ -831,52 +841,6 @@ function setOriginAndDestination(origin, destination) {
     directions.setOrigin([origin.coordinates[0], origin.coordinates[1]]);
     directions.setDestination([destination.coordinates[0], destination.coordinates[1]]);
     console.log("Origin and destination set with coordinates:", origin.coordinates, destination.coordinates);
-}
-
-// Add this function to set up the directions button event listener
-// Add logging to the setupDirectionsButton function
-function setupDirectionsButton() {
-    const directionsButton = document.getElementById('get-directions');
-    if (directionsButton) {
-        directionsButton.addEventListener('click', function() {
-            console.log("Directions button clicked.");
-            const selectedMarkerData = markers.find(marker => marker.marker.getElement().getAttribute('data-is-selected') === 'true');
-
-            if (selectedMarkerData) {
-                const { lat, lng, sidebarheader, icon_url } = selectedMarkerData.data;
-
-                if (!lng || !lat) {
-                    console.error("Selected marker data is missing required properties:", selectedMarkerData.data);
-                    alert('Selected marker data is missing required properties.');
-                    return;
-                }
-
-                destinationCoordinates = [lng, lat];
-                destinationSidebarHeader = sidebarheader || `${lat}, ${lng}`;
-
-                if (!directionsInitialized) {
-                    initializeDirectionsControl();
-                }
-
-                createCustomMarker({ lng, lat, sidebarheader: destinationSidebarHeader, icon_url }, 'B');
-                setDirectionsInputFields(originSidebarHeader, destinationSidebarHeader);
-
-                document.getElementById('directions-container').style.display = 'block';
-
-                if (!originCoordinates) {
-                    map.on('click', handleMapClickForOrigin);
-                } else {
-                    setDirections({ coordinates: originCoordinates, title: originSidebarHeader }, { coordinates: destinationCoordinates, title: destinationSidebarHeader });
-                }
-            } else {
-                console.error('No marker selected.');
-                alert('Please select a marker first.');
-            }
-        });
-    } else {
-        console.error("Element with ID 'get-directions' not found.");
-    }
-    deselectMarker();
 }
 
 document.addEventListener('DOMContentLoaded', function() {
