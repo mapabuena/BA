@@ -119,11 +119,12 @@ function applyRouteInfoStyles() {
 }
 
 function deselectMarker() {
-    markers.forEach(markerObj => {
-        const markerElement = markerObj.marker.getElement();
-        markerElement.setAttribute('data-is-selected', 'false');
-    });
-    selectedMarker = null;
+    if (selectedMarker) {
+        const el = selectedMarker.marker.getElement();
+        el.setAttribute('data-is-selected', 'false');
+        el.style.backgroundImage = `url(${selectedMarker.data.icon_url})`;
+        selectedMarker = null;
+    }
 }
 window.addEventListener('resize', applyRouteInfoStyles);
 document.addEventListener('DOMContentLoaded', applyRouteInfoStyles);
@@ -1697,6 +1698,7 @@ function createMarker(data) {
         data: data
     });
 }
+
 function resetMarkerStyles() {
     markers.forEach(({ marker, data }) => {
         const el = marker.getElement();
@@ -1752,12 +1754,26 @@ function toggleGeoJSONRoute(geojson, visibility) {
     }
 }
 
-function simulateMarkerClick(markerId) {
-    const { marker, data } = markers[markerId];
-    // Simulate marker click
-    marker.getElement().dispatchEvent(new Event('click'));
-}
+function simulateMarkerClick(markerIndex) {
+    const { marker, data } = markers[markerIndex];
+    const el = marker.getElement();
 
+    resetMarkerStyles(); // Reset all marker styles
+
+    selectedMarker = { marker, data }; // Track the selected marker
+
+    el.style.backgroundImage = `url(${data.icon2_url})`;
+    el.setAttribute('data-is-selected', 'true'); // Mark as selected
+
+    document.getElementById('sidebarimage').innerHTML = `<img src="${data.sidebarimage}" alt="Sidebar Image" style="width: 100%;">`;
+    document.getElementById('sidebarheader').innerText = data.sidebarheader;
+    document.getElementById('sidebardescription').innerText = data.description;
+    document.getElementById('sidebarheader2').innerText = data.sidebarheader2 || '';
+
+    document.getElementById('sidebaropener').click();
+
+    recenterMap(data.lng, data.lat); // Recenter map with offset
+}
 
 function toggleSpecificRoute(markerData) {
     const layerId = 'route-layer';
