@@ -53,17 +53,17 @@ const customStyles = [{
         ['==', 'marker-symbol', 'B']
     ]
 }];
-function createCustomMarker(coordinates, symbol, title) {
+function createCustomMarker(coordinates, symbol, title, iconUrl) {
     const el = document.createElement('div');
     el.className = 'marker';
 
     // Set different styles for origin ('A') and destination ('B')
     if (symbol === 'A') {
-        el.style.backgroundImage = `https://raw.githubusercontent.com/mapabuena/BA/main/TransparentMapIconRed.svg`; // Replace with your origin marker icon URL
+        el.style.backgroundImage = `url(${iconUrl || 'https://raw.githubusercontent.com/mapabuena/BA/main/TransparentMapIconRed.svg'})`; // Use the provided icon URL or default
         el.style.width = '50px';
         el.style.height = '50px';
     } else if (symbol === 'B') {
-        el.style.backgroundImage = `https://raw.githubusercontent.com/mapabuena/BA/main/TransparentMapIconRed.svg`; // Replace with your destination marker icon URL
+        el.style.backgroundImage = `url(${iconUrl || 'https://raw.githubusercontent.com/mapabuena/BA/main/TransparentMapIconBlue.svg'})`; // Use the provided icon URL or default
         el.style.width = '50px';
         el.style.height = '50px';
     }
@@ -752,7 +752,7 @@ function setupDirectionsButton() {
             );
 
             if (selectedMarkerData) {
-                const { lat, lng, sidebarheader } = selectedMarkerData.data;
+                const { lat, lng, sidebarheader, icon_url } = selectedMarkerData.data;
 
                 if (!lng || !lat) {
                     console.error("Selected marker data is missing required properties:", selectedMarkerData.data);
@@ -769,7 +769,7 @@ function setupDirectionsButton() {
                 }
 
                 // Create custom destination marker
-                createCustomMarker(destinationCoordinates, 'B', destinationSidebarHeader);
+                createCustomMarker(destinationCoordinates, 'B', destinationSidebarHeader, icon_url);
 
                 setDirectionsInputFields('', destinationSidebarHeader);
 
