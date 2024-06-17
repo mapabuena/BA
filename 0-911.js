@@ -205,11 +205,20 @@ function initializeDirectionsControl() {
             console.error('Element with ID "directions-control" not found.');
         }
 
+        directions.on('route', (event) => {
+            const routes = event.route;
+            const profile = directions.options.profile;
+            if (routes && routes.length > 0) {
+                onRoutesReceived(routes, profile);
+            } else {
+                console.error("No routes received from Directions API.");
+            }
+        });
+
         directionsInitialized = true;
         console.log("Directions control initialized.", directions);
     }
 }
-
 
 function handleMapClick(e) {
     const { lng, lat } = e.lngLat;
@@ -713,9 +722,12 @@ function handleMapClickForOrigin(e) {
     createCustomMarker(data, 'A');
     setDirectionsInputFields(originSidebarHeader, destinationSidebarHeader);
 
+    if (destinationCoordinates) {
+        setDirections({ coordinates: originCoordinates, title: originSidebarHeader }, { coordinates: destinationCoordinates, title: destinationSidebarHeader });
+    }
+
     map.off('click', handleMapClickForOrigin); // Remove event listener after setting the origin
 }
-
 function handleMapClickForDestination(e) {
     const { lng, lat } = e.lngLat;
     const data = {
@@ -730,6 +742,10 @@ function handleMapClickForDestination(e) {
     destinationSidebarHeader = `${lat}, ${lng}`;
     createCustomMarker(data, 'B');
     setDirectionsInputFields(originSidebarHeader, destinationSidebarHeader);
+
+    if (originCoordinates) {
+        setDirections({ coordinates: originCoordinates, title: originSidebarHeader }, { coordinates: destinationCoordinates, title: destinationSidebarHeader });
+    }
 
     map.off('click', handleMapClickForDestination); // Remove event listener after setting the destination
 }
@@ -778,12 +794,14 @@ function setupDirectionsButton() {
                 }
 
                 createCustomMarker({ lng, lat, sidebarheader: destinationSidebarHeader, icon_url }, 'B');
-                setDirectionsInputFields('', destinationSidebarHeader);
+                setDirectionsInputFields(originSidebarHeader, destinationSidebarHeader);
 
                 document.getElementById('directions-container').style.display = 'block';
 
                 if (!originCoordinates) {
                     map.on('click', handleMapClickForOrigin);
+                } else {
+                    setDirections({ coordinates: originCoordinates, title: originSidebarHeader }, { coordinates: destinationCoordinates, title: destinationSidebarHeader });
                 }
             } else {
                 console.error('No marker selected.');
