@@ -247,14 +247,6 @@ document.addEventListener('DOMContentLoaded', function() {
     setupDirectionsButton();
 });
 
-Other Necessary Updates
-
-    Ensure initializeDirectionsControl function initializes the directions object properly.
-    Ensure setOriginAndDestination function is updated to handle setting directions with error handling.
-
-Helper Functions
-
-javascript
 
 // Function to initialize the directions control
 function initializeDirectionsControl() {
