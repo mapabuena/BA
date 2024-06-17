@@ -674,7 +674,7 @@ function setOriginAndDestination(origin, destination) {
             coordinates: origin.coordinates
         },
         properties: {
-            id: 'origin.title',
+            id: 'origin',  // Fixed id value
             'marker-symbol': 'A',
             title: origin.title
         }
@@ -687,7 +687,7 @@ function setOriginAndDestination(origin, destination) {
             coordinates: destination.coordinates
         },
         properties: {
-            id: 'destination.title'
+            id: 'destination',  // Fixed id value
             'marker-symbol': 'B',
             title: destination.title
         }
