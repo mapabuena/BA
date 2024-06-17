@@ -199,8 +199,10 @@ function initializeDirectionsControl() {
         }
 
         directionsInitialized = true;
+        console.log("Directions control initialized.");
     }
 }
+
 function handleMapClick(e) {
     const { lng, lat } = e.lngLat;
 
@@ -725,10 +727,13 @@ function setOriginAndDestination(origin, destination) {
 }
 
 // Add this function to set up the directions button event listener
+// Add logging to the setupDirectionsButton function
 function setupDirectionsButton() {
     const directionsButton = document.getElementById('get-directions');
     if (directionsButton) {
         directionsButton.addEventListener('click', function() {
+            console.log("Directions button clicked.");
+
             const selectedMarkerData = markers.find(marker => marker.marker.getElement().getAttribute('data-is-selected') === 'true');
 
             if (selectedMarkerData) {
@@ -742,6 +747,7 @@ function setupDirectionsButton() {
 
                 destinationCoordinates = [lng, lat];
                 destinationSidebarHeader = sidebarheader || `${lat}, ${lng}`;
+                console.log("Destination coordinates set to:", destinationCoordinates);
 
                 if (!directionsInitialized) {
                     initializeDirectionsControl();
@@ -776,6 +782,7 @@ function saveDestinationTitleToLocalStorage(destinationTitle) {
     }
 }
 
+// Add logging to the setOriginOnClick function
 function setOriginOnClick(e) {
     console.log("setOriginOnClick invoked");
 
@@ -797,9 +804,7 @@ function setOriginOnClick(e) {
         originSidebarHeader = sidebarheader || `${lat}, ${lng}`;
         console.log("Setting origin with sidebarheader:", sidebarheader);
 
-        // Create custom origin marker with specific icon
-        createCustomMarker(originCoordinates, 'A', originSidebarHeader, icon_url);
-
+        createCustomMarker({ lng, lat, sidebarheader: originSidebarHeader, icon_url }, 'A');
         setDirectionsInputFields(originSidebarHeader, destinationSidebarHeader);
 
         console.log("Origin set successfully with properties:", { title: originSidebarHeader, 'marker-symbol': 'A' });
@@ -826,6 +831,7 @@ function setOriginOnClick(e) {
     deselectMarker();
 }
 
+// Add logging to the setDestinationOnClick function
 function setDestinationOnClick(e) {
     console.log("setDestinationOnClick invoked");
 
@@ -847,9 +853,7 @@ function setDestinationOnClick(e) {
         destinationSidebarHeader = sidebarheader || `${lat}, ${lng}`;
         console.log("Setting destination with sidebarheader:", sidebarheader);
 
-        // Create custom destination marker with specific icon
-        createCustomMarker(destinationCoordinates, 'B', destinationSidebarHeader, icon_url);
-
+        createCustomMarker({ lng, lat, sidebarheader: destinationSidebarHeader, icon_url }, 'B');
         setDirectionsInputFields(originSidebarHeader, destinationSidebarHeader);
 
         console.log("Destination set successfully with properties:", { title: destinationSidebarHeader, 'marker-symbol': 'B' });
@@ -875,6 +879,7 @@ function setDestinationOnClick(e) {
 
     deselectMarker();
 }
+
 // Function to set origin and destination using the custom markers
 function setDirections(originData, destinationData) {
     if (originData && destinationData) {
