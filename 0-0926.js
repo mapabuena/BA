@@ -59,13 +59,13 @@ function createCustomMarker(coordinates, symbol, title) {
 
     // Set different styles for origin ('A') and destination ('B')
     if (symbol === 'A') {
-        el.style.backgroundImage = `url(https://example.com/marker-icon-A.svg)`; // Replace with your origin marker icon URL
-        el.style.width = '30px';
-        el.style.height = '30px';
+        el.style.backgroundImage = `https://raw.githubusercontent.com/mapabuena/BA/main/TransparentMapIconRed.svg`; // Replace with your origin marker icon URL
+        el.style.width = '50px';
+        el.style.height = '50px';
     } else if (symbol === 'B') {
-        el.style.backgroundImage = `url(https://example.com/marker-icon-B.svg)`; // Replace with your destination marker icon URL
-        el.style.width = '30px';
-        el.style.height = '30px';
+        el.style.backgroundImage = `https://raw.githubusercontent.com/mapabuena/BA/main/TransparentMapIconRed.svg`; // Replace with your destination marker icon URL
+        el.style.width = '50px';
+        el.style.height = '50px';
     }
 
     el.style.backgroundSize = 'contain';
