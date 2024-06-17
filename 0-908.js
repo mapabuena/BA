@@ -676,7 +676,49 @@ document.addEventListener('DOMContentLoaded', function() {
 
     setupDirectionsButton();
 });
+function setupDirectionsButton() {
+    const directionsButton = document.getElementById('get-directions');
+    if (directionsButton) {
+        directionsButton.addEventListener('click', function() {
+            console.log("Directions button clicked.");
+            const selectedMarkerData = markers.find(marker => marker.marker.getElement().getAttribute('data-is-selected') === 'true');
 
+            if (selectedMarkerData) {
+                const { lat, lng, sidebarheader, icon_url } = selectedMarkerData.data;
+
+                if (!lng || !lat) {
+                    console.error("Selected marker data is missing required properties:", selectedMarkerData.data);
+                    alert('Selected marker data is missing required properties.');
+                    return;
+                }
+
+                destinationCoordinates = [lng, lat];
+                destinationSidebarHeader = sidebarheader || `${lat}, ${lng}`;
+
+                if (!directionsInitialized) {
+                    initializeDirectionsControl();
+                }
+
+                createCustomMarker({ lng, lat, sidebarheader: destinationSidebarHeader, icon_url }, 'B');
+                setDirectionsInputFields('', destinationSidebarHeader);
+
+                document.getElementById('directions-container').style.display = 'block';
+
+                if (!originCoordinates) {
+                    map.on('click', handleMapClickForOrigin);
+                } else {
+                    setDirections({ coordinates: originCoordinates, title: originSidebarHeader }, { coordinates: destinationCoordinates, title: destinationSidebarHeader });
+                }
+            } else {
+                console.error('No marker selected.');
+                alert('Please select a marker first.');
+            }
+        });
+    } else {
+        console.error("Element with ID 'get-directions' not found.");
+    }
+    deselectMarker();
+}
 function handleSetOrigin() {
     if (!directionsInitialized) {
         initializeDirectionsControl();
