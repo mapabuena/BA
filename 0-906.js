@@ -513,6 +513,7 @@ function setDirectionsInputFields(originTitle, destinationTitle) {
         destinationInput.value = destinationTitle || '';
     }
 }
+
 // Ensure validateCoordinates is defined
 function validateCoordinates(coords) {
     if (!Array.isArray(coords) || coords.length !== 2) {
@@ -710,7 +711,7 @@ function setupDirectionsButton() {
                 }
 
                 createCustomMarker({ lng, lat, sidebarheader: destinationSidebarHeader, icon_url }, 'B');
-                setDirectionsInputFields('', destinationSidebarHeader);
+                setDirectionsInputFields(originSidebarHeader, destinationSidebarHeader); // Ensure this function exists and is defined
 
                 document.getElementById('directions-container').style.display = 'block';
 
@@ -775,10 +776,6 @@ function handleMapClickForOrigin(e) {
     originSidebarHeader = `${lat}, ${lng}`;
     createCustomMarker(data, 'A');
     setDirectionsInputFields(originSidebarHeader, destinationSidebarHeader);
-
-    if (destinationCoordinates) {
-        setDirections({ coordinates: originCoordinates, title: originSidebarHeader }, { coordinates: destinationCoordinates, title: destinationSidebarHeader });
-    }
 
     map.off('click', handleMapClickForOrigin); // Remove event listener after setting the origin
 }
