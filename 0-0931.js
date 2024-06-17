@@ -781,6 +781,12 @@ function setupDirectionsButton() {
             if (selectedMarkerData) {
                 const { lat, lng, sidebarheader } = selectedMarkerData.data;
 
+                if (!lng || !lat) {
+                    console.error("Selected marker data is missing required properties:", selectedMarkerData.data);
+                    alert('Selected marker data is missing required properties.');
+                    return;
+                }
+
                 destinationCoordinates = [lng, lat];
                 destinationSidebarHeader = sidebarheader || `${lat}, ${lng}`;
 
@@ -808,6 +814,7 @@ function setupDirectionsButton() {
                 } catch (error) {
                     console.error("Error setting destination:", error);
                     alert('Error setting destination.');
+                    return;
                 }
 
                 document.getElementById('directions-container').style.display = 'block';
@@ -826,6 +833,7 @@ function setupDirectionsButton() {
 
     deselectMarker();
 }
+
 // Function to save destination title to localStorage
 function saveDestinationTitleToLocalStorage(destinationTitle) {
     if (destinationTitle) {
@@ -845,6 +853,7 @@ function setOriginOnClick(e) {
 
         if (!lng || !lat) {
             console.error("Selected marker data is missing required properties:", selectedMarker.data);
+            alert('Selected marker data is missing required properties.');
             return;
         }
 
