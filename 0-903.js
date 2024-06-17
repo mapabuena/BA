@@ -180,6 +180,83 @@ function monitorDestinationInput() {
     }
 }
 
+Certainly! Here are the necessary changes to integrate the logic from setOriginOnClick(e) into setupDirectionsButton() for setting the destination marker:
+Updated setupDirectionsButton() Function
+
+javascript
+
+// Add this function to set up the directions button event listener
+function setupDirectionsButton() {
+    const directionsButton = document.getElementById('get-directions');
+    if (directionsButton) {
+        directionsButton.addEventListener('click', function() {
+            console.log("Directions button clicked.");
+
+            const selectedMarkerData = markers.find(marker => marker.marker.getElement().getAttribute('data-is-selected') === 'true');
+            if (selectedMarkerData) {
+                const { lng, lat, sidebarheader, icon_url } = selectedMarkerData.data;
+                console.log("Selected marker data:", selectedMarkerData.data);
+
+                if (!lng || !lat) {
+                    console.error("Selected marker data is missing required properties:", selectedMarkerData.data);
+                    alert('Selected marker data is missing required properties.');
+                    return;
+                }
+
+                destinationCoordinates = [lng, lat];
+                destinationSidebarHeader = sidebarheader || `${lat}, ${lng}`;
+                console.log("Setting destination with sidebarheader:", sidebarheader);
+
+                createCustomMarker({ lng, lat, sidebarheader: destinationSidebarHeader, icon_url }, 'B');
+                setDirectionsInputFields(originSidebarHeader, destinationSidebarHeader);
+
+                console.log("Destination set successfully with properties:", { title: destinationSidebarHeader, 'marker-symbol': 'B' });
+
+                if (!originCoordinates) {
+                    map.on('click', handleMapClickForOrigin);
+                } else {
+                    if (!directions) {
+                        initializeDirectionsControl();
+                    }
+                    setOriginAndDestination({ coordinates: originCoordinates, title: originSidebarHeader }, { coordinates: destinationCoordinates, title: destinationSidebarHeader });
+                }
+            } else {
+                console.error("No marker is selected or selected marker data is undefined.");
+                alert('Please select a marker first.');
+            }
+
+            setTimeout(() => {
+                const directionsContainer = document.getElementById('directions-container');
+                if (directionsContainer) {
+                    directionsContainer.scrollIntoView({ behavior: 'smooth' });
+                    console.log("Scrolled to directions container.");
+                } else {
+                    console.error('Directions container not found.');
+                }
+            }, 500);
+
+            deselectMarker();
+        });
+    } else {
+        console.error("Element with ID 'get-directions' not found.");
+    }
+}
+
+// Ensure this function is called when the DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    setupDirectionsButton();
+});
+
+Other Necessary Updates
+
+    Ensure initializeDirectionsControl function initializes the directions object properly.
+    Ensure setOriginAndDestination function is updated to handle setting directions with error handling.
+
+Helper Functions
+
+javascript
+
+// Function to initialize the directions control
 function initializeDirectionsControl() {
     if (!directionsInitialized) {
         directions = new MapboxDirections({
@@ -197,12 +274,7 @@ function initializeDirectionsControl() {
         const directionsContainer = document.getElementById('directions-control');
         if (directionsContainer) {
             directionsContainer.innerHTML = '';
-            const directionsControlContainer = directions.onAdd(map);
-            if (directionsControlContainer) {
-                directionsContainer.appendChild(directionsControlContainer);
-            } else {
-                console.error('Directions control container not found.');
-            }
+            directionsContainer.appendChild(directions.onAdd(map));
         } else {
             console.error('Element with ID "directions-control" not found.');
         }
@@ -502,7 +574,7 @@ function displayRouteAlternatives(routes, profile) {
     }
 }
 
-// Function to set the input fields for directions
+// Function to set directions input fields
 function setDirectionsInputFields(originTitle, destinationTitle) {
     const originInput = document.querySelector('.mapbox-directions-origin input');
     const destinationInput = document.querySelector('.mapbox-directions-destination input');
@@ -513,6 +585,12 @@ function setDirectionsInputFields(originTitle, destinationTitle) {
     if (destinationInput) {
         destinationInput.value = destinationTitle || '';
     }
+}
+
+// Function to handle routes received
+function onRoutesReceived(routes, profile) {
+    console.log("Processing routes:", routes);
+    displayRouteAlternatives(routes, profile);
 }
 
 // Ensure validateCoordinates is defined
@@ -718,6 +796,9 @@ function setupDirectionsButton() {
                 if (!originCoordinates) {
                     map.on('click', handleMapClickForOrigin);
                 } else {
+                    if (!directions) {
+                        initializeDirectionsControl();
+                    }
                     setOriginAndDestination({ coordinates: originCoordinates, title: originSidebarHeader }, { coordinates: destinationCoordinates, title: destinationSidebarHeader });
                 }
             } else {
@@ -741,6 +822,11 @@ function setupDirectionsButton() {
         console.error("Element with ID 'get-directions' not found.");
     }
 }
+
+// Ensure this function is called when the DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    setupDirectionsButton();
+});
 function handleSetOrigin() {
     if (!directionsInitialized) {
         initializeDirectionsControl();
@@ -773,6 +859,7 @@ function handleSetDestination() {
     }
 }
 
+// Function to handle map click for setting origin
 function handleMapClickForOrigin(e) {
     const { lng, lat } = e.lngLat;
     const data = {
@@ -795,6 +882,7 @@ function handleMapClickForOrigin(e) {
 document.addEventListener('DOMContentLoaded', function() {
     setupDirectionsButton();
 });
+// Function to handle map click for setting destination
 function handleMapClickForDestination(e) {
     const { lng, lat } = e.lngLat;
     const data = {
@@ -811,10 +899,11 @@ function handleMapClickForDestination(e) {
     setDirectionsInputFields(originSidebarHeader, destinationSidebarHeader);
 
     if (originCoordinates) {
-        setDirections({ coordinates: originCoordinates, title: originSidebarHeader }, { coordinates: destinationCoordinates, title: destinationSidebarHeader });
+        setOriginAndDestination({ coordinates: originCoordinates, title: originSidebarHeader }, { coordinates: destinationCoordinates, title: destinationSidebarHeader });
     }
 
     map.off('click', handleMapClickForDestination); // Remove event listener after setting the destination
+} handleMapClickForDestination); // Remove event listener after setting the destination
 }
 // Ensure this function updates both input fields correctly
 function setDirections(originData, destinationData) {
@@ -850,8 +939,13 @@ function setDirections(originData, destinationData) {
     }
 }
 
-// Function to handle setting directions with origin and destination data
+// Function to set origin and destination for directions
 function setOriginAndDestination(originData, destinationData) {
+    if (!validateCoordinates(originData.coordinates) || !validateCoordinates(destinationData.coordinates)) {
+        console.error("Invalid coordinates for origin or destination:", originData.coordinates, destinationData.coordinates);
+        return;
+    }
+
     directions.setOrigin([originData.coordinates[0], originData.coordinates[1]]);
     directions.setDestination([destinationData.coordinates[0], destinationData.coordinates[1]]);
     console.log("Origin and destination set with coordinates:", originData.coordinates, destinationData.coordinates);
