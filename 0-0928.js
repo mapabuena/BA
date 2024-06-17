@@ -59,11 +59,11 @@ function createCustomMarker(coordinates, symbol, title) {
 
     // Set different styles for origin ('A') and destination ('B')
     if (symbol === 'A') {
-        el.style.backgroundImage = `https://raw.githubusercontent.com/mapabuena/BA/main/TransparentMapIconRed.svg`; // Replace with your origin marker icon URL
+        el.style.backgroundImage = `url(https://example.com/marker-icon-A.svg)`; // Replace with your origin marker icon URL
         el.style.width = '30px';
         el.style.height = '30px';
     } else if (symbol === 'B') {
-        el.style.backgroundImage = `https://raw.githubusercontent.com/mapabuena/BA/main/TransparentMapIconRed.svg`; // Replace with your destination marker icon URL
+        el.style.backgroundImage = `url(https://example.com/marker-icon-B.svg)`; // Replace with your destination marker icon URL
         el.style.width = '30px';
         el.style.height = '30px';
     }
@@ -74,13 +74,18 @@ function createCustomMarker(coordinates, symbol, title) {
         .setLngLat(coordinates)
         .addTo(map);
 
-    const input = symbol === 'A' ? document.querySelector('.mapbox-directions-origin input') : document.querySelector('.mapbox-directions-destination input');
-    input.value = title;
-    input.placeholder = title;
+    // Select the correct input element based on the symbol
+    const inputSelector = symbol === 'A' ? '.mapbox-directions-origin input' : '.mapbox-directions-destination input';
+    const input = document.querySelector(inputSelector);
 
-    console.log(`${symbol === 'A' ? 'Origin' : 'Destination'} marker created at:`, coordinates);
+    if (input) {
+        input.value = title;
+        input.placeholder = title;
+        console.log(`${symbol === 'A' ? 'Origin' : 'Destination'} marker created at:`, coordinates);
+    } else {
+        console.error(`Input element not found for ${symbol === 'A' ? 'origin' : 'destination'} marker.`);
+    }
 }
-
 if (typeof polyline === 'undefined') {
     console.error("Polyline library is not loaded!");
 } else {
