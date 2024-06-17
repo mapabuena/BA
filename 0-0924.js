@@ -194,12 +194,30 @@ function initializeDirectionsControl() {
         }
 
         directionsInitialized = true;
-    }
-}
-function logAllProperties(obj, objName) {
-    console.log(`${objName} properties:`);
-    for (const [key, value] of Object.entries(obj)) {
-        console.log(`${key}: ${value}`);
+        
+        // Check for stored coordinates
+        const storedOrigin = JSON.parse(localStorage.getItem('originCoordinates'));
+        const storedDestination = JSON.parse(localStorage.getItem('destinationCoordinates'));
+        const originTitle = getOriginTitleFromLocalStorage();
+        const destinationTitle = getDestinationTitleFromLocalStorage();
+
+        if (storedOrigin) {
+            originCoordinates = storedOrigin;
+            originSidebarHeader = originTitle;
+            createCustomMarker(storedOrigin, 'A', originTitle, ''); // Add correct icon URL if needed
+            setDirectionsInputFields(originTitle, destinationTitle);
+        }
+
+        if (storedDestination) {
+            destinationCoordinates = storedDestination;
+            destinationSidebarHeader = destinationTitle;
+            createCustomMarker(storedDestination, 'B', destinationTitle, ''); // Add correct icon URL if needed
+            setDirectionsInputFields(originTitle, destinationTitle);
+        }
+        
+        if (storedOrigin && storedDestination) {
+            setOriginAndDestination({ coordinates: storedOrigin, title: originTitle }, { coordinates: storedDestination, title: destinationTitle });
+        }
     }
 }
 
@@ -803,7 +821,7 @@ function saveDestinationTitleToLocalStorage(destinationTitle) {
 function setOriginOnClick(e) {
     console.log("setOriginOnClick invoked");
 
-    const selectedMarkerData = markers.find(marker => 
+    const selectedMarkerData = markers.find(marker =>
         marker.marker.getElement().getAttribute('data-is-selected') === 'true'
     );
 
@@ -824,9 +842,13 @@ function setOriginOnClick(e) {
         // Create custom origin marker with specific icon
         createCustomMarker(originCoordinates, 'A', originSidebarHeader, icon_url);
 
-        setDirectionsInputFields(originSidebarHeader, '');
+        setDirectionsInputFields(originSidebarHeader, destinationSidebarHeader);
 
         console.log("Origin set successfully with properties:", { title: originSidebarHeader, 'marker-symbol': 'A' });
+
+        if (destinationCoordinates) {
+            setOriginAndDestination({ coordinates: originCoordinates, title: originSidebarHeader }, { coordinates: destinationCoordinates, title: destinationSidebarHeader });
+        }
 
     } else {
         console.error("No marker is selected or selected marker data is undefined.");
@@ -843,14 +865,12 @@ function setOriginOnClick(e) {
         }
     }, 500);
 
-    // Deselect marker at the end
     deselectMarker();
 }
-
 function setDestinationOnClick(e) {
     console.log("setDestinationOnClick invoked");
 
-    const selectedMarkerData = markers.find(marker => 
+    const selectedMarkerData = markers.find(marker =>
         marker.marker.getElement().getAttribute('data-is-selected') === 'true'
     );
 
@@ -875,6 +895,10 @@ function setDestinationOnClick(e) {
 
         console.log("Destination set successfully with properties:", { title: destinationSidebarHeader, 'marker-symbol': 'B' });
 
+        if (originCoordinates) {
+            setOriginAndDestination({ coordinates: originCoordinates, title: originSidebarHeader }, { coordinates: destinationCoordinates, title: destinationSidebarHeader });
+        }
+
     } else {
         console.error("No marker is selected or selected marker data is undefined.");
         alert('Please select a marker first.');
@@ -890,10 +914,8 @@ function setDestinationOnClick(e) {
         }
     }, 500);
 
-    // Deselect marker at the end
     deselectMarker();
 }
-
 // Function to set directions in Mapbox Directions API
 function setDirections(lat, lng) {
     directions.setOrigin([lng, lat]);
