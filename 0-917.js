@@ -110,12 +110,11 @@ function applyRouteInfoStyles() {
 }
 
 function deselectMarker() {
-    if (selectedMarker) {
-        const markerElement = selectedMarker.marker.getElement();
-        markerElement.style.backgroundImage = `url(${selectedMarker.data.icon_url})`;
+    markers.forEach(markerObj => {
+        const markerElement = markerObj.marker.getElement();
         markerElement.setAttribute('data-is-selected', 'false');
-        selectedMarker = null;
-    }
+    });
+    selectedMarker = null;
 }
 window.addEventListener('resize', applyRouteInfoStyles);
 document.addEventListener('DOMContentLoaded', applyRouteInfoStyles);
@@ -200,9 +199,6 @@ function initializeDirectionsControl() {
         }
 
         directionsInitialized = true;
-
-        // Add click event listener for setting origin and destination
-        map.on('click', handleMapClick);
     }
 }
 function handleMapClick(e) {
@@ -628,24 +624,78 @@ function clearAllPopups() {
         secondPopup = null;
     }
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('set-origin').addEventListener('click', function() {
+        handleSetOrigin();
+    });
+
+    document.getElementById('set-destination').addEventListener('click', function() {
+        handleSetDestination();
+    });
+
+    setupDirectionsButton();
+});
+
+function handleSetOrigin() {
+    if (!directionsInitialized) {
+        initializeDirectionsControl();
+    }
+
+    const selectedMarkerData = markers.find(marker => marker.marker.getElement().getAttribute('data-is-selected') === 'true');
+    if (selectedMarkerData) {
+        originCoordinates = [selectedMarkerData.data.lng, selectedMarkerData.data.lat];
+        originSidebarHeader = selectedMarkerData.data.sidebarheader;
+        createCustomMarker(selectedMarkerData.data, 'A');
+        setDirectionsInputFields(originSidebarHeader, destinationSidebarHeader);
+    } else {
+        map.on('click', handleMapClickForOrigin);
+    }
+}
+
+function handleSetDestination() {
+    if (!directionsInitialized) {
+        initializeDirectionsControl();
+    }
+
+    const selectedMarkerData = markers.find(marker => marker.marker.getElement().getAttribute('data-is-selected') === 'true');
+    if (selectedMarkerData) {
+        destinationCoordinates = [selectedMarkerData.data.lng, selectedMarkerData.data.lat];
+        destinationSidebarHeader = selectedMarkerData.data.sidebarheader;
+        createCustomMarker(selectedMarkerData.data, 'B');
+        setDirectionsInputFields(originSidebarHeader, destinationSidebarHeader);
+    } else {
+        map.on('click', handleMapClickForDestination);
+    }
+}
+
+function handleMapClickForOrigin(e) {
+    const { lng, lat } = e.lngLat;
+    originCoordinates = [lng, lat];
+    originSidebarHeader = `${lat}, ${lng}`;
+    createCustomMarker({ lng, lat, sidebarheader: originSidebarHeader }, 'A');
+    setDirectionsInputFields(originSidebarHeader, destinationSidebarHeader);
+    map.off('click', handleMapClickForOrigin); // Remove event listener after setting the origin
+}
+
+function handleMapClickForDestination(e) {
+    const { lng, lat } = e.lngLat;
+    destinationCoordinates = [lng, lat];
+    destinationSidebarHeader = `${lat}, ${lng}`;
+    createCustomMarker({ lng, lat, sidebarheader: destinationSidebarHeader }, 'B');
+    setDirectionsInputFields(originSidebarHeader, destinationSidebarHeader);
+    map.off('click', handleMapClickForDestination); // Remove event listener after setting the destination
+}
+// Ensure this function updates both input fields correctly
 function setDirectionsInputFields(originTitle, destinationTitle) {
     const originInput = document.querySelector('.mapbox-directions-origin input');
     const destinationInput = document.querySelector('.mapbox-directions-destination input');
 
-    console.log("Updating input fields with:", { originTitle, destinationTitle });
-
-    if (originTitle && originTitle.trim() !== '' && originInput) {
-        originInput.value = originTitle;
-        console.log("Origin input field set to:", originTitle);
-    } else {
-        console.log("Origin title or input is missing or invalid.");
+    if (originInput) {
+        originInput.value = originTitle || '';
     }
-
-    if (destinationTitle && destinationTitle.trim() !== '' && destinationInput) {
-        destinationInput.value = destinationTitle;
-        console.log("Destination input field set to:", destinationTitle);
-    } else {
-        console.log("Destination title or input is missing or invalid.");
+    if (destinationInput) {
+        destinationInput.value = destinationTitle || '';
     }
 }
 
@@ -660,9 +710,7 @@ function setupDirectionsButton() {
     const directionsButton = document.getElementById('get-directions');
     if (directionsButton) {
         directionsButton.addEventListener('click', function() {
-            const selectedMarkerData = markers.find(marker => 
-                marker.marker.getElement().getAttribute('data-is-selected') === 'true'
-            );
+            const selectedMarkerData = markers.find(marker => marker.marker.getElement().getAttribute('data-is-selected') === 'true');
 
             if (selectedMarkerData) {
                 const { lat, lng, sidebarheader, icon_url } = selectedMarkerData.data;
@@ -682,14 +730,13 @@ function setupDirectionsButton() {
                 }
 
                 // Create custom destination marker
-                createCustomMarker(destinationCoordinates, 'B', destinationSidebarHeader, icon_url);
-
+                createCustomMarker({ lng, lat, sidebarheader: destinationSidebarHeader, icon_url }, 'B');
                 setDirectionsInputFields('', destinationSidebarHeader);
 
                 document.getElementById('directions-container').style.display = 'block';
 
                 if (!originCoordinates) {
-                    map.on('click', setOriginOnClick);
+                    map.on('click', handleMapClickForOrigin);
                 }
             } else {
                 console.error('No marker selected.');
@@ -702,7 +749,6 @@ function setupDirectionsButton() {
 
     deselectMarker();
 }
-
 // Function to save destination title to localStorage
 function saveDestinationTitleToLocalStorage(destinationTitle) {
     if (destinationTitle) {
