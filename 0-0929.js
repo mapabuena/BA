@@ -53,17 +53,25 @@ const customStyles = [{
         ['==', 'marker-symbol', 'B']
     ]
 }];
-function createCustomMarker(coordinates, symbol, title, iconUrl) {
+function createCustomMarker(coordinates, symbol, title) {
     const el = document.createElement('div');
     el.className = 'marker';
-    el.style.backgroundImage = `url(${iconUrl})`; // Use the appropriate icon URL
-    el.style.width = '30px';
-    el.style.height = '30px';
+
+    // Set different styles for origin ('A') and destination ('B')
+    if (symbol === 'A') {
+        el.style.backgroundImage = `https://raw.githubusercontent.com/mapabuena/BA/main/TransparentMapIconRed.svg`; // Replace with your origin marker icon URL
+        el.style.width = '30px';
+        el.style.height = '30px';
+    } else if (symbol === 'B') {
+        el.style.backgroundImage = `https://raw.githubusercontent.com/mapabuena/BA/main/TransparentMapIconRed.svg`; // Replace with your destination marker icon URL
+        el.style.width = '30px';
+        el.style.height = '30px';
+    }
+
     el.style.backgroundSize = 'contain';
 
     new mapboxgl.Marker(el)
         .setLngLat(coordinates)
-        .setPopup(new mapboxgl.Popup({ offset: 25 }).setText(title)) // Add a popup with the title
         .addTo(map);
 
     const input = symbol === 'A' ? document.querySelector('.mapbox-directions-origin input') : document.querySelector('.mapbox-directions-destination input');
@@ -93,7 +101,7 @@ function applyRouteInfoStyles() {
     }
 }
 
-  function deselectMarker() {
+function deselectMarker() {
     if (selectedMarker) {
         const markerElement = selectedMarker.marker.getElement();
         markerElement.style.backgroundImage = `url(${selectedMarker.data.icon_url})`;
