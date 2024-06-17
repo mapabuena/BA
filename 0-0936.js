@@ -183,8 +183,8 @@ function initializeDirectionsControl() {
             if (originCoordinates) {
                 const originInput = document.querySelector('.mapbox-directions-origin input');
                 if (originInput) {
-                    originInput.placeholder = originProperties.title || 'Choose a starting place';
-                    originInput.value = originProperties.title || originInput.value || '';
+                    originInput.placeholder = 'Choose a starting place';
+                    originInput.value = originProperties.title || 'no title' || '';
                     console.log("Origin input placeholder and value set to:", originInput.placeholder);
                 }
 
@@ -207,7 +207,7 @@ function initializeDirectionsControl() {
                 const destinationInput = document.querySelector('.mapbox-directions-destination input');
                 if (destinationInput) {
                     destinationInput.placeholder = destinationProperties.title || 'Choose destination';
-                    destinationInput.value = destinationProperties.title || destinationInput.value || '';
+                    destinationInput.value = destinationProperties.title || "no title" || '';
                     console.log("Destination input placeholder and value set to:", destinationInput.placeholder);
                 }
 
@@ -674,7 +674,7 @@ function setOriginAndDestination(origin, destination) {
             coordinates: origin.coordinates
         },
         properties: {
-            id: 'origin',
+            id: 'origin.title',
             'marker-symbol': 'A',
             title: origin.title
         }
@@ -687,7 +687,7 @@ function setOriginAndDestination(origin, destination) {
             coordinates: destination.coordinates
         },
         properties: {
-            id: 'destination',
+            id: 'destination.title'
             'marker-symbol': 'B',
             title: destination.title
         }
