@@ -508,7 +508,31 @@ document.addEventListener('DOMContentLoaded', function() {
     setupInfoItemHoverEffects();
     setupDirectionsButton();
 
+
+    const originInput = document.querySelector('.mapbox-directions-origin input');
+    const destinationInput = document.querySelector('.mapbox-directions-destination input');
+    const originClearButton = document.querySelector('.mapbox-directions-origin .geocoder-icon-close');
+    const destinationClearButton = document.querySelector('.mapbox-directions-destination .geocoder-icon-close');
+    const setOriginButton = document.getElementById('set-origin');
+    const setDestinationButton = document.getElementById('set-destination');
     const closeDirectionsButton = document.getElementById('close-directions');
+
+    if (setOriginButton) {
+        setOriginButton.addEventListener('click', function() {
+            handleSetOrigin();
+        });
+    } else {
+        console.error("Element with ID 'set-origin' not found.");
+    }
+
+    if (setDestinationButton) {
+        setDestinationButton.addEventListener('click', function() {
+            handleSetDestination();
+        });
+    } else {
+        console.error("Element with ID 'set-destination' not found.");
+    }
+
     if (closeDirectionsButton) {
         closeDirectionsButton.addEventListener('click', function() {
             document.getElementById('directions-container').style.display = 'none';
@@ -517,11 +541,6 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         console.error("Element with ID 'close-directions' not found.");
     }
-
-    const originInput = document.querySelector('.mapbox-directions-origin input');
-    const destinationInput = document.querySelector('.mapbox-directions-destination input');
-    const originClearButton = document.querySelector('.mapbox-directions-origin .geocoder-icon-close');
-    const destinationClearButton = document.querySelector('.mapbox-directions-destination .geocoder-icon-close');
 
 
     // Event listener for clearing origin input
@@ -724,12 +743,10 @@ function setupDirectionsButton() {
                 destinationCoordinates = [lng, lat];
                 destinationSidebarHeader = sidebarheader || `${lat}, ${lng}`;
 
-                // Initialize the directions control if not already initialized
                 if (!directionsInitialized) {
                     initializeDirectionsControl();
                 }
 
-                // Create custom destination marker
                 createCustomMarker({ lng, lat, sidebarheader: destinationSidebarHeader, icon_url }, 'B');
                 setDirectionsInputFields('', destinationSidebarHeader);
 
