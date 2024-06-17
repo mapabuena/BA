@@ -341,10 +341,10 @@ function addRouteLabels(route, profile) {
 function getRouteCenter(coordinates) {
     if (coordinates && coordinates.length > 0) {
         const midIndex = Math.floor(coordinates.length / 2);
-        return coordinates[midIndex]; // Coordinates are already [lng, lat]
+        return coordinates[midIndex];
     } else {
         console.error("Coordinates are undefined or empty.");
-        return null; // Return null to handle appropriately
+        return null;
     }
 }
 let currentPopup = null;
@@ -367,15 +367,16 @@ document.head.appendChild(style);
 function showRoutePopup(route, coordinates, profile, isBestRoute = true) {
     if (!coordinates || coordinates.length !== 2 || typeof coordinates[0] !== 'number' || typeof coordinates[1] !== 'number') {
         console.error("Invalid coordinates for route popup:", coordinates);
-        return; // Exit if coordinates are invalid
+        return;
     }
+
     const formattedDistance = (route.distance / 1000).toFixed(2) + ' km';
     const formattedTravelTime = Math.round(route.duration / 60) + ' min';
 
     let modeIcon;
-    let iconSize = { width: '24px', height: '24px' }; // Default icon size
-    let popupSize = { width: '120px', height: '32px' }; // Default popup size
-    let iconPaddingBottom = '0px'; // Default padding
+    let iconSize = { width: '24px', height: '24px' };
+    let popupSize = { width: '120px', height: '32px' };
+    let iconPaddingBottom = '0px';
 
     switch (profile) {
         case 'mapbox/driving':
@@ -431,16 +432,16 @@ function showRoutePopup(route, coordinates, profile, isBestRoute = true) {
         } else {
             console.error('Popup element not found for setting zIndex');
         }
-    }, 100); // Delay to ensure the popup is added to the map
+    }, 100);
 
     if (isBestRoute) {
         if (currentPopup) {
-            currentPopup.remove(); // Close the previous popup if it exists
+            currentPopup.remove();
         }
         currentPopup = popup;
     } else {
         if (secondPopup) {
-            secondPopup.remove(); // Close the previous popup if it exists
+            secondPopup.remove();
         }
         secondPopup = popup;
     }
@@ -448,7 +449,6 @@ function showRoutePopup(route, coordinates, profile, isBestRoute = true) {
 
 // Function to display route alternatives
 function displayRouteAlternatives(routes, profile) {
-
     if (routes && routes.length > 1) {
         const bestRoute = routes[0];
         const secondBestRoute = routes[1];
@@ -457,14 +457,13 @@ function displayRouteAlternatives(routes, profile) {
         let secondBestRouteCoordinates = [];
 
         try {
-            bestRouteCoordinates = polyline.decode(bestRoute.geometry); // Decode the polyline string
-            secondBestRouteCoordinates = polyline.decode(secondBestRoute.geometry); // Decode the polyline string
+            bestRouteCoordinates = polyline.decode(bestRoute.geometry);
+            secondBestRouteCoordinates = polyline.decode(secondBestRoute.geometry);
         } catch (error) {
             console.error("Error decoding polyline:", error);
         }
 
         if (bestRouteCoordinates.length > 0 && secondBestRouteCoordinates.length > 0) {
-    
             const bestRouteCenter = getRouteCenter(bestRouteCoordinates);
             const secondBestRouteCenter = getRouteCenter(secondBestRouteCoordinates);
 
@@ -482,14 +481,12 @@ function displayRouteAlternatives(routes, profile) {
         let bestRouteCoordinates = [];
 
         try {
-            bestRouteCoordinates = polyline.decode(bestRoute.geometry); // Decode the polyline string
+            bestRouteCoordinates = polyline.decode(bestRoute.geometry);
         } catch (error) {
             console.error("Error decoding polyline:", error);
         }
 
         if (bestRouteCoordinates.length > 0) {
-            console.log("Best route coordinates:", bestRouteCoordinates); // Debug log
-
             const bestRouteCenter = getRouteCenter(bestRouteCoordinates);
 
             if (bestRouteCenter) {
@@ -501,10 +498,12 @@ function displayRouteAlternatives(routes, profile) {
             console.error("Decoded coordinates are empty or invalid.");
         }
     } else {
-        console.warn("No routes available to display"); // Warn if no routes are available
+        console.warn("No routes available to display");
     }
 }
 
+
+// Ensure validateCoordinates is defined
 function validateCoordinates(coords) {
     if (!Array.isArray(coords) || coords.length !== 2) {
         console.error('Invalid coordinates format:', coords);
@@ -519,6 +518,7 @@ function validateCoordinates(coords) {
 }
 
 function onRoutesReceived(routes, profile) {
+    console.log("Processing routes:", routes);
     displayRouteAlternatives(routes, profile);
 }
 document.addEventListener('DOMContentLoaded', function() {
@@ -752,15 +752,36 @@ function handleMapClickForDestination(e) {
     map.off('click', handleMapClickForDestination); // Remove event listener after setting the destination
 }
 // Ensure this function updates both input fields correctly
-function setDirectionsInputFields(originTitle, destinationTitle) {
-    const originInput = document.querySelector('.mapbox-directions-origin input');
-    const destinationInput = document.querySelector('.mapbox-directions-destination input');
+function setDirections(originData, destinationData) {
+    if (originData && destinationData) {
+        console.log("Setting directions with origin and destination data:", originData, destinationData);
 
-    if (originInput) {
-        originInput.value = originTitle || '';
-    }
-    if (destinationInput) {
-        destinationInput.value = destinationTitle || '';
+        // Check if coordinates are valid
+        if (!validateCoordinates(originData.coordinates) || !validateCoordinates(destinationData.coordinates)) {
+            console.error("Invalid coordinates for origin or destination:", originData.coordinates, destinationData.coordinates);
+            return;
+        }
+
+        directions.setOrigin([originData.coordinates[0], originData.coordinates[1]]);
+        directions.setDestination([destinationData.coordinates[0], destinationData.coordinates[1]]);
+        console.log("Directions set with origin and destination coordinates:", originData.coordinates, destinationData.coordinates);
+
+        // Add an event listener for the 'route' event
+        directions.on('route', (event) => {
+            const routes = event.route;
+            const profile = directions.options.profile;
+            if (routes && routes.length > 0) {
+                console.log("Routes received from Directions API:", routes);
+                onRoutesReceived(routes, profile);
+            } else {
+                console.error("No routes received from Directions API.");
+            }
+        });
+
+        // Add error handling
+        directions.on('error', (event) => {
+            console.error("Error received from Directions API:", event.error);
+        });
     }
 }
 
