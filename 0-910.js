@@ -23,6 +23,8 @@ let isDataLoading = false;
 let selectedMarkerIndex = null; // Variable to keep track of the selected marker index
 let originCoordinates = null;
 let destinationCoordinates = null;
+let originSidebarHeader = null;
+let destinationSidebarHeader = null;
 
 let directionsInitialized = false;
 let directions; // Define the directions variable here
