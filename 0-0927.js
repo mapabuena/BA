@@ -84,12 +84,9 @@ function createCustomMarker(coordinates, symbol, title) {
         console.log(`${symbol === 'A' ? 'Origin' : 'Destination'} marker created at:`, coordinates);
     } else {
         console.error(`Input element not found for ${symbol === 'A' ? 'origin' : 'destination'} marker.`);
+        console.log(`Attempted to find input using selector: ${inputSelector}`);
+        console.log(`HTML of directions control: ${document.getElementById('directions-control').innerHTML}`);
     }
-}
-if (typeof polyline === 'undefined') {
-    console.error("Polyline library is not loaded!");
-} else {
-    console.log("Polyline library loaded successfully.");
 }
 function applyRouteInfoStyles() {
     const routeInfo = document.querySelector('.route-info');
@@ -195,62 +192,6 @@ function initializeDirectionsControl() {
         } else {
             console.error('Element with ID "directions-control" not found.');
         }
-
-        directions.on('route', (event) => {
-            const routes = event.route;
-            const profile = directions.options.profile;
-            if (routes && routes.length > 0) {
-                onRoutesReceived(routes, profile);
-            } else {
-                console.error("No routes received from Directions API.");
-            }
-        });
-
-        directions.on('origin', (event) => {
-            const originProperties = event.feature.properties || {};
-            const originCoordinates = event.feature.geometry ? event.feature.geometry.coordinates : null;
-
-            console.log("Origin event triggered:", originProperties, originCoordinates);
-
-            if (originCoordinates) {
-                const originInput = document.querySelector('.mapbox-directions-origin input');
-                if (originInput) {
-                    originInput.placeholder = 'Choose a starting place';
-                    originInput.value = originProperties.title || '';
-                    console.log("Origin input placeholder and value set to:", originInput.placeholder);
-                }
-
-                const originMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="A"]');
-                if (originMarker) {
-                    originMarker.style.backgroundColor = '#c62026';
-                }
-            } else {
-                console.log("No origin coordinates, properties not affecting the title.");
-            }
-        });
-
-        directions.on('destination', (event) => {
-            const destinationProperties = event.feature.properties || {};
-            const destinationCoordinates = event.feature.geometry ? event.feature.geometry.coordinates : null;
-
-            console.log("Destination event triggered:", destinationProperties, destinationCoordinates);
-
-            if (destinationCoordinates) {
-                const destinationInput = document.querySelector('.mapbox-directions-destination input');
-                if (destinationInput) {
-                    destinationInput.placeholder = destinationProperties.title || 'Choose destination';
-                    destinationInput.value = destinationProperties.title || '';
-                    console.log("Destination input placeholder and value set to:", destinationInput.placeholder);
-                }
-
-                const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
-                if (destinationMarker) {
-                    destinationMarker.style.backgroundColor = '#26617f';
-                }
-            } else {
-                console.log("No destination coordinates, properties not affecting the title.");
-            }
-        });
 
         directionsInitialized = true;
     }
@@ -821,6 +762,11 @@ function setupDirectionsButton() {
 
                 destinationCoordinates = [lng, lat];
                 destinationSidebarHeader = sidebarheader || `${lat}, ${lng}`;
+
+                // Initialize the directions control if not already initialized
+                if (!directionsInitialized) {
+                    initializeDirectionsControl();
+                }
 
                 // Create custom destination marker
                 createCustomMarker(destinationCoordinates, 'B', destinationSidebarHeader);
