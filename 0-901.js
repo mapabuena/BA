@@ -180,11 +180,6 @@ function monitorDestinationInput() {
     }
 }
 
-Certainly! Here are the necessary changes to integrate the logic from setOriginOnClick(e) into setupDirectionsButton() for setting the destination marker:
-Updated setupDirectionsButton() Function
-
-javascript
-
 // Add this function to set up the directions button event listener
 function setupDirectionsButton() {
     const directionsButton = document.getElementById('get-directions');
