@@ -68,12 +68,19 @@ function createCustomMarker(data, symbol) {
         .setLngLat([data.lng, data.lat])
         .addTo(map);
 
+    // Add custom properties to the marker
+    marker._customData = {
+        title: data.sidebarheader || `${data.lat}, ${data.lng}`,
+        coordinates: [data.lng, data.lat],
+        symbol: symbol
+    };
+
     markers.push({
         marker: marker,
         data: data
     });
 
-    console.log(`${symbol === 'A' ? 'Origin' : 'Destination'} marker created at:`, [data.lng, data.lat], marker);
+    console.log(`${symbol === 'A' ? 'Origin' : 'Destination'} marker created at:`, marker._customData);
 
     // Set the input fields directly when the marker is created
     if (symbol === 'A') {
@@ -86,7 +93,7 @@ function createCustomMarker(data, symbol) {
 
     // Add event listener for setting directions
     el.addEventListener('click', () => {
-        console.log(`Marker with symbol ${symbol} clicked:`, marker);
+        console.log(`Marker with symbol ${symbol} clicked:`, marker._customData);
         if (symbol === 'A') {
             setDirections(data, { coordinates: destinationCoordinates, title: destinationSidebarHeader });
         } else {
@@ -94,7 +101,6 @@ function createCustomMarker(data, symbol) {
         }
     });
 }
-
 function applyRouteInfoStyles() {
     const routeInfo = document.querySelector('.route-info');
     if (routeInfo) {
@@ -694,19 +700,37 @@ function handleSetDestination() {
 
 function handleMapClickForOrigin(e) {
     const { lng, lat } = e.lngLat;
+    const data = {
+        lng: lng,
+        lat: lat,
+        sidebarheader: `${lat}, ${lng}`,
+        icon_url: 'https://raw.githubusercontent.com/mapabuena/BA/main/TransparentMapIconRed.svg'
+    };
+    console.log("Map clicked for origin at:", [lng, lat]);
+
     originCoordinates = [lng, lat];
     originSidebarHeader = `${lat}, ${lng}`;
-    createCustomMarker({ lng, lat, sidebarheader: originSidebarHeader }, 'A');
+    createCustomMarker(data, 'A');
     setDirectionsInputFields(originSidebarHeader, destinationSidebarHeader);
+
     map.off('click', handleMapClickForOrigin); // Remove event listener after setting the origin
 }
 
 function handleMapClickForDestination(e) {
     const { lng, lat } = e.lngLat;
+    const data = {
+        lng: lng,
+        lat: lat,
+        sidebarheader: `${lat}, ${lng}`,
+        icon_url: 'https://raw.githubusercontent.com/mapabuena/BA/main/TransparentMapIconBlue.svg'
+    };
+    console.log("Map clicked for destination at:", [lng, lat]);
+
     destinationCoordinates = [lng, lat];
     destinationSidebarHeader = `${lat}, ${lng}`;
-    createCustomMarker({ lng, lat, sidebarheader: destinationSidebarHeader }, 'B');
+    createCustomMarker(data, 'B');
     setDirectionsInputFields(originSidebarHeader, destinationSidebarHeader);
+
     map.off('click', handleMapClickForDestination); // Remove event listener after setting the destination
 }
 // Ensure this function updates both input fields correctly
@@ -735,7 +759,6 @@ function setupDirectionsButton() {
     if (directionsButton) {
         directionsButton.addEventListener('click', function() {
             console.log("Directions button clicked.");
-
             const selectedMarkerData = markers.find(marker => marker.marker.getElement().getAttribute('data-is-selected') === 'true');
 
             if (selectedMarkerData) {
@@ -749,7 +772,6 @@ function setupDirectionsButton() {
 
                 destinationCoordinates = [lng, lat];
                 destinationSidebarHeader = sidebarheader || `${lat}, ${lng}`;
-                console.log("Destination coordinates set to:", destinationCoordinates);
 
                 if (!directionsInitialized) {
                     initializeDirectionsControl();
@@ -771,9 +793,31 @@ function setupDirectionsButton() {
     } else {
         console.error("Element with ID 'get-directions' not found.");
     }
-
     deselectMarker();
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    setupDirectionsButton();
+
+    const setOriginButton = document.getElementById('set-origin');
+    const setDestinationButton = document.getElementById('set-destination');
+
+    if (setOriginButton) {
+        setOriginButton.addEventListener('click', function() {
+            handleSetOrigin();
+        });
+    } else {
+        console.error("Element with ID 'set-origin' not found.");
+    }
+
+    if (setDestinationButton) {
+        setDestinationButton.addEventListener('click', function() {
+            handleSetDestination();
+        });
+    } else {
+        console.error("Element with ID 'set-destination' not found.");
+    }
+});
 // Function to save destination title to localStorage
 function saveDestinationTitleToLocalStorage(destinationTitle) {
     if (destinationTitle) {
@@ -889,8 +933,6 @@ function setDirections(originData, destinationData) {
         directions.setOrigin([originData.coordinates[0], originData.coordinates[1]]);
         directions.setDestination([destinationData.coordinates[0], destinationData.coordinates[1]]);
         console.log("Directions set with origin and destination coordinates:", originData.coordinates, destinationData.coordinates);
-    } else {
-        console.error("Invalid origin or destination data:", originData, destinationData);
     }
 }
 // Example usage when clicking on markers or setting directions
