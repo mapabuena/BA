@@ -869,6 +869,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setupDirectionsButton();
 });
 // Function to handle map click for setting destination
+// Function to handle map click for setting destination
 function handleMapClickForDestination(e) {
     const { lng, lat } = e.lngLat;
     const data = {
@@ -889,8 +890,8 @@ function handleMapClickForDestination(e) {
     }
 
     map.off('click', handleMapClickForDestination); // Remove event listener after setting the destination
-} handleMapClickForDestination); // Remove event listener after setting the destination
 }
+
 // Ensure this function updates both input fields correctly
 function setDirections(originData, destinationData) {
     if (originData && destinationData) {
