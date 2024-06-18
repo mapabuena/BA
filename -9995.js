@@ -122,10 +122,7 @@ function setOriginOnClick(e) {
         directions.setOrigin([lng, lat]); // Set the custom origin object
         console.log("Origin set to:", [lng, lat]);
 
-        // Optionally reset the destination if needed
-        // directions.setDestination('');
-
-        // Set the input fields with the custom text
+        // Update the origin input field if necessary
         setDirectionsInputFields(origin.properties.title, '');
 
         console.log("Origin set successfully.");
@@ -134,7 +131,6 @@ function setOriginOnClick(e) {
         alert('Error setting origin.');
     }
 }
-
 function addRouteLabels(route, profile) {
     if (route.geometry) {
         const coordinates = polyline.decode(route.geometry); // Decode the polyline string
