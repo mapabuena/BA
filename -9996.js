@@ -365,7 +365,7 @@ function setupDirectionsButton() {
 
                 directions.removeRoutes(); // Clear any existing routes
 
-                // Now set the destination instead of the origin
+                // Set the destination with the selected marker
                 const destination = {
                     "type": "Feature",
                     "geometry": {
@@ -397,8 +397,10 @@ function setupDirectionsButton() {
 
                 document.getElementById('directions-container').style.display = 'block';
 
-                // Add click event listener to the map for setting the origin (optional)
-                // map.on('click', setOriginOnClick);
+                // Enable map click to set origin
+                console.log("Click map to set origin."); // Inform user to click map to set origin
+                map.once('click', setOriginOnClick); // Use map.once to handle one-time click for setting origin
+
             } else {
                 console.error('No marker selected.');
                 alert('Please select a marker first.');
