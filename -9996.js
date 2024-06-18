@@ -383,23 +383,18 @@ function setupDirectionsButton() {
                     directions.setDestination([validLng, validLat]); // Set the custom destination object
                     console.log("Destination set to:", [validLng, validLat]);
 
-                    // Optionally, set the origin to the user's current location or another specific location
-                    directions.setOrigin('Current location'); // Or use a specific origin if needed
+                    // Leave the origin empty and let the user set it by clicking on the map
+                    console.log("Please click on the map to set the origin.");
 
-                    // Set the input fields with the custom text
-                    setDirectionsInputFields('', destination.properties.title);
+                    // Enable map click to set origin
+                    map.once('click', setOriginOnClick); // Use map.once to handle one-time click for setting origin
 
-                    console.log("Destination set successfully.");
                 } catch (error) {
                     console.error("Error setting destination:", error);
                     alert('Error setting destination.');
                 }
 
                 document.getElementById('directions-container').style.display = 'block';
-
-                // Enable map click to set origin
-                console.log("Click map to set origin."); // Inform user to click map to set origin
-                map.once('click', setOriginOnClick); // Use map.once to handle one-time click for setting origin
 
             } else {
                 console.error('No marker selected.');
@@ -410,7 +405,6 @@ function setupDirectionsButton() {
         console.error("Element with ID 'get-directions' not found.");
     }
 }
-
 document.getElementById('nightmode').addEventListener('click', () => {
     isNightMode = !isNightMode;
     map.setStyle(isNightMode ? nightStyle : originalStyle);
