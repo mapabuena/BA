@@ -119,10 +119,10 @@ function setOriginOnClick(e) {
     console.log("Setting origin with:", JSON.stringify(origin));
 
     try {
-        directions.setOrigin([lng, lat]); // Set the custom origin object
+        directions.setOrigin([lng, lat]); // Set the origin dynamically based on map click
         console.log("Origin set to:", [lng, lat]);
 
-        // Update the origin input field if necessary
+        // Optionally update the origin input fields if such a feature is desired
         setDirectionsInputFields(origin.properties.title, '');
 
         console.log("Origin set successfully.");
@@ -343,7 +343,7 @@ function setupDirectionsButton() {
 
             if (selectedMarker) {
                 const { lat, lng, sidebarheader } = selectedMarker.data;
-                console.log("Selected marker data:", selectedMarker.data); // Log the selected marker data
+                console.log("Selected marker data:", selectedMarker.data);
 
                 // Validate coordinates
                 const validLat = parseFloat(lat);
@@ -361,7 +361,6 @@ function setupDirectionsButton() {
 
                 directions.removeRoutes(); // Clear any existing routes
 
-                // Set the destination with the selected marker
                 const destination = {
                     "type": "Feature",
                     "geometry": {
@@ -379,11 +378,9 @@ function setupDirectionsButton() {
                     directions.setDestination([validLng, validLat]); // Set the custom destination object
                     console.log("Destination set to:", [validLng, validLat]);
 
-                    // Leave the origin empty and let the user set it by clicking on the map
+                    // Prompt the user to set the origin by clicking on the map
                     console.log("Please click on the map to set the origin.");
-
-                    // Enable map click to set origin
-                    map.once('click', setOriginOnClick); // Use map.once to handle one-time click for setting origin
+                    map.once('click', setOriginOnClick); // Attach event listener to set origin
 
                 } catch (error) {
                     console.error("Error setting destination:", error);
@@ -391,7 +388,6 @@ function setupDirectionsButton() {
                 }
 
                 document.getElementById('directions-container').style.display = 'block';
-
             } else {
                 console.error('No marker selected.');
                 alert('Please select a marker first.');
