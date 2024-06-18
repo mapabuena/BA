@@ -377,6 +377,8 @@ function setupDirectionsButton() {
                 try {
                     directions.setDestination([validLng, validLat]); // Set the custom destination object
                     console.log("Destination set to:", [validLng, validLat]);
+                         // Set the input fields with the custom text
+                    setDirectionsInputFields('', destination.properties.title);
 
                     // Prompt the user to set the origin by clicking on the map
                     console.log("Please click on the map to set the origin.");
