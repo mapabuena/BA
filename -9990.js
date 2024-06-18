@@ -91,7 +91,7 @@ function deactivateDirections() {
         directionsInitialized = false; // Mark as not initialized
         directions = null; // Reset the directions object
     }
-    map.off('click', setOriginOnClick); // Remove map click event listener for setting destination
+    map.off('click', setDestinationOnClick); // Remove map click event listener for setting destination
 }
 
 function clearAllPopups() {
