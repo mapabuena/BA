@@ -26,13 +26,17 @@ function initializeDirectionsControl() {
     if (!directions) {
         directions = new MapboxDirections({
             accessToken: mapboxgl.accessToken,
-            unit: 'metric',
+            unit: 'imperial',
             profile: 'mapbox/driving-traffic',
             alternatives: true,
             controls: {
                 inputs: true,
                 instructions: true,
             }
+               flyTo: false, // example setting, adjust as needed
+            zoom: 14, // example setting, adjust as needed
+            placeholderOrigin: "Enter starting location", // New placeholder option for origin
+            placeholderDestination: "Enter destination location" // New placeholder option for destination
         });
 
         const directionsControlElement = document.getElementById('directions-control');
@@ -87,7 +91,7 @@ function deactivateDirections() {
         directionsInitialized = false; // Mark as not initialized
         directions = null; // Reset the directions object
     }
-    map.off('click', setDestinationOnClick); // Remove map click event listener for setting destination
+    map.off('click', setOriginOnClick); // Remove map click event listener for setting destination
 }
 
 function clearAllPopups() {
