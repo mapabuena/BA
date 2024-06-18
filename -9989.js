@@ -22,6 +22,21 @@ let selectedMarkerIndex = null; // Variable to keep track of the selected marker
 let directions; // Declare the directions variable here
 let directionsInitialized = false;
 
+function geocodeCoordinates(coords, callback) {
+    const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${coords[0]},${coords[1]}.json?access_token=${mapboxgl.accessToken}`;
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            if (data.features.length > 0) {
+                const address = data.features[0].place_name;
+                callback(address, coords);
+            } else {
+                callback(`${coords[1]}, ${coords[0]}`, coords); // Fallback to showing coordinates
+            }
+        })
+        .catch(error => console.error('Geocoding error:', error));
+}
+
 function initializeDirectionsControl() {
     if (!directions) {
         directions = new MapboxDirections({
@@ -105,35 +120,37 @@ function clearAllPopups() {
     }
 }
 
-function setDestinationOnClick(e) {
+function setOriginOnClick(e) {
     const { lng, lat } = e.lngLat;
     console.log("Map clicked at:", lng, lat);
 
-    const destination = {
-        "type": "Feature",
-        "geometry": {
-            "type": "Point",
-            "coordinates": [lng, lat]
-        },
-        "properties": {
-            "title": `${lat}, ${lng}`
+    // Use the geocoding function to convert coordinates to an address
+    geocodeCoordinates([lng, lat], function(address, coords) {
+        const origin = {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": coords
+            },
+            "properties": {
+                "title": address // Now using address instead of raw coordinates
+            }
+        };
+
+        console.log("Setting Origin with:", JSON.stringify(origin));
+        try {
+            directions.setOrigin(coords); // Set the origin using the coordinates
+            console.log("Origin set to:", coords);
+
+            // Set the input fields with the address obtained
+            setDirectionsInputFields(address, '');
+
+            console.log("Origin set successfully.");
+        } catch (error) {
+            console.error("Error setting origin:", error);
+            alert('Error setting origin.');
         }
-    };
-
-    console.log("Setting destination with:", JSON.stringify(destination));
-
-    try {
-        directions.setDestination([lng, lat]); // Set the custom destination object
-        console.log("Destination set to:", [lng, lat]);
-
-        // Set the input fields with the custom text
-        setDirectionsInputFields('', destination.properties.title);
-
-        console.log("Destination set successfully.");
-    } catch (error) {
-        console.error("Error setting destination:", error);
-        alert('Error setting destination.');
-    }
+    });
 }
 function addRouteLabels(route, profile) {
     if (route.geometry) {
