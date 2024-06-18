@@ -87,7 +87,7 @@ function deactivateDirections() {
         directionsInitialized = false; // Mark as not initialized
         directions = null; // Reset the directions object
     }
-    map.off('click', setDestinationOnClick); // Remove map click event listener for setting destination
+    map.off('click', setOriginOnClick); // Remove map click event listener for setting destination
 }
 
 function clearAllPopups() {
@@ -101,11 +101,11 @@ function clearAllPopups() {
     }
 }
 
-function setDestinationOnClick(e) {
+function setOriginOnClick(e) {
     const { lng, lat } = e.lngLat;
     console.log("Map clicked at:", lng, lat);
 
-    const destination = {
+    const origin = {
         "type": "Feature",
         "geometry": {
             "type": "Point",
@@ -116,21 +116,25 @@ function setDestinationOnClick(e) {
         }
     };
 
-    console.log("Setting destination with:", JSON.stringify(destination));
+    console.log("Setting origin with:", JSON.stringify(origin));
 
     try {
-        directions.setDestination([lng, lat]); // Set the custom destination object
-        console.log("Destination set to:", [lng, lat]);
+        directions.setOrigin([lng, lat]); // Set the custom origin object
+        console.log("Origin set to:", [lng, lat]);
+
+        // Optionally reset the destination if needed
+        // directions.setDestination('');
 
         // Set the input fields with the custom text
-        setDirectionsInputFields('', destination.properties.title);
+        setDirectionsInputFields(origin.properties.title, '');
 
-        console.log("Destination set successfully.");
+        console.log("Origin set successfully.");
     } catch (error) {
-        console.error("Error setting destination:", error);
-        alert('Error setting destination.');
+        console.error("Error setting origin:", error);
+        alert('Error setting origin.');
     }
 }
+
 function addRouteLabels(route, profile) {
     if (route.geometry) {
         const coordinates = polyline.decode(route.geometry); // Decode the polyline string
