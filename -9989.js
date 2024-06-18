@@ -32,7 +32,7 @@ function initializeDirectionsControl() {
             controls: {
                 inputs: true,
                 instructions: true,
-            }
+            },
                flyTo: false, // example setting, adjust as needed
             zoom: 14, // example setting, adjust as needed
             placeholderOrigin: "Enter starting location", // New placeholder option for origin
