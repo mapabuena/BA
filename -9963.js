@@ -49,25 +49,47 @@ function setupInputListeners() {
     }
 }
 
+let isProgrammaticChange = false; // Flag to track programmatic changes
 
 function handleInputChange(value, isOrigin) {
-    if (!value) return;
+    if (!value || isProgrammaticChange) return;
 
     geocodeAddress(value, function(coords) {
         if (coords) {
+            isProgrammaticChange = true; // Set the flag before making a programmatic change
             if (isOrigin) {
                 directions.setOrigin(coords);
                 console.log("Origin set to:", coords);
+                geocodeCoordinates(coords, (address) => {
+                    setDirectionsInputFields(address, null);
+                });
             } else {
                 directions.setDestination(coords);
                 console.log("Destination set to:", coords);
+                geocodeCoordinates(coords, (address) => {
+                    setDirectionsInputFields(null, address);
+                });
             }
+            isProgrammaticChange = false; // Reset the flag after the change
         } else {
             console.error("Address not found:", value);
         }
     });
 }
-
+function geocodeCoordinates(coords, callback) {
+    const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${coords[0]},${coords[1]}.json?access_token=${mapboxgl.accessToken}`;
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            if (data.features.length > 0) {
+                const address = data.features[0].place_name;
+                callback(address);
+            } else {
+                callback(`${coords[1]}, ${coords[0]}`);
+            }
+        })
+        .catch(error => console.error('Geocoding error:', error));
+}
 function geocodeAddress(address, callback) {
     const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(address)}.json?access_token=${mapboxgl.accessToken}`;
     fetch(url)
