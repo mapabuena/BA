@@ -25,6 +25,9 @@ let selectedMarkerIndex = null; // Variable to keep track of the selected marker
 let directions; // Declare the directions variable here
 let directionsInitialized = false;
 
+console.log(document.querySelector('#mapbox-directions-origin-input .mapboxgl-ctrl-geocoder--input')); // Should log the element or null
+console.log(document.querySelector('#mapbox-directions-destination-input .mapboxgl-ctrl-geocoder--input')); // Should log the element or null
+
 function geocodeCoordinates(coords, callback) {
     const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${coords[0]},${coords[1]}.json?access_token=${mapboxgl.accessToken}`;
     fetch(url)
@@ -380,17 +383,21 @@ function updateRoute(origin, destination) {
 }
 
 function setDirectionsInputFields(origin, destination) {
+    // Add logging to check the availability of elements
+    console.log('Setting directions input fields...');
     const originInput = document.querySelector('#mapbox-directions-origin-input .mapboxgl-ctrl-geocoder--input');
     const destinationInput = document.querySelector('#mapbox-directions-destination-input .mapboxgl-ctrl-geocoder--input');
 
     if (originInput) {
         originInput.value = origin;
+        console.log('Origin input field set to:', origin);
     } else {
         console.error("Origin input field not found");
     }
 
     if (destinationInput) {
         destinationInput.value = destination;
+        console.log('Destination input field set to:', destination);
     } else {
         console.error("Destination input field not found");
     }
@@ -423,12 +430,13 @@ function setupDirectionsButton() {
                 initializeDirectionsControl();
             }
 
-            directions.removeRoutes();
+            directions.removeRoutes(); // Clear any existing routes
 
             try {
-                directions.setDestination([validLng, validLat]);
+                directions.setDestination([validLng, validLat]); // Set the custom destination object
                 console.log("Destination set to:", [validLng, validLat]);
 
+                // Set the input fields with the custom text
                 setDirectionsInputFields('', sidebarheader || `${validLat}, ${validLng}`);
                 console.log("Destination set successfully.");
             } catch (error) {
@@ -443,6 +451,20 @@ function setupDirectionsButton() {
         console.error("Element with ID 'get-directions' not found.");
     }
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    setupDirectionsButton();
+
+    const closeDirectionsButton = document.getElementById('close-directions');
+    if (closeDirectionsButton) {
+        closeDirectionsButton.addEventListener('click', function() {
+            document.getElementById('directions-container').style.display = 'none';
+            deactivateDirections();
+        });
+    } else {
+        console.error("Element with ID 'close-directions' not found.");
+    }
+});
 
 
 document.getElementById('nightmode').addEventListener('click', () => {
