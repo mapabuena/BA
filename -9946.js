@@ -48,18 +48,24 @@ function setupInputListeners() {
 
 let isProgrammaticChange = false; // Flag to track programmatic changes
 
-function setDirectionsInputFields(originTitle, destinationTitle) {
-    const originInput = document.querySelector('.mapbox-directions-origin input');
-    const destinationInput = document.querySelector('.mapbox-directions-destination input');
+let isProgrammaticChange = false;
 
-    isProgrammaticChange = true; // Set the flag before making programmatic changes
-    if (originTitle && originInput) {
+function setDirectionsInputFields(originTitle, destinationTitle) {
+    const originInput = document.querySelector('#mapbox-directions-origin-input .mapboxgl-ctrl-geocoder--input');
+    const destinationInput = document.querySelector('#mapbox-directions-destination-input .mapboxgl-ctrl-geocoder--input');
+
+    isProgrammaticChange = true; // Indicate that changes are programmatic
+
+    if (originInput && originTitle) {
         originInput.value = originTitle;
+        originInput.dispatchEvent(new Event('input')); // Simulate input to update UI
     }
-    if (destinationTitle && destinationInput) {
+    if (destinationInput && destinationTitle) {
         destinationInput.value = destinationTitle;
+        destinationInput.dispatchEvent(new Event('input')); // Simulate input to update UI
     }
-    isProgrammaticChange = false; // Reset the flag after the changes
+
+    isProgrammaticChange = false; // Reset the flag after changes
 }
 function handleInputChange(value, isOrigin) {
     if (!value || isProgrammaticChange) return;
