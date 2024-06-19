@@ -382,24 +382,16 @@ function updateRoute(origin, destination) {
     });
 }
 
-function setDirectionsInputFields(origin, destination) {
-    // Add logging to check the availability of elements
-    console.log('Setting directions input fields...');
-    const originInput = document.querySelector('#mapbox-directions-origin-input .mapboxgl-ctrl-geocoder--input');
-    const destinationInput = document.querySelector('#mapbox-directions-destination-input .mapboxgl-ctrl-geocoder--input');
-
-    if (originInput) {
-        originInput.value = origin;
-        console.log('Origin input field set to:', origin);
-    } else {
-        console.error("Origin input field not found");
+function setDirectionsInputFields(originTitle, destinationTitle) {
+    const originInput = document.querySelector('.mapbox-directions-origin input');
+    const destinationInput = document.querySelector('.mapbox-directions-destination input');
+    
+    if (originTitle && originInput) {
+        originInput.value = originTitle;
     }
-
-    if (destinationInput) {
-        destinationInput.value = destination;
-        console.log('Destination input field set to:', destination);
-    } else {
-        console.error("Destination input field not found");
+    
+    if (destinationTitle && destinationInput) {
+        destinationInput.value = destinationTitle;
     }
 }
 // Add this function to set up the directions button event listener
