@@ -29,8 +29,8 @@ console.log(document.querySelector('#mapbox-directions-origin-input .mapboxgl-ct
 console.log(document.querySelector('#mapbox-directions-destination-input .mapboxgl-ctrl-geocoder--input')); // Should log the element or null
 
 function setupInputListeners() {
-    const originInput = document.querySelector('#mapbox-directions-origin-input .mapboxgl-ctrl-geocoder--input');
-    const destinationInput = document.querySelector('#mapbox-directions-destination-input .mapboxgl-ctrl-geocoder--input');
+    const originInput = document.querySelector('.mapbox-directions-origin input');
+    const destinationInput = document.querySelector('.mapbox-directions-destination input');
 
     if (originInput) {
         originInput.addEventListener('change', function() {
@@ -48,6 +48,7 @@ function setupInputListeners() {
         console.error("Destination input field not found");
     }
 }
+
 
 function handleInputChange(value, isOrigin) {
     if (!value) return;
@@ -134,9 +135,8 @@ function initializeDirectionsControl() {
         } else {
             console.error("Element with ID 'directions-control' not found.");
         }
-    
-        directionsInitialized = true;
-          setupInputListeners();
+
+        setupInputListeners(); // Setup input listeners for manual input changes
     }
 }
 function deactivateDirections() {
@@ -421,19 +421,38 @@ function updateRoute(origin, destination) {
         });
     });
 }
-
 function setDirectionsInputFields(originTitle, destinationTitle) {
     const originInput = document.querySelector('.mapbox-directions-origin input');
     const destinationInput = document.querySelector('.mapbox-directions-destination input');
-    
+
     if (originTitle && originInput) {
         originInput.value = originTitle;
     }
-    
+
     if (destinationTitle && destinationInput) {
         destinationInput.value = destinationTitle;
     }
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    setupDirectionsButton();
+
+    const closeDirectionsButton = document.getElementById('close-directions');
+    if (closeDirectionsButton) {
+        closeDirectionsButton.addEventListener('click', function() {
+            document.getElementById('directions-container').style.display = 'none';
+            directions.removeRoutes();
+            directions.setOrigin('');
+            directions.setDestination('');
+        });
+    } else {
+        console.error("Element with ID 'close-directions' not found.");
+    }
+
+    // Verify that elements are available
+    console.log('Origin input at DOMContentLoaded:', document.querySelector('.mapbox-directions-origin input'));
+    console.log('Destination input at DOMContentLoaded:', document.querySelector('.mapbox-directions-destination input'));
+});
 // Add this function to set up the directions button event listener
 function setupDirectionsButton() {
     const directionsButton = document.getElementById('get-directions');
