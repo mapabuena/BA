@@ -500,8 +500,8 @@ function setupDirectionsButton() {
     } else {
         console.error("Element with ID 'get-directions' not found.");
     }
-}
-
+  }
+});
 document.getElementById('nightmode').addEventListener('click', () => {
     isNightMode = !isNightMode;
     map.setStyle(isNightMode ? nightStyle : originalStyle);
