@@ -232,14 +232,13 @@ function setOriginOnClick(e) {
 
             console.log("Origin set successfully.");
             originSet = true; // Mark the origin as set
+             map.off('click', setOriginOnClick);
         } catch (error) {
             console.error("Error setting origin:", error);
             alert('Error setting origin.');
         }
     });
-
-    // Optionally, remove click event listener after setting origin
-    map.off('click', setOriginOnClick);
+   
 }
 function addRouteLabels(route, profile) {
     if (route.geometry) {
