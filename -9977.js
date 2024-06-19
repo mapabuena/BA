@@ -379,19 +379,20 @@ function updateRoute(origin, destination) {
 }
 
 function setDirectionsInputFields(origin, destination) {
-    document.getElementById('origin-input').value = origin;
-    document.getElementById('destination-input').value = destination;
+    const originInput = document.querySelector('.mapboxgl-ctrl-directions-origin-input');
+    const destinationInput = document.querySelector('.mapboxgl-ctrl-directions-destination-input');
 
-    // Add event listeners to detect changes in inputs
-    document.getElementById('origin-input').addEventListener('input', function() {
-        const newOrigin = this.value;
-        updateRoute(newOrigin, document.getElementById('destination-input').value);
-    });
+    if (originInput) {
+        originInput.value = origin;
+    } else {
+        console.error("Origin input field not found");
+    }
 
-    document.getElementById('destination-input').addEventListener('input', function() {
-        const newDestination = this.value;
-        updateRoute(document.getElementById('origin-input').value, newDestination);
-    });
+    if (destinationInput) {
+        destinationInput.value = destination;
+    } else {
+        console.error("Destination input field not found");
+    }
 }
 // Add this function to set up the directions button event listener
 function setupDirectionsButton() {
