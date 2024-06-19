@@ -52,12 +52,21 @@ function setDirectionsInputFields(originTitle, destinationTitle) {
     const originInput = document.querySelector('.mapbox-directions-origin input');
     const destinationInput = document.querySelector('.mapbox-directions-destination input');
 
+    console.log("Origin Input: ", originInput); // Check if the element is null
+    console.log("Destination Input: ", destinationInput); // Check if the element is null
+
     isProgrammaticChange = true; // Set the flag before making programmatic changes
     if (originTitle && originInput) {
         originInput.value = originTitle;
+          console.log("Setting origin input to: ", originTitle);
+            } else {
+        console.log("Failed to find or set origin input");
     }
     if (destinationTitle && destinationInput) {
         destinationInput.value = destinationTitle;
+          console.log("Setting destination input to: ", destinationTitle);
+    } else {
+        console.log("Failed to find or set destination input");
     }
     isProgrammaticChange = false; // Reset the flag after the changes
 }
@@ -520,7 +529,7 @@ function setupDirectionsButton() {
                 console.log("Destination set to:", [validLng, validLat]);
 
                 // Set the input fields with the custom text
-                setDirectionsInputFields('', 'address' || 'sidebarheader' || '${validLat}, ${validLng}');
+                setDirectionsInputFields('', address || sidebarheader || '${validLat}, ${validLng}');
                 console.log("Destination set successfully.");
 
                 destinationSet = true; // Mark the destination as set
