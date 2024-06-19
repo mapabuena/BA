@@ -50,10 +50,10 @@ function initializeDirectionsControl() {
                 inputs: true,
                 instructions: true,
             },
-               flyTo: false, // example setting, adjust as needed
-            zoom: 14, // example setting, adjust as needed
-            placeholderOrigin: "Enter starting location", // New placeholder option for origin
-            placeholderDestination: "Enter destination location" // New placeholder option for destination
+            flyTo: false,
+            zoom: 14,
+            placeholderOrigin: "Enter starting location",
+            placeholderDestination: "Enter destination location"
         });
 
         const directionsControlElement = document.getElementById('directions-control');
@@ -63,39 +63,37 @@ function initializeDirectionsControl() {
             directions.on('origin', () => {
                 const originMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="A"]');
                 if (originMarker) {
-                    originMarker.style.backgroundColor = '#c62026'; // Change this to your desired color
+                    originMarker.style.backgroundColor = '#c62026';
                 }
             });
 
             directions.on('destination', () => {
                 const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
                 if (destinationMarker) {
-                    destinationMarker.style.backgroundColor = '#26617f'; // Change this to your desired color
+                    destinationMarker.style.backgroundColor = '#26617f';
                 }
             });
 
+            directions.on('route', (event) => {
+                const routes = event.route;
+                const profile = directions.options.profile;
+                console.log("Profile from options:", profile);
+                if (routes && routes.length > 0) {
+                    onRoutesReceived(routes, profile);
+                }
+            });
 
-directions.on('route', (event) => {
-    const routes = event.route;
-    const profile = directions.options.profile; // Get the current profile
-    console.log("Profile from options:", profile); // Log the profile to ensure it's being set correctly
-    if (routes && routes.length > 0) {
-        onRoutesReceived(routes, profile); // Pass the routes and profile
-    }
-});
-
-            // Listen for profile change
             document.querySelectorAll('.mapbox-directions-profile input').forEach(input => {
                 input.addEventListener('change', (e) => {
                     console.log("Profile changed to:", e.target.value);
-                    directions.options.profile = e.target.value; // Update the profile in directions options
+                    directions.options.profile = e.target.value;
                 });
             });
         } else {
             console.error("Element with ID 'directions-control' not found.");
         }
 
-        directionsInitialized = true; // Mark as initialized
+        directionsInitialized = true;
     }
 }
 function deactivateDirections() {
@@ -425,13 +423,12 @@ function setupDirectionsButton() {
                 initializeDirectionsControl();
             }
 
-            directions.removeRoutes(); // Clear any existing routes
+            directions.removeRoutes();
 
             try {
-                directions.setDestination([validLng, validLat]); // Set the custom destination object
+                directions.setDestination([validLng, validLat]);
                 console.log("Destination set to:", [validLng, validLat]);
 
-                // Set the input fields with the custom text
                 setDirectionsInputFields('', sidebarheader || `${validLat}, ${validLng}`);
                 console.log("Destination set successfully.");
             } catch (error) {
@@ -446,6 +443,7 @@ function setupDirectionsButton() {
         console.error("Element with ID 'get-directions' not found.");
     }
 }
+
 
 document.getElementById('nightmode').addEventListener('click', () => {
     isNightMode = !isNightMode;
