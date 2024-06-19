@@ -68,7 +68,24 @@ function initializeDirectionsControl() {
                 }
             });
 
+   directions.on('origin', function(e) {
+        if (e.feature) {
+            const coords = e.feature.geometry.coordinates;
+            geocodeCoordinates(coords, function(address) {
+                setDirectionsInputFields(address, document.querySelector('.mapbox-directions-destination input').value);
+            });
+        }
+    });
 
+    directions.on('destination', function(e) {
+        if (e.feature) {
+            const coords = e.feature.geometry.coordinates;
+            geocodeCoordinates(coords, function(address) {
+                setDirectionsInputFields(document.querySelector('.mapbox-directions-origin input').value, address);
+            });
+        }
+    });
+});
 directions.on('route', (event) => {
     const routes = event.route;
     const profile = directions.options.profile; // Get the current profile
