@@ -119,30 +119,10 @@ function setOriginOnClick(e) {
         directions.setOrigin(coords); // Set the origin
         setDirectionsInputFields(address, ''); // Optionally update the input field if exists
         map.off('click', setOriginOnClick); // Disable further clicks to set origin
+
+        // Assuming you might have some UI to re-enable setting the origin, you should handle that separately
     });
 }
-
-// Initially allow setting origin by clicking on the map
-map.on('click', setOriginOnClick);
-
-// Listen to origin and destination change events from the directions control (e.g., when user drags the markers)
-directions.on('origin', function(e) {
-    if (e.feature) {
-        const coords = e.feature.geometry.coordinates;
-        geocodeCoordinates(coords, function(address) {
-            setDirectionsInputFields(address, document.querySelector('.mapbox-directions-destination input').value);
-        });
-    }
-});
-
-directions.on('destination', function(e) {
-    if (e.feature) {
-        const coords = e.feature.geometry.coordinates;
-        geocodeCoordinates(coords, function(address) {
-            setDirectionsInputFields(document.querySelector('.mapbox-directions-origin input').value, address);
-        });
-    }
-});
 
 function addRouteLabels(route, profile) {
     if (route.geometry) {
