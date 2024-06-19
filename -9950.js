@@ -446,11 +446,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const closeDirectionsButton = document.getElementById('close-directions');
     if (closeDirectionsButton) {
         closeDirectionsButton.addEventListener('click', function() {
-            document.getElementById('directions-container').style.display = 'none';
-            directions.removeRoutes();
-            directions.setOrigin('');
-            directions.setDestination('');
-            clearAllPopups();
+         deactivateDirections();
         });
     } else {
         console.error("Element with ID 'close-directions' not found.");
