@@ -48,8 +48,6 @@ function setupInputListeners() {
 
 let isProgrammaticChange = false; // Flag to track programmatic changes
 
-let isProgrammaticChange = false;
-
 function setDirectionsInputFields(originTitle, destinationTitle) {
     const originInput = document.querySelector('#mapbox-directions-origin-input .mapboxgl-ctrl-geocoder--input');
     const destinationInput = document.querySelector('#mapbox-directions-destination-input .mapboxgl-ctrl-geocoder--input');
