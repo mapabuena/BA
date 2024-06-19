@@ -26,7 +26,7 @@ let directions; // Declare the directions variable here
 let directionsInitialized = false;
 
 console.log(document.querySelector('.mapbox-directions-origin input')); // Should log the element or null
-console.log(document.querySelector()); // Should log the element or null
+console.log(document.querySelector('.mapbox-directions-destination input')); // Should log the element or null
 
 function setupInputListeners() {
     const originInput = document.querySelector('.mapbox-directions-origin input');
