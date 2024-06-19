@@ -515,7 +515,7 @@ function setupDirectionsButton() {
 
             try {
                 directions.setDestination([lng, lat]); // Set the destination
-                directions.once('route', () => {
+                directions.on('route', () => {
                     setDirectionsInputFields('', sidebarheader); // Set the input fields when the route is found
                     console.log("Destination and sidebar header set successfully.");
                      destinationSet = true; // Mark the destination as set
