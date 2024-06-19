@@ -117,7 +117,7 @@ function geocodeAddress(address, callback) {
             callback(null);
         });
 }
-unction initializeDirectionsControl() {
+function initializeDirectionsControl() {
     if (!directions) {
         directions = new MapboxDirections({
             accessToken: mapboxgl.accessToken,
