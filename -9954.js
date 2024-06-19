@@ -196,18 +196,7 @@ function clearAllPopups() {
         secondPopup = null;
     }
 }
-    const resetOriginButton = document.getElementById('reset-origin');
-    if (resetOriginButton) {
-        resetOriginButton.addEventListener('click', function() {
-            originSet = false;
-            destinationSet = false; // Reset destination flag as well
-            map.on('click', setOriginOnClick); // Re-enable click event listener to set origin
-            directions.setOrigin('');
-            directions.setDestination(''); // Clear the destination as well
-            setDirectionsInputFields('', ''); // Clear input fields
-            console.log("Origin and destination reset");
-        });
-}
+
 let originSet = false; // Flag to check if the origin has been set
 let destinationSet = false; // Flag to check if the destination has been set
 
@@ -431,7 +420,19 @@ document.addEventListener('DOMContentLoaded', function() {
     setupMapEvents();
     setupInfoItemHoverEffects();
     setupDirectionsButton();
-
+  
+    const resetOriginButton = document.getElementById('reset-origin');
+    if (resetOriginButton) {
+        resetOriginButton.addEventListener('click', function() {
+            originSet = false;
+            destinationSet = false; // Reset destination flag as well
+            map.on('click', setOriginOnClick); // Re-enable click event listener to set origin
+            directions.setOrigin('');
+            directions.setDestination(''); // Clear the destination as well
+            setDirectionsInputFields('', ''); // Clear input fields
+            console.log("Origin and destination reset");
+        });
+}
     const closeDirectionsButton = document.getElementById('close-directions');
     if (closeDirectionsButton) {
         closeDirectionsButton.addEventListener('click', function() {
