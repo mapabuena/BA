@@ -6,9 +6,6 @@ let map = new mapboxgl.Map({
     zoom: 11
 });
 
-map.on('load', function() {
-        initializeDirectionsControl(map); // Initialize directions after the map has loaded
-    });
 let markers = [];
 let activeFilters = {
     category: [],
