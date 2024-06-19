@@ -22,7 +22,37 @@ let selectedMarkerIndex = null; // Variable to keep track of the selected marker
 let directions; // Declare the directions variable here
 let directionsInitialized = false;
 
-function setupCustomOriginAndDestinationHandling() {
+
+function initializeDirectionsControl() {
+    if (!directions) {
+        directions = new MapboxDirections({
+            accessToken: mapboxgl.accessToken,
+            unit: 'imperial',
+            profile: 'mapbox/driving-traffic',
+            controls: {
+                inputs: true,
+                instructions: true
+            },
+            flyTo: false
+        });
+
+        // Function to convert coordinates to an address and update the UI accordingly
+function geocodeCoordinates(coords, callback) {
+    const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${coords[0]},${coords[1]}.json?access_token=${mapboxgl.accessToken}`;
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            if (data.features.length > 0) {
+                const address = data.features[0].place_name;
+                callback(address, coords);
+            } else {
+                callback(`${coords[1]}, ${coords[0]}`, coords); // Fallback to showing coordinates
+            }
+        })
+        .catch(error => console.error('Geocoding error:', error));
+}
+        map.addControl(directions);
+        function setupCustomOriginAndDestinationHandling() {
     // Example triggers, such as from UI events
     document.getElementById('set-origin').addEventListener('click', function() {
         const coords = [/* longitude, latitude */];
@@ -49,46 +79,28 @@ function setCustomDestination(coords) {
         // Optionally update any UI or state here
     });
 }
+function setOriginOnClick(e) {
+    const coords = [e.lngLat.lng, e.lngLat.lat];
+    geocodeCoordinates(coords, function(address, coords) {
+        directions.setOrigin(coords); // Set the origin
+        setDirectionsInputFields(address, ''); // Optionally update the input field if exists
+        map.off('click', setOriginOnClick); // Disable further clicks to set origin
 
-function geocodeCoordinates(coords, callback) {
-    const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${coords[0]},${coords[1]}.json?access_token=${mapboxgl.accessToken}`;
-    fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            const address = data.features.length > 0 ? data.features[0].place_name : `${coords[1]}, ${coords[0]}`;
-            callback(address, coords);
-        })
-        .catch(error => console.error('Geocoding error:', error));
-}
-function initializeDirectionsControl() {
-    if (!directions) {
-        directions = new MapboxDirections({
-            accessToken: mapboxgl.accessToken,
-            unit: 'imperial',
-            profile: 'mapbox/driving-traffic',
-            alternatives: true,
-            controls: {
-                inputs: true,
-                instructions: true
-            },
-            flyTo: false,
-            zoom: 14,
-            placeholderOrigin: "Enter starting location",
-            placeholderDestination: "Enter destination location"
-        });
-
-        const directionsControlElement = document.getElementById('directions-control');
-        if (directionsControlElement) {
-            directionsControlElement.appendChild(directions.onAdd(map));
-
-            // Custom handling for setting origin and destination via UI or programmatically
-            setupCustomOriginAndDestinationHandling();
-        } else {
-            console.error("Element with ID 'directions-control' not found.");
-        }
+        // Assuming you might have some UI to re-enable setting the origin, you should handle that separately
+    });
+}           
+        function setDirectionsInputFields(originTitle, destinationTitle) {
+    const originInput = document.querySelector('.mapbox-directions-origin input');
+    const destinationInput = document.querySelector('.mapbox-directions-destination input');
+    
+    if (originTitle && originInput) {
+        originInput.value = originTitle;
+    }
+    
+    if (destinationTitle && destinationInput) {
+        destinationInput.value = destinationTitle;
     }
 }
-     
 function deactivateDirections() {
     clearAllPopups();
     if (directions) {
@@ -102,6 +114,13 @@ function deactivateDirections() {
     map.off('click', setDestinationOnClick); // Remove map click event listener for setting destination
 }
 
+    }
+}
+
+
+
+
+
 function clearAllPopups() {
     if (currentPopup) {
         currentPopup.remove();
@@ -113,16 +132,6 @@ function clearAllPopups() {
     }
 }
 
-function setOriginOnClick(e) {
-    const coords = [e.lngLat.lng, e.lngLat.lat];
-    geocodeCoordinates(coords, function(address, coords) {
-        directions.setOrigin(coords); // Set the origin
-        setDirectionsInputFields(address, ''); // Optionally update the input field if exists
-        map.off('click', setOriginOnClick); // Disable further clicks to set origin
-
-        // Assuming you might have some UI to re-enable setting the origin, you should handle that separately
-    });
-}
 
 function addRouteLabels(route, profile) {
     if (route.geometry) {
@@ -313,18 +322,7 @@ function clearAllPopups() {
     }
 }
 
-function setDirectionsInputFields(originTitle, destinationTitle) {
-    const originInput = document.querySelector('.mapbox-directions-origin input');
-    const destinationInput = document.querySelector('.mapbox-directions-destination input');
-    
-    if (originTitle && originInput) {
-        originInput.value = originTitle;
-    }
-    
-    if (destinationTitle && destinationInput) {
-        destinationInput.value = destinationTitle;
-    }
-}
+
 // Add this function to set up the directions button event listener
 function setupDirectionsButton() {
     const directionsButton = document.getElementById('get-directions');
