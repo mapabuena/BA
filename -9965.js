@@ -483,19 +483,6 @@ function setupDirectionsButton() {
     }
 }
 
-
-    const closeDirectionsButton = document.getElementById('close-directions');
-    if (closeDirectionsButton) {
-        closeDirectionsButton.addEventListener('click', function() {
-            document.getElementById('directions-container').style.display = 'none';
-            deactivateDirections();
-        });
-    } else {
-        console.error("Element with ID 'close-directions' not found.");
-    }
-});
-
-
 document.getElementById('nightmode').addEventListener('click', () => {
     isNightMode = !isNightMode;
     map.setStyle(isNightMode ? nightStyle : originalStyle);
