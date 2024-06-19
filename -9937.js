@@ -29,7 +29,7 @@ function checkAndLockSettings() {
     if (originSet && destinationSet) {
         // Disable further clicks to set origin or destination
         map.off('click', setOriginOnClick);
-        map.off('click', setDestinationOnClick);
+ 
 
         console.log("Both origin and destination are set. Map clicks for setting new origins or destinations are now disabled.");
     }
@@ -232,31 +232,6 @@ function setOriginOnClick(e) {
     });
 }
 
-function setDestinationOnClick(e) {
-    if (destinationSet || !originSet) return; // Prevent further clicks if destination is already set or origin is not set
-
-    const { lng, lat } = e.lngLat;
-    console.log("Map clicked at:", lng, lat);
-
-    // Use the geocoding function to convert coordinates to an address
-    geocodeCoordinates([lng, lat], function(address, coords) {
-        console.log("Setting Destination with:", JSON.stringify(coords));
-        try {
-            directions.setDestination(coords); // Set the destination using the coordinates
-            console.log("Destination set to:", coords);
-
-            // Set the input fields with the address obtained
-            setDirectionsInputFields(null, address);
-
-            console.log("Destination set successfully.");
-            destinationSet = true; // Mark the destination as set
-         checkAndLockSettings()
-        } catch (error) {
-            console.error("Error setting destination:", error);
-            alert('Error setting destination.');
-        }
-    });
-}
 function addRouteLabels(route, profile) {
     if (route.geometry) {
         const coordinates = polyline.decode(route.geometry); // Decode the polyline string
@@ -479,7 +454,7 @@ function setupDirectionsButton() {
                 return;
             }
 
-            const { lat, lng, sidebarheader } = selectedMarker.data;
+            const { lat, lng, sidebarheader, address } = selectedMarker.data;
             if (!directions) {
                 console.error("Directions control is not initialized.");
                 initializeDirectionsControl();
@@ -490,8 +465,8 @@ function setupDirectionsButton() {
             try {
                 directions.setDestination([lng, lat]); // Set the destination
                 directions.on('route', () => {
-                    setDirectionsInputFields('', sidebarheader); // Set the input fields when the route is found
-                    console.log("Destination and sidebar header set successfully.");
+                    setDirectionsInputFields('', address); // Set the input fields when the route is found
+                    console.log("Destination and address set successfully.");
                      destinationSet = true; // Mark the destination as set
                   
            checkAndLockSettings()
