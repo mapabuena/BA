@@ -51,6 +51,19 @@ function setupInputListeners() {
 
 let isProgrammaticChange = false; // Flag to track programmatic changes
 
+function setDirectionsInputFields(originTitle, destinationTitle) {
+    const originInput = document.querySelector('.mapbox-directions-origin input');
+    const destinationInput = document.querySelector('.mapbox-directions-destination input');
+
+    isProgrammaticChange = true; // Set the flag before making programmatic changes
+    if (originTitle && originInput) {
+        originInput.value = originTitle;
+    }
+    if (destinationTitle && destinationInput) {
+        destinationInput.value = destinationTitle;
+    }
+    isProgrammaticChange = false; // Reset the flag after the changes
+}
 function handleInputChange(value, isOrigin) {
     if (!value || isProgrammaticChange) return;
 
@@ -439,23 +452,7 @@ function updateRoute(origin, destination) {
         });
     });
 }
-function setDirectionsInputFields(originTitle, destinationTitle) {
-    const originInput = document.querySelector('.mapbox-directions-origin input');
-    const destinationInput = document.querySelector('.mapbox-directions-destination input');
 
-    if (originTitle && originInput) {
-        originInput.value = originTitle;
-    }
-
-    if (destinationTitle && destinationInput) {
-        destinationInput.value = destinationTitle;
-    }
-}
-
-    // Verify that elements are available
-    console.log('Origin input at DOMContentLoaded:', document.querySelector('.mapbox-directions-origin input'));
-    console.log('Destination input at DOMContentLoaded:', document.querySelector('.mapbox-directions-destination input'));
-});
 // Add this function to set up the directions button event listener
 function setupDirectionsButton() {
     const directionsButton = document.getElementById('get-directions');
