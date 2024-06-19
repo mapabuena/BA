@@ -25,26 +25,6 @@ let directionsInitialized = false;
 console.log(document.querySelector('.mapbox-directions-origin input')); // Should log the element or null
 console.log(document.querySelector('.mapbox-directions-destination input')); // Should log the element or null
 
-function setupInputListeners() {
-    const originInput = document.querySelector('.mapbox-directions-origin input');
-    const destinationInput = document.querySelector('.mapbox-directions-destination input');
-
-    if (originInput) {
-        originInput.addEventListener('change', function() {
-            handleInputChange(originInput.value, true);
-        });
-    } else {
-        console.error("Origin input field not found");
-    }
-
-    if (destinationInput) {
-        destinationInput.addEventListener('change', function() {
-            handleInputChange(destinationInput.value, false);
-        });
-    } else {
-        console.error("Destination input field not found");
-    }
-}
 function checkAndLockSettings() {
     if (originSet && destinationSet) {
         // Disable further clicks to set origin or destination
@@ -184,8 +164,6 @@ function initializeDirectionsControl() {
                     directions.options.profile = e.target.value;
                 });
             });
-
-            setupInputListeners(); // Setup input listeners for manual input changes
         } else {
             console.error("Element with ID 'directions-control' not found.");
         }
@@ -438,18 +416,6 @@ document.addEventListener('DOMContentLoaded', function() {
     setupInfoItemHoverEffects();
     setupDirectionsButton();
   
-    const resetOriginButton = document.getElementById('reset-origin');
-    if (resetOriginButton) {
-        resetOriginButton.addEventListener('click', function() {
-            originSet = false;
-            destinationSet = false; // Reset destination flag as well
-            map.on('click', setOriginOnClick); // Re-enable click event listener to set origin
-            directions.setOrigin('');
-            directions.setDestination(''); // Clear the destination as well
-            setDirectionsInputFields('', ''); // Clear input fields
-            console.log("Origin and destination reset");
-        });
-    }
     function clearAllPopups() {
     if (currentPopup) {
         currentPopup.remove();
