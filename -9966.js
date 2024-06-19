@@ -376,7 +376,7 @@ if (closeDirectionsButton) {
 } else {
     console.error("Element with ID 'close-directions' not found.");
 }
-
+    
 function clearAllPopups() {
     if (currentPopup) {
         currentPopup.remove();
