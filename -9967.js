@@ -377,7 +377,6 @@ if (closeDirectionsButton) {
     console.error("Element with ID 'close-directions' not found.");
 }
 
-
 function clearAllPopups() {
     if (currentPopup) {
         currentPopup.remove();
@@ -430,21 +429,6 @@ function setDirectionsInputFields(originTitle, destinationTitle) {
         destinationInput.value = destinationTitle;
     }
 }
-
-document.addEventListener('DOMContentLoaded', function() {
-    setupDirectionsButton();
-
-    const closeDirectionsButton = document.getElementById('close-directions');
-    if (closeDirectionsButton) {
-        closeDirectionsButton.addEventListener('click', function() {
-            document.getElementById('directions-container').style.display = 'none';
-            directions.removeRoutes();
-            directions.setOrigin('');
-            directions.setDestination('');
-        });
-    } else {
-        console.error("Element with ID 'close-directions' not found.");
-    }
 
     // Verify that elements are available
     console.log('Origin input at DOMContentLoaded:', document.querySelector('.mapbox-directions-origin input'));
