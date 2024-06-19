@@ -365,23 +365,17 @@ document.addEventListener('DOMContentLoaded', function() {
     setupInfoItemHoverEffects();
     setupDirectionsButton();
 
-    const closeDirectionsButton = document.getElementById('close-directions');
-    if (closeDirectionsButton) {
-        closeDirectionsButton.addEventListener('click', function() {
-            document.getElementById('directions-container').style.display = 'none';
-            deactivateDirections();
-        });
-    } else {
-        console.error("Element with ID 'close-directions' not found.");
-    }
-
-    // Call this function to set up the directions button event
-    if (directionsButton) {
-        setupDirectionsButton();
-    } else {
-        console.error("Element with ID 'get-directions' not found.");
-    }
-});
+const closeDirectionsButton = document.getElementById('close-directions');
+if (closeDirectionsButton) {
+    closeDirectionsButton.addEventListener('click', function() {
+        document.getElementById('directions-container').style.display = 'none';
+        directions.removeRoutes();
+        directions.setOrigin('');
+        directions.setDestination('');
+    });
+} else {
+    console.error("Element with ID 'close-directions' not found.");
+}
 
 
 function clearAllPopups() {
