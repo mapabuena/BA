@@ -25,8 +25,8 @@ let selectedMarkerIndex = null; // Variable to keep track of the selected marker
 let directions; // Declare the directions variable here
 let directionsInitialized = false;
 
-console.log(document.querySelector('#mapbox-directions-origin-input .mapboxgl-ctrl-geocoder--input')); // Should log the element or null
-console.log(document.querySelector('#mapbox-directions-destination-input .mapboxgl-ctrl-geocoder--input')); // Should log the element or null
+console.log(document.querySelector('.mapbox-directions-origin input')); // Should log the element or null
+console.log(document.querySelector()); // Should log the element or null
 
 function setupInputListeners() {
     const originInput = document.querySelector('.mapbox-directions-origin input');
@@ -68,19 +68,22 @@ function handleInputChange(value, isOrigin) {
     });
 }
 
-function geocodeCoordinates(coords, callback) {
-    const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${coords[0]},${coords[1]}.json?access_token=${mapboxgl.accessToken}`;
+function geocodeAddress(address, callback) {
+    const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(address)}.json?access_token=${mapboxgl.accessToken}`;
     fetch(url)
         .then(response => response.json())
         .then(data => {
             if (data.features.length > 0) {
-                const address = data.features[0].place_name;
-                callback(address, coords);
+                const coords = data.features[0].geometry.coordinates;
+                callback(coords);
             } else {
-                callback(`${coords[1]}, ${coords[0]}`, coords);
+                callback(null);
             }
         })
-        .catch(error => console.error('Geocoding error:', error));
+        .catch(error => {
+            console.error('Geocoding error:', error);
+            callback(null);
+        });
 }
 function initializeDirectionsControl() {
     if (!directions) {
@@ -496,15 +499,12 @@ function setupDirectionsButton() {
             }
 
             document.getElementById('directions-container').style.display = 'block';
-            map.on('click', setOriginOnClick);
         });
     } else {
         console.error("Element with ID 'get-directions' not found.");
     }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    setupDirectionsButton();
 
     const closeDirectionsButton = document.getElementById('close-directions');
     if (closeDirectionsButton) {
@@ -549,8 +549,7 @@ document.getElementById('nightmode').addEventListener('click', () => {
     }
 });
 
-// Call this function to set up the button event
-setupDirectionsButton();
+
 
 // Function to set directions in Mapbox Directions API
 function setDirections(lat, lng) {
