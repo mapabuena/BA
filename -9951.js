@@ -433,21 +433,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log("Origin and destination reset");
         });
     }
-    
-    const closeDirectionsButton = document.getElementById('close-directions');
-    if (closeDirectionsButton) {
-        closeDirectionsButton.addEventListener('click', function() {
-            document.getElementById('directions-container').style.display = 'none';
-            directions.removeRoutes();
-            directions.setOrigin('');
-            directions.setDestination('');
-        });
-    } else {
-        console.error("Element with ID 'close-directions' not found.");
-    }
-}); // Close the DOMContentLoaded listener properly
-
-function clearAllPopups() {
+    function clearAllPopups() {
     if (currentPopup) {
         currentPopup.remove();
         currentPopup = null;
@@ -457,6 +443,20 @@ function clearAllPopups() {
         secondPopup = null;
     }
 }
+    const closeDirectionsButton = document.getElementById('close-directions');
+    if (closeDirectionsButton) {
+        closeDirectionsButton.addEventListener('click', function() {
+            document.getElementById('directions-container').style.display = 'none';
+            directions.removeRoutes();
+            directions.setOrigin('');
+            directions.setDestination('');
+            clearAllPopups();
+        });
+    } else {
+        console.error("Element with ID 'close-directions' not found.");
+    }
+}); // Close the DOMContentLoaded listener properly
+
 
 function geocodeAddress(address, callback) {
     const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(address)}.json?access_token=${mapboxgl.accessToken}`;
