@@ -520,7 +520,7 @@ function setupDirectionsButton() {
                 console.log("Destination set to:", [validLng, validLat]);
 
                 // Set the input fields with the custom text
-                setDirectionsInputFields('', address || sidebarheader || ${validLat}, ${validLng});
+                setDirectionsInputFields('', address || sidebarheader || '${validLat}, ${validLng}');
                 console.log("Destination set successfully.");
 
                 destinationSet = true; // Mark the destination as set
