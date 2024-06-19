@@ -44,7 +44,7 @@ function initializeDirectionsControl() {
                 inputs: true,
                 instructions: true,
             },
-               flyTo: false, // example setting, adjust as needed
+            flyTo: false, // example setting, adjust as needed
             zoom: 14, // example setting, adjust as needed
             placeholderOrigin: "Enter starting location", // New placeholder option for origin
             placeholderDestination: "Enter destination location" // New placeholder option for destination
@@ -54,59 +54,38 @@ function initializeDirectionsControl() {
         if (directionsControlElement) {
             directionsControlElement.appendChild(directions.onAdd(map));
 
-            directions.on('origin', () => {
+            // Event listener for origin change
+            directions.on('origin', function(e) {
+                if (e.feature) {
+                    const coords = e.feature.geometry.coordinates;
+                    geocodeCoordinates(coords, function(address) {
+                        setDirectionsInputFields(address, document.querySelector('.mapbox-directions-destination input').value);
+                    });
+                }
+                // Style for the origin marker
                 const originMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="A"]');
                 if (originMarker) {
                     originMarker.style.backgroundColor = '#c62026'; // Change this to your desired color
                 }
             });
 
-            directions.on('destination', () => {
+            // Event listener for destination change
+            directions.on('destination', function(e) {
+                if (e.feature) {
+                    const coords = e.feature.geometry.coordinates;
+                    geocodeCoordinates(coords, function(address) {
+                        setDirectionsInputFields(document.querySelector('.mapbox-directions-origin input').value, address);
+                    });
+                }
+                // Style for the destination marker
                 const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
                 if (destinationMarker) {
                     destinationMarker.style.backgroundColor = '#26617f'; // Change this to your desired color
                 }
             });
-
-   directions.on('origin', function(e) {
-        if (e.feature) {
-            const coords = e.feature.geometry.coordinates;
-            geocodeCoordinates(coords, function(address) {
-                setDirectionsInputFields(address, document.querySelector('.mapbox-directions-destination input').value);
-            });
-        }
-    });
-
-    directions.on('destination', function(e) {
-        if (e.feature) {
-            const coords = e.feature.geometry.coordinates;
-            geocodeCoordinates(coords, function(address) {
-                setDirectionsInputFields(document.querySelector('.mapbox-directions-origin input').value, address);
-            });
-        }
-    });
-});
-directions.on('route', (event) => {
-    const routes = event.route;
-    const profile = directions.options.profile; // Get the current profile
-    console.log("Profile from options:", profile); // Log the profile to ensure it's being set correctly
-    if (routes && routes.length > 0) {
-        onRoutesReceived(routes, profile); // Pass the routes and profile
-    }
-});
-
-            // Listen for profile change
-            document.querySelectorAll('.mapbox-directions-profile input').forEach(input => {
-                input.addEventListener('change', (e) => {
-                    console.log("Profile changed to:", e.target.value);
-                    directions.options.profile = e.target.value; // Update the profile in directions options
-                });
-            });
         } else {
             console.error("Element with ID 'directions-control' not found.");
         }
-
-        directionsInitialized = true; // Mark as initialized
     }
 }
 function deactivateDirections() {
