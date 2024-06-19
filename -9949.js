@@ -498,7 +498,7 @@ function setupDirectionsButton() {
                 return;
             }
 
-            const { lat, lng, sidebarheader } = selectedMarker.data;
+            const { lat, lng, sidebarheader, address} = selectedMarker.data;
             const validLat = parseFloat(lat);
             const validLng = parseFloat(lng);
 
@@ -520,7 +520,7 @@ function setupDirectionsButton() {
                 console.log("Destination set to:", [validLng, validLat]);
 
                 // Set the input fields with the custom text
-                setDirectionsInputFields('', sidebarheader || `${validLat}, ${validLng}`);
+                setDirectionsInputFields('', 'address || sidebarheader || ${validLat}, ${validLng}`);
                 console.log("Destination set successfully.");
 
                 destinationSet = true; // Mark the destination as set
