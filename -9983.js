@@ -88,44 +88,7 @@ function initializeDirectionsControl() {
         }
     }
 }
-        const directionsControlElement = document.getElementById('directions-control');
-        if (directionsControlElement) {
-            directionsControlElement.appendChild(directions.onAdd(map));
-
-            // Event listener for origin change
-            directions.on('origin', function(e) {
-                if (e.feature) {
-                    const coords = e.feature.geometry.coordinates;
-                    geocodeCoordinates(coords, function(address) {
-                        setDirectionsInputFields(address, document.querySelector('.mapbox-directions-destination input').value);
-                    });
-                }
-                // Style for the origin marker
-                const originMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="A"]');
-                if (originMarker) {
-                    originMarker.style.backgroundColor = '#c62026'; // Change this to your desired color
-                }
-            });
-
-            // Event listener for destination change
-            directions.on('destination', function(e) {
-                if (e.feature) {
-                    const coords = e.feature.geometry.coordinates;
-                    geocodeCoordinates(coords, function(address) {
-                        setDirectionsInputFields(document.querySelector('.mapbox-directions-origin input').value, address);
-                    });
-                }
-                // Style for the destination marker
-                const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
-                if (destinationMarker) {
-                    destinationMarker.style.backgroundColor = '#26617f'; // Change this to your desired color
-                }
-            });
-        } else {
-            console.error("Element with ID 'directions-control' not found.");
-        }
-    }
-}
+     
 function deactivateDirections() {
     clearAllPopups();
     if (directions) {
