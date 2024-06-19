@@ -117,7 +117,7 @@ function geocodeAddress(address, callback) {
             callback(null);
         });
 }
-function initializeDirectionsControl() {
+unction initializeDirectionsControl() {
     if (!directions) {
         directions = new MapboxDirections({
             accessToken: mapboxgl.accessToken,
@@ -167,11 +167,11 @@ function initializeDirectionsControl() {
                     directions.options.profile = e.target.value;
                 });
             });
+
+            setupInputListeners(); // Setup input listeners for manual input changes
         } else {
             console.error("Element with ID 'directions-control' not found.");
         }
-
-        setupInputListeners(); // Setup input listeners for manual input changes
     }
 }
 function deactivateDirections() {
@@ -200,14 +200,16 @@ const resetOriginButton = document.getElementById('reset-origin');
 if (resetOriginButton) {
     resetOriginButton.addEventListener('click', function() {
         originSet = false;
+        destinationSet = false; // Reset destination flag as well
         map.on('click', setOriginOnClick); // Re-enable click event listener to set origin
         directions.setOrigin('');
+        directions.setDestination(''); // Clear the destination as well
         setDirectionsInputFields('', ''); // Clear input fields
-        console.log("Origin reset");
+        console.log("Origin and destination reset");
     });
 }
 let originSet = false; // Flag to check if the origin has been set
-
+let destinationSet = false; // Flag to check if the destination has been set
 
 function setOriginOnClick(e) {
     if (originSet) return; // Prevent further clicks if origin is already set
@@ -242,6 +244,32 @@ function setOriginOnClick(e) {
         } catch (error) {
             console.error("Error setting origin:", error);
             alert('Error setting origin.');
+        }
+    });
+}
+
+function setDestinationOnClick(e) {
+    if (destinationSet || !originSet) return; // Prevent further clicks if destination is already set or origin is not set
+
+    const { lng, lat } = e.lngLat;
+    console.log("Map clicked at:", lng, lat);
+
+    // Use the geocoding function to convert coordinates to an address
+    geocodeCoordinates([lng, lat], function(address, coords) {
+        console.log("Setting Destination with:", JSON.stringify(coords));
+        try {
+            directions.setDestination(coords); // Set the destination using the coordinates
+            console.log("Destination set to:", coords);
+
+            // Set the input fields with the address obtained
+            setDirectionsInputFields(null, address);
+
+            console.log("Destination set successfully.");
+            destinationSet = true; // Mark the destination as set
+            map.off('click', setDestinationOnClick); // Remove click event listener after setting destination
+        } catch (error) {
+            console.error("Error setting destination:", error);
+            alert('Error setting destination.');
         }
     });
 }
@@ -404,17 +432,17 @@ document.addEventListener('DOMContentLoaded', function() {
     setupInfoItemHoverEffects();
     setupDirectionsButton();
 
-const closeDirectionsButton = document.getElementById('close-directions');
-if (closeDirectionsButton) {
-    closeDirectionsButton.addEventListener('click', function() {
-        document.getElementById('directions-container').style.display = 'none';
-        directions.removeRoutes();
-        directions.setOrigin('');
-        directions.setDestination('');
-    });
-} else {
-    console.error("Element with ID 'close-directions' not found.");
-}
+    const closeDirectionsButton = document.getElementById('close-directions');
+    if (closeDirectionsButton) {
+        closeDirectionsButton.addEventListener('click', function() {
+            document.getElementById('directions-container').style.display = 'none';
+            directions.removeRoutes();
+            directions.setOrigin('');
+            directions.setDestination('');
+        });
+    } else {
+        console.error("Element with ID 'close-directions' not found.");
+    }
     
 function clearAllPopups() {
     if (currentPopup) {
