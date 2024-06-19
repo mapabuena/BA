@@ -432,7 +432,8 @@ document.addEventListener('DOMContentLoaded', function() {
             setDirectionsInputFields('', ''); // Clear input fields
             console.log("Origin and destination reset");
         });
-}
+    }
+    
     const closeDirectionsButton = document.getElementById('close-directions');
     if (closeDirectionsButton) {
         closeDirectionsButton.addEventListener('click', function() {
@@ -444,7 +445,8 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         console.error("Element with ID 'close-directions' not found.");
     }
-    
+}); // Close the DOMContentLoaded listener properly
+
 function clearAllPopups() {
     if (currentPopup) {
         currentPopup.remove();
@@ -455,6 +457,7 @@ function clearAllPopups() {
         secondPopup = null;
     }
 }
+
 function geocodeAddress(address, callback) {
     const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(address)}.json?access_token=${mapboxgl.accessToken}`;
     fetch(url)
@@ -469,6 +472,7 @@ function geocodeAddress(address, callback) {
         })
         .catch(error => console.error('Geocoding error:', error));
 }
+
 function updateRoute(origin, destination) {
     if (!origin || !destination) return;
 
@@ -486,7 +490,6 @@ function updateRoute(origin, destination) {
     });
 }
 
-// Add this function to set up the directions button event listener
 function setupDirectionsButton() {
     const directionsButton = document.getElementById('get-directions');
     if (directionsButton) {
@@ -537,7 +540,6 @@ function setupDirectionsButton() {
     } else {
         console.error("Element with ID 'get-directions' not found.");
     }
-}
 }
 document.getElementById('nightmode').addEventListener('click', () => {
     isNightMode = !isNightMode;
