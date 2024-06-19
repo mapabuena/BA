@@ -379,8 +379,8 @@ function updateRoute(origin, destination) {
 }
 
 function setDirectionsInputFields(origin, destination) {
-    const originInput = document.querySelector('.mapboxgl-ctrl-directions-origin-input');
-    const destinationInput = document.querySelector('.mapboxgl-ctrl-directions-destination-input');
+    const originInput = document.querySelector('#mapbox-directions-origin-input .mapboxgl-ctrl-geocoder--input');
+    const destinationInput = document.querySelector('#mapbox-directions-destination-input .mapboxgl-ctrl-geocoder--input');
 
     if (originInput) {
         originInput.value = origin;
