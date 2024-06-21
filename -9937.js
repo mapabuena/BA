@@ -409,7 +409,7 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         console.error("Element with ID 'close-directions' not found.");
     }
-}); // Close the DOMContentLoaded listener properly
+}); //// Close the DOMContentLoaded listener properly
 
 
 function geocodeAddress(address, callback) {
