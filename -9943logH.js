@@ -51,6 +51,12 @@ function checkAndLockSettings() {
     }
 }
 
+function unselectAllMarkers() {
+    markers.forEach(({ marker }) => {
+        const markerElement = marker.getElement();
+        markerElement.setAttribute('data-is-selected', 'false');
+    });
+}
 
 function setDirectionsInputFields(originTitle, destinationTitle) {
     const originInput = document.querySelector('.mapbox-directions-origin input');
@@ -604,6 +610,8 @@ function setupDirectionsButton() {
                         console.log("Destination address set via SetupDirectionsButton.");
 
                         destinationSet = true; // Mark the destination as set
+                        unselectAllMarkers();
+                    
                         setOriginOnClick();
                              console.log("setOriginOnClick triggered by SetupDirectionsButton.");
                     } catch (error) {
