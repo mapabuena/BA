@@ -48,28 +48,7 @@ function checkAndLockSettings() {
         console.log("Both origin and destination are set. Click handlers deactivated.");
     }
 }
-function setupInputListeners() {
-    const originInput = document.querySelector('.mapbox-directions-origin input');
-    const destinationInput = document.querySelector('.mapbox-directions-destination input');
 
-    if (originInput) {
-        originInput.addEventListener('change', function() {
-            handleInputChange(originInput.value, true);
-        });
-    } else {
-        console.error("Origin input field not found");
-    }
-
-    if (destinationInput) {
-        destinationInput.addEventListener('change', function() {
-            handleInputChange(destinationInput.value, false);
-        });
-    } else {
-        console.error("Destination input field not found");
-    }
-}
-
-let isProgrammaticChange = false; // Flag to track programmatic changes
 
 function setDirectionsInputFields(originTitle, destinationTitle) {
     const originInput = document.querySelector('.mapbox-directions-origin input');
@@ -78,7 +57,6 @@ function setDirectionsInputFields(originTitle, destinationTitle) {
     console.log("Origin Input: ", originInput); // Check if the element is null
     console.log("Destination Input: ", destinationInput); // Check if the element is null
 
-    isProgrammaticChange = true; // Set the flag before making programmatic changes
     if (originTitle && originInput) {
         originInput.value = originTitle;
           console.log("Setting origin input to: ", originTitle);
@@ -91,33 +69,8 @@ function setDirectionsInputFields(originTitle, destinationTitle) {
     } else {
         console.log("Failed to find or set destination input");
     }
-    isProgrammaticChange = false; // Reset the flag after the changes
 }
-function handleInputChange(value, isOrigin) {
-    if (!value || isProgrammaticChange) return;
 
-    geocodeAddress(value, function(coords) {
-        if (coords) {
-            isProgrammaticChange = true; // Set the flag before making a programmatic change
-            if (isOrigin) {
-                directions.setOrigin(coords);
-                console.log("Origin set via handle Input Change to:", coords);
-                geocodeCoordinates(coords, (address) => {
-                    setDirectionsInputFields(address, null);
-                });
-            } else {
-                directions.setDestination(coords);
-                console.log("Destination set via HandleInputChange:", coords);
-                geocodeCoordinates(coords, (address) => {
-                    setDirectionsInputFields(null, address);
-                });
-            }
-            isProgrammaticChange = false; // Reset the flag after the change
-        } else {
-            console.error("Address not found:", value);
-        }
-    });
-}
 function geocodeCoordinates(coords, callback) {
     const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${coords[0]},${coords[1]}.json?access_token=${mapboxgl.accessToken}`;
     fetch(url)
