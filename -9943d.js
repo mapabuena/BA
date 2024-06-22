@@ -238,9 +238,8 @@ function setOriginOnClick(e) {
                     console.log("Origin set to:", coords);
 
                     // Set the input fields with the address
-                    setDirectionsInputFields(address || `${coords[1]}, ${coords[0]}`, '');
-                    console.log("Origin set successfully.");
-
+                   console.log("Origin set successfully.");
+                     setDirectionsInputFields(address || `${coords[1]}, ${coords[0]}`, '');
                     originSet = true; // Mark the origin as set
                     map.off('click', setOriginOnClick); // Remove click event listener after setting origin
                 } catch (error) {
