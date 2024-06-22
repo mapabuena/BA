@@ -101,13 +101,13 @@ function handleInputChange(value, isOrigin) {
             isProgrammaticChange = true; // Set the flag before making a programmatic change
             if (isOrigin) {
                 directions.setOrigin(coords);
-                console.log("Origin set to:", coords);
+                console.log("Origin set via handle Input Change to:", coords);
                 geocodeCoordinates(coords, (address) => {
                     setDirectionsInputFields(address, null);
                 });
             } else {
                 directions.setDestination(coords);
-                console.log("Destination set to:", coords);
+                console.log("Destination set via HandleInputChange:", coords);
                 geocodeCoordinates(coords, (address) => {
                     setDirectionsInputFields(null, address);
                 });
@@ -262,7 +262,7 @@ function setOriginOnClick(e) {
 
                     // Set the input fields with the address
                     setDirectionsInputFields(address || `${coords[1]}, ${coords[0]}`, '');
-                    console.log("Origin set successfully.");
+                    console.log("Origin set via SetOriginOnClick marker-seleted.");
 
                     originSet = true; // Mark the origin as set
                     map.off('click', setOriginOnClick); // Remove click event listener after setting origin
@@ -299,6 +299,7 @@ function setOriginOnClick(e) {
 
                 // Set the input fields with the address obtained
                 setDirectionsInputFields(address, '');
+                 console.log("Origin set via SetOriginOnClick() .")
 
                 console.log("Origin set successfully.");
                 originSet = true; // Mark the origin as set
@@ -379,7 +380,7 @@ function setDestinationOnClick(e) {
                 // Set the input fields with the address obtained
                 setDirectionsInputFields('', address);
 
-                console.log("Destination set successfully.");
+                console.log("Destination set via SetDestinationOnClick.");
                 destinationSet = true; // Mark the destination as set
                 map.off('click', setDestinationOnClick); // Remove click event listener after setting destination
             } catch (error) {
@@ -650,7 +651,7 @@ function setupDirectionsButton() {
 
                         // Set the input fields with the address
                         setDirectionsInputFields('', address);
-                        console.log("Destination set successfully.");
+                        console.log("Destination set via SetupDirectionsButton.");
 
                         destinationSet = true; // Mark the destination as set
                         map.off('click', setOriginOnClick); // Ensure no further clicks are processed
