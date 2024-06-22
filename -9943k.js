@@ -27,7 +27,22 @@ let destinationSet = false; // Flag to check if the destination has been set
 console.log(document.querySelector('.mapbox-directions-origin input')); // Should log the element or null
 console.log(document.querySelector('.mapbox-directions-destination input')); // Should log the element or null
 
+function updateRoute(origin, destination) {
+    if (!origin || !destination) return;
 
+    // Convert address to coordinates and update route
+    geocodeAddress(origin, function(originCoords) {
+        geocodeAddress(destination, function(destinationCoords) {
+            try {
+                directions.setOrigin(originCoords);
+                directions.setDestination(destinationCoords);
+                console.log(`Route updated with origin: ${originCoords} and destination: ${destinationCoords}`);
+            } catch (error) {
+                console.error('Error updating route:', error);
+            }
+        });
+    });
+}
 
 function setDirectionsInputFields(originTitle, destinationTitle) {
     const originInput = document.querySelector('.mapbox-directions-origin input');
@@ -227,6 +242,7 @@ function setOriginOnClick(e) {
                 console.log("Origin set successfully.");
                 originSet = true; // Mark the origin as set
                 map.off('click', setOriginOnClick); // Remove click event listener after setting origin
+                updateRoute();
             } catch (error) {
                 console.error("Error setting origin:", error);
                 alert('Error setting origin.');
@@ -555,6 +571,7 @@ function setupDirectionsButton() {
                         console.log("Destination set successfully.");
 
                         destinationSet = true; // Mark the destination as set
+                        updateRoute();
 
                     
                     } catch (error) {
