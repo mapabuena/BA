@@ -20,7 +20,7 @@ let isDataLoading = false;
 let selectedMarkerIndex = null; // Variable to keep track of the selected marker index
 
 let directions; // Declare the directions variable here
-let directionsInitialized = true;
+let directionsInitialized = false;
 let originSet = false; // Flag to check if the origin has been set
 let destinationSet = false; // Flag to check if the destination has been set
 
@@ -98,6 +98,8 @@ function geocodeAddress(address, callback) {
 }
 function initializeDirectionsControl() {
     if (!directions) {
+        console.log("Directions control is not initialized. Initializing now...");
+        
         directions = new MapboxDirections({
             accessToken: mapboxgl.accessToken,
             unit: 'imperial',
@@ -147,10 +149,12 @@ function initializeDirectionsControl() {
                 });
             });
 
-          
+            console.log("Directions control has been initialized successfully.");
         } else {
             console.error("Element with ID 'directions-control' not found.");
         }
+    } else {
+        console.log("Directions control is already initialized.");
     }
 }
 function deactivateDirections() {
