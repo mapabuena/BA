@@ -558,14 +558,15 @@ function setupDirectionsButton() {
                         console.log("Destination set successfully.");
 
                         destinationSet = true; // Mark the destination as set
-                        map.off('click', setOriginOnClick); // Ensure no further clicks are processed
-                        map.off('click', setDestinationOnClick); // Ensure no further clicks are processed
+
+                    
                     } catch (error) {
                         console.error("Error setting destination:", error);
                         alert('Error setting destination.');
                     }
 
-                    document.getElementById('directions-container').style.display = 'block';
+                     document.getElementById('directions-container').style.display = 'block';
+                   map.on('click', setOriginOnClick);
                 } else {
                     console.error('Geocoding failed for address:', address);
                     alert('Failed to geocode the address.');
