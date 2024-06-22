@@ -21,6 +21,8 @@ let selectedMarkerIndex = null; // Variable to keep track of the selected marker
 
 let directions; // Declare the directions variable here
 let directionsInitialized = false;
+let originSet = false; // Flag to check if the origin has been set
+let destinationSet = false; // Flag to check if the destination has been set
 
 console.log(document.querySelector('.mapbox-directions-origin input')); // Should log the element or null
 console.log(document.querySelector('.mapbox-directions-destination input')); // Should log the element or null
@@ -181,13 +183,9 @@ function clearAllPopups() {
     }
 }
 
-let originSet = false; // Flag to check if the origin has been set
-let destinationSet = false; // Flag to check if the destination has been set
 
 function setOriginOnClick(e) {
-    if (originSet) return; // Prevent further clicks if origin is already set
-
-    const selectedMarker = markers.find(marker => marker.marker.getElement().getAttribute('data-is-selected') === 'true');
+   const selectedMarker = markers.find(marker => marker.marker.getElement().getAttribute('data-is-selected') === 'true');
 
     if (selectedMarker) {
         const {address, sidebarheader} = selectedMarker.data;
@@ -603,7 +601,7 @@ function setupDirectionsButton() {
 
                         // Set the input fields with the address
                         setDirectionsInputFields('', address);
-                        console.log("Destination set via SetupDirectionsButton.");
+                        console.log("Destination address set via SetupDirectionsButton.");
 
                         destinationSet = true; // Mark the destination as set
                         setOriginOnClick();
