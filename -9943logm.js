@@ -28,6 +28,7 @@ console.log(document.querySelector('.mapbox-directions-origin input')); // Shoul
 console.log(document.querySelector('.mapbox-directions-destination input')); // Should log the element or null
 
 function activateClickHandlers() {
+    console.log("Activating click handlers. OriginSet:", originSet, "DestinationSet:", destinationSet);
     if (!originSet) {
         map.on('click', setOriginOnClick);
         console.log('Click handler for origin activated');
@@ -37,7 +38,6 @@ function activateClickHandlers() {
         console.log('Click handler for destination activated');
     }
 }
-
 function deactivateClickHandlers() {
     map.off('click', setOriginOnClick);
     map.off('click', setDestinationOnClick);
@@ -132,6 +132,7 @@ function initializeDirectionsControl() {
             directionsControlElement.appendChild(directions.onAdd(map));
 
             directions.on('origin', () => {
+                console.log("Origin event triggered in directions control");
                 const originMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="A"]');
                 if (originMarker) {
                     originMarker.style.backgroundColor = '#c62026';
@@ -139,6 +140,7 @@ function initializeDirectionsControl() {
             });
 
             directions.on('destination', () => {
+                   console.log("Destination event triggered in directions control");
                 const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
                 if (destinationMarker) {
                     destinationMarker.style.backgroundColor = '#26617f';
