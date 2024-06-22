@@ -21,10 +21,11 @@ let selectedMarkerIndex = null; // Variable to keep track of the selected marker
 
 let directions; // Declare the directions variable here
 let directionsInitialized = false;
+let originSet = false; // Flag to check if the origin has been set
+let destinationSet = false; // Flag to check if the destination has been set
 
 console.log(document.querySelector('.mapbox-directions-origin input')); // Should log the element or null
 console.log(document.querySelector('.mapbox-directions-destination input')); // Should log the element or null
-
 
 
 function setDirectionsInputFields(originTitle, destinationTitle) {
@@ -34,21 +35,6 @@ function setDirectionsInputFields(originTitle, destinationTitle) {
     console.log("Origin Input: ", originInput); // Check if the element is null
     console.log("Destination Input: ", destinationInput); // Check if the element is null
 
-    isProgrammaticChange = true; // Set the flag before making programmatic changes
-    if (originTitle && originInput) {
-        originInput.value = originTitle;
-          console.log("Setting origin input to: ", originTitle);
-            } else {
-        console.log("Failed to find or set origin input");
-    }
-    if (destinationTitle && destinationInput) {
-        destinationInput.value = destinationTitle;
-          console.log("Setting destination input to: ", destinationTitle);
-    } else {
-        console.log("Failed to find or set destination input");
-    }
-    isProgrammaticChange = false; // Reset the flag after the changes
-}
 
 function geocodeCoordinates(coords, callback) {
     const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${coords[0]},${coords[1]}.json?access_token=${mapboxgl.accessToken}`;
@@ -160,9 +146,6 @@ function clearAllPopups() {
         secondPopup = null;
     }
 }
-
-let originSet = false; // Flag to check if the origin has been set
-let destinationSet = false; // Flag to check if the destination has been set
 
 function setOriginOnClick(e) {
     if (originSet || !directions) return; // Prevent further clicks if origin is already set or directions control is not initialized
