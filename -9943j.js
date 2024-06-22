@@ -28,12 +28,26 @@ console.log(document.querySelector('.mapbox-directions-origin input')); // Shoul
 console.log(document.querySelector('.mapbox-directions-destination input')); // Should log the element or null
 
 
+
 function setDirectionsInputFields(originTitle, destinationTitle) {
     const originInput = document.querySelector('.mapbox-directions-origin input');
     const destinationInput = document.querySelector('.mapbox-directions-destination input');
 
     console.log("Origin Input: ", originInput); // Check if the element is null
     console.log("Destination Input: ", destinationInput); // Check if the element is null
+
+    if (originTitle && originInput) {
+        originInput.value = originTitle;
+          console.log("Setting origin input to: ", originTitle);
+            } else {
+        console.log("Failed to find or set origin input");
+    }
+    if (destinationTitle && destinationInput) {
+        destinationInput.value = destinationTitle;
+          console.log("Setting destination input to: ", destinationTitle);
+    } else {
+        console.log("Failed to find or set destination input");
+    }
 }
 
 function geocodeCoordinates(coords, callback) {
