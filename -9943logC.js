@@ -153,7 +153,6 @@ function initializeDirectionsControl() {
                 });
             });
 
-            setupInputListeners(); // Setup input listeners for manual input changes
         } else {
             console.error("Element with ID 'directions-control' not found.");
         }
