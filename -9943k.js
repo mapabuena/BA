@@ -200,11 +200,12 @@ function setOriginOnClick(e) {
                     console.log("Origin set to:", coords);
 
                     // Set the input fields with the address
-                    setDirectionsInputFields(address || sidebarheader || `${coords[1]}, ${coords[0]}`, '');
+                    setDirectionsInputFields(address, '');
                     console.log("Origin set successfully.");
 
                     originSet = true; // Mark the origin as set
                     map.off('click', setOriginOnClick); // Remove click event listener after setting origin
+                     updateRoute();
                 } catch (error) {
                     console.error("Error setting origin:", error);
                     alert('Error setting origin.');
