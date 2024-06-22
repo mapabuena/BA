@@ -34,7 +34,7 @@ function setDirectionsInputFields(originTitle, destinationTitle) {
 
     console.log("Origin Input: ", originInput); // Check if the element is null
     console.log("Destination Input: ", destinationInput); // Check if the element is null
-
+}
 
 function geocodeCoordinates(coords, callback) {
     const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${coords[0]},${coords[1]}.json?access_token=${mapboxgl.accessToken}`;
