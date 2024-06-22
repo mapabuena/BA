@@ -20,7 +20,7 @@ let isDataLoading = false;
 let selectedMarkerIndex = null; // Variable to keep track of the selected marker index
 
 let directions; // Declare the directions variable here
-let directionsInitialized = false;
+let directionsInitialized = true;
 let originSet = false; // Flag to check if the origin has been set
 let destinationSet = false; // Flag to check if the destination has been set
 
