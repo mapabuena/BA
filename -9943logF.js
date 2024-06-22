@@ -607,7 +607,7 @@ function setupDirectionsButton() {
 
                         destinationSet = true; // Mark the destination as set
                         setOriginOnClick();
-                             console.log(setOriginOnClick triggered by SetupDirectionsButton);
+                             console.log("setOriginOnClick triggered by SetupDirectionsButton.");
                     } catch (error) {
                         console.error("Error setting destination:", error);
                         alert('Error setting destination.');
