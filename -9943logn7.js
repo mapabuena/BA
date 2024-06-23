@@ -25,6 +25,7 @@ let originSet = false; // Flag to check if the origin has been set
 let destinationSet = false; // Flag to check if the destination has been set
 let handlingDirectionEvents = false;
 let ignoreEvents = false;
+let settingOrigin = false;
 
 console.log(document.querySelector('.mapbox-directions-origin input')); // Should log the element or null
 console.log(document.querySelector('.mapbox-directions-destination input')); // Should log the element or null
@@ -178,7 +179,11 @@ function clearAllPopups() {
 
 
 function setOriginOnClick(e) {
+    if (settingDestination) return; // Avoid setting origin if destination is being set
+
     console.log("setOriginOnClick triggered. OriginSet:", originSet, "DestinationSet:", destinationSet);
+
+    settingOrigin = true;
 
     const selectedMarker = markers.find(marker => marker.marker.getElement().getAttribute('data-is-selected') === 'true');
     if (selectedMarker) {
@@ -187,6 +192,7 @@ function setOriginOnClick(e) {
         if (!address) {
             console.error('No address found for the selected marker.');
             alert('No address found for the selected marker.');
+            settingOrigin = false;
             return;
         }
 
@@ -220,10 +226,12 @@ function setOriginOnClick(e) {
                 } finally {
                     handlingDirectionEvents = false; // End manual handling
                     ignoreEvents = false; // Re-enable events
+                    settingOrigin = false;
                 }
             } else {
                 console.error('Geocoding failed for address:', address);
                 alert('Failed to geocode the address.');
+                settingOrigin = false;
             }
         });
     } else {
@@ -253,7 +261,7 @@ function setOriginOnClick(e) {
 
                 // Set the input fields with the address obtained
                 setDirectionsInputFields(address, '');
-                console.log("Origin set via SetOriginOnClick().")
+                console.log("Origin set via SetOriginOnClick().");
 
                 console.log("Origin set successfully.");
                 originSet = true; // Mark the origin as set
@@ -265,11 +273,11 @@ function setOriginOnClick(e) {
             } finally {
                 handlingDirectionEvents = false; // End manual handling
                 ignoreEvents = false; // Re-enable events
+                settingOrigin = false;
             }
         });
     }
 }
-
 
 
 function setDestinationOnClick(e) {
