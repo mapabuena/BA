@@ -29,6 +29,8 @@ let ignoreEvents = false;
 console.log(document.querySelector('.mapbox-directions-origin input')); // Should log the element or null
 console.log(document.querySelector('.mapbox-directions-destination input')); // Should log the element or null
 
+let ignoreEvents = false;
+
 function handleOriginEvent() {
     if (handlingDirectionEvents || ignoreEvents) return;
     console.log("Origin event triggered in directions control");
@@ -48,7 +50,7 @@ function handleDestinationEvent() {
 }
 
 function handleRouteEvent(event) {
-    if (handlingDirectionEvents) return;
+    if (handlingDirectionEvents || ignoreEvents) return;
     const routes = event.route;
     const profile = directions.options.profile;
     console.log("Profile from options:", profile);
@@ -269,6 +271,7 @@ function setOriginOnClick(e) {
         });
     }
 }
+
 
 
 function setDestinationOnClick(e) {
