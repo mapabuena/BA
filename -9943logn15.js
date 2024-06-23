@@ -28,18 +28,14 @@ let ignoreEvents = false;
 let settingOrigin = false;
 let settingDestination = false;
 
+
 console.log(document.querySelector('.mapbox-directions-origin input')); // Should log the element or null
 console.log(document.querySelector('.mapbox-directions-destination input')); // Should log the element or null
 
-directions.on('origin', () => {
-    console.log("Origin event detected by Mapbox Directions.");
-});
 
-directions.on('destination', () => {
-    console.log("Destination event detected by Mapbox Directions.");
-});
 function handleOriginEvent() {
-    if (handlingDirectionEvents || ignoreEvents || originSet) return;
+    if (handlingDirectionEvents || ignoreEvents) return;
+    if (originSet) return;  // Avoid handling event if origin is already set
     console.log("Origin event triggered in directions control");
     const originMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="A"]');
     if (originMarker) {
@@ -48,14 +44,14 @@ function handleOriginEvent() {
 }
 
 function handleDestinationEvent() {
-    if (handlingDirectionEvents || ignoreEvents || destinationSet) return;
+    if (handlingDirectionEvents || ignoreEvents) return;
+    if (destinationSet) return;  // Avoid handling event if destination is already set
     console.log("Destination event triggered in directions control");
     const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
     if (destinationMarker) {
         destinationMarker.style.backgroundColor = '#26617f';
     }
 }
-
 function handleRouteEvent(event) {
     if (handlingDirectionEvents || ignoreEvents) return;
     const routes = event.route;
