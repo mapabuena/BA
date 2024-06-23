@@ -142,9 +142,18 @@ function initializeDirectionsControl() {
         if (directionsControlElement) {
             directionsControlElement.appendChild(directions.onAdd(map));
 
-            directions.on('origin', handleOriginEvent);
-            directions.on('destination', handleDestinationEvent);
-            directions.on('route', handleRouteEvent);
+      directions.on('origin', handleOriginEvent);
+directions.on('destination', handleDestinationEvent);
+directions.on('route', handleRouteEvent);
+
+directions.on('origin', () => {
+    console.log("Origin event detected by Mapbox Directions.");
+});
+
+directions.on('destination', () => {
+    console.log("Destination event detected by Mapbox Directions.");
+});
+
 
             document.querySelectorAll('.mapbox-directions-profile input').forEach(input => {
                 input.addEventListener('change', (e) => {
@@ -221,6 +230,7 @@ function setOriginOnClick(e) {
 
                     console.log("Origin set via SetOriginOnClick marker-selected.");
                     originSet = true;
+                    console.log("OriginSet updated to true");
                     map.off('click', setOriginOnClick);
 
                 } catch (error) {
@@ -255,6 +265,7 @@ function setOriginOnClick(e) {
 
                     console.log("Origin set via SetOriginOnClick.");
                     originSet = true;
+                    console.log("OriginSet updated to true");
                     map.off('click', setOriginOnClick);
 
                 } catch (error) {
