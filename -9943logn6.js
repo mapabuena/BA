@@ -29,8 +29,6 @@ let ignoreEvents = false;
 console.log(document.querySelector('.mapbox-directions-origin input')); // Should log the element or null
 console.log(document.querySelector('.mapbox-directions-destination input')); // Should log the element or null
 
-let ignoreEvents = false;
-
 function handleOriginEvent() {
     if (handlingDirectionEvents || ignoreEvents) return;
     console.log("Origin event triggered in directions control");
