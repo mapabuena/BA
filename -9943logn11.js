@@ -70,18 +70,18 @@ function setDirectionsInputFields(originTitle, destinationTitle) {
     const originInput = document.querySelector('.mapbox-directions-origin input');
     const destinationInput = document.querySelector('.mapbox-directions-destination input');
 
-    console.log("Origin Input: ", originInput); // Check if the element is null
-    console.log("Destination Input: ", destinationInput); // Check if the element is null
+    console.log("Origin Input: ", originInput);
+    console.log("Destination Input: ", destinationInput);
 
     if (originTitle && originInput) {
         originInput.value = originTitle;
-          console.log("Setting origin input to: ", originTitle);
-            } else {
+        console.log("Setting origin input to: ", originTitle);
+    } else {
         console.log("Failed to find or set origin input");
     }
     if (destinationTitle && destinationInput) {
         destinationInput.value = destinationTitle;
-          console.log("Setting destination input to: ", destinationTitle);
+        console.log("Setting destination input to: ", destinationTitle);
     } else {
         console.log("Failed to find or set destination input");
     }
@@ -180,7 +180,7 @@ function clearAllPopups() {
 
 
 function setOriginOnClick(e) {
-    if (settingDestination) return; // Avoid setting origin if destination is being set
+    if (settingDestination) return;
 
     console.log("setOriginOnClick triggered. OriginSet:", originSet, "DestinationSet:", destinationSet);
 
@@ -202,7 +202,7 @@ function setOriginOnClick(e) {
             initializeDirectionsControl();
         }
 
-        directions.removeRoutes(); // Clear any existing routes
+        directions.removeRoutes();
 
         geocodeAddress(address, function (coords) {
             if (coords) {
@@ -210,7 +210,7 @@ function setOriginOnClick(e) {
                     handlingDirectionEvents = true;
                     ignoreEvents = true;
 
-                    directions.setOrigin(coords); // Set the origin using coordinates
+                    directions.setOrigin(coords);
                     console.log("Origin set to:", coords);
 
                     setDirectionsInputFields(address, '');
@@ -243,7 +243,7 @@ function setOriginOnClick(e) {
                     handlingDirectionEvents = true;
                     ignoreEvents = true;
 
-                    directions.setOrigin(coords); // Set the origin using coordinates
+                    directions.setOrigin(coords);
                     console.log("Origin set to:", coords);
 
                     setDirectionsInputFields(address, '');
@@ -618,14 +618,13 @@ function setupDirectionsButton() {
                     initializeDirectionsControl();
                 }
 
-                directions.removeRoutes(); // Clear any existing routes
+                directions.removeRoutes();
 
-                // Geocode the address to get coordinates
                 geocodeAddress(address, function (coords) {
                     if (coords) {
                         try {
                             settingDestination = true;
-                            directions.setDestination(coords); // Set the destination using coordinates
+                            directions.setDestination(coords);
                             console.log("Destination set to:", coords);
 
                             setDirectionsInputFields('', address);
