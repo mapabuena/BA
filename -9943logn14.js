@@ -31,6 +31,13 @@ let settingDestination = false;
 console.log(document.querySelector('.mapbox-directions-origin input')); // Should log the element or null
 console.log(document.querySelector('.mapbox-directions-destination input')); // Should log the element or null
 
+directions.on('origin', () => {
+    console.log("Origin event detected by Mapbox Directions.");
+});
+
+directions.on('destination', () => {
+    console.log("Destination event detected by Mapbox Directions.");
+});
 function handleOriginEvent() {
     if (handlingDirectionEvents || ignoreEvents || originSet) return;
     console.log("Origin event triggered in directions control");
@@ -180,14 +187,8 @@ function clearAllPopups() {
 
 
 function setOriginOnClick(e) {
-    if (settingDestination) {
-        console.log("Aborting setOriginOnClick because settingDestination is true");
-        return; 
-    }
-    if (originSet) {
-        console.log("Aborting setOriginOnClick because originSet is already true");
-        return; 
-    }
+    if (settingDestination) return;
+    if (originSet) return;
 
     settingOrigin = true;
     console.log("setOriginOnClick triggered. OriginSet:", originSet, "DestinationSet:", destinationSet);
@@ -279,14 +280,8 @@ function setOriginOnClick(e) {
 
 
 function setDestinationOnClick(e) {
-    if (settingOrigin) {
-        console.log("Aborting setDestinationOnClick because settingOrigin is true");
-        return; 
-    }
-    if (destinationSet) {
-        console.log("Aborting setDestinationOnClick because destinationSet is already true");
-        return; 
-    }
+    if (settingOrigin) return;
+    if (destinationSet) return;
 
     settingDestination = true;
     console.log("setDestinationOnClick triggered. DestinationSet:", destinationSet, "OriginSet:", originSet);
