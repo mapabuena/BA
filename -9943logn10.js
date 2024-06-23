@@ -32,7 +32,7 @@ console.log(document.querySelector('.mapbox-directions-origin input')); // Shoul
 console.log(document.querySelector('.mapbox-directions-destination input')); // Should log the element or null
 
 function handleOriginEvent() {
-    if (handlingDirectionEvents || ignoreEvents) return;
+    if (handlingDirectionEvents || ignoreEvents || originSet) return;
     console.log("Origin event triggered in directions control");
     const originMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="A"]');
     if (originMarker) {
@@ -41,7 +41,7 @@ function handleOriginEvent() {
 }
 
 function handleDestinationEvent() {
-    if (handlingDirectionEvents || ignoreEvents) return;
+    if (handlingDirectionEvents || ignoreEvents || destinationSet) return;
     console.log("Destination event triggered in directions control");
     const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
     if (destinationMarker) {
