@@ -202,6 +202,10 @@ function setOriginOnClick(e) {
                 try {
                     handlingDirectionEvents = true; // Start manual handling
 
+                    // Temporarily disable event listeners
+                    directions.off('origin', handleOriginEvent);
+                    directions.off('destination', handleDestinationEvent);
+
                     directions.setOrigin(coords); // Set the origin using coordinates
                     console.log("Origin set to:", coords);
 
@@ -216,6 +220,9 @@ function setOriginOnClick(e) {
                     console.error("Error setting origin:", error);
                     alert('Error setting origin.');
                 } finally {
+                    // Re-enable event listeners
+                    directions.on('origin', handleOriginEvent);
+                    directions.on('destination', handleDestinationEvent);
                     handlingDirectionEvents = false; // End manual handling
                 }
             } else {
@@ -244,6 +251,10 @@ function setOriginOnClick(e) {
             try {
                 handlingDirectionEvents = true; // Start manual handling
 
+                // Temporarily disable event listeners
+                directions.off('origin', handleOriginEvent);
+                directions.off('destination', handleDestinationEvent);
+
                 directions.setOrigin(coords); // Set the origin using the coordinates
                 console.log("Origin set to:", coords);
 
@@ -259,6 +270,9 @@ function setOriginOnClick(e) {
                 console.error("Error setting origin:", error);
                 alert('Error setting origin.');
             } finally {
+                // Re-enable event listeners
+                directions.on('origin', handleOriginEvent);
+                directions.on('destination', handleDestinationEvent);
                 handlingDirectionEvents = false; // End manual handling
             }
         });
@@ -293,6 +307,10 @@ function setDestinationOnClick(e) {
                 try {
                     handlingDirectionEvents = true; // Start manual handling
 
+                    // Temporarily disable event listeners
+                    directions.off('origin', handleOriginEvent);
+                    directions.off('destination', handleDestinationEvent);
+
                     directions.setDestination(coords); // Set the destination using coordinates
                     console.log("Destination set to:", coords);
 
@@ -307,6 +325,9 @@ function setDestinationOnClick(e) {
                     console.error("Error setting destination:", error);
                     alert('Error setting destination.');
                 } finally {
+                    // Re-enable event listeners
+                    directions.on('origin', handleOriginEvent);
+                    directions.on('destination', handleDestinationEvent);
                     handlingDirectionEvents = false; // End manual handling
                 }
             } else {
@@ -335,6 +356,10 @@ function setDestinationOnClick(e) {
             try {
                 handlingDirectionEvents = true; // Start manual handling
 
+                // Temporarily disable event listeners
+                directions.off('origin', handleOriginEvent);
+                directions.off('destination', handleDestinationEvent);
+
                 directions.setDestination(coords); // Set the destination using the coordinates
                 console.log("Destination set to:", coords);
 
@@ -349,12 +374,14 @@ function setDestinationOnClick(e) {
                 console.error("Error setting destination:", error);
                 alert('Error setting destination.');
             } finally {
+                // Re-enable event listeners
+                directions.on('origin', handleOriginEvent);
+                directions.on('destination', handleDestinationEvent);
                 handlingDirectionEvents = false; // End manual handling
             }
         });
     }
 }
-
 function addRouteLabels(route, profile) {
     if (route.geometry) {
         const coordinates = polyline.decode(route.geometry); // Decode the polyline string
