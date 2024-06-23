@@ -188,7 +188,7 @@ function setOriginOnClick(e) {
 
     const selectedMarker = markers.find(marker => marker.marker.getElement().getAttribute('data-is-selected') === 'true');
     if (selectedMarker) {
-        const { address, sidebarheader } = selectedMarker.data;
+        const { address } = selectedMarker.data;
 
         if (!address) {
             console.error('No address found for the selected marker.');
@@ -204,29 +204,27 @@ function setOriginOnClick(e) {
 
         directions.removeRoutes(); // Clear any existing routes
 
-        // Geocode the address to get coordinates
         geocodeAddress(address, function (coords) {
             if (coords) {
                 try {
-                    handlingDirectionEvents = true; // Start manual handling
-                    ignoreEvents = true; // Temporarily ignore events
+                    handlingDirectionEvents = true;
+                    ignoreEvents = true;
 
                     directions.setOrigin(coords); // Set the origin using coordinates
                     console.log("Origin set to:", coords);
 
-                    // Set the input fields with the address
-                    setDirectionsInputFields(address || `${coords[1]}, ${coords[0]}`, '');
-                    console.log("Origin set via SetOriginOnClick marker-seleted.");
+                    setDirectionsInputFields(address, '');
+                    console.log("Origin set via SetOriginOnClick marker-selected.");
 
-                    originSet = true; // Mark the origin as set
-                    map.off('click', setOriginOnClick); // Remove click event listener after setting origin
+                    originSet = true;
+                    map.off('click', setOriginOnClick);
 
                 } catch (error) {
                     console.error("Error setting origin:", error);
                     alert('Error setting origin.');
                 } finally {
-                    handlingDirectionEvents = false; // End manual handling
-                    ignoreEvents = false; // Re-enable events
+                    handlingDirectionEvents = false;
+                    ignoreEvents = false;
                     settingOrigin = false;
                 }
             } else {
@@ -239,41 +237,32 @@ function setOriginOnClick(e) {
         const { lng, lat } = e.lngLat;
         console.log("Map clicked at:", lng, lat);
 
-        // Use the geocoding function to convert coordinates to an address
         geocodeCoordinates([lng, lat], function (address, coords) {
-            const origin = {
-                "type": "Feature",
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": coords
-                },
-                "properties": {
-                    "title": address
+            if (coords) {
+                try {
+                    handlingDirectionEvents = true;
+                    ignoreEvents = true;
+
+                    directions.setOrigin(coords); // Set the origin using coordinates
+                    console.log("Origin set to:", coords);
+
+                    setDirectionsInputFields(address, '');
+                    console.log("Origin set via SetOriginOnClick().");
+
+                    originSet = true;
+                    map.off('click', setOriginOnClick);
+
+                } catch (error) {
+                    console.error("Error setting origin:", error);
+                    alert('Error setting origin.');
+                } finally {
+                    handlingDirectionEvents = false;
+                    ignoreEvents = false;
+                    settingOrigin = false;
                 }
-            };
-
-            console.log("Setting Origin with:", JSON.stringify(origin));
-            try {
-                handlingDirectionEvents = true; // Start manual handling
-                ignoreEvents = true; // Temporarily ignore events
-
-                directions.setOrigin(coords); // Set the origin using the coordinates
-                console.log("Origin set to:", coords);
-
-                // Set the input fields with the address obtained
-                setDirectionsInputFields(address, '');
-                console.log("Origin set via SetOriginOnClick().");
-
-                console.log("Origin set successfully.");
-                originSet = true; // Mark the origin as set
-                map.off('click', setOriginOnClick); // Remove click event listener after setting origin
-
-            } catch (error) {
-                console.error("Error setting origin:", error);
-                alert('Error setting origin.');
-            } finally {
-                handlingDirectionEvents = false; // End manual handling
-                ignoreEvents = false; // Re-enable events
+            } else {
+                console.error('Geocoding failed for address:', address);
+                alert('Failed to geocode the address.');
                 settingOrigin = false;
             }
         });
@@ -609,62 +598,56 @@ function setupDirectionsButton() {
         directionsButton.addEventListener('click', function () {
             console.log("Directions button clicked. OriginSet:", originSet, "DestinationSet:", destinationSet);
 
-            const selectedMarker = markers.find(marker => marker.marker.getElement().getAttribute('data-is-selected') === 'true');
-
-            if (!selectedMarker) {
-                console.error('No marker selected.');
-                alert('Please select a marker first.');
-                return;
-            }
-
-            const { address, sidebarheader } = selectedMarker.data;
-
-            if (!address) {
-                console.error('No address found for the selected marker.');
-                alert('No address found for the selected marker.');
-                return;
-            }
-
-            if (!directions) {
-                console.error("Directions control is not initialized.");
-                initializeDirectionsControl();
-            }
-
-            directions.removeRoutes(); // Clear any existing routes
-
-            // Geocode the address to get coordinates
-            geocodeAddress(address, function (coords) {
-                if (coords) {
-                    try {
-                        handlingDirectionEvents = true; // Start manual handling
-
-                        directions.setDestination(coords); // Set the destination using coordinates
-                        console.log("Destination set to:", coords);
-
-                        // Set the input fields with the address
-                        setDirectionsInputFields('', address);
-                        console.log("Destination address set via setupDirectionsButton.");
-
-                        destinationSet = true; // Mark the destination as set
-                        console.log("DestinationSet updated to true");
-
-                        unselectAllMarkers();
-                        map.on('click', setOriginOnClick);
-                        console.log("setOriginOnClick triggered by setupDirectionsButton.");
-
-                    } catch (error) {
-                        console.error("Error setting destination:", error);
-                        alert('Error setting destination.');
-                    } finally {
-                        handlingDirectionEvents = false; // End manual handling
-                    }
-
-                    document.getElementById('directions-container').style.display = 'block';
-                } else {
-                    console.error('Geocoding failed for address:', address);
-                    alert('Failed to geocode the address.');
+            if (!originSet && !destinationSet) {
+                const selectedMarker = markers.find(marker => marker.marker.getElement().getAttribute('data-is-selected') === 'true');
+                if (!selectedMarker) {
+                    console.error('No marker selected.');
+                    alert('Please select a marker first.');
+                    return;
                 }
-            });
+
+                const { address } = selectedMarker.data;
+                if (!address) {
+                    console.error('No address found for the selected marker.');
+                    alert('No address found for the selected marker.');
+                    return;
+                }
+
+                if (!directions) {
+                    console.error("Directions control is not initialized.");
+                    initializeDirectionsControl();
+                }
+
+                directions.removeRoutes(); // Clear any existing routes
+
+                // Geocode the address to get coordinates
+                geocodeAddress(address, function (coords) {
+                    if (coords) {
+                        try {
+                            settingDestination = true;
+                            directions.setDestination(coords); // Set the destination using coordinates
+                            console.log("Destination set to:", coords);
+
+                            setDirectionsInputFields('', address);
+                            console.log("Destination address set via setupDirectionsButton.");
+                            destinationSet = true;
+                            console.log("DestinationSet updated to true");
+
+                            map.on('click', setOriginOnClick);
+                            console.log("setOriginOnClick triggered by setupDirectionsButton.");
+
+                        } catch (error) {
+                            console.error("Error setting destination:", error);
+                            alert('Error setting destination.');
+                        } finally {
+                            settingDestination = false;
+                        }
+                    } else {
+                        console.error('Geocoding failed for address:', address);
+                        alert('Failed to geocode the address.');
+                    }
+                });
+            }
         });
     } else {
         console.error("Element with ID 'get-directions' not found.");
