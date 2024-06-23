@@ -24,12 +24,13 @@ let directionsInitialized = false;
 let originSet = false; // Flag to check if the origin has been set
 let destinationSet = false; // Flag to check if the destination has been set
 let handlingDirectionEvents = false;
+let ignoreEvents = false;
 
 console.log(document.querySelector('.mapbox-directions-origin input')); // Should log the element or null
 console.log(document.querySelector('.mapbox-directions-destination input')); // Should log the element or null
 
 function handleOriginEvent() {
-    if (handlingDirectionEvents) return;
+    if (handlingDirectionEvents || ignoreEvents) return;
     console.log("Origin event triggered in directions control");
     const originMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="A"]');
     if (originMarker) {
@@ -38,7 +39,7 @@ function handleOriginEvent() {
 }
 
 function handleDestinationEvent() {
-    if (handlingDirectionEvents) return;
+    if (handlingDirectionEvents || ignoreEvents) return;
     console.log("Destination event triggered in directions control");
     const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
     if (destinationMarker) {
@@ -201,10 +202,7 @@ function setOriginOnClick(e) {
             if (coords) {
                 try {
                     handlingDirectionEvents = true; // Start manual handling
-
-                    // Temporarily disable event listeners
-                    directions.off('origin', handleOriginEvent);
-                    directions.off('destination', handleDestinationEvent);
+                    ignoreEvents = true; // Temporarily ignore events
 
                     directions.setOrigin(coords); // Set the origin using coordinates
                     console.log("Origin set to:", coords);
@@ -220,10 +218,8 @@ function setOriginOnClick(e) {
                     console.error("Error setting origin:", error);
                     alert('Error setting origin.');
                 } finally {
-                    // Re-enable event listeners
-                    directions.on('origin', handleOriginEvent);
-                    directions.on('destination', handleDestinationEvent);
                     handlingDirectionEvents = false; // End manual handling
+                    ignoreEvents = false; // Re-enable events
                 }
             } else {
                 console.error('Geocoding failed for address:', address);
@@ -250,10 +246,7 @@ function setOriginOnClick(e) {
             console.log("Setting Origin with:", JSON.stringify(origin));
             try {
                 handlingDirectionEvents = true; // Start manual handling
-
-                // Temporarily disable event listeners
-                directions.off('origin', handleOriginEvent);
-                directions.off('destination', handleDestinationEvent);
+                ignoreEvents = true; // Temporarily ignore events
 
                 directions.setOrigin(coords); // Set the origin using the coordinates
                 console.log("Origin set to:", coords);
@@ -270,10 +263,8 @@ function setOriginOnClick(e) {
                 console.error("Error setting origin:", error);
                 alert('Error setting origin.');
             } finally {
-                // Re-enable event listeners
-                directions.on('origin', handleOriginEvent);
-                directions.on('destination', handleDestinationEvent);
                 handlingDirectionEvents = false; // End manual handling
+                ignoreEvents = false; // Re-enable events
             }
         });
     }
@@ -306,10 +297,7 @@ function setDestinationOnClick(e) {
             if (coords) {
                 try {
                     handlingDirectionEvents = true; // Start manual handling
-
-                    // Temporarily disable event listeners
-                    directions.off('origin', handleOriginEvent);
-                    directions.off('destination', handleDestinationEvent);
+                    ignoreEvents = true; // Temporarily ignore events
 
                     directions.setDestination(coords); // Set the destination using coordinates
                     console.log("Destination set to:", coords);
@@ -325,10 +313,8 @@ function setDestinationOnClick(e) {
                     console.error("Error setting destination:", error);
                     alert('Error setting destination.');
                 } finally {
-                    // Re-enable event listeners
-                    directions.on('origin', handleOriginEvent);
-                    directions.on('destination', handleDestinationEvent);
                     handlingDirectionEvents = false; // End manual handling
+                    ignoreEvents = false; // Re-enable events
                 }
             } else {
                 console.error('Geocoding failed for address:', address);
@@ -355,10 +341,7 @@ function setDestinationOnClick(e) {
             console.log("Setting Destination with:", JSON.stringify(destination));
             try {
                 handlingDirectionEvents = true; // Start manual handling
-
-                // Temporarily disable event listeners
-                directions.off('origin', handleOriginEvent);
-                directions.off('destination', handleDestinationEvent);
+                ignoreEvents = true; // Temporarily ignore events
 
                 directions.setDestination(coords); // Set the destination using the coordinates
                 console.log("Destination set to:", coords);
@@ -374,10 +357,8 @@ function setDestinationOnClick(e) {
                 console.error("Error setting destination:", error);
                 alert('Error setting destination.');
             } finally {
-                // Re-enable event listeners
-                directions.on('origin', handleOriginEvent);
-                directions.on('destination', handleDestinationEvent);
                 handlingDirectionEvents = false; // End manual handling
+                ignoreEvents = false; // Re-enable events
             }
         });
     }
