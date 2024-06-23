@@ -26,6 +26,7 @@ let destinationSet = false; // Flag to check if the destination has been set
 let handlingDirectionEvents = false;
 let ignoreEvents = false;
 let settingOrigin = false;
+let settingDestination = false;
 
 console.log(document.querySelector('.mapbox-directions-origin input')); // Should log the element or null
 console.log(document.querySelector('.mapbox-directions-destination input')); // Should log the element or null
@@ -281,7 +282,9 @@ function setOriginOnClick(e) {
 
 
 function setDestinationOnClick(e) {
-    if (destinationSet || !originSet) return; // Prevent further clicks if destination is already set or origin is not set
+    if (destinationSet || !originSet || settingOrigin) return; // Prevent further clicks if destination is already set, origin is not set, or origin is being set
+
+    settingDestination = true;
 
     const selectedMarker = markers.find(marker => marker.marker.getElement().getAttribute('data-is-selected') === 'true');
 
@@ -291,6 +294,7 @@ function setDestinationOnClick(e) {
         if (!address) {
             console.error('No address found for the selected marker.');
             alert('No address found for the selected marker.');
+            settingDestination = false;
             return;
         }
 
@@ -324,10 +328,12 @@ function setDestinationOnClick(e) {
                 } finally {
                     handlingDirectionEvents = false; // End manual handling
                     ignoreEvents = false; // Re-enable events
+                    settingDestination = false;
                 }
             } else {
                 console.error('Geocoding failed for address:', address);
                 alert('Failed to geocode the address.');
+                settingDestination = false;
             }
         });
     } else {
@@ -368,6 +374,7 @@ function setDestinationOnClick(e) {
             } finally {
                 handlingDirectionEvents = false; // End manual handling
                 ignoreEvents = false; // Re-enable events
+                settingDestination = false;
             }
         });
     }
