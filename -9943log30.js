@@ -28,6 +28,7 @@ let ignoreEvents = true;
 let settingOrigin = false;
 let settingDestination = false;
 
+
 // Debounce function to prevent rapid succession of events
 function debounce(func, wait) {
     let timeout;
@@ -138,7 +139,7 @@ function initializeDirectionsControl() {
             profile: 'mapbox/driving-traffic',
             alternatives: true,
             controls: {
-                inputs: false,
+                inputs: true,
                 instructions: true,
             },
             flyTo: false,
@@ -150,6 +151,8 @@ function initializeDirectionsControl() {
         const directionsControlElement = document.getElementById('directions-control');
         if (directionsControlElement) {
             directionsControlElement.appendChild(directions.onAdd(map));
+
+            directions.mapClickHandlerAdded = false;
 
             directions.on('origin', handleOriginEvent);
             directions.on('destination', handleDestinationEvent);
