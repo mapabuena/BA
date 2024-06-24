@@ -138,7 +138,7 @@ function initializeDirectionsControl() {
             profile: 'mapbox/driving-traffic',
             alternatives: true,
             controls: {
-                inputs: true,
+                inputs: false,
                 instructions: true,
             },
             flyTo: false,
@@ -193,8 +193,7 @@ function clearAllPopups() {
 
 
 function setOriginOnClick(e) {
-    if (settingDestination) return;
-    if (originSet) return;
+    if (settingDestination || originSet) return;
 
     settingOrigin = true;
     console.log("setOriginOnClick triggered. OriginSet:", originSet, "DestinationSet:", destinationSet);
@@ -205,7 +204,7 @@ function setOriginOnClick(e) {
         return;
     }
 
-    ignoreEvents = true; // Temporarily stop ignoring events
+    ignoreEvents = true; // Stop handling events
 
     const selectedMarker = markers.find(marker => marker.marker.getElement().getAttribute('data-is-selected') === 'true');
     if (selectedMarker) {
@@ -215,7 +214,7 @@ function setOriginOnClick(e) {
             console.error('No address found for the selected marker.');
             alert('No address found for the selected marker.');
             settingOrigin = false;
-            ignoreEvents = false; // Resume ignoring events
+            ignoreEvents = false; // Resume handling events
             return;
         }
 
@@ -229,7 +228,6 @@ function setOriginOnClick(e) {
 
                     console.log("Setting origin input fields with address:", address);
                     setDirectionsInputFields(address, '');
-                    ignoreEvents = true; 
 
                     console.log("Origin set via SetOriginOnClick marker-selected.");
                     originSet = true;
@@ -241,13 +239,15 @@ function setOriginOnClick(e) {
                     alert('Error setting origin.');
                 } finally {
                     settingOrigin = false;
-                        
+                    setTimeout(() => {
+                        ignoreEvents = false; // Resume handling events after a short delay
+                    }, 500);
                 }
             } else {
                 console.error('Geocoding failed for address:', address);
                 alert('Failed to geocode the address.');
                 settingOrigin = false;
-                ignoreEvents = false; // Resume ignoring events
+                ignoreEvents = false; // Resume handling events
             }
         });
     } else {
@@ -274,21 +274,20 @@ function setOriginOnClick(e) {
                 } finally {
                     settingOrigin = false;
                     setTimeout(() => {
-                        ignoreEvents = false; // Resume ignoring events after a short delay
-                    }, 500); // Delay to ensure any automatic events are handled
+                        ignoreEvents = false; // Resume handling events after a short delay
+                    }, 500);
                 }
             } else {
                 console.error('Geocoding failed for coordinates:', [lng, lat]);
                 alert('Failed to geocode the coordinates.');
                 settingOrigin = false;
-                ignoreEvents = true; // Resume ignoring events
+                ignoreEvents = false; // Resume handling events
             }
         });
     }
 }
 function setDestinationOnClick(e) {
-    if (settingOrigin) return;
-    if (destinationSet) return;
+    if (settingOrigin || destinationSet) return;
 
     settingDestination = true;
     console.log("setDestinationOnClick triggered. DestinationSet:", destinationSet, "OriginSet:", originSet);
@@ -306,7 +305,6 @@ function setDestinationOnClick(e) {
 
         if (!directions) {
             console.error("Directions control is not initialized.");
-    
         }
 
         directions.removeRoutes();
