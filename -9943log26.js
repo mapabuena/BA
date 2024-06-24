@@ -24,7 +24,7 @@ let directionsInitialized = false;
 let originSet = false; // Flag to check if the origin has been set
 let destinationSet = false; // Flag to check if the destination has been set
 let handlingDirectionEvents = false;
-let ignoreEvents = false;
+let ignoreEvents = true;
 let settingOrigin = false;
 let settingDestination = false;
 
@@ -41,41 +41,27 @@ console.log(document.querySelector('.mapbox-directions-destination input')); // 
 
 
 function handleOriginEvent() {
+    if (ignoreEvents || handlingDirectionEvents || originSet) return;
     console.log("handleOriginEvent triggered. handlingDirectionEvents:", handlingDirectionEvents, "ignoreEvents:", ignoreEvents, "originSet:", originSet);
-    if (handlingDirectionEvents || ignoreEvents || originSet) return;
-    console.log("Processing origin event in directions control");
-    const originMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="A"]');
-    if (originMarker) {
-        originMarker.style.backgroundColor = '#FF0000';
-    }
+    // Handle the origin event
 }
 
 function handleDestinationEvent() {
+    if (ignoreEvents || handlingDirectionEvents || destinationSet) return;
     console.log("handleDestinationEvent triggered. handlingDirectionEvents:", handlingDirectionEvents, "ignoreEvents:", ignoreEvents, "destinationSet:", destinationSet);
-    if (handlingDirectionEvents || ignoreEvents || destinationSet) return;
-    console.log("Processing destination event in directions control");
-    const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
-    if (destinationMarker) {
-        destinationMarker.style.backgroundColor = '#000000';
-    }
+    // Handle the destination event
 }
-function handleRouteEvent(event) {
-    if (handlingDirectionEvents || ignoreEvents) return;
 
+function handleRouteEvent(event) {
+    if (ignoreEvents || handlingDirectionEvents) return;
+    console.log("handleRouteEvent triggered.");
     const routes = event.route;
     const profile = directions.options.profile;
-
-    console.log("handleRouteEvent triggered.");
     console.log("Profile from options:", profile);
-    console.log("Routes received:", routes);
-
     if (routes && routes.length > 0) {
         onRoutesReceived(routes, profile);
-    } else {
-        console.warn("No routes received.");
     }
 }
-
 function unselectAllMarkers() {
     markers.forEach(({ marker }) => {
         const markerElement = marker.getElement();
@@ -159,17 +145,9 @@ function initializeDirectionsControl() {
         if (directionsControlElement) {
             directionsControlElement.appendChild(directions.onAdd(map));
 
-            directions.on('origin', debounce(handleOriginEvent, 200));
-            directions.on('destination', debounce(handleDestinationEvent, 200));
-            directions.on('route', debounce(handleRouteEvent, 200));
-
-            directions.on('origin', () => {
-                console.log("Origin event detected by Mapbox Directions.");
-            });
-
-            directions.on('destination', () => {
-                console.log("Destination event detected by Mapbox Directions.");
-            });
+            directions.on('origin', handleOriginEvent);
+            directions.on('destination', handleDestinationEvent);
+            directions.on('route', handleRouteEvent);
 
             document.querySelectorAll('.mapbox-directions-profile input').forEach(input => {
                 input.addEventListener('change', (e) => {
@@ -183,6 +161,7 @@ function initializeDirectionsControl() {
         }
     }
 }
+
 function deactivateDirections() {
     clearAllPopups();
     if (directions) {
@@ -219,6 +198,8 @@ function setOriginOnClick(e) {
         return;
     }
 
+    ignoreEvents = false; // Temporarily stop ignoring events
+
     const selectedMarker = markers.find(marker => marker.marker.getElement().getAttribute('data-is-selected') === 'true');
     if (selectedMarker) {
         const { address } = selectedMarker.data;
@@ -227,6 +208,7 @@ function setOriginOnClick(e) {
             console.error('No address found for the selected marker.');
             alert('No address found for the selected marker.');
             settingOrigin = false;
+            ignoreEvents = true; // Resume ignoring events
             return;
         }
 
@@ -235,9 +217,6 @@ function setOriginOnClick(e) {
         geocodeAddress(address, function (coords) {
             if (coords) {
                 try {
-                    handlingDirectionEvents = true;
-                    ignoreEvents = true;
-
                     console.log("Setting origin to:", coords);
                     directions.setOrigin(coords);
 
@@ -253,14 +232,14 @@ function setOriginOnClick(e) {
                     console.error("Error setting origin:", error);
                     alert('Error setting origin.');
                 } finally {
-                    handlingDirectionEvents = false;
-                    ignoreEvents = false;
                     settingOrigin = false;
+                    ignoreEvents = true; // Resume ignoring events
                 }
             } else {
                 console.error('Geocoding failed for address:', address);
                 alert('Failed to geocode the address.');
                 settingOrigin = false;
+                ignoreEvents = true; // Resume ignoring events
             }
         });
     } else {
@@ -270,9 +249,6 @@ function setOriginOnClick(e) {
         geocodeCoordinates([lng, lat], function (address, coords) {
             if (coords) {
                 try {
-                    handlingDirectionEvents = true;
-                    ignoreEvents = true;
-
                     console.log("Setting origin to:", coords);
                     directions.setOrigin(coords);
 
@@ -288,14 +264,14 @@ function setOriginOnClick(e) {
                     console.error("Error setting origin:", error);
                     alert('Error setting origin.');
                 } finally {
-                    handlingDirectionEvents = false;
-                    ignoreEvents = false;
                     settingOrigin = false;
+                    ignoreEvents = true; // Resume ignoring events
                 }
             } else {
                 console.error('Geocoding failed for address:', address);
                 alert('Failed to geocode the address.');
                 settingOrigin = false;
+                ignoreEvents = true; // Resume ignoring events
             }
         });
     }
@@ -628,14 +604,12 @@ function setupDirectionsButton() {
                 return;
             }
 
+            ignoreEvents = false; // Temporarily stop ignoring events
             directions.removeRoutes();
 
             geocodeAddress(address, function (coords) {
                 if (coords) {
                     try {
-                        handlingDirectionEvents = true;
-                        ignoreEvents = true;
-
                         console.log("Setting destination to:", coords);
                         directions.setDestination(coords);
                         console.log("Destination set to:", coords);
@@ -654,14 +628,14 @@ function setupDirectionsButton() {
                         console.error("Error setting destination:", error);
                         alert('Error setting destination.');
                     } finally {
-                        handlingDirectionEvents = false;
-                        ignoreEvents = false;
+                        ignoreEvents = true; // Resume ignoring events
                     }
 
                     document.getElementById('directions-container').style.display = 'block';
                 } else {
                     console.error('Geocoding failed for address:', address);
                     alert('Failed to geocode the address.');
+                    ignoreEvents = true; // Resume ignoring events
                 }
             });
         });
@@ -669,6 +643,7 @@ function setupDirectionsButton() {
         console.error("Element with ID 'get-directions' not found.");
     }
 }
+
 
 
 document.getElementById('nightmode').addEventListener('click', () => {
