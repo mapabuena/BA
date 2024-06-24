@@ -152,7 +152,10 @@ function initializeDirectionsControl() {
         if (directionsControlElement) {
             directionsControlElement.appendChild(directions.onAdd(map));
 
+            // Ensure no automatic map click handling
             directions.mapClickHandlerAdded = false;
+            directions.setOrigin = function () {};
+            directions.setDestination = function () {};
 
             directions.on('origin', handleOriginEvent);
             directions.on('destination', handleDestinationEvent);
@@ -289,6 +292,7 @@ function setOriginOnClick(e) {
         });
     }
 }
+
 function setDestinationOnClick(e) {
     if (settingOrigin || destinationSet) return;
 
@@ -380,6 +384,7 @@ function setDestinationOnClick(e) {
         });
     }
 }
+
 function addRouteLabels(route, profile) {
     if (route.geometry) {
         const coordinates = polyline.decode(route.geometry); // Decode the polyline string
@@ -653,6 +658,7 @@ function setupDirectionsButton() {
         console.error("Element with ID 'get-directions' not found.");
     }
 }
+
 
 
 
