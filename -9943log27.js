@@ -43,17 +43,23 @@ console.log(document.querySelector('.mapbox-directions-destination input')); // 
 function handleOriginEvent() {
     if (ignoreEvents || handlingDirectionEvents || originSet) return;
     console.log("handleOriginEvent triggered. handlingDirectionEvents:", handlingDirectionEvents, "ignoreEvents:", ignoreEvents, "originSet:", originSet);
-    // Handle the origin event
+      const originMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="A"]');
+    if (originMarker) {
+        originMarker.style.backgroundColor = '#FF0000';
+    }
 }
 
 function handleDestinationEvent() {
     if (ignoreEvents || handlingDirectionEvents || destinationSet) return;
-    console.log("handleDestinationEvent triggered. handlingDirectionEvents:", handlingDirectionEvents, "ignoreEvents:", ignoreEvents, "destinationSet:", destinationSet);
-    // Handle the destination event
+   console.log("handleDestinationEvent triggered. handlingDirectionEvents:", handlingDirectionEvents, "ignoreEvents:", ignoreEvents, "destinationSet:", destinationSet);
+    const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
+    if (destinationMarker) {
+        destinationMarker.style.backgroundColor = '#000000';
+    }
 }
 
 function handleRouteEvent(event) {
-    if (ignoreEvents || handlingDirectionEvents) return;
+    if (ignoreEvents) return;
     console.log("handleRouteEvent triggered.");
     const routes = event.route;
     const profile = directions.options.profile;
@@ -195,10 +201,11 @@ function setOriginOnClick(e) {
 
     if (!directions) {
         console.error("Directions control is not initialized.");
+        settingOrigin = false;
         return;
     }
 
-    ignoreEvents = false; // Temporarily stop ignoring events
+    ignoreEvents = true; // Temporarily stop ignoring events
 
     const selectedMarker = markers.find(marker => marker.marker.getElement().getAttribute('data-is-selected') === 'true');
     if (selectedMarker) {
@@ -208,7 +215,7 @@ function setOriginOnClick(e) {
             console.error('No address found for the selected marker.');
             alert('No address found for the selected marker.');
             settingOrigin = false;
-            ignoreEvents = true; // Resume ignoring events
+            ignoreEvents = false; // Resume ignoring events
             return;
         }
 
@@ -233,24 +240,26 @@ function setOriginOnClick(e) {
                     alert('Error setting origin.');
                 } finally {
                     settingOrigin = false;
-                    ignoreEvents = true; // Resume ignoring events
+                    setTimeout(() => {
+                        ignoreEvents = false; // Resume ignoring events after a short delay
+                    }, 500); // Delay to ensure any automatic events are handled
                 }
             } else {
                 console.error('Geocoding failed for address:', address);
                 alert('Failed to geocode the address.');
                 settingOrigin = false;
-                ignoreEvents = true; // Resume ignoring events
+                ignoreEvents = false; // Resume ignoring events
             }
         });
     } else {
         const { lng, lat } = e.lngLat;
         console.log("Map clicked at:", lng, lat);
 
-        geocodeCoordinates([lng, lat], function (address, coords) {
-            if (coords) {
+        geocodeCoordinates([lng, lat], function (address) {
+            if (address) {
                 try {
-                    console.log("Setting origin to:", coords);
-                    directions.setOrigin(coords);
+                    console.log("Setting origin to:", [lng, lat]);
+                    directions.setOrigin([lng, lat]);
 
                     console.log("Setting origin input fields with address:", address);
                     setDirectionsInputFields(address, '');
@@ -265,18 +274,19 @@ function setOriginOnClick(e) {
                     alert('Error setting origin.');
                 } finally {
                     settingOrigin = false;
-                    ignoreEvents = true; // Resume ignoring events
+                    setTimeout(() => {
+                        ignoreEvents = false; // Resume ignoring events after a short delay
+                    }, 500); // Delay to ensure any automatic events are handled
                 }
             } else {
-                console.error('Geocoding failed for address:', address);
-                alert('Failed to geocode the address.');
+                console.error('Geocoding failed for coordinates:', [lng, lat]);
+                alert('Failed to geocode the coordinates.');
                 settingOrigin = false;
-                ignoreEvents = true; // Resume ignoring events
+                ignoreEvents = false; // Resume ignoring events
             }
         });
     }
 }
-
 function setDestinationOnClick(e) {
     if (settingOrigin) return;
     if (destinationSet) return;
