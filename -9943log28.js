@@ -229,6 +229,7 @@ function setOriginOnClick(e) {
 
                     console.log("Setting origin input fields with address:", address);
                     setDirectionsInputFields(address, '');
+                    ignoreEvents = true; 
 
                     console.log("Origin set via SetOriginOnClick marker-selected.");
                     originSet = true;
@@ -240,9 +241,7 @@ function setOriginOnClick(e) {
                     alert('Error setting origin.');
                 } finally {
                     settingOrigin = false;
-                    setTimeout(() => {
-                        ignoreEvents = false; // Resume ignoring events after a short delay
-                    }, 500); // Delay to ensure any automatic events are handled
+                        
                 }
             } else {
                 console.error('Geocoding failed for address:', address);
@@ -282,7 +281,7 @@ function setOriginOnClick(e) {
                 console.error('Geocoding failed for coordinates:', [lng, lat]);
                 alert('Failed to geocode the coordinates.');
                 settingOrigin = false;
-                ignoreEvents = false; // Resume ignoring events
+                ignoreEvents = true; // Resume ignoring events
             }
         });
     }
