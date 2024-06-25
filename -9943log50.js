@@ -65,8 +65,11 @@ function handleRouteEvent(event) {
     const routes = event.route;
     const profile = directions.options.profile;
     console.log("Profile from options:", profile);
+    console.log("Routes received:", routes); // Log the routes
     if (routes && routes.length > 0) {
         onRoutesReceived(routes, profile);
+    } else {
+        console.warn("No routes available.");
     }
 }
 function unselectAllMarkers() {
@@ -650,6 +653,7 @@ function setupDirectionsButton() {
         console.error("Element with ID 'get-directions' not found.");
     }
 }
+
 
 document.getElementById('nightmode').addEventListener('click', () => {
     isNightMode = !isNightMode;
