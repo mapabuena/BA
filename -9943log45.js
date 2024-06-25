@@ -273,6 +273,9 @@ function initializeDirectionsControl() {
             directionsControlElement.appendChild(directions.onAdd(map));
 
             directions.mapClickHandlerAdded = false;
+            directions.getRoutes = function() {
+    return directions.route.routes;
+}
 
             directions.on('origin', handleOriginEvent);
             directions.on('destination', handleDestinationEvent);
