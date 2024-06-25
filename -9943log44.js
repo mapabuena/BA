@@ -121,7 +121,11 @@ function setCustomOrigin(coords, address) {
         console.log("OriginSet updated to true");
 
         if (destination && destination.geometry) {
-            fetchRouteManually(); // Fetch route manually if both origin and destination are set
+            // Trigger handleRouteEvent if both origin and destination are set
+            handleRouteEvent({
+                route: directions.getRoutes(),
+                profile: directions.options.profile
+            });
         }
     } catch (error) {
         console.error("Error setting origin:", error);
@@ -144,7 +148,11 @@ function setCustomDestination(coords, address) {
         console.log("DestinationSet updated to true");
 
         if (origin && origin.geometry) {
-            fetchRouteManually(); // Fetch route manually if both origin and destination are set
+            // Trigger handleRouteEvent if both origin and destination are set
+            handleRouteEvent({
+                route: directions.getRoutes(),
+                profile: directions.options.profile
+            });
         }
     } catch (error) {
         console.error("Error setting destination:", error);
