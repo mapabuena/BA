@@ -52,8 +52,14 @@ function initializeDirectionsControl() {
 
             directions.mapClickHandlerAdded = false;
 
-            directions.on('origin', checkAndRetrieveDirections);
-            directions.on('destination', checkAndRetrieveDirections);
+            directions.on('origin', () => {
+                console.log("Origin event triggered.");
+                checkAndRetrieveDirections();
+            });
+            directions.on('destination', () => {
+                console.log("Destination event triggered.");
+                checkAndRetrieveDirections();
+            });
 
             document.querySelectorAll('.mapbox-directions-profile input').forEach(input => {
                 input.addEventListener('change', (e) => {
@@ -71,12 +77,18 @@ function checkAndRetrieveDirections() {
     const origin = directions.getOrigin();
     const destination = directions.getDestination();
 
+    console.log("Checking directions...");
+    console.log("Origin:", origin);
+    console.log("Destination:", destination);
+
     if (origin && destination && origin.geometry && destination.geometry) {
         const originCoords = origin.geometry.coordinates.join(',');
         const destinationCoords = destination.geometry.coordinates.join(',');
         const profile = directions.options.profile;
 
-        const url = `https://api.mapbox.com/directions/v5/${profile}/${originCoords};${destinationCoords}?access_token=${mapboxgl.accessToken}&alternatives=true&geometries=geojson`;
+        const url = `https://api.mapbox.com/directions/v5/mapbox/${profile}/${originCoords};${destinationCoords}?access_token=${mapboxgl.accessToken}&alternatives=true&geometries=geojson`;
+
+        console.log("Fetching directions from URL:", url);
 
         fetch(url)
             .then(response => response.json())
@@ -89,6 +101,8 @@ function checkAndRetrieveDirections() {
                 }
             })
             .catch(error => console.error('Error fetching directions:', error));
+    } else {
+        console.log("Either origin or destination is missing coordinates.");
     }
 }
 // Debounce function to prevent rapid succession of events
@@ -671,13 +685,16 @@ function setupDirectionsButton() {
             geocodeAddress(address, function (coords) {
                 if (coords) {
                     try {
+                        console.log("Setting destination to:", coords);
                         directions.setDestination(coords);
                         destinationSet = true;
 
+                        console.log("Setting destination input fields with address:", address);
                         setDirectionsInputFields(directions.getOrigin().place_name || '', address);
 
                         unselectAllMarkers();
                         map.on('click', setOriginOnClick);
+
                     } catch (error) {
                         console.error("Error setting destination:", error);
                         alert('Error setting destination.');
@@ -692,7 +709,6 @@ function setupDirectionsButton() {
         console.error("Element with ID 'get-directions' not found.");
     }
 }
-
 
 document.getElementById('nightmode').addEventListener('click', () => {
     isNightMode = !isNightMode;
