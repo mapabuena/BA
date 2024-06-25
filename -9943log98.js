@@ -31,7 +31,14 @@ let destinationCoordinates = null; // Store destination coordinates
 let customOriginMarker = null;
 let customDestinationMarker = null;
 
-
+function removeDefaultMarkers() {
+    const defaultMarkers = document.querySelectorAll('.mapboxgl-marker');
+    defaultMarkers.forEach(marker => {
+        if (marker.style.backgroundImage.includes('mapbox')) { // Adjust this check as needed
+            marker.remove();
+        }
+    });
+}
 // Create custom marker function with SVG URL
 function createCustomMarker(coords, svgUrl) {
     const el = document.createElement('div');
@@ -93,6 +100,7 @@ function initializeDirectionsControl() {
                 originCoordinates = directions.getOrigin().geometry.coordinates;
                 console.log("Origin Coordinates set to:", originCoordinates);
                 originSet = true;
+                removeDefaultMarkers(); // Ensure default markers are removed
                 updateOriginMarker(originCoordinates); // Update custom origin marker
                 if (originSet && destinationSet) {
                     checkAndRetrieveDirections();
@@ -104,6 +112,7 @@ function initializeDirectionsControl() {
                 destinationCoordinates = directions.getDestination().geometry.coordinates;
                 console.log("Destination Coordinates set to:", destinationCoordinates);
                 destinationSet = true;
+                removeDefaultMarkers(); // Ensure default markers are removed
                 updateDestinationMarker(destinationCoordinates); // Update custom destination marker
                 if (originSet && destinationSet) {
                     checkAndRetrieveDirections();
