@@ -111,7 +111,6 @@ function checkAndRetrieveDirections() {
         console.log("Either origin or destination is missing coordinates.");
     }
 }
-
 // Debounce function to prevent rapid succession of events
 function debounce(func, wait) {
     let timeout;
@@ -263,6 +262,7 @@ function geocodeAddress(address, callback) {
             callback(null);
         });
 }
+
 
 function deactivateDirections() {
     clearAllPopups();
@@ -490,7 +490,7 @@ function addRouteLabels(route, profile) {
 }
 
 function getRouteCenter(coordinates) {
-    if (coordinates && coordinates.length > 0) {
+    if (Array.isArray(coordinates) && coordinates.length > 0) {
         const midIndex = Math.floor(coordinates.length / 2);
         return [coordinates[midIndex][1], coordinates[midIndex][0]]; // Ensure the order is [lng, lat]
     } else {
@@ -596,8 +596,8 @@ function displayRouteAlternatives(routes, profile) {
         const secondBestRoute = routes[1];
 
         console.log("Displaying best route popup"); // Debug log
-        const bestRouteCoordinates = getRouteCenter(polyline.decode(bestRoute.geometry.coordinates));
-        const secondBestRouteCoordinates = getRouteCenter(polyline.decode(secondBestRoute.geometry.coordinates));
+        const bestRouteCoordinates = getRouteCenter(bestRoute.geometry.coordinates);
+        const secondBestRouteCoordinates = getRouteCenter(secondBestRoute.geometry.coordinates);
 
         console.log("Best route coordinates:", bestRouteCoordinates); // Debug log
         console.log("Second-best route coordinates:", secondBestRouteCoordinates); // Debug log
@@ -608,7 +608,7 @@ function displayRouteAlternatives(routes, profile) {
         showRoutePopup(secondBestRoute, secondBestRouteCoordinates, profile, false);
     } else if (routes && routes.length > 0) {
         const bestRoute = routes[0];
-        const bestRouteCoordinates = getRouteCenter(polyline.decode(bestRoute.geometry.coordinates));
+        const bestRouteCoordinates = getRouteCenter(bestRoute.geometry.coordinates);
 
         console.log("Best route coordinates:", bestRouteCoordinates); // Debug log
 
