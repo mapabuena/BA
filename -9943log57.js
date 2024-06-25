@@ -52,18 +52,8 @@ function initializeDirectionsControl() {
 
             directions.mapClickHandlerAdded = false;
 
-            directions.on('origin', handleOriginEvent);
-            directions.on('destination', handleDestinationEvent);
-            directions.on('route', (event) => {
-                console.log("Route event triggered.");
-                const routes = event.route;
-                if (routes && routes.length > 0) {
-                    console.log("Routes received:", routes);
-                    displayRouteAlternatives(routes, directions.options.profile);
-                } else {
-                    console.warn("No routes available.");
-                }
-            });
+            directions.on('origin', checkAndRetrieveDirections);
+            directions.on('destination', checkAndRetrieveDirections);
 
             document.querySelectorAll('.mapbox-directions-profile input').forEach(input => {
                 input.addEventListener('change', (e) => {
@@ -77,8 +67,30 @@ function initializeDirectionsControl() {
         }
     }
 }
+function checkAndRetrieveDirections() {
+    const origin = directions.getOrigin();
+    const destination = directions.getDestination();
 
+    if (origin && destination && origin.geometry && destination.geometry) {
+        const originCoords = origin.geometry.coordinates.join(',');
+        const destinationCoords = destination.geometry.coordinates.join(',');
+        const profile = directions.options.profile;
 
+        const url = `https://api.mapbox.com/directions/v5/${profile}/${originCoords};${destinationCoords}?access_token=${mapboxgl.accessToken}&alternatives=true&geometries=geojson`;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                if (data.routes && data.routes.length > 0) {
+                    console.log("Routes received:", data.routes);
+                    displayRouteAlternatives(data.routes, profile);
+                } else {
+                    console.warn("No routes available.");
+                }
+            })
+            .catch(error => console.error('Error fetching directions:', error));
+    }
+}
 // Debounce function to prevent rapid succession of events
 function debounce(func, wait) {
     let timeout;
