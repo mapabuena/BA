@@ -376,7 +376,6 @@ function setOriginOnClick(e) {
         });
     }
 }
-
 function setDestinationOnClick(e) {
     if (settingOrigin || destinationSet) return;
 
@@ -597,8 +596,8 @@ function displayRouteAlternatives(routes, profile) {
         const secondBestRoute = routes[1];
 
         console.log("Displaying best route popup"); // Debug log
-        const bestRouteCoordinates = getRouteCenter(polyline.decode(bestRoute.geometry));
-        const secondBestRouteCoordinates = getRouteCenter(polyline.decode(secondBestRoute.geometry));
+        const bestRouteCoordinates = getRouteCenter(polyline.decode(bestRoute.geometry.coordinates));
+        const secondBestRouteCoordinates = getRouteCenter(polyline.decode(secondBestRoute.geometry.coordinates));
 
         console.log("Best route coordinates:", bestRouteCoordinates); // Debug log
         console.log("Second-best route coordinates:", secondBestRouteCoordinates); // Debug log
@@ -609,7 +608,7 @@ function displayRouteAlternatives(routes, profile) {
         showRoutePopup(secondBestRoute, secondBestRouteCoordinates, profile, false);
     } else if (routes && routes.length > 0) {
         const bestRoute = routes[0];
-        const bestRouteCoordinates = getRouteCenter(polyline.decode(bestRoute.geometry));
+        const bestRouteCoordinates = getRouteCenter(polyline.decode(bestRoute.geometry.coordinates));
 
         console.log("Best route coordinates:", bestRouteCoordinates); // Debug log
 
@@ -618,6 +617,7 @@ function displayRouteAlternatives(routes, profile) {
         console.warn("No routes available to display"); // Warn if no routes are available
     }
 }
+
 
 function onRoutesReceived(routes, profile) {
     console.log("Routes received for profile:", profile); // Debug log for profile
