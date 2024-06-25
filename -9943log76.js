@@ -331,11 +331,10 @@ function setOriginOnClick(e) {
                     console.log("Setting origin input fields with address:", address);
                     setDirectionsInputFields(address, directions.getDestination().place_name || '');
 
-                    // Check if the destination is already set and fetch directions if both are set
-                    if (originSet && destinationSet) {
-                        checkAndRetrieveDirections(); // Ensure directions are retrieved
+                    // Ensure directions are retrieved only after setting both origin and destination
+                    if (destinationSet) {
+                        checkAndRetrieveDirections();
                     }
-
                 } catch (error) {
                     console.error("Error setting origin:", error);
                     alert('Error setting origin.');
@@ -368,11 +367,10 @@ function setOriginOnClick(e) {
                     console.log("Setting origin input fields with address:", address);
                     setDirectionsInputFields(address, directions.getDestination().place_name || '');
 
-                    // Check if the destination is already set and fetch directions if both are set
-                    if (originSet && destinationSet) {
-                        checkAndRetrieveDirections(); // Ensure directions are retrieved
+                    // Ensure directions are retrieved only after setting both origin and destination
+                    if (destinationSet) {
+                        checkAndRetrieveDirections();
                     }
-
                 } catch (error) {
                     console.error("Error setting origin:", error);
                     alert('Error setting origin.');
@@ -391,6 +389,7 @@ function setOriginOnClick(e) {
         });
     }
 }
+
 
 function setDestinationOnClick(e) {
     if (settingOrigin) return; // Avoid setting destination if setting origin
@@ -432,11 +431,10 @@ function setDestinationOnClick(e) {
                     console.log("Destination set via SetDestinationOnClick marker-selected.");
                     map.off('click', setDestinationOnClick);
 
-                    // Check if the origin is already set and fetch directions if both are set
-                    if (originSet && destinationSet) {
-                        checkAndRetrieveDirections(); // Ensure directions are retrieved
+                    // Ensure directions are retrieved only after setting both origin and destination
+                    if (originSet) {
+                        checkAndRetrieveDirections();
                     }
-
                 } catch (error) {
                     console.error("Error setting destination:", error);
                     alert('Error setting destination.');
@@ -472,11 +470,10 @@ function setDestinationOnClick(e) {
                     console.log("Destination set via SetDestinationOnClick.");
                     map.off('click', setDestinationOnClick);
 
-                    // Check if the origin is already set and fetch directions if both are set
-                    if (originSet && destinationSet) {
-                        checkAndRetrieveDirections(); // Ensure directions are retrieved
+                    // Ensure directions are retrieved only after setting both origin and destination
+                    if (originSet) {
+                        checkAndRetrieveDirections();
                     }
-
                 } catch (error) {
                     console.error("Error setting destination:", error);
                     alert('Error setting destination.');
