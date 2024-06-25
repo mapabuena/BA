@@ -65,7 +65,6 @@ function updateDestinationMarker(coords) {
 }
 
 // Initialize Directions Control
-// Initialize Directions Control
 function initializeDirectionsControl() {
     if (!directions) {
         directions = new MapboxDirections({
@@ -362,6 +361,7 @@ function clearAllPopups() {
 
 // Set Origin on Click
 
+// Set Origin on Click
 function setOriginOnClick(e) {
     if (settingDestination) return;
 
