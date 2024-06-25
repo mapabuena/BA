@@ -32,24 +32,35 @@ let customOriginMarker = null;
 let customDestinationMarker = null;
 
 
-// Create custom marker function
-function createCustomMarker(coords, color) {
+// Create custom marker function with SVG URL
+function createCustomMarker(coords, svgUrl) {
     const el = document.createElement('div');
     el.className = 'marker';
-    el.style.backgroundColor = color;
+    el.style.backgroundImage = `url(${svgUrl})`;
     el.style.width = '30px';
     el.style.height = '30px';
-    el.style.borderRadius = '50%';
-    el.style.border = '2px solid white';
+    el.style.backgroundSize = 'contain';
+    el.style.backgroundRepeat = 'no-repeat';
     return new mapboxgl.Marker(el).setLngLat(coords);
 }
 
 // Create or update the origin marker
 function updateOriginMarker(coords) {
+    const originSvgUrl = 'https://raw.githubusercontent.com/mapabuena/BA/main/TransparentMapIconRed.svg';  // Replace with the actual URL to your origin SVG
     if (customOriginMarker) {
         customOriginMarker.setLngLat(coords).addTo(map);
     } else {
-        customOriginMarker = createCustomMarker(coords, 'blue').addTo(map);
+        customOriginMarker = createCustomMarker(coords, originSvgUrl).addTo(map);
+    }
+}
+
+// Create or update the destination marker
+function updateDestinationMarker(coords) {
+    const destinationSvgUrl = 'https://raw.githubusercontent.com/mapabuena/BA/main/TransparentMapIcon.svg';  // Replace with the actual URL to your destination SVG
+    if (customDestinationMarker) {
+        customDestinationMarker.setLngLat(coords).addTo(map);
+    } else {
+        customDestinationMarker = createCustomMarker(coords, destinationSvgUrl).addTo(map);
     }
 }
 
