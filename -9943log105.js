@@ -154,28 +154,26 @@ function initializeDirectionsControl() {
             });
 
             // Add event listeners for the "x" buttons
-            const originInput = document.querySelector('.mapbox-directions-origin input');
-            const destinationInput = document.querySelector('.mapbox-directions-destination input');
+            const originCloseButton = document.querySelector('.mapbox-directions-origin .geocoder-icon-close');
+            const destinationCloseButton = document.querySelector('.mapbox-directions-destination .geocoder-icon-close');
 
-            if (originInput) {
-                originInput.addEventListener('input', function () {
-                    if (originInput.value === '') {
-                        originSet = false;
-                        customOriginMarker.remove(); // Optionally remove the marker
-                        customOriginMarker = null;
-                        map.on('click', setOriginOnClick);
-                    }
+            if (originCloseButton) {
+                originCloseButton.addEventListener('click', function () {
+                    console.log("Origin close button clicked.");
+                    originSet = false;
+                    customOriginMarker.remove(); // Optionally remove the marker
+                    customOriginMarker = null;
+                    map.on('click', setOriginOnClick);
                 });
             }
 
-            if (destinationInput) {
-                destinationInput.addEventListener('input', function () {
-                    if (destinationInput.value === '') {
-                        destinationSet = false;
-                        customDestinationMarker.remove(); // Optionally remove the marker
-                        customDestinationMarker = null;
-                        map.on('click', setDestinationOnClick);
-                    }
+            if (destinationCloseButton) {
+                destinationCloseButton.addEventListener('click', function () {
+                    console.log("Destination close button clicked.");
+                    destinationSet = false;
+                    customDestinationMarker.remove(); // Optionally remove the marker
+                    customDestinationMarker = null;
+                    map.on('click', setDestinationOnClick);
                 });
             }
         } else {
