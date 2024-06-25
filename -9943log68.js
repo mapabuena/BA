@@ -56,10 +56,12 @@ function initializeDirectionsControl() {
 
             directions.on('origin', () => {
                 console.log("Origin event triggered.");
+                originCoordinates = directions.getOrigin().geometry.coordinates;
                 checkAndRetrieveDirections();
             });
             directions.on('destination', () => {
                 console.log("Destination event triggered.");
+                destinationCoordinates = directions.getDestination().geometry.coordinates;
                 checkAndRetrieveDirections();
             });
 
@@ -75,6 +77,7 @@ function initializeDirectionsControl() {
         }
     }
 }
+
 function checkAndRetrieveDirections() {
     console.log("Checking directions...");
     console.log("Origin Coordinates:", originCoordinates);
@@ -630,7 +633,7 @@ console.log("Directions control initialized after DOMContentLoaded.");
     setupInfoItemHoverEffects();
     setupDirectionsButton();
   
-    const resetOriginButton = document.getElementById('reset-origin');
+   const resetOriginButton = document.getElementById('reset-origin');
     if (resetOriginButton) {
         resetOriginButton.addEventListener('click', function() {
             originSet = false;
@@ -652,7 +655,7 @@ console.log("Directions control initialized after DOMContentLoaded.");
         secondPopup = null;
     }
 }
-    const closeDirectionsButton = document.getElementById('close-directions');
+   const closeDirectionsButton = document.getElementById('close-directions');
     if (closeDirectionsButton) {
         closeDirectionsButton.addEventListener('click', function() {
          deactivateDirections();
@@ -713,6 +716,7 @@ function setupDirectionsButton() {
                     try {
                         console.log("Setting destination to:", coords);
                         directions.setDestination(coords);
+                        destinationCoordinates = coords;
                         destinationSet = true;
 
                         console.log("Setting destination input fields with address:", address);
@@ -735,6 +739,7 @@ function setupDirectionsButton() {
         console.error("Element with ID 'get-directions' not found.");
     }
 }
+
 
 document.getElementById('nightmode').addEventListener('click', () => {
     isNightMode = !isNightMode;
