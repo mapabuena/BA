@@ -63,6 +63,8 @@ function setCustomOrigin(coords, address) {
         console.log("Origin set via setCustomOrigin.");
         originSet = true;
         console.log("OriginSet updated to true");
+
+        fetchRouteIfReady(); // Fetch route if both origin and destination are set
     } catch (error) {
         console.error("Error setting origin:", error);
         alert('Error setting origin.');
@@ -81,12 +83,13 @@ function setCustomDestination(coords, address) {
         console.log("Destination set via setCustomDestination.");
         destinationSet = true;
         console.log("DestinationSet updated to true");
+
+        fetchRouteIfReady(); // Fetch route if both origin and destination are set
     } catch (error) {
         console.error("Error setting destination:", error);
         alert('Error setting destination.');
     }
 }
-
 function handleOriginEvent() {
     if (ignoreEvents || handlingDirectionEvents || originSet) return;
     console.log("handleOriginEvent triggered. handlingDirectionEvents:", handlingDirectionEvents, "ignoreEvents:", ignoreEvents, "originSet:", originSet);
