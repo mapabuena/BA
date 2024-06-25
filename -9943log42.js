@@ -57,7 +57,7 @@ async function fetchRouteManually() {
     const origin = directions.getOrigin();
     const destination = directions.getDestination();
 
-    if (origin && destination) {
+    if (origin && origin.geometry && destination && destination.geometry) {
         const profile = directions.options.profile || 'mapbox/driving-traffic';
         const coordinates = `${origin.geometry.coordinates.join(',')};${destination.geometry.coordinates.join(',')}`;
         const accessToken = mapboxgl.accessToken;
@@ -76,6 +76,8 @@ async function fetchRouteManually() {
         } catch (error) {
             console.error('Error fetching route:', error);
         }
+    } else {
+        console.error('Origin or destination geometry is undefined.');
     }
 }
 
@@ -109,15 +111,18 @@ function setCustomOrigin(coords, address) {
         console.log("Setting origin to:", coords);
         directions.setOrigin(coords);
 
-        console.log("After setting origin, destination is:", directions.getDestination());
+        const destination = directions.getDestination();
+        console.log("After setting origin, destination is:", destination);
 
-        setDirectionsInputFields(address, directions.getDestination().place_name || '');
+        setDirectionsInputFields(address, destination ? destination.place_name : '');
 
         console.log("Origin set via setCustomOrigin.");
         originSet = true;
         console.log("OriginSet updated to true");
 
-        fetchRouteManually(); // Fetch route manually if both origin and destination are set
+        if (destination) {
+            fetchRouteManually(); // Fetch route manually if both origin and destination are set
+        }
     } catch (error) {
         console.error("Error setting origin:", error);
         alert('Error setting origin.');
@@ -129,21 +134,23 @@ function setCustomDestination(coords, address) {
         console.log("Setting destination to:", coords);
         directions.setDestination(coords);
 
-        console.log("After setting destination, origin is:", directions.getOrigin());
+        const origin = directions.getOrigin();
+        console.log("After setting destination, origin is:", origin);
 
-        setDirectionsInputFields(directions.getOrigin().place_name || '', address);
+        setDirectionsInputFields(origin ? origin.place_name : '', address);
 
         console.log("Destination set via setCustomDestination.");
         destinationSet = true;
         console.log("DestinationSet updated to true");
 
-        fetchRouteManually(); // Fetch route manually if both origin and destination are set
+        if (origin) {
+            fetchRouteManually(); // Fetch route manually if both origin and destination are set
+        }
     } catch (error) {
         console.error("Error setting destination:", error);
         alert('Error setting destination.');
     }
 }
-
 
 function handleOriginEvent() {
     if (ignoreEvents || handlingDirectionEvents || originSet) return;
