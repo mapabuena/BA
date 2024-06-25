@@ -185,7 +185,7 @@ function initializeDirectionsControl() {
 }
 
 // Add event listeners for custom profile buttons
-document.getElementById('custom-driving').addEventListener('click', function() {
+document.getElementById('custom-traffic').addEventListener('click', function() {
     changeProfile('mapbox/driving-traffic');
 });
 
