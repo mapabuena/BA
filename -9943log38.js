@@ -40,6 +40,17 @@ function debounce(func, wait) {
 console.log(document.querySelector('.mapbox-directions-origin input')); // Should log the element or null
 console.log(document.querySelector('.mapbox-directions-destination input')); // Should log the element or null
 
+// Function to fetch the route if both origin and destination are set
+function fetchRouteIfReady() {
+    const origin = directions.getOrigin();
+    const destination = directions.getDestination();
+
+    if (origin && destination) {
+        console.log("Fetching route for origin and destination:", origin, destination);
+        directions.query();
+    }
+}
+
 function setCustomOrigin(coords, address) {
     try {
         console.log("Setting origin to:", coords);
@@ -232,6 +243,7 @@ function clearAllPopups() {
 }
 
 
+// Modify setOriginOnClick function to use setCustomOrigin
 function setOriginOnClick(e) {
     if (settingDestination || originSet) return;
 
@@ -583,6 +595,7 @@ function geocodeAddress(address, callback) {
         .catch(error => console.error('Geocoding error:', error));
 }
 
+// Modify setupDirectionsButton function to use setCustomDestination
 function setupDirectionsButton() {
     const directionsButton = document.getElementById('get-directions');
     if (directionsButton) {
