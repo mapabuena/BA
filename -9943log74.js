@@ -385,6 +385,7 @@ function setOriginOnClick(e) {
         });
     }
 }
+
 function setDestinationOnClick(e) {
     if (settingOrigin) return; // Avoid setting destination if setting origin
 
@@ -523,11 +524,10 @@ function showRoutePopup(route, coordinates, profile, isBestRoute = true) {
     const formattedDistance = (route.distance / 1000).toFixed(2) + ' km';
     const formattedTravelTime = Math.round(route.duration / 60) + ' mins';
 
-    // Define the icon and popup size based on the transport mode
     let modeIcon;
-    let iconSize = { width: '24px', height: '24px' }; // Default icon size
-    let popupSize = { width: '120px', height: '32px' }; // Default popup size
-    let iconPaddingBottom = '0px'; // Default padding
+    let iconSize = { width: '24px', height: '24px' }; 
+    let popupSize = { width: '120px', height: '32px' }; 
+    let iconPaddingBottom = '0px'; 
 
     switch (profile) {
         case 'mapbox/driving':
@@ -555,8 +555,8 @@ function showRoutePopup(route, coordinates, profile, isBestRoute = true) {
             iconPaddingBottom = '15px';
     }
 
-    const backgroundColor = isBestRoute ? 'rgba(255, 255, 255, 0.75)' : 'rgba(169, 169, 169, 0.75)'; // White for best route, gray for second-best
-    const popupClass = isBestRoute ? 'best-route-popup' : 'second-route-popup'; // Set class based on the route type
+    const backgroundColor = isBestRoute ? 'rgba(255, 255, 255, 0.75)' : 'rgba(169, 169, 169, 0.75)'; 
+    const popupClass = isBestRoute ? 'best-route-popup' : 'second-route-popup'; 
 
     const popupContent = `
         <div class="${popupClass}" style="display: flex; align-items: center; padding: 5px; background: ${backgroundColor}; border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); font-family: Arial, sans-serif; width: ${popupSize.width}; height: ${popupSize.height}; overflow: hidden;">
@@ -577,17 +577,19 @@ function showRoutePopup(route, coordinates, profile, isBestRoute = true) {
 
     setTimeout(() => {
         const popupElement = popup.getElement();
-        popupElement.style.zIndex = isBestRoute ? '9999' : '9998';
+        if (popupElement) {
+            popupElement.style.zIndex = isBestRoute ? '9999' : '9998';
+        }
     }, 100); // Delay to ensure the popup is added to the map
 
     if (isBestRoute) {
         if (currentPopup) {
-            currentPopup.remove(); // Close the previous popup if it exists
+            currentPopup.remove(); 
         }
         currentPopup = popup;
     } else {
         if (secondPopup) {
-            secondPopup.remove(); // Close the previous popup if it exists
+            secondPopup.remove(); 
         }
         secondPopup = popup;
     }
