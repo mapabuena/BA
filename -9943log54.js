@@ -28,6 +28,56 @@ let ignoreEvents = true;
 let settingOrigin = false;
 let settingDestination = false;
 
+function initializeDirectionsControl() {
+    if (!directions) {
+        directions = new MapboxDirections({
+            accessToken: mapboxgl.accessToken,
+            unit: 'imperial',
+            profile: 'mapbox/driving-traffic',
+            alternatives: true,
+            controls: {
+                inputs: true,
+                instructions: true,
+            },
+            flyTo: false,
+            interactive: false, // Disable interactivity
+            zoom: 14,
+            placeholderOrigin: "Enter starting location",
+            placeholderDestination: "Enter destination location"
+        });
+
+        const directionsControlElement = document.getElementById('directions-control');
+        if (directionsControlElement) {
+            directionsControlElement.appendChild(directions.onAdd(map));
+
+            directions.mapClickHandlerAdded = false;
+
+            directions.on('origin', handleOriginEvent);
+            directions.on('destination', handleDestinationEvent);
+            directions.on('route', (event) => {
+                console.log("Route event triggered.");
+                const routes = event.route;
+                if (routes && routes.length > 0) {
+                    console.log("Routes received:", routes);
+                    displayRouteAlternatives(routes, directions.options.profile);
+                } else {
+                    console.warn("No routes available.");
+                }
+            });
+
+            document.querySelectorAll('.mapbox-directions-profile input').forEach(input => {
+                input.addEventListener('change', (e) => {
+                    console.log("Profile changed to:", e.target.value);
+                    directions.options.profile = e.target.value;
+                });
+            });
+
+        } else {
+            console.error("Element with ID 'directions-control' not found.");
+        }
+    }
+}
+
 
 // Debounce function to prevent rapid succession of events
 function debounce(func, wait) {
@@ -113,11 +163,9 @@ function handleRouteEvent(event) {
         console.warn("No routes available.");
     }
 }
-function unselectAllMarkers() {
-    markers.forEach(({ marker }) => {
-        const markerElement = marker.getElement();
-        markerElement.setAttribute('data-is-selected', 'false');
-    });
+function onRoutesReceived(routes, profile) {
+    console.log("Routes received for profile:", profile); // Debug log for profile
+    displayRouteAlternatives(routes, profile);
 }
 
 function setDirectionsInputFields(originTitle, destinationTitle) {
@@ -175,46 +223,6 @@ function geocodeAddress(address, callback) {
             console.error('Geocoding error:', error);
             callback(null);
         });
-}
-function initializeDirectionsControl() {
-    if (!directions) {
-        directions = new MapboxDirections({
-            accessToken: mapboxgl.accessToken,
-            unit: 'imperial',
-            profile: 'mapbox/driving-traffic',
-            alternatives: true,
-            controls: {
-                inputs: true,
-                instructions: true,
-            },
-            flyTo: false,
-            interactive: false, // Disable interactivity
-            zoom: 14,
-            placeholderOrigin: "Enter starting location",
-            placeholderDestination: "Enter destination location"
-        });
-
-        const directionsControlElement = document.getElementById('directions-control');
-        if (directionsControlElement) {
-            directionsControlElement.appendChild(directions.onAdd(map));
-
-            directions.mapClickHandlerAdded = false;
-
-            directions.on('origin', handleOriginEvent);
-            directions.on('destination', handleDestinationEvent);
-            directions.on('route', handleRouteEvent);
-
-            document.querySelectorAll('.mapbox-directions-profile input').forEach(input => {
-                input.addEventListener('change', (e) => {
-                    console.log("Profile changed to:", e.target.value);
-                    directions.options.profile = e.target.value;
-                });
-            });
-
-        } else {
-            console.error("Element with ID 'directions-control' not found.");
-        }
-    }
 }
 
 function deactivateDirections() {
@@ -323,7 +331,6 @@ function setOriginOnClick(e) {
         });
     }
 }
-
 function setDestinationOnClick(e) {
     if (settingOrigin || destinationSet) return;
 
@@ -404,7 +411,6 @@ function setDestinationOnClick(e) {
         });
     }
 }
-
 function addRouteLabels(route, profile) {
     if (route.geometry) {
         const coordinates = polyline.decode(route.geometry); // Decode the polyline string
@@ -556,7 +562,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Ensure element exists
     const directionsButton = document.getElementById('get-directions');
     console.log(directionsButton ? "get-directions button found." : "get-directions button NOT found.");
-
+console.log("Document loaded");
+    initializeDirectionsControl();
+console.log("Directions control initialized after DOMContentLoaded.");
     setupDatePickers();
     setupCityButtons();
     setupFormHandlers();
@@ -645,16 +653,13 @@ function setupDirectionsButton() {
             geocodeAddress(address, function (coords) {
                 if (coords) {
                     try {
-                        console.log("Setting destination to:", coords);
                         directions.setDestination(coords);
                         destinationSet = true;
 
-                        console.log("Setting destination input fields with address:", address);
                         setDirectionsInputFields(directions.getOrigin().place_name || '', address);
 
                         unselectAllMarkers();
                         map.on('click', setOriginOnClick);
-
                     } catch (error) {
                         console.error("Error setting destination:", error);
                         alert('Error setting destination.');
