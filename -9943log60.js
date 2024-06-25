@@ -376,6 +376,7 @@ function setOriginOnClick(e) {
         });
     }
 }
+
 function setDestinationOnClick(e) {
     if (settingOrigin || destinationSet) return;
 
