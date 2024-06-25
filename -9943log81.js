@@ -53,18 +53,18 @@ function initializeDirectionsControl() {
 
             directions.mapClickHandlerAdded = false;
 
-       directions.on('origin', () => {
-    console.log("Origin event triggered.");
-    originCoordinates = directions.getOrigin().geometry.coordinates;
-    originSet = true; // Set the origin flag to true
-    checkAndRetrieveDirections();
-});
-         directions.on('destination', () => {
-    console.log("Destination event triggered.");
-    destinationCoordinates = directions.getDestination().geometry.coordinates;
-    destinationSet = true; // Set the destination flag to true
-    checkAndRetrieveDirections();
-});
+            directions.on('origin', () => {
+                console.log("Origin event triggered.");
+                originCoordinates = directions.getOrigin().geometry.coordinates;
+                originSet = true; // Set the origin flag to true
+            });
+
+            directions.on('destination', () => {
+                console.log("Destination event triggered.");
+                destinationCoordinates = directions.getDestination().geometry.coordinates;
+                destinationSet = true; // Set the destination flag to true
+            });
+
             document.querySelectorAll('.mapbox-directions-profile input').forEach(input => {
                 input.addEventListener('change', (e) => {
                     console.log("Profile changed to:", e.target.value);
@@ -325,11 +325,9 @@ function setOriginOnClick(e) {
                     console.log("Setting origin input fields with address:", address);
                     setDirectionsInputFields(address, directions.getDestination().place_name || '');
 
-                    if (destinationSet) {
+                    if (originSet && destinationSet) {
                         console.log("Both origin and destination are set. Fetching directions...");
                         checkAndRetrieveDirections();
-                    } else {
-                        console.log("Waiting for destination to be set...");
                     }
                 } catch (error) {
                     console.error("Error setting origin:", error);
@@ -356,11 +354,9 @@ function setOriginOnClick(e) {
                     console.log("Setting origin input fields with address:", address);
                     setDirectionsInputFields(address, directions.getDestination().place_name || '');
 
-                    if (destinationSet) {
+                    if (originSet && destinationSet) {
                         console.log("Both origin and destination are set. Fetching directions...");
                         checkAndRetrieveDirections();
-                    } else {
-                        console.log("Waiting for destination to be set...");
                     }
                 } catch (error) {
                     console.error("Error setting origin:", error);
@@ -408,11 +404,9 @@ function setDestinationOnClick(e) {
                     console.log("Destination set via SetDestinationOnClick marker-selected.");
                     map.off('click', setDestinationOnClick);
 
-                    if (originSet) {
+                    if (originSet && destinationSet) {
                         console.log("Both origin and destination are set. Fetching directions...");
                         checkAndRetrieveDirections();
-                    } else {
-                        console.log("Waiting for origin to be set...");
                     }
                 } catch (error) {
                     console.error("Error setting destination:", error);
@@ -441,24 +435,21 @@ function setDestinationOnClick(e) {
                     console.log("Destination set via SetDestinationOnClick.");
                     map.off('click', setDestinationOnClick);
 
-                    if (originSet) {
+                    if (originSet && destinationSet) {
                         console.log("Both origin and destination are set. Fetching directions...");
                         checkAndRetrieveDirections();
-                    } else {
-                        console.log("Waiting for origin to be set...");
                     }
                 } catch (error) {
                     console.error("Error setting destination:", error);
                     alert('Error setting destination.');
                 }
             } else {
-                console.error('Geocoding failed for coordinates:', [lng, lat]);
-                alert('Failed to geocode the coordinates.');
+                console.error('Geocoding failed for address:', address);
+                alert('Failed to geocode the address.');
             }
         });
     }
 }
-
 function addRouteLabels(route, profile) {
     if (route.geometry) {
         const coordinates = polyline.decode(route.geometry); // Decode the polyline string
