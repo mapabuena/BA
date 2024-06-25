@@ -89,7 +89,7 @@ function checkAndRetrieveDirections() {
         const destinationCoords = destinationCoordinates.join(',');
         const profile = directions.options.profile;
 
-        const url = `https://api.mapbox.com/directions/v5/mapbox/${profile}/${originCoords};${destinationCoords}?access_token=${mapboxgl.accessToken}&alternatives=true&geometries=geojson`;
+        const url = `https://api.mapbox.com/directions/v5/${profile}/${originCoords};${destinationCoords}?access_token=${mapboxgl.accessToken}&alternatives=true&geometries=geojson`;
 
         console.log("Fetching directions from URL:", url);
 
