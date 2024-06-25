@@ -120,7 +120,7 @@ function setCustomOrigin(coords, address) {
         originSet = true;
         console.log("OriginSet updated to true");
 
-        if (destination) {
+        if (destination && destination.geometry) {
             fetchRouteManually(); // Fetch route manually if both origin and destination are set
         }
     } catch (error) {
@@ -143,7 +143,7 @@ function setCustomDestination(coords, address) {
         destinationSet = true;
         console.log("DestinationSet updated to true");
 
-        if (origin) {
+        if (origin && origin.geometry) {
             fetchRouteManually(); // Fetch route manually if both origin and destination are set
         }
     } catch (error) {
