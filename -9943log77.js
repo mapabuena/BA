@@ -333,7 +333,10 @@ function setOriginOnClick(e) {
 
                     // Ensure directions are retrieved only after setting both origin and destination
                     if (destinationSet) {
+                        console.log("Both origin and destination are set. Fetching directions...");
                         checkAndRetrieveDirections();
+                    } else {
+                        console.log("Waiting for destination to be set...");
                     }
                 } catch (error) {
                     console.error("Error setting origin:", error);
@@ -369,7 +372,10 @@ function setOriginOnClick(e) {
 
                     // Ensure directions are retrieved only after setting both origin and destination
                     if (destinationSet) {
+                        console.log("Both origin and destination are set. Fetching directions...");
                         checkAndRetrieveDirections();
+                    } else {
+                        console.log("Waiting for destination to be set...");
                     }
                 } catch (error) {
                     console.error("Error setting origin:", error);
@@ -433,7 +439,10 @@ function setDestinationOnClick(e) {
 
                     // Ensure directions are retrieved only after setting both origin and destination
                     if (originSet) {
+                        console.log("Both origin and destination are set. Fetching directions...");
                         checkAndRetrieveDirections();
+                    } else {
+                        console.log("Waiting for origin to be set...");
                     }
                 } catch (error) {
                     console.error("Error setting destination:", error);
@@ -472,7 +481,10 @@ function setDestinationOnClick(e) {
 
                     // Ensure directions are retrieved only after setting both origin and destination
                     if (originSet) {
+                        console.log("Both origin and destination are set. Fetching directions...");
                         checkAndRetrieveDirections();
+                    } else {
+                        console.log("Waiting for origin to be set...");
                     }
                 } catch (error) {
                     console.error("Error setting destination:", error);
