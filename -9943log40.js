@@ -40,6 +40,7 @@ function debounce(func, wait) {
 console.log(document.querySelector('.mapbox-directions-origin input')); // Should log the element or null
 console.log(document.querySelector('.mapbox-directions-destination input')); // Should log the element or null
 
+
 // Function to fetch the route if both origin and destination are set
 function fetchRouteIfReady() {
     const origin = directions.getOrigin();
@@ -47,7 +48,7 @@ function fetchRouteIfReady() {
 
     if (origin && destination) {
         console.log("Fetching route for origin and destination:", origin, destination);
-        directions.query();
+        // The Mapbox Directions plugin will handle the route fetching internally
     }
 }
 
@@ -90,6 +91,8 @@ function setCustomDestination(coords, address) {
         alert('Error setting destination.');
     }
 }
+
+
 function handleOriginEvent() {
     if (ignoreEvents || handlingDirectionEvents || originSet) return;
     console.log("handleOriginEvent triggered. handlingDirectionEvents:", handlingDirectionEvents, "ignoreEvents:", ignoreEvents, "originSet:", originSet);
@@ -107,7 +110,6 @@ function handleDestinationEvent() {
         destinationMarker.style.backgroundColor = '#000000';
     }
 }
-
 function handleRouteEvent(event) {
     if (ignoreEvents) return;
     console.log("handleRouteEvent triggered.");
