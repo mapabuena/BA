@@ -31,12 +31,11 @@ let destinationCoordinates = null; // Store destination coordinates
 let customOriginMarker = null;
 let customDestinationMarker = null;
 
+// Function to remove default markers added by Mapbox Directions
 function removeDefaultMarkers() {
-    const defaultMarkers = document.querySelectorAll('.mapboxgl-marker');
+    const defaultMarkers = document.querySelectorAll('.mapboxgl-marker:not(.marker)');
     defaultMarkers.forEach(marker => {
-        if (marker.style.backgroundImage.includes('mapbox')) { // Adjust this check as needed
-            marker.remove();
-        }
+        marker.remove();
     });
 }
 // Create custom marker function with SVG URL
@@ -50,6 +49,7 @@ function createCustomMarker(coords, svgUrl) {
     el.style.backgroundRepeat = 'no-repeat';
     return new mapboxgl.Marker(el).setLngLat(coords);
 }
+
 
 // Create or update the origin marker
 function updateOriginMarker(coords) {
@@ -117,6 +117,11 @@ function initializeDirectionsControl() {
                 if (originSet && destinationSet) {
                     checkAndRetrieveDirections();
                 }
+            });
+
+            directions.on('route', () => {
+                console.log("Route event triggered.");
+                removeDefaultMarkers(); // Ensure default markers are removed after route is added
             });
 
             document.querySelectorAll('.mapbox-directions-profile input').forEach(input => {
