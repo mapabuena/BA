@@ -48,10 +48,62 @@ function fetchRouteIfReady() {
 
     if (origin && destination) {
         console.log("Fetching route for origin and destination:", origin, destination);
-        // The Mapbox Directions plugin will handle the route fetching internally
+        fetchRouteManually(); // Call manual route fetch
     }
 }
 
+
+async function fetchRouteManually() {
+    const origin = directions.getOrigin();
+    const destination = directions.getDestination();
+
+    if (origin && destination) {
+        const profile = directions.options.profile || 'mapbox/driving-traffic';
+        const coordinates = `${origin.geometry.coordinates.join(',')};${destination.geometry.coordinates.join(',')}`;
+        const accessToken = mapboxgl.accessToken;
+
+        const url = `https://api.mapbox.com/directions/v5/${profile}/${coordinates}?access_token=${accessToken}&geometries=geojson`;
+
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+
+            if (data.routes && data.routes.length > 0) {
+                displayRoute(data.routes[0]);
+            } else {
+                console.error('No routes found.');
+            }
+        } catch (error) {
+            console.error('Error fetching route:', error);
+        }
+    }
+}
+
+function displayRoute(route) {
+    if (map.getSource('route')) {
+        map.getSource('route').setData(route.geometry);
+    } else {
+        map.addSource('route', {
+            'type': 'geojson',
+            'data': route.geometry
+        });
+
+        map.addLayer({
+            'id': 'route',
+            'type': 'line',
+            'source': 'route',
+            'layout': {
+                'line-join': 'round',
+                'line-cap': 'round'
+            },
+            'paint': {
+                'line-color': '#3887be',
+                'line-width': 5,
+                'line-opacity': 0.75
+            }
+        });
+    }
+}
 function setCustomOrigin(coords, address) {
     try {
         console.log("Setting origin to:", coords);
@@ -65,7 +117,7 @@ function setCustomOrigin(coords, address) {
         originSet = true;
         console.log("OriginSet updated to true");
 
-        fetchRouteIfReady(); // Fetch route if both origin and destination are set
+        fetchRouteManually(); // Fetch route manually if both origin and destination are set
     } catch (error) {
         console.error("Error setting origin:", error);
         alert('Error setting origin.');
@@ -85,7 +137,7 @@ function setCustomDestination(coords, address) {
         destinationSet = true;
         console.log("DestinationSet updated to true");
 
-        fetchRouteIfReady(); // Fetch route if both origin and destination are set
+        fetchRouteManually(); // Fetch route manually if both origin and destination are set
     } catch (error) {
         console.error("Error setting destination:", error);
         alert('Error setting destination.');
