@@ -27,6 +27,8 @@ let handlingDirectionEvents = false;
 let ignoreEvents = true;
 let settingOrigin = false;
 let settingDestination = false;
+let originCoordinates = null; // Store origin coordinates
+let destinationCoordinates = null; // Store destination coordinates
 
 function initializeDirectionsControl() {
     if (!directions) {
@@ -74,16 +76,13 @@ function initializeDirectionsControl() {
     }
 }
 function checkAndRetrieveDirections() {
-    const origin = directions.getOrigin();
-    const destination = directions.getDestination();
-
     console.log("Checking directions...");
-    console.log("Origin:", origin);
-    console.log("Destination:", destination);
+    console.log("Origin Coordinates:", originCoordinates);
+    console.log("Destination Coordinates:", destinationCoordinates);
 
-    if (origin && destination && origin.geometry && destination.geometry) {
-        const originCoords = origin.geometry.coordinates.join(',');
-        const destinationCoords = destination.geometry.coordinates.join(',');
+    if (originCoordinates && destinationCoordinates) {
+        const originCoords = originCoordinates.join(',');
+        const destinationCoords = destinationCoordinates.join(',');
         const profile = directions.options.profile;
 
         const url = `https://api.mapbox.com/directions/v5/mapbox/${profile}/${originCoords};${destinationCoords}?access_token=${mapboxgl.accessToken}&alternatives=true&geometries=geojson`;
@@ -102,13 +101,13 @@ function checkAndRetrieveDirections() {
             })
             .catch(error => console.error('Error fetching directions:', error));
     } else {
-        if (!origin || !origin.geometry) {
-            console.log("Origin is missing or invalid:", origin);
+        if (!originCoordinates) {
+            console.log("Origin coordinates are missing.");
         }
-        if (!destination || !destination.geometry) {
-            console.log("Destination is missing or invalid:", destination);
+        if (!destinationCoordinates) {
+            console.log("Destination coordinates are missing.");
         }
-        console.log("Either origin or destination is missing coordinates.");
+        console.log("Either origin or destination coordinates are missing.");
     }
 }
 // Debounce function to prevent rapid succession of events
@@ -321,6 +320,7 @@ function setOriginOnClick(e) {
                 try {
                     console.log("Setting origin to:", coords);
                     directions.setOrigin(coords);
+                    originCoordinates = coords;
                     originSet = true;
                     map.off('click', setOriginOnClick);
 
@@ -352,6 +352,7 @@ function setOriginOnClick(e) {
                 try {
                     console.log("Setting origin to:", [lng, lat]);
                     directions.setOrigin([lng, lat]);
+                    originCoordinates = [lng, lat];
                     originSet = true;
                     map.off('click', setOriginOnClick);
 
@@ -406,18 +407,14 @@ function setDestinationOnClick(e) {
                     ignoreEvents = true;
 
                     console.log("Setting destination to:", coords);
-                    console.log("Before setting destination, origin is:", directions.getOrigin());
-
                     directions.setDestination(coords);
-
-                    console.log("After setting destination, origin is:", directions.getOrigin());
+                    destinationCoordinates = coords;
+                    destinationSet = true;
 
                     console.log("Setting destination input fields with address:", address);
                     setDirectionsInputFields(directions.getOrigin().place_name || '', address);
 
                     console.log("Destination set via SetDestinationOnClick marker-selected.");
-                    destinationSet = true;
-                    console.log("DestinationSet updated to true");
                     map.off('click', setDestinationOnClick);
 
                 } catch (error) {
@@ -445,18 +442,14 @@ function setDestinationOnClick(e) {
                     ignoreEvents = true;
 
                     console.log("Setting destination to:", [lng, lat]);
-                    console.log("Before setting destination, origin is:", directions.getOrigin());
-
                     directions.setDestination([lng, lat]);
-
-                    console.log("After setting destination, origin is:", directions.getOrigin());
+                    destinationCoordinates = [lng, lat];
+                    destinationSet = true;
 
                     console.log("Setting destination input fields with address:", address);
                     setDirectionsInputFields(directions.getOrigin().place_name || '', address);
 
                     console.log("Destination set via SetDestinationOnClick.");
-                    destinationSet = true;
-                    console.log("DestinationSet updated to true");
                     map.off('click', setDestinationOnClick);
 
                 } catch (error) {
@@ -475,7 +468,6 @@ function setDestinationOnClick(e) {
         });
     }
 }
-
 function addRouteLabels(route, profile) {
     if (route.geometry) {
         const coordinates = polyline.decode(route.geometry); // Decode the polyline string
