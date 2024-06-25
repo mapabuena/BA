@@ -54,17 +54,18 @@ function initializeDirectionsControl() {
 
             directions.mapClickHandlerAdded = false;
 
-            directions.on('origin', () => {
-                console.log("Origin event triggered.");
-                originCoordinates = directions.getOrigin().geometry.coordinates;
-                checkAndRetrieveDirections();
-            });
-            directions.on('destination', () => {
-                console.log("Destination event triggered.");
-                destinationCoordinates = directions.getDestination().geometry.coordinates;
-                checkAndRetrieveDirections();
-            });
-
+       directions.on('origin', () => {
+    console.log("Origin event triggered.");
+    originCoordinates = directions.getOrigin().geometry.coordinates;
+    originSet = true; // Set the origin flag to true
+    checkAndRetrieveDirections();
+});
+         directions.on('destination', () => {
+    console.log("Destination event triggered.");
+    destinationCoordinates = directions.getDestination().geometry.coordinates;
+    destinationSet = true; // Set the destination flag to true
+    checkAndRetrieveDirections();
+});
             document.querySelectorAll('.mapbox-directions-profile input').forEach(input => {
                 input.addEventListener('change', (e) => {
                     console.log("Profile changed to:", e.target.value);
@@ -291,7 +292,7 @@ function clearAllPopups() {
 
 
 function setOriginOnClick(e) {
-    if (settingDestination || originSet) return;
+    if (settingDestination) return; // Avoid setting origin if setting destination
 
     settingOrigin = true;
     console.log("setOriginOnClick triggered. OriginSet:", originSet, "DestinationSet:", destinationSet);
@@ -380,8 +381,9 @@ function setOriginOnClick(e) {
         });
     }
 }
+
 function setDestinationOnClick(e) {
-    if (settingOrigin || destinationSet) return;
+    if (settingOrigin) return; // Avoid setting destination if setting origin
 
     settingDestination = true;
     console.log("setDestinationOnClick triggered. DestinationSet:", destinationSet, "OriginSet:", originSet);
