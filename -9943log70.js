@@ -331,6 +331,8 @@ function setOriginOnClick(e) {
                     console.log("Setting origin input fields with address:", address);
                     setDirectionsInputFields(address, directions.getDestination().place_name || '');
 
+                    checkAndRetrieveDirections(); // Ensure directions are retrieved
+
                 } catch (error) {
                     console.error("Error setting origin:", error);
                     alert('Error setting origin.');
@@ -363,6 +365,8 @@ function setOriginOnClick(e) {
                     console.log("Setting origin input fields with address:", address);
                     setDirectionsInputFields(address, directions.getDestination().place_name || '');
 
+                    checkAndRetrieveDirections(); // Ensure directions are retrieved
+
                 } catch (error) {
                     console.error("Error setting origin:", error);
                     alert('Error setting origin.');
@@ -381,7 +385,6 @@ function setOriginOnClick(e) {
         });
     }
 }
-
 function setDestinationOnClick(e) {
     if (settingOrigin) return; // Avoid setting destination if setting origin
 
@@ -422,6 +425,8 @@ function setDestinationOnClick(e) {
                     console.log("Destination set via SetDestinationOnClick marker-selected.");
                     map.off('click', setDestinationOnClick);
 
+                    checkAndRetrieveDirections(); // Ensure directions are retrieved
+
                 } catch (error) {
                     console.error("Error setting destination:", error);
                     alert('Error setting destination.');
@@ -456,6 +461,8 @@ function setDestinationOnClick(e) {
 
                     console.log("Destination set via SetDestinationOnClick.");
                     map.off('click', setDestinationOnClick);
+
+                    checkAndRetrieveDirections(); // Ensure directions are retrieved
 
                 } catch (error) {
                     console.error("Error setting destination:", error);
