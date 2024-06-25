@@ -227,7 +227,11 @@ function setOriginOnClick(e) {
             if (coords) {
                 try {
                     console.log("Setting origin to:", coords);
+                    console.log("Before setting origin, destination is:", directions.getDestination());
+                    
                     directions.setOrigin(coords);
+
+                    console.log("After setting origin, destination is:", directions.getDestination());
 
                     console.log("Setting origin input fields with address:", address);
                     setDirectionsInputFields(address, directions.getDestination().place_name || '');
@@ -261,7 +265,11 @@ function setOriginOnClick(e) {
             if (address) {
                 try {
                     console.log("Setting origin to:", [lng, lat]);
+                    console.log("Before setting origin, destination is:", directions.getDestination());
+
                     directions.setOrigin([lng, lat]);
+
+                    console.log("After setting origin, destination is:", directions.getDestination());
 
                     console.log("Setting origin input fields with address:", address);
                     setDirectionsInputFields(address, directions.getDestination().place_name || '');
@@ -289,6 +297,7 @@ function setOriginOnClick(e) {
         });
     }
 }
+
 function setDestinationOnClick(e) {
     if (settingOrigin || destinationSet) return;
 
@@ -319,7 +328,11 @@ function setDestinationOnClick(e) {
                     ignoreEvents = true;
 
                     console.log("Setting destination to:", coords);
+                    console.log("Before setting destination, origin is:", directions.getOrigin());
+
                     directions.setDestination(coords);
+
+                    console.log("After setting destination, origin is:", directions.getOrigin());
 
                     console.log("Setting destination input fields with address:", address);
                     setDirectionsInputFields(directions.getOrigin().place_name || '', address);
@@ -354,7 +367,11 @@ function setDestinationOnClick(e) {
                     ignoreEvents = true;
 
                     console.log("Setting destination to:", [lng, lat]);
+                    console.log("Before setting destination, origin is:", directions.getOrigin());
+
                     directions.setDestination([lng, lat]);
+
+                    console.log("After setting destination, origin is:", directions.getOrigin());
 
                     console.log("Setting destination input fields with address:", address);
                     setDirectionsInputFields(directions.getOrigin().place_name || '', address);
