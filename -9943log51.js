@@ -40,7 +40,49 @@ function debounce(func, wait) {
 console.log(document.querySelector('.mapbox-directions-origin input')); // Should log the element or null
 console.log(document.querySelector('.mapbox-directions-destination input')); // Should log the element or null
 
+async function getDirections(origin, destination, profile = 'mapbox/driving') {
+    const coordinates = `${origin[0]},${origin[1]};${destination[0]},${destination[1]}`;
+    const url = `https://api.mapbox.com/directions/v5/mapbox/${profile}/${coordinates}?geometries=geojson&access_token=${mapboxgl.accessToken}`;
 
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        if (data.routes && data.routes.length > 0) {
+            return data.routes[0]; // Return the first route
+        } else {
+            console.error("No routes found:", data);
+            return null;
+        }
+    } catch (error) {
+        console.error("Error fetching directions:", error);
+        return null;
+    }
+}
+function addRouteToMap(route) {
+    if (map.getSource('route')) {
+        map.getSource('route').setData(route.geometry);
+    } else {
+        map.addSource('route', {
+            type: 'geojson',
+            data: route.geometry
+        });
+
+        map.addLayer({
+            id: 'route',
+            type: 'line',
+            source: 'route',
+            layout: {
+                'line-join': 'round',
+                'line-cap': 'round'
+            },
+            paint: {
+                'line-color': '#3b9ddd',
+                'line-width': 5,
+                'line-opacity': 0.75
+            }
+        });
+    }
+}
 function handleOriginEvent() {
     if (ignoreEvents || handlingDirectionEvents || originSet) return;
     console.log("handleOriginEvent triggered. handlingDirectionEvents:", handlingDirectionEvents, "ignoreEvents:", ignoreEvents, "originSet:", originSet);
@@ -289,7 +331,7 @@ function setOriginOnClick(e) {
     }
 }
 
-function setDestinationOnClick(e) {
+async function setDestinationOnClick(e) {
     if (settingOrigin || destinationSet) return;
 
     settingDestination = true;
@@ -312,7 +354,7 @@ function setDestinationOnClick(e) {
 
         directions.removeRoutes();
 
-        geocodeAddress(address, function (coords) {
+        geocodeAddress(address, async function (coords) {
             if (coords) {
                 try {
                     handlingDirectionEvents = true;
@@ -333,6 +375,13 @@ function setDestinationOnClick(e) {
                     console.log("DestinationSet updated to true");
                     map.off('click', setDestinationOnClick);
 
+                    // Manually get and display directions
+                    const origin = directions.getOrigin().geometry.coordinates;
+                    const route = await getDirections(origin, coords);
+                    if (route) {
+                        addRouteToMap(route);
+                    }
+
                 } catch (error) {
                     console.error("Error setting destination:", error);
                     alert('Error setting destination.');
@@ -351,7 +400,7 @@ function setDestinationOnClick(e) {
         const { lng, lat } = e.lngLat;
         console.log("Map clicked at:", lng, lat);
 
-        geocodeCoordinates([lng, lat], function (address) {
+        geocodeCoordinates([lng, lat], async function (address) {
             if (address) {
                 try {
                     handlingDirectionEvents = true;
@@ -372,6 +421,13 @@ function setDestinationOnClick(e) {
                     console.log("DestinationSet updated to true");
                     map.off('click', setDestinationOnClick);
 
+                    // Manually get and display directions
+                    const origin = directions.getOrigin().geometry.coordinates;
+                    const route = await getDirections(origin, [lng, lat]);
+                    if (route) {
+                        addRouteToMap(route);
+                    }
+
                 } catch (error) {
                     console.error("Error setting destination:", error);
                     alert('Error setting destination.');
@@ -381,8 +437,8 @@ function setDestinationOnClick(e) {
                     settingDestination = false;
                 }
             } else {
-                console.error('Geocoding failed for address:', address);
-                alert('Failed to geocode the address.');
+                console.error('Geocoding failed for coordinates:', [lng, lat]);
+                alert('Failed to geocode the coordinates.');
                 settingDestination = false;
             }
         });
