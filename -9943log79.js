@@ -1741,3 +1741,4 @@ document.getElementById('mapsearchbox').addEventListener('input', async function
         document.getElementById('auto-complete-results').innerHTML = '';
         clearMarkers(); // Clear markers if query length is less than 3
     }
+ });
