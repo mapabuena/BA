@@ -144,6 +144,7 @@ function initializeDirectionsControl() {
                 instructions: true,
             },
             flyTo: false,
+            interactive: false, // Disable interactivity
             zoom: 14,
             placeholderOrigin: "Enter starting location",
             placeholderDestination: "Enter destination location"
