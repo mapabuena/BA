@@ -228,7 +228,7 @@ function setOriginOnClick(e) {
                 try {
                     console.log("Setting origin to:", coords);
                     console.log("Before setting origin, destination is:", directions.getDestination());
-                    
+
                     directions.setOrigin(coords);
 
                     console.log("After setting origin, destination is:", directions.getDestination());
