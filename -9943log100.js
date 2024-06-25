@@ -100,7 +100,7 @@ function initializeDirectionsControl() {
                 originCoordinates = directions.getOrigin().geometry.coordinates;
                 console.log("Origin Coordinates set to:", originCoordinates);
                 originSet = true;
-                removeDefaultMarkers(); // Ensure default markers are removed
+                hideDefaultMarkers()
                 updateOriginMarker(originCoordinates); // Update custom origin marker
                 if (originSet && destinationSet) {
                     checkAndRetrieveDirections();
@@ -112,7 +112,7 @@ function initializeDirectionsControl() {
                 destinationCoordinates = directions.getDestination().geometry.coordinates;
                 console.log("Destination Coordinates set to:", destinationCoordinates);
                 destinationSet = true;
-                removeDefaultMarkers(); // Ensure default markers are removed
+                hideDefaultMarkers()
                 updateDestinationMarker(destinationCoordinates); // Update custom destination marker
                 if (originSet && destinationSet) {
                     checkAndRetrieveDirections();
@@ -121,7 +121,7 @@ function initializeDirectionsControl() {
 
             directions.on('route', () => {
                 console.log("Route event triggered.");
-                removeDefaultMarkers(); // Ensure default markers are removed after route is added
+                hideDefaultMarkers(); // Ensure default markers are hidden after route is added
             });
 
             document.querySelectorAll('.mapbox-directions-profile input').forEach(input => {
@@ -134,6 +134,45 @@ function initializeDirectionsControl() {
             console.error("Element with ID 'directions-control' not found.");
         }
     }
+}
+// Function to hide default markers added by Mapbox Directions
+function hideDefaultMarkers() {
+    const style = [{
+        'id': 'directions-origin-point',
+        'type': 'circle',
+        'source': 'directions',
+        'paint': {
+            'circle-radius': 0, // Set radius to 0 to hide the marker
+            'circle-color': 'transparent' // Set color to transparent to hide the marker
+        },
+        'filter': [
+            'all',
+            ['in', '$type', 'Point'],
+            ['in', 'marker-symbol', 'A']
+        ]
+    }, {
+        'id': 'directions-destination-point',
+        'type': 'circle',
+        'source': 'directions',
+        'paint': {
+            'circle-radius': 0, // Set radius to 0 to hide the marker
+            'circle-color': 'transparent' // Set color to transparent to hide the marker
+        },
+        'filter': [
+            'all',
+            ['in', '$type', 'Point'],
+            ['in', 'marker-symbol', 'B']
+        ]
+    }];
+    
+    style.forEach(layer => {
+        if (map.getLayer(layer.id)) {
+            map.setPaintProperty(layer.id, 'circle-radius', layer.paint['circle-radius']);
+            map.setPaintProperty(layer.id, 'circle-color', layer.paint['circle-color']);
+        } else {
+            map.addLayer(layer);
+        }
+    });
 }
 
 // Check and retrieve directions
