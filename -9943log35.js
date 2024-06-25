@@ -80,6 +80,7 @@ function setDirectionsInputFields(originTitle, destinationTitle) {
     const originInput = document.querySelector('.mapbox-directions-origin input');
     const destinationInput = document.querySelector('.mapbox-directions-destination input');
 
+    console.log("Setting input fields. Origin Title:", originTitle, "Destination Title:", destinationTitle);
     console.log("Origin Input before setting:", originInput ? originInput.value : "null");
     console.log("Destination Input before setting:", destinationInput ? destinationInput.value : "null");
 
@@ -639,8 +640,12 @@ function setupDirectionsButton() {
                 if (coords) {
                     try {
                         console.log("Setting destination to:", coords);
+                        console.log("Before setting destination, origin is:", directions.getOrigin());
+
                         directions.setDestination(coords);
                         console.log("Destination set to:", coords);
+
+                        console.log("After setting destination, origin is:", directions.getOrigin());
 
                         setDirectionsInputFields('', address);
                         console.log("Destination address set via setupDirectionsButton.");
@@ -666,7 +671,6 @@ function setupDirectionsButton() {
         console.error("Element with ID 'get-directions' not found.");
     }
 }
-
 
 document.getElementById('nightmode').addEventListener('click', () => {
     isNightMode = !isNightMode;
