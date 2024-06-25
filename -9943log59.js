@@ -102,9 +102,16 @@ function checkAndRetrieveDirections() {
             })
             .catch(error => console.error('Error fetching directions:', error));
     } else {
+        if (!origin || !origin.geometry) {
+            console.log("Origin is missing or invalid:", origin);
+        }
+        if (!destination || !destination.geometry) {
+            console.log("Destination is missing or invalid:", destination);
+        }
         console.log("Either origin or destination is missing coordinates.");
     }
 }
+
 // Debounce function to prevent rapid succession of events
 function debounce(func, wait) {
     let timeout;
@@ -317,7 +324,9 @@ function setOriginOnClick(e) {
                     originSet = true;
                     map.off('click', setOriginOnClick);
 
+                    console.log("Setting origin input fields with address:", address);
                     setDirectionsInputFields(address, directions.getDestination().place_name || '');
+
                 } catch (error) {
                     console.error("Error setting origin:", error);
                     alert('Error setting origin.');
@@ -336,6 +345,8 @@ function setOriginOnClick(e) {
         });
     } else {
         const { lng, lat } = e.lngLat;
+        console.log("Map clicked at:", lng, lat);
+
         geocodeCoordinates([lng, lat], function (address) {
             if (address) {
                 try {
@@ -344,7 +355,9 @@ function setOriginOnClick(e) {
                     originSet = true;
                     map.off('click', setOriginOnClick);
 
+                    console.log("Setting origin input fields with address:", address);
                     setDirectionsInputFields(address, directions.getDestination().place_name || '');
+
                 } catch (error) {
                     console.error("Error setting origin:", error);
                     alert('Error setting origin.');
@@ -392,12 +405,21 @@ function setDestinationOnClick(e) {
                     handlingDirectionEvents = true;
                     ignoreEvents = true;
 
+                    console.log("Setting destination to:", coords);
+                    console.log("Before setting destination, origin is:", directions.getOrigin());
+
                     directions.setDestination(coords);
 
+                    console.log("After setting destination, origin is:", directions.getOrigin());
+
+                    console.log("Setting destination input fields with address:", address);
                     setDirectionsInputFields(directions.getOrigin().place_name || '', address);
 
+                    console.log("Destination set via SetDestinationOnClick marker-selected.");
                     destinationSet = true;
+                    console.log("DestinationSet updated to true");
                     map.off('click', setDestinationOnClick);
+
                 } catch (error) {
                     console.error("Error setting destination:", error);
                     alert('Error setting destination.');
@@ -414,6 +436,7 @@ function setDestinationOnClick(e) {
         });
     } else {
         const { lng, lat } = e.lngLat;
+        console.log("Map clicked at:", lng, lat);
 
         geocodeCoordinates([lng, lat], function (address) {
             if (address) {
@@ -421,12 +444,21 @@ function setDestinationOnClick(e) {
                     handlingDirectionEvents = true;
                     ignoreEvents = true;
 
+                    console.log("Setting destination to:", [lng, lat]);
+                    console.log("Before setting destination, origin is:", directions.getOrigin());
+
                     directions.setDestination([lng, lat]);
 
+                    console.log("After setting destination, origin is:", directions.getOrigin());
+
+                    console.log("Setting destination input fields with address:", address);
                     setDirectionsInputFields(directions.getOrigin().place_name || '', address);
 
+                    console.log("Destination set via SetDestinationOnClick.");
                     destinationSet = true;
+                    console.log("DestinationSet updated to true");
                     map.off('click', setDestinationOnClick);
+
                 } catch (error) {
                     console.error("Error setting destination:", error);
                     alert('Error setting destination.');
@@ -436,13 +468,14 @@ function setDestinationOnClick(e) {
                     settingDestination = false;
                 }
             } else {
-                console.error('Geocoding failed for coordinates:', [lng, lat]);
-                alert('Failed to geocode the coordinates.');
+                console.error('Geocoding failed for address:', address);
+                alert('Failed to geocode the address.');
                 settingDestination = false;
             }
         });
     }
 }
+
 function addRouteLabels(route, profile) {
     if (route.geometry) {
         const coordinates = polyline.decode(route.geometry); // Decode the polyline string
