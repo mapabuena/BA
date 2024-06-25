@@ -40,6 +40,41 @@ function debounce(func, wait) {
 console.log(document.querySelector('.mapbox-directions-origin input')); // Should log the element or null
 console.log(document.querySelector('.mapbox-directions-destination input')); // Should log the element or null
 
+function setCustomOrigin(coords, address) {
+    try {
+        console.log("Setting origin to:", coords);
+        directions.setOrigin(coords);
+
+        console.log("After setting origin, destination is:", directions.getDestination());
+
+        setDirectionsInputFields(address, directions.getDestination().place_name || '');
+
+        console.log("Origin set via setCustomOrigin.");
+        originSet = true;
+        console.log("OriginSet updated to true");
+    } catch (error) {
+        console.error("Error setting origin:", error);
+        alert('Error setting origin.');
+    }
+}
+
+function setCustomDestination(coords, address) {
+    try {
+        console.log("Setting destination to:", coords);
+        directions.setDestination(coords);
+
+        console.log("After setting destination, origin is:", directions.getOrigin());
+
+        setDirectionsInputFields(directions.getOrigin().place_name || '', address);
+
+        console.log("Destination set via setCustomDestination.");
+        destinationSet = true;
+        console.log("DestinationSet updated to true");
+    } catch (error) {
+        console.error("Error setting destination:", error);
+        alert('Error setting destination.');
+    }
+}
 
 function handleOriginEvent() {
     if (ignoreEvents || handlingDirectionEvents || originSet) return;
@@ -560,7 +595,6 @@ function setupDirectionsButton() {
             }
 
             const selectedMarker = markers.find(marker => marker.marker.getElement().getAttribute('data-is-selected') === 'true');
-
             if (!selectedMarker) {
                 console.error('No marker selected.');
                 alert('Please select a marker first.');
@@ -568,7 +602,6 @@ function setupDirectionsButton() {
             }
 
             const { address } = selectedMarker.data;
-
             if (!address) {
                 console.error('No address found for the selected marker.');
                 alert('No address found for the selected marker.');
@@ -576,33 +609,13 @@ function setupDirectionsButton() {
             }
 
             directions.removeRoutes();
-            destinationSet = false; // Reset the destinationSet flag before setting new destination
+            destinationSet = false;
 
             geocodeAddress(address, function (coords) {
                 if (coords) {
-                    try {
-                        console.log("Setting destination to:", coords);
-                        console.log("Before setting destination, origin is:", directions.getOrigin());
-
-                        directions.setDestination(coords);
-                        console.log("Destination set to:", coords);
-
-                        console.log("After setting destination, origin is:", directions.getOrigin());
-
-                        setDirectionsInputFields('', address);
-                        console.log("Destination address set via setupDirectionsButton.");
-
-                        destinationSet = true;
-                        console.log("DestinationSet updated to true");
-
-                        unselectAllMarkers();
-                        map.on('click', setOriginOnClick);
-                        console.log("setOriginOnClick triggered by setupDirectionsButton.");
-
-                    } catch (error) {
-                        console.error("Error setting destination:", error);
-                        alert('Error setting destination.');
-                    }
+                    setCustomDestination(coords, address);
+                    unselectAllMarkers();
+                    map.on('click', setOriginOnClick);
                 } else {
                     console.error('Geocoding failed for address:', address);
                     alert('Failed to geocode the address.');
