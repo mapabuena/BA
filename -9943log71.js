@@ -35,7 +35,7 @@ function initializeDirectionsControl() {
         directions = new MapboxDirections({
             accessToken: mapboxgl.accessToken,
             unit: 'imperial',
-            profile: 'driving-traffic',
+            profile: 'mapbox/driving-traffic',
             alternatives: true,
             controls: {
                 inputs: true,
@@ -125,9 +125,9 @@ function debounce(func, wait) {
 console.log(document.querySelector('.mapbox-directions-origin input')); // Should log the element or null
 console.log(document.querySelector('.mapbox-directions-destination input')); // Should log the element or null
 
-async function getDirections(origin, destination, profile = 'driving-traffic') {
+async function getDirections(origin, destination, profile = 'mapbox/driving-traffic') {
     const coordinates = `${origin[0]},${origin[1]};${destination[0]},${destination[1]}`;
-    const url = `https://api.mapbox.com/directions/v5/mapbox/${profile}/${coordinates}?geometries=geojson&access_token=${mapboxgl.accessToken}`;
+    const url = `https://api.mapbox.com/directions/v5/${profile}/${coordinates}?geometries=geojson&access_token=${mapboxgl.accessToken}`;
 
     try {
         const response = await fetch(url);
@@ -530,19 +530,19 @@ function showRoutePopup(route, coordinates, profile, isBestRoute = true) {
     let iconPaddingBottom = '0px'; // Default padding
 
     switch (profile) {
-        case 'driving':
+        case 'mapbox/driving':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/car.svg';
             iconSize = { width: '25px', height: '25px' };
             popupSize = { width: '120px', height: '38px' };
             iconPaddingBottom = '29px';
             break;
-        case 'walking':
+        case 'mapbox/walking':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/walking.svg';
             iconSize = { width: '55px', height: '55px' };
             popupSize = { width: '95px', height: '55px' };
             iconPaddingBottom = '14px';
             break;
-        case 'cycling':
+        case 'mapbox/cycling':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/cycling.svg';
             iconSize = { width: '32px', height: '32px' };
             popupSize = { width: '110px', height: '52px' };
@@ -787,7 +787,7 @@ document.getElementById('nightmode').addEventListener('click', () => {
 function setDirections(lat, lng) {
     directions.setOrigin([lng, lat]);
     directions.setDestination([lng, lat]);
-    directions.setProfile('driving-traffic'); // Default to driving, can be changed later
+    directions.setProfile('mapbox/driving-traffic'); // Default to driving, can be changed later
 }
 
 function setupInfoItemHoverEffects() {
