@@ -240,18 +240,18 @@ function clearRouteFromMap() {
 function handleOriginEvent() {
     if (originSet) return;
     console.log("handleOriginEvent triggered. handlingDirectionEvents:", handlingDirectionEvents, "ignoreEvents:", ignoreEvents, "originSet:", originSet);
-      const originMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="A"]');
+    const originMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="A"]');
     if (originMarker) {
-        originMarker.style.backgroundColor = '#FF0000';
+        originMarker.remove(); // Remove the default origin marker
     }
 }
 
 function handleDestinationEvent() {
     if (destinationSet) return;
-   console.log("handleDestinationEvent triggered. handlingDirectionEvents:", handlingDirectionEvents, "ignoreEvents:", ignoreEvents, "destinationSet:", destinationSet);
+    console.log("handleDestinationEvent triggered. handlingDirectionEvents:", handlingDirectionEvents, "ignoreEvents:", ignoreEvents, "destinationSet:", destinationSet);
     const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
     if (destinationMarker) {
-        destinationMarker.style.backgroundColor = '#000000';
+        destinationMarker.remove(); // Remove the default destination marker
     }
 }
 function handleRouteEvent(event) {
