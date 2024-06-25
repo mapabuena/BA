@@ -163,6 +163,12 @@ function handleRouteEvent(event) {
         console.warn("No routes available.");
     }
 }
+function unselectAllMarkers() {
+    markers.forEach(({ marker }) => {
+        const markerElement = marker.getElement();
+        markerElement.setAttribute('data-is-selected', 'false');
+    });
+}
 function onRoutesReceived(routes, profile) {
     console.log("Routes received for profile:", profile); // Debug log for profile
     displayRouteAlternatives(routes, profile);
