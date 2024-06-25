@@ -100,7 +100,6 @@ function handleDestinationEvent() {
         destinationMarker.style.backgroundColor = '#000000';
     }
 }
-
 function handleRouteEvent(event) {
     if (ignoreEvents) return;
     console.log("handleRouteEvent triggered.");
@@ -278,9 +277,7 @@ function setOriginOnClick(e) {
                     originSet = true;
                     map.off('click', setOriginOnClick);
 
-                    console.log("Setting origin input fields with address:", address);
                     setDirectionsInputFields(address, directions.getDestination().place_name || '');
-
                 } catch (error) {
                     console.error("Error setting origin:", error);
                     alert('Error setting origin.');
@@ -299,8 +296,6 @@ function setOriginOnClick(e) {
         });
     } else {
         const { lng, lat } = e.lngLat;
-        console.log("Map clicked at:", lng, lat);
-
         geocodeCoordinates([lng, lat], function (address) {
             if (address) {
                 try {
@@ -309,9 +304,7 @@ function setOriginOnClick(e) {
                     originSet = true;
                     map.off('click', setOriginOnClick);
 
-                    console.log("Setting origin input fields with address:", address);
                     setDirectionsInputFields(address, directions.getDestination().place_name || '');
-
                 } catch (error) {
                     console.error("Error setting origin:", error);
                     alert('Error setting origin.');
@@ -331,7 +324,7 @@ function setOriginOnClick(e) {
     }
 }
 
-async function setDestinationOnClick(e) {
+function setDestinationOnClick(e) {
     if (settingOrigin || destinationSet) return;
 
     settingDestination = true;
@@ -354,34 +347,18 @@ async function setDestinationOnClick(e) {
 
         directions.removeRoutes();
 
-        geocodeAddress(address, async function (coords) {
+        geocodeAddress(address, function (coords) {
             if (coords) {
                 try {
                     handlingDirectionEvents = true;
                     ignoreEvents = true;
 
-                    console.log("Setting destination to:", coords);
-                    console.log("Before setting destination, origin is:", directions.getOrigin());
-
                     directions.setDestination(coords);
 
-                    console.log("After setting destination, origin is:", directions.getOrigin());
-
-                    console.log("Setting destination input fields with address:", address);
                     setDirectionsInputFields(directions.getOrigin().place_name || '', address);
 
-                    console.log("Destination set via SetDestinationOnClick marker-selected.");
                     destinationSet = true;
-                    console.log("DestinationSet updated to true");
                     map.off('click', setDestinationOnClick);
-
-                    // Manually get and display directions
-                    const origin = directions.getOrigin().geometry.coordinates;
-                    const route = await getDirections(origin, coords);
-                    if (route) {
-                        addRouteToMap(route);
-                    }
-
                 } catch (error) {
                     console.error("Error setting destination:", error);
                     alert('Error setting destination.');
@@ -398,36 +375,19 @@ async function setDestinationOnClick(e) {
         });
     } else {
         const { lng, lat } = e.lngLat;
-        console.log("Map clicked at:", lng, lat);
 
-        geocodeCoordinates([lng, lat], async function (address) {
+        geocodeCoordinates([lng, lat], function (address) {
             if (address) {
                 try {
                     handlingDirectionEvents = true;
                     ignoreEvents = true;
 
-                    console.log("Setting destination to:", [lng, lat]);
-                    console.log("Before setting destination, origin is:", directions.getOrigin());
-
                     directions.setDestination([lng, lat]);
 
-                    console.log("After setting destination, origin is:", directions.getOrigin());
-
-                    console.log("Setting destination input fields with address:", address);
                     setDirectionsInputFields(directions.getOrigin().place_name || '', address);
 
-                    console.log("Destination set via SetDestinationOnClick.");
                     destinationSet = true;
-                    console.log("DestinationSet updated to true");
                     map.off('click', setDestinationOnClick);
-
-                    // Manually get and display directions
-                    const origin = directions.getOrigin().geometry.coordinates;
-                    const route = await getDirections(origin, [lng, lat]);
-                    if (route) {
-                        addRouteToMap(route);
-                    }
-
                 } catch (error) {
                     console.error("Error setting destination:", error);
                     alert('Error setting destination.');
