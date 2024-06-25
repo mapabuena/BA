@@ -64,14 +64,6 @@ function updateDestinationMarker(coords) {
     }
 }
 
-// Create or update the destination marker
-function updateDestinationMarker(coords) {
-    if (customDestinationMarker) {
-        customDestinationMarker.setLngLat(coords).addTo(map);
-    } else {
-        customDestinationMarker = createCustomMarker(coords, 'red').addTo(map);
-    }
-}
 
 // Initialize Directions Control
 function initializeDirectionsControl() {
