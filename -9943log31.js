@@ -152,10 +152,7 @@ function initializeDirectionsControl() {
         if (directionsControlElement) {
             directionsControlElement.appendChild(directions.onAdd(map));
 
-            // Ensure no automatic map click handling
             directions.mapClickHandlerAdded = false;
-            directions.setOrigin = function () {};
-            directions.setDestination = function () {};
 
             directions.on('origin', handleOriginEvent);
             directions.on('destination', handleDestinationEvent);
@@ -233,7 +230,7 @@ function setOriginOnClick(e) {
                     directions.setOrigin(coords);
 
                     console.log("Setting origin input fields with address:", address);
-                    setDirectionsInputFields(address, '');
+                    setDirectionsInputFields(address, directions.getDestination().place_name || '');
 
                     console.log("Origin set via SetOriginOnClick marker-selected.");
                     originSet = true;
@@ -267,7 +264,7 @@ function setOriginOnClick(e) {
                     directions.setOrigin([lng, lat]);
 
                     console.log("Setting origin input fields with address:", address);
-                    setDirectionsInputFields(address, '');
+                    setDirectionsInputFields(address, directions.getDestination().place_name || '');
 
                     console.log("Origin set via SetOriginOnClick.");
                     originSet = true;
@@ -292,7 +289,6 @@ function setOriginOnClick(e) {
         });
     }
 }
-
 function setDestinationOnClick(e) {
     if (settingOrigin || destinationSet) return;
 
@@ -326,7 +322,7 @@ function setDestinationOnClick(e) {
                     directions.setDestination(coords);
 
                     console.log("Setting destination input fields with address:", address);
-                    setDirectionsInputFields('', address);
+                    setDirectionsInputFields(directions.getOrigin().place_name || '', address);
 
                     console.log("Destination set via SetDestinationOnClick marker-selected.");
                     destinationSet = true;
@@ -351,17 +347,17 @@ function setDestinationOnClick(e) {
         const { lng, lat } = e.lngLat;
         console.log("Map clicked at:", lng, lat);
 
-        geocodeCoordinates([lng, lat], function (address, coords) {
-            if (coords) {
+        geocodeCoordinates([lng, lat], function (address) {
+            if (address) {
                 try {
                     handlingDirectionEvents = true;
                     ignoreEvents = true;
 
-                    console.log("Setting destination to:", coords);
-                    directions.setDestination(coords);
+                    console.log("Setting destination to:", [lng, lat]);
+                    directions.setDestination([lng, lat]);
 
                     console.log("Setting destination input fields with address:", address);
-                    setDirectionsInputFields('', address);
+                    setDirectionsInputFields(directions.getOrigin().place_name || '', address);
 
                     console.log("Destination set via SetDestinationOnClick.");
                     destinationSet = true;
@@ -619,8 +615,8 @@ function setupDirectionsButton() {
                 return;
             }
 
-            ignoreEvents = false; // Temporarily stop ignoring events
             directions.removeRoutes();
+            destinationSet = false; // Reset the destinationSet flag before setting new destination
 
             geocodeAddress(address, function (coords) {
                 if (coords) {
@@ -642,15 +638,10 @@ function setupDirectionsButton() {
                     } catch (error) {
                         console.error("Error setting destination:", error);
                         alert('Error setting destination.');
-                    } finally {
-                        ignoreEvents = true; // Resume ignoring events
                     }
-
-                    document.getElementById('directions-container').style.display = 'block';
                 } else {
                     console.error('Geocoding failed for address:', address);
                     alert('Failed to geocode the address.');
-                    ignoreEvents = true; // Resume ignoring events
                 }
             });
         });
@@ -658,8 +649,6 @@ function setupDirectionsButton() {
         console.error("Element with ID 'get-directions' not found.");
     }
 }
-
-
 
 
 document.getElementById('nightmode').addEventListener('click', () => {
