@@ -189,7 +189,11 @@ function initializeDirectionsControl() {
 // Ensure the element with ID 'custom-traffic' has the 'pressed' class by default
 document.addEventListener('DOMContentLoaded', function() {
     const defaultButton = document.getElementById('custom-traffic');
-    defaultButton.classList.add('pressed');
+    if (defaultButton) {
+        defaultButton.classList.add('pressed');
+    } else {
+        console.error("Default button not found.");
+    }
 
     const profileButtons = document.querySelectorAll('.profile-button');
 
@@ -201,7 +205,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Set the new profile
-        directions.options.profile = profile;
+        directions.setProfile(profile); // Make sure this function exists in your directions control
 
         // Clear the existing route
         clearRouteFromMap();
