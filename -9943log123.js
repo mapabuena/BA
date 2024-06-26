@@ -789,7 +789,6 @@ function displayRouteAlternatives(routes, profile) {
     }
 }
 
-
 function onRoutesReceived(routes, profile) {
     console.log("Routes received for profile:", profile); // Debug log for profile
     displayRouteAlternatives(routes, profile);
@@ -806,7 +805,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setupMapEvents();
     setupInfoItemHoverEffects();
     setupDirectionsButton();
-    setupProfileButtons()
+   
 
  const resetOriginButton = document.getElementById('reset-origin');
     if (resetOriginButton) {
@@ -947,6 +946,9 @@ function setupDirectionsButton() {
 
                         unselectAllMarkers();
                         map.on('click', setOriginOnClick);
+
+                        // Call setupProfileButtons here after making the buttons visible
+                        setupProfileButtons();
 
                     } catch (error) {
                         console.error("Error setting destination:", error);
