@@ -31,6 +31,53 @@ let destinationCoordinates = null; // Store destination coordinates
 let customOriginMarker = null;
 let customDestinationMarker = null;
 
+   
+function setupProfileButtons() {
+        const profileButtons = document.querySelectorAll('.profile-button');
+        if (profileButtons.length > 0) {
+            // Function to change profile and update button states
+            function changeProfile(profile) {
+                if (!directions) {
+                    console.error("Directions control is not initialized.");
+                    return;
+                }
+
+                // Set the new profile
+                directions.options.profile = profile;
+
+                // Clear the existing route
+                clearRouteFromMap();
+
+                // Fetch and redraw the route with the new profile
+                checkAndRetrieveDirections();
+
+                // Ensure markers are updated as needed
+                if (originCoordinates) {
+                    updateOriginMarker(originCoordinates);
+                }
+                if (destinationCoordinates) {
+                    updateDestinationMarker(destinationCoordinates);
+                }
+            }
+
+            // Add event listeners for profile buttons
+            profileButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove 'Pressed' class from all buttons
+                    profileButtons.forEach(btn => btn.classList.remove('Pressed'));
+
+                    // Add 'Pressed' class to the clicked button
+                    this.classList.add('Pressed');
+
+                    // Change profile based on the data-profile attribute
+                    const profile = this.getAttribute('data-profile');
+                    changeProfile(profile);
+                });
+            });
+        } else {
+            console.error("No profile buttons found.");
+        }
+    }
 // Function to remove default markers added by Mapbox Directions
 function removeDefaultMarkers() {
     const defaultMarkers = document.querySelectorAll('.mapboxgl-marker:not(.marker)');
@@ -805,6 +852,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setupMapEvents();
     setupInfoItemHoverEffects();
     setupDirectionsButton();
+    setupProfileButtons()
 
  const resetOriginButton = document.getElementById('reset-origin');
     if (resetOriginButton) {
@@ -836,51 +884,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Default button not found.");
     }
 
-    // Declare profileButtons after DOMContentLoaded
-    const profileButtons = document.querySelectorAll('.profile-button');
-    if (profileButtons.length > 0) {
-        // Function to change profile and update button states
-        function changeProfile(profile) {
-            if (!directions) {
-                console.error("Directions control is not initialized.");
-                return;
-            }
-
-            // Set the new profile
-            directions.options.profile = profile;
-
-            // Clear the existing route
-            clearRouteFromMap();
-
-            // Fetch and redraw the route with the new profile
-            checkAndRetrieveDirections();
-
-            // Ensure markers are updated as needed
-            if (originCoordinates) {
-                updateOriginMarker(originCoordinates);
-            }
-            if (destinationCoordinates) {
-                updateDestinationMarker(destinationCoordinates);
-            }
-        }
-
-        // Add event listeners for profile buttons
-        profileButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                // Remove 'Pressed' class from all buttons
-                profileButtons.forEach(btn => btn.classList.remove('Pressed'));
-
-                // Add 'Pressed' class to the clicked button
-                this.classList.add('Pressed');
-
-                // Change profile based on the data-profile attribute
-                const profile = this.getAttribute('data-profile');
-                changeProfile(profile);
-            });
-        });
-    } else {
-        console.error("No profile buttons found.");
-    }
+ 
 }); // Close the DOMContentLoaded listener properly
 
 function geocodeAddress(address, callback) {
