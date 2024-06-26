@@ -184,21 +184,6 @@ function initializeDirectionsControl() {
     }
 }
 
-   // Add event listeners for profile buttons
-    profileButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            // Remove 'pressed' class from all buttons
-            profileButtons.forEach(btn => btn.classList.remove('pressed'));
-
-            // Add 'pressed' class to the clicked button
-            this.classList.add('pressed');
-
-            // Change profile based on the data-profile attribute
-            const profile = this.getAttribute('data-profile');
-            changeProfile(profile);
-        });
-    });
-
 // Function to hide default markers added by Mapbox Directions
 function hideDefaultMarkers() {
     const style = [{
