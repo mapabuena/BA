@@ -895,7 +895,7 @@ document.addEventListener('DOMContentLoaded', function() {
             clearRouteFromMap();
             clearCustomMarkers(); // Clear custom markers for origin and destination
             resetDirectionState(); // Reset direction state variables
-            resetMarkerStates(); unselect selected markers
+            resetMarkerStates(); // unselect selected markers
         });
     } else {
         console.error("Element with ID 'close-directions' not found.");
