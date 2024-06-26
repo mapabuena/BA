@@ -833,6 +833,7 @@ function setupProfileButtons() {
         console.error("No profile buttons found.");
     }
 }
+
 document.addEventListener('DOMContentLoaded', function() {
     console.log("Document loaded");
     // Initialize necessary components and handlers
@@ -865,17 +866,12 @@ document.addEventListener('DOMContentLoaded', function() {
         closeDirectionsButton.addEventListener('click', function() {
             deactivateDirections();
             clearRouteFromMap();
+            unselectMarkers();
         });
     } else {
         console.error("Element with ID 'close-directions' not found.");
     }
 
-    const defaultButton = document.getElementById('custom-traffic');
-    if (defaultButton) {
-        defaultButton.classList.add('Pressed');
-    } else {
-        console.error("Default button not found.");
-    }
 }); // Close the DOMContentLoaded listener properly
 
 
