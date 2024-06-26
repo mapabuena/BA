@@ -31,7 +31,13 @@ let destinationCoordinates = null; // Store destination coordinates
 let customOriginMarker = null;
 let customDestinationMarker = null;
 
-   
+  // Function to reset all marker states
+function resetMarkerStates() {
+    markers.forEach(({ marker }) => {
+        const markerElement = marker.getElement();
+        markerElement.setAttribute('data-is-selected', 'false');
+    });
+} 
 // Function to remove default markers added by Mapbox Directions
 function removeDefaultMarkers() {
     const defaultMarkers = document.querySelectorAll('.mapboxgl-marker:not(.marker)');
@@ -887,9 +893,9 @@ document.addEventListener('DOMContentLoaded', function() {
         closeDirectionsButton.addEventListener('click', function() {
             deactivateDirections();
             clearRouteFromMap();
-            unselectMarkers();
             clearCustomMarkers(); // Clear custom markers for origin and destination
             resetDirectionState(); // Reset direction state variables
+            resetMarkerStates(); unselect selected markers
         });
     } else {
         console.error("Element with ID 'close-directions' not found.");
@@ -1089,13 +1095,7 @@ function setupInfoItemHoverEffects() {
     });
 }
 
-// Function to reset all marker states
-function resetMarkerStates() {
-    markers.forEach(({ marker }) => {
-        const markerElement = marker.getElement();
-        markerElement.setAttribute('data-is-selected', 'false');
-    });
-}
+
 function setupDatePickers() {
     const startDateInput = document.getElementById('startDateTime');
     const endDateInput = document.getElementById('endDateTime');
