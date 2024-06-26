@@ -836,9 +836,6 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         console.error("Default button not found.");
     }
-
-}); // Close the DOMContentLoaded listener properly
-
 function setupProfileButtons() {
         const profileButtons = document.querySelectorAll('.profile-button');
         if (profileButtons.length > 0) {
@@ -885,6 +882,8 @@ function setupProfileButtons() {
             console.error("No profile buttons found.");
         }
     }
+}); // Close the DOMContentLoaded listener properly
+
 
 function geocodeAddress(address, callback) {
     const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(address)}.json?access_token=${mapboxgl.accessToken}`;
