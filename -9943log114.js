@@ -31,9 +31,6 @@ let destinationCoordinates = null; // Store destination coordinates
 let customOriginMarker = null;
 let customDestinationMarker = null;
 
-
-
-
 // Function to remove default markers added by Mapbox Directions
 function removeDefaultMarkers() {
     const defaultMarkers = document.querySelectorAll('.mapboxgl-marker:not(.marker)');
