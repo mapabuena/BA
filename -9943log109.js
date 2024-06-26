@@ -206,11 +206,11 @@ function changeProfile(profile) {
     // Set the new profile
     directions.options.profile = profile;
 
-    // Redraw the route with the new profile
-    checkAndRetrieveDirections();
+    // Clear the existing route
+    clearRouteFromMap();
 
-    // Update the input fields with the current addresses
-    setDirectionsInputFields(directions.getOrigin().place_name || '', directions.getDestination().place_name || '');
+    // Fetch and redraw the route with the new profile
+    checkAndRetrieveDirections();
 
     // Ensure markers are updated as needed
     if (originCoordinates) {
@@ -440,6 +440,7 @@ function setDirectionsInputFields(originTitle, destinationTitle) {
     console.log("Origin Input after setting:", originInput ? originInput.value : "null");
     console.log("Destination Input after setting:", destinationInput ? destinationInput.value : "null");
 }
+
 
 function geocodeCoordinates(coords, callback) {
     const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${coords[0]},${coords[1]}.json?access_token=${mapboxgl.accessToken}`;
