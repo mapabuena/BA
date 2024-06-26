@@ -340,8 +340,6 @@ function addRouteToMap(route) {
     console.log("Route data added to map:", routeData);
 }
 
-    console.log("Route data added to map:", routeData);
-}
 // Clear existing route from the map
 function clearRouteFromMap() {
     if (map.getSource('route')) {
