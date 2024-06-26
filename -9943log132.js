@@ -888,6 +888,8 @@ document.addEventListener('DOMContentLoaded', function() {
             deactivateDirections();
             clearRouteFromMap();
             unselectMarkers();
+            clearCustomMarkers(); // Clear custom markers for origin and destination
+            resetDirectionState(); // Reset direction state variables
         });
     } else {
         console.error("Element with ID 'close-directions' not found.");
@@ -895,6 +897,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
 }); // Close the DOMContentLoaded listener properly
 
+// Function to clear custom markers for origin and destination
+function clearCustomMarkers() {
+    if (customOriginMarker) {
+        customOriginMarker.remove();
+        customOriginMarker = null;
+    }
+    if (customDestinationMarker) {
+        customDestinationMarker.remove();
+        customDestinationMarker = null;
+    }
+}
+// Function to reset direction state variables
+function resetDirectionState() {
+    originSet = false;
+    destinationSet = false;
+    originCoordinates = null;
+    destinationCoordinates = null;
+}
 
 function geocodeAddress(address, callback) {
     const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(address)}.json?access_token=${mapboxgl.accessToken}`;
