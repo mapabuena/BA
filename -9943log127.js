@@ -778,49 +778,6 @@ function onRoutesReceived(routes, profile) {
     console.log("Routes received for profile:", profile); // Debug log for profile
     displayRouteAlternatives(routes, profile);
 }
-
-document.addEventListener('DOMContentLoaded', function() {
-    console.log("Document loaded");
-    // Initialize necessary components and handlers
-    initializeDirectionsControl();
-    console.log("Directions control initialized after DOMContentLoaded.");
-    setupDatePickers();
-    setupCityButtons();
-    setupFormHandlers();
-    setupMapEvents();
-    setupInfoItemHoverEffects();
-    setupDirectionsButton();
-   
-
- const resetOriginButton = document.getElementById('reset-origin');
-    if (resetOriginButton) {
-        resetOriginButton.addEventListener('click', function() {
-            originSet = false;
-            destinationSet = false; // Reset destination flag as well
-            map.on('click', setOriginOnClick); // Re-enable click event listener to set origin
-            directions.setOrigin('');
-            directions.setDestination(''); // Clear the destination as well
-            setDirectionsInputFields('', ''); // Clear input fields
-            console.log("Origin and destination reset");
-        });
-    }
-
-    const closeDirectionsButton = document.getElementById('close-directions');
-    if (closeDirectionsButton) {
-        closeDirectionsButton.addEventListener('click', function() {
-            deactivateDirections();
-            clearRouteFromMap();
-        });
-    } else {
-        console.error("Element with ID 'close-directions' not found.");
-    }
-
-    const defaultButton = document.getElementById('custom-traffic');
-    if (defaultButton) {
-        defaultButton.classList.add('Pressed');
-    } else {
-        console.error("Default button not found.");
-    }
 function setupProfileButtons() {
     const profileButtons = document.querySelectorAll('.profile-button');
     console.log(profileButtons); // Log the NodeList of profile buttons
@@ -868,6 +825,49 @@ function setupProfileButtons() {
         console.error("No profile buttons found.");
     }
 }
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("Document loaded");
+    // Initialize necessary components and handlers
+    initializeDirectionsControl();
+    console.log("Directions control initialized after DOMContentLoaded.");
+    setupDatePickers();
+    setupCityButtons();
+    setupFormHandlers();
+    setupMapEvents();
+    setupInfoItemHoverEffects();
+    setupDirectionsButton();
+    setupProfileButtons();
+   
+
+ const resetOriginButton = document.getElementById('reset-origin');
+    if (resetOriginButton) {
+        resetOriginButton.addEventListener('click', function() {
+            originSet = false;
+            destinationSet = false; // Reset destination flag as well
+            map.on('click', setOriginOnClick); // Re-enable click event listener to set origin
+            directions.setOrigin('');
+            directions.setDestination(''); // Clear the destination as well
+            setDirectionsInputFields('', ''); // Clear input fields
+            console.log("Origin and destination reset");
+        });
+    }
+
+    const closeDirectionsButton = document.getElementById('close-directions');
+    if (closeDirectionsButton) {
+        closeDirectionsButton.addEventListener('click', function() {
+            deactivateDirections();
+            clearRouteFromMap();
+        });
+    } else {
+        console.error("Element with ID 'close-directions' not found.");
+    }
+
+    const defaultButton = document.getElementById('custom-traffic');
+    if (defaultButton) {
+        defaultButton.classList.add('Pressed');
+    } else {
+        console.error("Default button not found.");
+    }
 }); // Close the DOMContentLoaded listener properly
 
 
