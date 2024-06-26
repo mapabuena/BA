@@ -795,20 +795,18 @@ function onRoutesReceived(routes, profile) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Ensure element exists
-    const directionsButton = document.getElementById('get-directions');
-    console.log(directionsButton ? "get-directions button found." : "get-directions button NOT found.");
-console.log("Document loaded");
+    console.log("Document loaded");
+    // Initialize necessary components and handlers
     initializeDirectionsControl();
-console.log("Directions control initialized after DOMContentLoaded.");
+    console.log("Directions control initialized after DOMContentLoaded.");
     setupDatePickers();
     setupCityButtons();
     setupFormHandlers();
     setupMapEvents();
     setupInfoItemHoverEffects();
     setupDirectionsButton();
-  
-   const resetOriginButton = document.getElementById('reset-origin');
+
+ const resetOriginButton = document.getElementById('reset-origin');
     if (resetOriginButton) {
         resetOriginButton.addEventListener('click', function() {
             originSet = false;
@@ -820,26 +818,17 @@ console.log("Directions control initialized after DOMContentLoaded.");
             console.log("Origin and destination reset");
         });
     }
-    function clearAllPopups() {
-    if (currentPopup) {
-        currentPopup.remove();
-        currentPopup = null;
-    }
-    if (secondPopup) {
-        secondPopup.remove();
-        secondPopup = null;
-    }
-}
-   const closeDirectionsButton = document.getElementById('close-directions');
+
+    const closeDirectionsButton = document.getElementById('close-directions');
     if (closeDirectionsButton) {
         closeDirectionsButton.addEventListener('click', function() {
-         deactivateDirections();
+            deactivateDirections();
             clearRouteFromMap();
         });
     } else {
         console.error("Element with ID 'close-directions' not found.");
     }
-    
+
     const defaultButton = document.getElementById('custom-traffic');
     if (defaultButton) {
         defaultButton.classList.add('Pressed');
@@ -849,46 +838,49 @@ console.log("Directions control initialized after DOMContentLoaded.");
 
     // Declare profileButtons after DOMContentLoaded
     const profileButtons = document.querySelectorAll('.profile-button');
+    if (profileButtons.length > 0) {
+        // Function to change profile and update button states
+        function changeProfile(profile) {
+            if (!directions) {
+                console.error("Directions control is not initialized.");
+                return;
+            }
 
-    // Function to change profile and update button states
-    function changeProfile(profile) {
-        if (!directions) {
-            console.error("Directions control is not initialized.");
-            return;
+            // Set the new profile
+            directions.options.profile = profile;
+
+            // Clear the existing route
+            clearRouteFromMap();
+
+            // Fetch and redraw the route with the new profile
+            checkAndRetrieveDirections();
+
+            // Ensure markers are updated as needed
+            if (originCoordinates) {
+                updateOriginMarker(originCoordinates);
+            }
+            if (destinationCoordinates) {
+                updateDestinationMarker(destinationCoordinates);
+            }
         }
 
-        // Set the new profile
-        directions.options.profile = profile;
+        // Add event listeners for profile buttons
+        profileButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove 'Pressed' class from all buttons
+                profileButtons.forEach(btn => btn.classList.remove('Pressed'));
 
-        // Clear the existing route
-        clearRouteFromMap();
+                // Add 'Pressed' class to the clicked button
+                this.classList.add('Pressed');
 
-        // Fetch and redraw the route with the new profile
-        checkAndRetrieveDirections();
-
-        // Ensure markers are updated as needed
-        if (originCoordinates) {
-            updateOriginMarker(originCoordinates);
-        }
-        if (destinationCoordinates) {
-            updateDestinationMarker(destinationCoordinates);
-        }
-    }
-
-    // Add event listeners for profile buttons
-    profileButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            // Remove 'Pressed' class from all buttons
-            profileButtons.forEach(btn => btn.classList.remove('Pressed'));
-
-            // Add 'Pressed' class to the clicked button
-            this.classList.add('Pressed');
-
-            // Change profile based on the data-profile attribute
-            const profile = this.getAttribute('data-profile');
-            changeProfile(profile);
+                // Change profile based on the data-profile attribute
+                const profile = this.getAttribute('data-profile');
+                changeProfile(profile);
+            });
         });
-    });
+    } else {
+        console.error("No profile buttons found.");
+    }
 }); // Close the DOMContentLoaded listener properly
 
 function geocodeAddress(address, callback) {
