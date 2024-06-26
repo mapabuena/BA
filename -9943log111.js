@@ -199,7 +199,7 @@ function initializeDirectionsControl() {
         }
 
         // Set the new profile
-        directions.options.profile = profile;
+        directions.setProfile(profile);
 
         // Clear the existing route
         clearRouteFromMap();
