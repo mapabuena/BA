@@ -821,6 +821,14 @@ function setupProfileButtons() {
                 changeProfile(profile);
             });
         });
+
+        // Set the default pressed button state
+        const defaultButton = document.getElementById('custom-traffic');
+        if (defaultButton) {
+            defaultButton.classList.add('Pressed');
+        } else {
+            console.error("Default button not found.");
+        }
     } else {
         console.error("No profile buttons found.");
     }
