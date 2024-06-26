@@ -778,6 +778,7 @@ function onRoutesReceived(routes, profile) {
     console.log("Routes received for profile:", profile); // Debug log for profile
     displayRouteAlternatives(routes, profile);
 }
+
 function setupProfileButtons() {
     const profileButtons = document.querySelectorAll('.profile-button');
     console.log(profileButtons); // Log the NodeList of profile buttons
@@ -808,7 +809,7 @@ function setupProfileButtons() {
         }
 
         // Add event listeners for profile buttons
-        profileButtons.forEach(button => {
+     profileButtons.forEach(button => {
             button.addEventListener('click', function() {
                 // Remove 'Pressed' class from all buttons
                 profileButtons.forEach(btn => btn.classList.remove('Pressed'));
@@ -819,13 +820,21 @@ function setupProfileButtons() {
                 // Change profile based on the data-profile attribute
                 const profile = this.getAttribute('data-profile');
                 changeProfile(profile);
+
+                // Debugging log to check the class list
+                console.log(`Button ${this.id} class list:`, this.classList);
             });
         });
 
         // Set the default pressed button state
         const defaultButton = document.getElementById('custom-traffic');
+        console.log("Default Button: ", defaultButton); // Debug log for default button
         if (defaultButton) {
             defaultButton.classList.add('Pressed');
+            console.log("Pressed class added to default button"); // Debug log for class addition
+
+            // Debugging log to check the class list
+            console.log(`Default Button class list:`, defaultButton.classList);
         } else {
             console.error("Default button not found.");
         }
