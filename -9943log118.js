@@ -847,6 +847,7 @@ console.log("Directions control initialized after DOMContentLoaded.");
         console.error("Default button not found.");
     }
 
+    // Declare profileButtons after DOMContentLoaded
     const profileButtons = document.querySelectorAll('.profile-button');
 
     // Function to change profile and update button states
@@ -888,6 +889,7 @@ console.log("Directions control initialized after DOMContentLoaded.");
             changeProfile(profile);
         });
     });
+
 
 function geocodeAddress(address, callback) {
     const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(address)}.json?access_token=${mapboxgl.accessToken}`;
