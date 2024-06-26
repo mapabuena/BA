@@ -839,7 +839,7 @@ console.log("Directions control initialized after DOMContentLoaded.");
     } else {
         console.error("Element with ID 'close-directions' not found.");
     }
-}); // Close the DOMContentLoaded listener properly
+    
     const defaultButton = document.getElementById('custom-traffic');
     if (defaultButton) {
         defaultButton.classList.add('Pressed');
@@ -889,7 +889,7 @@ console.log("Directions control initialized after DOMContentLoaded.");
             changeProfile(profile);
         });
     });
-
+}); // Close the DOMContentLoaded listener properly
 
 function geocodeAddress(address, callback) {
     const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(address)}.json?access_token=${mapboxgl.accessToken}`;
