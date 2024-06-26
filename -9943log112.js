@@ -200,8 +200,8 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // Set the new profile
-        directions.setProfile(profile);
+         // Set the new profile
+    directions.options.profile = profile;
 
         // Clear the existing route
         clearRouteFromMap();
