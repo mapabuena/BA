@@ -183,9 +183,7 @@ function initializeDirectionsControl() {
     }
 }
 
-
-
-    // Add event listeners for profile buttons
+   // Add event listeners for profile buttons
     profileButtons.forEach(button => {
         button.addEventListener('click', function() {
             // Remove 'pressed' class from all buttons
@@ -199,9 +197,6 @@ function initializeDirectionsControl() {
             changeProfile(profile);
         });
     });
-});
-
-
 
 // Function to hide default markers added by Mapbox Directions
 function hideDefaultMarkers() {
