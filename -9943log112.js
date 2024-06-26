@@ -148,13 +148,13 @@ function initializeDirectionsControl() {
                 hideDefaultMarkers(); // Ensure default markers are hidden after route is added
             });
 
-            document.querySelectorAll('.mapbox-directions-profile input').forEach(input => {
+           document.querySelectorAll('.mapbox-directions-profile input').forEach(input => {
                 input.addEventListener('change', (e) => {
                     console.log("Profile changed to:", e.target.value);
-                    directions.options.profile = e.target.value;
+                    directions.setProfile(e.target.value);
                 });
             });
-
+            
             // Add event listeners for the "x" buttons
             const originCloseButton = document.querySelector('.mapbox-directions-origin .geocoder-icon-close');
             const destinationCloseButton = document.querySelector('.mapbox-directions-destination .geocoder-icon-close');
@@ -186,7 +186,9 @@ function initializeDirectionsControl() {
     }
 }
 
-  const defaultButton = document.getElementById('custom-traffic');
+document.addEventListener('DOMContentLoaded', function() {
+    // Ensure default button has 'pressed' state
+    const defaultButton = document.getElementById('custom-traffic');
     defaultButton.classList.add('pressed');
 
     const profileButtons = document.querySelectorAll('.profile-button');
@@ -230,6 +232,11 @@ function initializeDirectionsControl() {
             changeProfile(profile);
         });
     });
+
+    // Initialize Directions Control
+    initializeDirectionsControl();
+
+});
 
 // Function to hide default markers added by Mapbox Directions
 function hideDefaultMarkers() {
