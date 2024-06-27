@@ -143,6 +143,28 @@ function initializeDirectionsControl() {
                 }
             });
 
+            directions.on('reverse', () => {
+                const tempCoordinates = originCoordinates;
+                originCoordinates = destinationCoordinates;
+                destinationCoordinates = tempCoordinates;
+                
+                const tempMarker = customOriginMarker;
+                customOriginMarker = customDestinationMarker;
+                customDestinationMarker = tempMarker;
+                
+                updateOriginMarker(originCoordinates);
+                updateDestinationMarker(destinationCoordinates);
+                
+                setDirectionsInputFields(
+                    directions.getOrigin().place_name || '',
+                    directions.getDestination().place_name || ''
+                );
+
+                if (originSet && destinationSet) {
+                    checkAndRetrieveDirections();
+                }
+            });
+
             directions.on('route', (event) => {
                 if (event.route) {
                     const route = event.route[0];
