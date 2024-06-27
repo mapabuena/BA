@@ -99,113 +99,94 @@ function updateDestinationMarker(coords) {
     }
 }
 
-// Initialize Directions Control
-function initializeDirectionsControl() {
-    if (!directions) {
-        directions = new MapboxDirections({
-            accessToken: mapboxgl.accessToken,
-            unit: 'imperial',
-            profile: 'mapbox/driving-traffic',
-            alternatives: true,
-            controls: {
-                inputs: true,
-                instructions: true,
-            },
-            flyTo: false,
-            interactive: false,
-            zoom: 14,
-            placeholderOrigin: "Enter starting location",
-            placeholderDestination: "Enter destination location",
-            marker: false // Disable the default markers
-        });
-
-        const directionsControlElement = document.getElementById('directions-control');
-        if (directionsControlElement) {
-            directionsControlElement.appendChild(directions.onAdd(map));
-
-            directions.on('origin', () => {
-                originCoordinates = directions.getOrigin().geometry.coordinates;
-                originSet = true;
-                hideDefaultMarkers();
-                updateOriginMarker(originCoordinates); // Update custom origin marker
-                if (originSet && destinationSet) {
-                    checkAndRetrieveDirections();
-                }
+  // Initialize Directions Control with the Mapbox Directions API
+    function initializeDirectionsControl() {
+        if (!directions) {
+            directions = new MapboxDirections({
+                accessToken: mapboxgl.accessToken,
+                unit: 'imperial',
+                profile: 'mapbox/driving-traffic',
+                alternatives: true,
+                controls: {
+                    inputs: true,
+                    instructions: true,
+                },
+                flyTo: false,
+                interactive: false,
+                zoom: 14,
+                placeholderOrigin: "Enter starting location",
+                placeholderDestination: "Enter destination location",
+                marker: false // Disable the default markers
             });
 
-            directions.on('destination', () => {
-                destinationCoordinates = directions.getDestination().geometry.coordinates;
-                destinationSet = true;
-                hideDefaultMarkers();
-                updateDestinationMarker(destinationCoordinates); // Update custom destination marker
-                if (originSet && destinationSet) {
-                    checkAndRetrieveDirections();
-                }
-            });
+            const directionsControlElement = document.getElementById('directions-control');
+            if (directionsControlElement) {
+                directionsControlElement.appendChild(directions.onAdd(map));
 
-            directions.on('reverse', () => {
-                const tempCoordinates = originCoordinates;
-                originCoordinates = destinationCoordinates;
-                destinationCoordinates = tempCoordinates;
-                
-                const tempMarker = customOriginMarker;
-                customOriginMarker = customDestinationMarker;
-                customDestinationMarker = tempMarker;
-                
-                updateOriginMarker(originCoordinates);
-                updateDestinationMarker(destinationCoordinates);
-                
-                setDirectionsInputFields(
-                    directions.getOrigin().place_name || '',
-                    directions.getDestination().place_name || ''
-                );
-
-                if (originSet && destinationSet) {
-                    checkAndRetrieveDirections();
-                }
-            });
-
-            directions.on('route', (event) => {
-                if (event.route) {
-                    const route = event.route[0];
-                    updateDirectionsSteps(route); // Update the directions steps
-                }
-                hideDefaultMarkers(); // Ensure default markers are hidden after route is added
-            });
-
-            document.querySelectorAll('.mapbox-directions-profile input').forEach(input => {
-                input.addEventListener('change', (e) => {
-                    directions.setProfile(e.target.value);
+                directions.on('origin', () => {
+                    if (disableAutoFunctionality) return;
+                    originCoordinates = directions.getOrigin().geometry.coordinates;
+                    originSet = true;
+                    hideDefaultMarkers();
+                    updateOriginMarker(originCoordinates); // Update custom origin marker
+                    if (originSet && destinationSet) {
+                        checkAndRetrieveDirections();
+                    }
                 });
-            });
 
-            const originCloseButton = document.querySelector('.mapbox-directions-origin .geocoder-icon-close');
-            const destinationCloseButton = document.querySelector('.mapbox-directions-destination .geocoder-icon-close');
-
-            if (originCloseButton) {
-                originCloseButton.addEventListener('click', function () {
-                    originSet = false;
-                    customOriginMarker.remove(); // Optionally remove the marker
-                    customOriginMarker = null;
-                    unselectAllMarkers();
-                    map.on('click', setOriginOnClick);
+                directions.on('destination', () => {
+                    if (disableAutoFunctionality) return;
+                    destinationCoordinates = directions.getDestination().geometry.coordinates;
+                    destinationSet = true;
+                    hideDefaultMarkers();
+                    updateDestinationMarker(destinationCoordinates); // Update custom destination marker
+                    if (originSet && destinationSet) {
+                        checkAndRetrieveDirections();
+                    }
                 });
+
+                directions.on('route', (event) => {
+                    if (disableAutoFunctionality) return;
+                    if (event.route) {
+                        const route = event.route[0];
+                        updateDirectionsSteps(route); // Update the directions steps
+                    }
+                    hideDefaultMarkers(); // Ensure default markers are hidden after route is added
+                });
+
+                document.querySelectorAll('.mapbox-directions-profile input').forEach(input => {
+                    input.addEventListener('change', (e) => {
+                        directions.setProfile(e.target.value);
+                    });
+                });
+
+                const originCloseButton = document.querySelector('.mapbox-directions-origin .geocoder-icon-close');
+                const destinationCloseButton = document.querySelector('.mapbox-directions-destination .geocoder-icon-close');
+
+                if (originCloseButton) {
+                    originCloseButton.addEventListener('click', function () {
+                        originSet = false;
+                        customOriginMarker.remove(); // Optionally remove the marker
+                        customOriginMarker = null;
+                        unselectAllMarkers();
+                        map.on('click', setOriginOnClick);
+                    });
+                }
+
+                if (destinationCloseButton) {
+                    destinationCloseButton.addEventListener('click', function () {
+                        destinationSet = false;
+                        customDestinationMarker.remove(); // Optionally remove the marker
+                        customDestinationMarker = null;
+                        unselectAllMarkers();
+                        map.on('click', setDestinationOnClick);
+                    });
+                }
+            } else {
+                console.error("Element with ID 'directions-control' not found.");
             }
-
-            if (destinationCloseButton) {
-                destinationCloseButton.addEventListener('click', function () {
-                    destinationSet = false;
-                    customDestinationMarker.remove(); // Optionally remove the marker
-                    customDestinationMarker = null;
-                    unselectAllMarkers();
-                    map.on('click', setDestinationOnClick);
-                });
-            }
-        } else {
-            console.error("Element with ID 'directions-control' not found.");
         }
     }
-}
 // Update the directions steps in the directions control
 function updateDirectionsSteps(route) {
     const directionsStepsElement = document.getElementById('mapbox-directions-step-list');
@@ -939,10 +920,13 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         console.error("Element with ID 'close-directions' not found.");
     }
+    // Flag to temporarily disable Mapbox Directions API automatic functionality
+    let disableAutoFunctionality = false;
      // Add event listener for the reverse button
     const reverseButton = document.querySelector('.directions-reverse.js-reverse-inputs');
     if (reverseButton) {
         reverseButton.addEventListener('click', function() {
+            disableAutoFunctionality = true;
             const tempCoordinates = originCoordinates;
             originCoordinates = destinationCoordinates;
             destinationCoordinates = tempCoordinates;
@@ -962,6 +946,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (originSet && destinationSet) {
                 checkAndRetrieveDirections();
             }
+                disableAutoFunctionality = false;
         });
     } else {
         console.error("Reverse button not found.");
