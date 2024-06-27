@@ -292,6 +292,10 @@ function checkAndRetrieveDirections() {
                     console.log("Route object:", route);
                     addRouteToMap(route);  // Directly adding the best route to map
                     updateDirectionsSteps(route); // Update the directions steps
+
+                    // Ensure geometry properties are correctly set for origin and destination
+                    directions.setOrigin({ geometry: { type: 'Point', coordinates: originCoordinates } });
+                    directions.setDestination({ geometry: { type: 'Point', coordinates: destinationCoordinates } });
                 } else {
                     console.warn("No routes available.");
                 }
@@ -306,14 +310,6 @@ function checkAndRetrieveDirections() {
         }
         console.log("Either origin or destination coordinates are missing.");
     }
-}
-// Debounce function to prevent rapid succession of events
-function debounce(func, wait) {
-    let timeout;
-    return function(...args) {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => func.apply(this, args), wait);
-    };
 }
 console.log(document.querySelector('.mapbox-directions-origin input')); // Should log the element or null
 console.log(document.querySelector('.mapbox-directions-destination input')); // Should log the element or null
