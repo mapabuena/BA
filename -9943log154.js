@@ -793,87 +793,7 @@ function setupProfileButtons() {
         console.error("No profile buttons found.");
     }
 }
-
-document.addEventListener('DOMContentLoaded', function() {
-    console.log("Document loaded");
-    // Initialize necessary components and handlers
-    initializeDirectionsControl();
-    console.log("Directions control initialized after DOMContentLoaded.");
-    setupDatePickers();
-    setupCityButtons();
-    setupFormHandlers();
-    setupMapEvents();
-    setupInfoItemHoverEffects();
-    setupDirectionsButton();
-    setupProfileButtons();
-   
-
- const resetOriginButton = document.getElementById('reset-origin');
-    if (resetOriginButton) {
-        resetOriginButton.addEventListener('click', function() {
-            originSet = false;
-            destinationSet = false; // Reset destination flag as well
-            map.on('click', setOriginOnClick); // Re-enable click event listener to set origin
-            directions.setOrigin('');
-            directions.setDestination(''); // Clear the destination as well
-            setDirectionsInputFields('', ''); // Clear input fields
-            console.log("Origin and destination reset");
-        });
-    }
-        const closeDirectionsButton = document.getElementById('close-directions');
-    if (closeDirectionsButton) {
-        closeDirectionsButton.addEventListener('click', function() {
-            deactivateDirections();
-            clearRouteFromMap();
-            clearCustomMarkers(); // Clear custom markers for origin and destination
-            resetDirectionState(); // Reset direction state variables
-            resetMarkerStates(); // unselect selected markers
-        });
-    } else {
-        console.error("Element with ID 'close-directions' not found.");
-    }
-
-
-    // Flag to temporarily disable Mapbox Directions API automatic functionality
-    let disableAutoFunctionality = false;
-
-    // Add event listener for the reverse button
-    const reverseButton = document.querySelector('.directions-reverse.js-reverse-inputs');
-    if (reverseButton) {
-        reverseButton.addEventListener('click', function(event) {
-            event.preventDefault(); // Prevent default action
-            event.stopPropagation(); // Stop the event from propagating
-
-            disableAutoFunctionality = true;
-
-            const tempCoordinates = originCoordinates;
-            originCoordinates = destinationCoordinates;
-            destinationCoordinates = tempCoordinates;
-
-            const tempMarker = customOriginMarker;
-            customOriginMarker = customDestinationMarker;
-            customDestinationMarker = tempMarker;
-
-            updateOriginMarker(originCoordinates);
-            updateDestinationMarker(destinationCoordinates);
-
-            setDirectionsInputFields(
-                directions.getDestination().place_name || '',
-                directions.getOrigin().place_name || ''
-            );
-
-            if (originSet && destinationSet) {
-                checkAndRetrieveDirections();
-            }
-
-            disableAutoFunctionality = false;
-        });
-    } else {
-        console.error("Reverse button not found.");
-    }
-}); // Close the DOMContentLoaded listener properly
-
-    // Initialize Directions Control with the Mapbox Directions API
+  // Initialize Directions Control with the Mapbox Directions API
     function initializeDirectionsControl() {
         if (!directions) {
             directions = new MapboxDirections({
@@ -961,6 +881,86 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     }
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("Document loaded");
+    // Initialize necessary components and handlers
+    initializeDirectionsControl();
+    console.log("Directions control initialized after DOMContentLoaded.");
+    setupDatePickers();
+    setupCityButtons();
+    setupFormHandlers();
+    setupMapEvents();
+    setupInfoItemHoverEffects();
+    setupDirectionsButton();
+    setupProfileButtons();
+   
+
+ const resetOriginButton = document.getElementById('reset-origin');
+    if (resetOriginButton) {
+        resetOriginButton.addEventListener('click', function() {
+            originSet = false;
+            destinationSet = false; // Reset destination flag as well
+            map.on('click', setOriginOnClick); // Re-enable click event listener to set origin
+            directions.setOrigin('');
+            directions.setDestination(''); // Clear the destination as well
+            setDirectionsInputFields('', ''); // Clear input fields
+            console.log("Origin and destination reset");
+        });
+    }
+        const closeDirectionsButton = document.getElementById('close-directions');
+    if (closeDirectionsButton) {
+        closeDirectionsButton.addEventListener('click', function() {
+            deactivateDirections();
+            clearRouteFromMap();
+            clearCustomMarkers(); // Clear custom markers for origin and destination
+            resetDirectionState(); // Reset direction state variables
+            resetMarkerStates(); // unselect selected markers
+        });
+    } else {
+        console.error("Element with ID 'close-directions' not found.");
+    }
+
+
+    // Flag to temporarily disable Mapbox Directions API automatic functionality
+    let disableAutoFunctionality = false;
+
+    // Add event listener for the reverse button
+    const reverseButton = document.querySelector('.directions-reverse.js-reverse-inputs');
+    if (reverseButton) {
+        reverseButton.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent default action
+            event.stopPropagation(); // Stop the event from propagating
+
+            disableAutoFunctionality = true;
+
+            const tempCoordinates = originCoordinates;
+            originCoordinates = destinationCoordinates;
+            destinationCoordinates = tempCoordinates;
+
+            const tempMarker = customOriginMarker;
+            customOriginMarker = customDestinationMarker;
+            customDestinationMarker = tempMarker;
+
+            updateOriginMarker(originCoordinates);
+            updateDestinationMarker(destinationCoordinates);
+
+            setDirectionsInputFields(
+                directions.getDestination().place_name || '',
+                directions.getOrigin().place_name || ''
+            );
+
+            if (originSet && destinationSet) {
+                checkAndRetrieveDirections();
+            }
+
+            disableAutoFunctionality = false;
+        });
+    } else {
+        console.error("Reverse button not found.");
+    }
+}); // Close the DOMContentLoaded listener properly
+
+  
 // Function to clear custom markers for origin and destination
 function clearCustomMarkers() {
     if (customOriginMarker) {
