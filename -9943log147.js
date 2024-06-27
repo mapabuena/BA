@@ -627,6 +627,7 @@ function setDestinationOnClick(e) {
                     directions.setDestination(coords);
                     destinationCoordinates = coords;
                     destinationSet = true;
+                        map.off('click', setDestinationOnClick);
 
                     console.log("Setting destination input fields with address:", address);
                     setDirectionsInputFields(directions.getOrigin().place_name || '', address);
@@ -657,6 +658,7 @@ function setDestinationOnClick(e) {
                     directions.setDestination([lng, lat]);
                     destinationCoordinates = [lng, lat];
                     destinationSet = true;
+                    map.off('click', setDestinationOnClick);
 
                     console.log("Setting destination input fields with address:", address);
                     setDirectionsInputFields(directions.getOrigin().place_name || '', address);
