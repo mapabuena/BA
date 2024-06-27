@@ -580,7 +580,7 @@ function setOriginOnClick(e) {
     }
 }
 
-/ Set Destination on Click
+// Set Destination on Click
 function setDestinationOnClick(e) {
     if (settingOrigin) return;
 
