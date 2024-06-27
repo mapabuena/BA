@@ -123,44 +123,11 @@ function initializeDirectionsControl() {
         const directionsControlElement = document.getElementById('directions-control');
         if (directionsControlElement) {
             directionsControlElement.appendChild(directions.onAdd(map));
-
-            directions.on('origin', () => {
-                const origin = directions.getOrigin();
-                if (origin && origin.geometry) {
-                    originCoordinates = origin.geometry.coordinates;
-                    originSet = true;
-                    hideDefaultMarkers();
-                    updateOriginMarker(originCoordinates); // Update custom origin marker
-                    if (originSet && destinationSet) {
-                        checkAndRetrieveDirections();
-                    }
-                } else {
-                    console.error("Origin geometry is undefined");
-                }
-            });
-
-            directions.on('destination', () => {
-                const destination = directions.getDestination();
-                if (destination && destination.geometry) {
-                    destinationCoordinates = destination.geometry.coordinates;
-                    destinationSet = true;
-                    hideDefaultMarkers();
-                    updateDestinationMarker(destinationCoordinates); // Update custom destination marker
-                    if (originSet && destinationSet) {
-                        checkAndRetrieveDirections();
-                    }
-                } else {
-                    console.error("Destination geometry is undefined");
-                }
-            });
-
-            directions.on('route', (event) => {
-                if (event.route) {
-                    const route = event.route[0];
-                    updateDirectionsSteps(route); // Update the directions steps
-                }
-                hideDefaultMarkers(); // Ensure default markers are hidden after route is added
-            });
+            
+            // Add event listeners only after confirming directions is initialized
+            directions.on('origin', handleOriginEvent);
+            directions.on('destination', handleDestinationEvent);
+            directions.on('route', handleRouteEvent);
 
             document.querySelectorAll('.mapbox-directions-profile input').forEach(input => {
                 input.addEventListener('change', (e) => {
@@ -197,6 +164,10 @@ function initializeDirectionsControl() {
 
             // Reversing Origin / Destination
             document.querySelector('.js-reverse-inputs').addEventListener('click', function () {
+                if (!directions || !directions.store) {
+                    console.error("Directions store is not initialized.");
+                    return;
+                }
                 const state = directions.store.getState();
                 const origin = state.origin;
                 const destination = state.destination;
@@ -217,6 +188,7 @@ function initializeDirectionsControl() {
         }
     }
 }
+
 // Update the directions steps in the directions control
 function updateDirectionsSteps(route) {
     const directionsStepsElement = document.getElementById('mapbox-directions-step-list');
@@ -402,23 +374,37 @@ function clearRouteFromMap() {
         map.removeSource('route');
     }
 }
+// Event handler for 'origin' event
 function handleOriginEvent() {
-    if (originSet) return;
-    console.log("handleOriginEvent triggered. handlingDirectionEvents:", handlingDirectionEvents, "ignoreEvents:", ignoreEvents, "originSet:", originSet);
-    const originMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="A"]');
-    if (originMarker) {
-        originMarker.remove(); // Remove the default origin marker
+    const origin = directions.getOrigin();
+    if (origin && origin.geometry) {
+        originCoordinates = origin.geometry.coordinates;
+        originSet = true;
+        hideDefaultMarkers();
+        updateOriginMarker(originCoordinates); // Update custom origin marker
+        if (originSet && destinationSet) {
+            checkAndRetrieveDirections();
+        }
+    } else {
+        console.error("Origin geometry is undefined");
     }
 }
-
+// Event handler for 'destination' event
 function handleDestinationEvent() {
-    if (destinationSet) return;
-    console.log("handleDestinationEvent triggered. handlingDirectionEvents:", handlingDirectionEvents, "ignoreEvents:", ignoreEvents, "destinationSet:", destinationSet);
-    const destinationMarker = document.querySelector('.mapboxgl-marker.mapboxgl-marker-anchor-center[style*="B"]');
-    if (destinationMarker) {
-        destinationMarker.remove(); // Remove the default destination marker
+    const destination = directions.getDestination();
+    if (destination && destination.geometry) {
+        destinationCoordinates = destination.geometry.coordinates;
+        destinationSet = true;
+        hideDefaultMarkers();
+        updateDestinationMarker(destinationCoordinates); // Update custom destination marker
+        if (originSet && destinationSet) {
+            checkAndRetrieveDirections();
+        }
+    } else {
+        console.error("Destination geometry is undefined");
     }
 }
+// Event handler for 'route' event
 function handleRouteEvent(event) {
     if (ignoreEvents) return;
     console.log("handleRouteEvent triggered.");
