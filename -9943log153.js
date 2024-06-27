@@ -820,8 +820,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log("Origin and destination reset");
         });
     }
-
-    const closeDirectionsButton = document.getElementById('close-directions');
+        const closeDirectionsButton = document.getElementById('close-directions');
     if (closeDirectionsButton) {
         closeDirectionsButton.addEventListener('click', function() {
             deactivateDirections();
@@ -833,39 +832,48 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         console.error("Element with ID 'close-directions' not found.");
     }
+
+
     // Flag to temporarily disable Mapbox Directions API automatic functionality
     let disableAutoFunctionality = false;
-     // Add event listener for the reverse button
+
+    // Add event listener for the reverse button
     const reverseButton = document.querySelector('.directions-reverse.js-reverse-inputs');
     if (reverseButton) {
-        reverseButton.addEventListener('click', function() {
+        reverseButton.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent default action
+            event.stopPropagation(); // Stop the event from propagating
+
             disableAutoFunctionality = true;
+
             const tempCoordinates = originCoordinates;
             originCoordinates = destinationCoordinates;
             destinationCoordinates = tempCoordinates;
-            
+
             const tempMarker = customOriginMarker;
             customOriginMarker = customDestinationMarker;
             customDestinationMarker = tempMarker;
-            
+
             updateOriginMarker(originCoordinates);
             updateDestinationMarker(destinationCoordinates);
-            
+
             setDirectionsInputFields(
-                directions.getOrigin().place_name || '',
-                directions.getDestination().place_name || ''
+                directions.getDestination().place_name || '',
+                directions.getOrigin().place_name || ''
             );
 
             if (originSet && destinationSet) {
                 checkAndRetrieveDirections();
             }
-                disableAutoFunctionality = false;
+
+            disableAutoFunctionality = false;
         });
     } else {
         console.error("Reverse button not found.");
     }
+}); // Close the DOMContentLoaded listener properly
 
-      // Initialize Directions Control with the Mapbox Directions API
+    // Initialize Directions Control with the Mapbox Directions API
     function initializeDirectionsControl() {
         if (!directions) {
             directions = new MapboxDirections({
@@ -953,8 +961,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     }
-}); // Close the DOMContentLoaded listener properly
-
 // Function to clear custom markers for origin and destination
 function clearCustomMarkers() {
     if (customOriginMarker) {
