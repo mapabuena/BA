@@ -30,6 +30,7 @@ let originCoordinates = null; // Store origin coordinates
 let destinationCoordinates = null; // Store destination coordinates
 let customOriginMarker = null;
 let customDestinationMarker = null;
+let disableAutoFunctionality = false;     // Flag to temporarily disable Mapbox Directions API automatic functionality
 
   // Function to reset all marker states
 function resetMarkerStates() {
@@ -920,9 +921,6 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Element with ID 'close-directions' not found.");
     }
 
-
-    // Flag to temporarily disable Mapbox Directions API automatic functionality
-    let disableAutoFunctionality = false;
 
     // Add event listener for the reverse button
     const reverseButton = document.querySelector('.directions-reverse.js-reverse-inputs');
