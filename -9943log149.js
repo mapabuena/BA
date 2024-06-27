@@ -939,7 +939,33 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         console.error("Element with ID 'close-directions' not found.");
     }
+     // Add event listener for the reverse button
+    const reverseButton = document.querySelector('.directions-reverse.js-reverse-inputs');
+    if (reverseButton) {
+        reverseButton.addEventListener('click', function() {
+            const tempCoordinates = originCoordinates;
+            originCoordinates = destinationCoordinates;
+            destinationCoordinates = tempCoordinates;
+            
+            const tempMarker = customOriginMarker;
+            customOriginMarker = customDestinationMarker;
+            customDestinationMarker = tempMarker;
+            
+            updateOriginMarker(originCoordinates);
+            updateDestinationMarker(destinationCoordinates);
+            
+            setDirectionsInputFields(
+                directions.getOrigin().place_name || '',
+                directions.getDestination().place_name || ''
+            );
 
+            if (originSet && destinationSet) {
+                checkAndRetrieveDirections();
+            }
+        });
+    } else {
+        console.error("Reverse button not found.");
+    }
 }); // Close the DOMContentLoaded listener properly
 
 // Function to clear custom markers for origin and destination
