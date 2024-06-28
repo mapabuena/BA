@@ -322,6 +322,7 @@ function getDirections(origin, destination, profile = 'mapbox/driving-traffic') 
             return null;
         });
 }
+
 // Adjust the addRouteToMap function to include proper styling for manually added routes
 function addRouteToMap(route, isBestRoute) {
     const routeData = {
