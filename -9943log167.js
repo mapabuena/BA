@@ -101,6 +101,7 @@ function updateDestinationMarker(coords) {
 
 // Initialize Directions Control
 // Initialize Directions Control
+// Initialize Directions Control
 function initializeDirectionsControl() {
     if (!directions) {
         directions = new MapboxDirections({
@@ -172,8 +173,12 @@ function initializeDirectionsControl() {
                 setTimeout(() => {
                     const reversedOrigin = directions.getOrigin();
                     const reversedDestination = directions.getDestination();
-                    console.log("After reversing - Origin coordinates:", reversedOrigin.geometry.coordinates);
-                    console.log("After reversing - Destination coordinates:", reversedDestination.geometry.coordinates);
+                    if (reversedOrigin && reversedDestination && reversedOrigin.geometry && reversedDestination.geometry) {
+                        console.log("After reversing - Origin coordinates:", reversedOrigin.geometry.coordinates);
+                        console.log("After reversing - Destination coordinates:", reversedDestination.geometry.coordinates);
+                    } else {
+                        console.error("Error: reversed origin or destination geometry is undefined");
+                    }
                 }, 1000); // Delay to ensure coordinates are updated
             });
 
@@ -268,6 +273,7 @@ function hideDefaultMarkers() {
 }
 
 // Check and retrieve directions
+// Check and retrieve directions
 function checkAndRetrieveDirections() {
     console.log("Checking directions...");
     if (originCoordinates && destinationCoordinates) {
@@ -291,22 +297,23 @@ function checkAndRetrieveDirections() {
                     addRouteToMap(route);  // Directly adding the best route to map
                     updateDirectionsSteps(route); // Update the directions steps
 
-                    directions.setOrigin({ geometry: { type: 'Point', coordinates: originCoordinates } });
-                    directions.setDestination({ geometry: { type: 'Point', coordinates: destinationCoordinates } });
-
-                    // Log the coordinates after setting the route
-                    console.log("Origin coordinates after fetching directions:", directions.getOrigin().geometry.coordinates);
-                    console.log("Destination coordinates after fetching directions:", directions.getDestination().geometry.coordinates);
+                    if (directions.getOrigin() && directions.getDestination() && directions.getOrigin().geometry && directions.getDestination().geometry) {
+                        console.log("Origin coordinates after fetching directions:", directions.getOrigin().geometry.coordinates);
+                        console.log("Destination coordinates after fetching directions:", directions.getDestination().geometry.coordinates);
+                    } else {
+                        console.error("Error: directions.getOrigin() or directions.getDestination() geometry is undefined");
+                    }
                 } else {
                     console.warn("No routes available.");
                 }
             })
-            .catch(error => console.error('Error fetching directions:', error));
+            .catch(error => {
+                console.error('Error fetching directions:', error);
+            });
     } else {
         console.log("Either origin or destination coordinates are missing.");
     }
 }
-
 
 function getDirections(origin, destination, profile = 'mapbox/driving-traffic') {
     const coordinates = `${origin[0]},${origin[1]};${destination[0]},${destination[1]}`;
