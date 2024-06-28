@@ -551,14 +551,16 @@ function setOriginOnClick(e) {
                 try {
                     directions.setOrigin(coords);
                     originCoordinates = coords;
-                    
-                    // Set origin.geometry.coordinates
-                    const origin = directions.getOrigin();
-                    if (origin) {
-                        origin.geometry = { coordinates: coords };
-                    } else {
-                        console.error("Unable to set origin geometry coordinates.");
-                    }
+
+                    // Ensure origin.geometry.coordinates is set
+                    setTimeout(() => {
+                        const origin = directions.getOrigin();
+                        if (origin && origin.geometry && origin.geometry.coordinates) {
+                            console.log("Origin geometry coordinates set successfully:", origin.geometry.coordinates);
+                        } else {
+                            console.error("Unable to set origin geometry coordinates.");
+                        }
+                    }, 500); // Delay to ensure the coordinates are updated
 
                     originSet = true;
                     map.off('click', setOriginOnClick);
@@ -586,14 +588,16 @@ function setOriginOnClick(e) {
                 try {
                     directions.setOrigin([lng, lat]);
                     originCoordinates = [lng, lat];
-                    
-                    // Set origin.geometry.coordinates
-                    const origin = directions.getOrigin();
-                    if (origin) {
-                        origin.geometry = { coordinates: [lng, lat] };
-                    } else {
-                        console.error("Unable to set origin geometry coordinates.");
-                    }
+
+                    // Ensure origin.geometry.coordinates is set
+                    setTimeout(() => {
+                        const origin = directions.getOrigin();
+                        if (origin && origin.geometry && origin.geometry.coordinates) {
+                            console.log("Origin geometry coordinates set successfully:", origin.geometry.coordinates);
+                        } else {
+                            console.error("Unable to set origin geometry coordinates.");
+                        }
+                    }, 500); // Delay to ensure the coordinates are updated
 
                     originSet = true;
                     map.off('click', setOriginOnClick);
@@ -643,13 +647,15 @@ function setDestinationOnClick(e) {
                     directions.setDestination(coords);
                     destinationCoordinates = coords;
 
-                    // Set destination.geometry.coordinates
-                    const destination = directions.getDestination();
-                    if (destination) {
-                        destination.geometry = { coordinates: coords };
-                    } else {
-                        console.error("Unable to set destination geometry coordinates.");
-                    }
+                    // Ensure destination.geometry.coordinates is set
+                    setTimeout(() => {
+                        const destination = directions.getDestination();
+                        if (destination && destination.geometry && destination.geometry.coordinates) {
+                            console.log("Destination geometry coordinates set successfully:", destination.geometry.coordinates);
+                        } else {
+                            console.error("Unable to set destination geometry coordinates.");
+                        }
+                    }, 500); // Delay to ensure the coordinates are updated
 
                     destinationSet = true;
                     map.off('click', setDestinationOnClick);
@@ -678,13 +684,15 @@ function setDestinationOnClick(e) {
                     directions.setDestination([lng, lat]);
                     destinationCoordinates = [lng, lat];
 
-                    // Set destination.geometry.coordinates
-                    const destination = directions.getDestination();
-                    if (destination) {
-                        destination.geometry = { coordinates: [lng, lat] };
-                    } else {
-                        console.error("Unable to set destination geometry coordinates.");
-                    }
+                    // Ensure destination.geometry.coordinates is set
+                    setTimeout(() => {
+                        const destination = directions.getDestination();
+                        if (destination && destination.geometry && destination.geometry.coordinates) {
+                            console.log("Destination geometry coordinates set successfully:", destination.geometry.coordinates);
+                        } else {
+                            console.error("Unable to set destination geometry coordinates.");
+                        }
+                    }, 500); // Delay to ensure the coordinates are updated
 
                     destinationSet = true;
                     map.off('click', setDestinationOnClick);
@@ -1044,14 +1052,16 @@ function setupDirectionsButton() {
                         console.log("Setting destination to:", coords);
                         directions.setDestination(coords);
                         destinationCoordinates = coords;
-                        
-                        // Set destination.geometry.coordinates
-                        const destination = directions.getDestination();
-                        if (destination) {
-                            destination.geometry = { coordinates: coords };
-                        } else {
-                            console.error("Unable to set destination geometry coordinates.");
-                        }
+
+                        // Ensure destination.geometry.coordinates is set
+                        setTimeout(() => {
+                            const destination = directions.getDestination();
+                            if (destination && destination.geometry && destination.geometry.coordinates) {
+                                console.log("Destination geometry coordinates set successfully:", destination.geometry.coordinates);
+                            } else {
+                                console.error("Unable to set destination geometry coordinates.");
+                            }
+                        }, 500); // Delay to ensure the coordinates are updated
 
                         destinationSet = true;
 
