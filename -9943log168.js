@@ -556,6 +556,9 @@ function setOriginOnClick(e) {
 
                     setDirectionsInputFields(address, directions.getDestination().place_name || '');
 
+                    // Ensure origin.geometry.coordinates is set
+                    directions.store.dispatch(directions.actions.queryOrigin(coords));
+
                     updateOriginMarker(coords);  // Update custom origin marker
 
                     if (originSet && destinationSet) {
@@ -581,6 +584,9 @@ function setOriginOnClick(e) {
                     map.off('click', setOriginOnClick);
 
                     setDirectionsInputFields(address, directions.getDestination().place_name || '');
+
+                    // Ensure origin.geometry.coordinates is set
+                    directions.store.dispatch(directions.actions.queryOrigin([lng, lat]));
 
                     updateOriginMarker([lng, lat]);  // Update custom origin marker
 
@@ -629,6 +635,9 @@ function setDestinationOnClick(e) {
 
                     setDirectionsInputFields(directions.getOrigin().place_name || '', address);
 
+                    // Ensure destination.geometry.coordinates is set
+                    directions.store.dispatch(directions.actions.queryDestination(coords));
+
                     updateDestinationMarker(coords);  // Update custom destination marker
 
                     if (originSet && destinationSet) {
@@ -654,6 +663,9 @@ function setDestinationOnClick(e) {
                     map.off('click', setDestinationOnClick);
 
                     setDirectionsInputFields(directions.getOrigin().place_name || '', address);
+
+                    // Ensure destination.geometry.coordinates is set
+                    directions.store.dispatch(directions.actions.queryDestination([lng, lat]));
 
                     updateDestinationMarker([lng, lat]);  // Update custom destination marker
 
