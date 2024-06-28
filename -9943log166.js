@@ -100,6 +100,7 @@ function updateDestinationMarker(coords) {
 }
 
 // Initialize Directions Control
+// Initialize Directions Control
 function initializeDirectionsControl() {
     if (!directions) {
         directions = new MapboxDirections({
@@ -122,7 +123,7 @@ function initializeDirectionsControl() {
         const directionsControlElement = document.getElementById('directions-control');
         if (directionsControlElement) {
             directionsControlElement.appendChild(directions.onAdd(map));
-            
+
             // Add event listeners only after confirming directions is initialized
             directions.on('origin', handleOriginEvent);
             directions.on('destination', handleDestinationEvent);
@@ -161,6 +162,20 @@ function initializeDirectionsControl() {
                 });
             }
 
+            // Ensure the reverse button works natively
+            document.querySelector('.js-reverse-inputs').addEventListener('click', function () {
+                if (!directions || !directions.store) {
+                    console.error("Directions store is not initialized.");
+                    return;
+                }
+
+                setTimeout(() => {
+                    const reversedOrigin = directions.getOrigin();
+                    const reversedDestination = directions.getDestination();
+                    console.log("After reversing - Origin coordinates:", reversedOrigin.geometry.coordinates);
+                    console.log("After reversing - Destination coordinates:", reversedDestination.geometry.coordinates);
+                }, 1000); // Delay to ensure coordinates are updated
+            });
 
         } else {
             console.error("Element with ID 'directions-control' not found.");
@@ -280,8 +295,8 @@ function checkAndRetrieveDirections() {
                     directions.setDestination({ geometry: { type: 'Point', coordinates: destinationCoordinates } });
 
                     // Log the coordinates after setting the route
-                    console.log("Origin coordinates after fetching directions:", originCoordinates);
-                    console.log("Destination coordinates after fetching directions:", destinationCoordinates);
+                    console.log("Origin coordinates after fetching directions:", directions.getOrigin().geometry.coordinates);
+                    console.log("Destination coordinates after fetching directions:", directions.getDestination().geometry.coordinates);
                 } else {
                     console.warn("No routes available.");
                 }
@@ -291,6 +306,7 @@ function checkAndRetrieveDirections() {
         console.log("Either origin or destination coordinates are missing.");
     }
 }
+
 
 function getDirections(origin, destination, profile = 'mapbox/driving-traffic') {
     const coordinates = `${origin[0]},${origin[1]};${destination[0]},${destination[1]}`;
@@ -369,7 +385,7 @@ function handleOriginEvent() {
         originSet = true;
         hideDefaultMarkers();
         updateOriginMarker(originCoordinates); // Update custom origin marker
-        console.log("Origin set:", originCoordinates); // Log origin coordinates
+        console.log("Origin set:", origin.geometry.coordinates); // Log origin coordinates
         if (originSet && destinationSet) {
             checkAndRetrieveDirections();
         }
@@ -386,7 +402,7 @@ function handleDestinationEvent() {
         destinationSet = true;
         hideDefaultMarkers();
         updateDestinationMarker(destinationCoordinates); // Update custom destination marker
-        console.log("Destination set:", destinationCoordinates); // Log destination coordinates
+        console.log("Destination set:", destination.geometry.coordinates); // Log destination coordinates
         if (originSet && destinationSet) {
             checkAndRetrieveDirections();
         }
