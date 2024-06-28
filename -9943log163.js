@@ -101,6 +101,7 @@ function updateDestinationMarker(coords) {
 
 // Initialize Directions Control
 // Initialize Directions Control
+// Initialize Directions Control
 function initializeDirectionsControl() {
     if (!directions) {
         directions = new MapboxDirections({
@@ -162,7 +163,7 @@ function initializeDirectionsControl() {
                 });
             }
 
-            // Reversing Origin / Destination
+            // Add event listener for reversing origin and destination
             document.querySelector('.js-reverse-inputs').addEventListener('click', function () {
                 if (!directions || !directions.store) {
                     console.error("Directions store is not initialized.");
@@ -171,18 +172,16 @@ function initializeDirectionsControl() {
                 const state = directions.store.getState();
                 const origin = state.origin;
                 const destination = state.destination;
-                if (origin && origin.geometry && origin.geometry.coordinates) {
+
+                if (origin && origin.geometry && origin.geometry.coordinates && destination && destination.geometry.coordinates) {
                     directions.actions.queryDestination(origin.geometry.coordinates);
-                } else {
-                    console.error("Origin geometry coordinates are undefined");
-                }
-                if (destination && destination.geometry && destination.geometry.coordinates) {
                     directions.actions.queryOrigin(destination.geometry.coordinates);
+                    reverse();
                 } else {
-                    console.error("Destination geometry coordinates are undefined");
+                    console.error("Origin or Destination geometry coordinates are undefined");
                 }
-                reverse();
             });
+
         } else {
             console.error("Element with ID 'directions-control' not found.");
         }
@@ -325,6 +324,7 @@ function getDirections(origin, destination, profile = 'mapbox/driving-traffic') 
             return null;
         });
 }
+// Function to add route to map
 function addRouteToMap(route) {
     console.log("Adding route to map:", route);
     if (!route || !route.geometry || !route.geometry.coordinates) {
@@ -429,9 +429,11 @@ function onRoutesReceived(routes, profile) {
     displayRouteAlternatives(routes, profile);
 }
 
+
+// Update the input fields with better logs
 function setDirectionsInputFields(originTitle, destinationTitle) {
-    const originInput = document.querySelector('.mapbox-directions-origin input');
-    const destinationInput = document.querySelector('.mapbox-directions-destination input');
+    const originInput = document.querySelector('.mapbox-directions-origin input[type="text"]');
+    const destinationInput = document.querySelector('.mapbox-directions-destination input[type="text"]');
 
     console.log("Setting input fields. Origin Title:", originTitle, "Destination Title:", destinationTitle);
     console.log("Origin Input before setting:", originInput ? originInput.value : "null");
