@@ -275,44 +275,41 @@ function hideDefaultMarkers() {
     });
 }
 
-// Check and retrieve directions
-function checkAndRetrieveDirections() {
-    console.log("Checking directions...");
-    console.log("Origin Coordinates:", originCoordinates);
-    console.log("Destination Coordinates:", destinationCoordinates);
+  function checkAndRetrieveDirections() {
+            console.log("Checking directions...");
+            console.log("Origin Coordinates:", originCoordinates);
+            console.log("Destination Coordinates:", destinationCoordinates);
 
-    if (originCoordinates && destinationCoordinates) {
-        const originCoords = originCoordinates.join(',');
-        const destinationCoords = destinationCoordinates.join(',');
-        const profile = directions.options.profile;
+            if (originCoordinates && destinationCoordinates) {
+                const originCoords = originCoordinates.join(',');
+                const destinationCoords = destinationCoordinates.join(',');
+                const profile = directions.options.profile;
 
-        const url = `https://api.mapbox.com/directions/v5/${profile}/${originCoords};${destinationCoords}?access_token=${mapboxgl.accessToken}&alternatives=true&geometries=geojson&steps=true`;
+                const url = `https://api.mapbox.com/directions/v5/${profile}/${originCoords};${destinationCoords}?access_token=${mapboxgl.accessToken}&alternatives=true&geometries=geojson&steps=true`;
 
-        console.log("Fetching directions from URL:", url);
+                console.log("Fetching directions from URL:", url);
 
-        fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                if (data.routes && data.routes.length > 0) {
-                    console.log("Routes received:", data.routes);
-                    const route = data.routes[0];
-                    console.log("Route object:", route);
-                    addRoutesToMap(route);  // Directly adding the best route to map
-                } else {
-                    console.warn("No routes available.");
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.routes && data.routes.length > 0) {
+                            console.log("Routes received:", data.routes);
+                            addRoutesToMap(data.routes, profile);  // Adding all routes to map based on profile
+                        } else {
+                            console.warn("No routes available.");
+                        }
+                    })
+                    .catch(error => console.error('Error fetching directions:', error));
+            } else {
+                if (!originCoordinates) {
+                    console.log("Origin coordinates are missing.");
                 }
-            })
-            .catch(error => console.error('Error fetching directions:', error));
-    } else {
-        if (!originCoordinates) {
-            console.log("Origin coordinates are missing.");
+                if (!destinationCoordinates) {
+                    console.log("Destination coordinates are missing.");
+                }
+                console.log("Either origin or destination coordinates are missing.");
+            }
         }
-        if (!destinationCoordinates) {
-            console.log("Destination coordinates are missing.");
-        }
-        console.log("Either origin or destination coordinates are missing.");
-    }
-}
 
 console.log(document.querySelector('.mapbox-directions-origin input')); // Should log the element or null
 console.log(document.querySelector('.mapbox-directions-destination input')); // Should log the element or null
@@ -390,7 +387,8 @@ function getDirections(origin, destination, profile = 'mapbox/driving-traffic') 
 
                 console.log(`Route ${index} data added to map:`, routeData);
             });
-         // Create buttons for each route alternative
+
+            // Create buttons for each route alternative
             const routeButtonsContainer = document.getElementById(`${profile}-routes`);
             routeButtonsContainer.innerHTML = ''; // Clear previous buttons
 
@@ -403,7 +401,7 @@ function getDirections(origin, destination, profile = 'mapbox/driving-traffic') 
             });
         }
 
-        function highlightRoute(index, routes) {
+    function highlightRoute(index, routes) {
             routes.forEach((route, routeIndex) => {
                 const routeId = `route${routeIndex}`;
                 map.setPaintProperty(routeId, 'line-color', routeIndex === index ? '#3b9ddd' : '#aaaaaa');
