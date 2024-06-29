@@ -549,8 +549,7 @@ function setOriginOnClick(e) {
                     console.log("Setting origin input fields with address:", address);
                     setDirectionsInputFields(address, directions.getDestination().place_name || '');
 
-                    updateOriginMarker(coords);  // Update custom origin marker
-                    }
+                    updateOriginMarker(coords); // Update custom origin marker
                 } catch (error) {
                     console.error("Error setting origin:", error);
                     alert('Error setting origin.');
@@ -576,9 +575,7 @@ function setOriginOnClick(e) {
                     console.log("Setting origin input fields with address:", address);
                     setDirectionsInputFields(address, directions.getDestination().place_name || '');
 
-                    updateOriginMarker([lng, lat]);  // Update custom origin marker
-
-                    }
+                    updateOriginMarker([lng, lat]); // Update custom origin marker
                 } catch (error) {
                     console.error("Error setting origin:", error);
                     alert('Error setting origin.');
@@ -619,12 +616,12 @@ function setDestinationOnClick(e) {
                     directions.setDestination(coords);
                     destinationCoordinates = coords;
                     destinationSet = true;
-                        map.off('click', setDestinationOnClick);
+                    map.off('click', setDestinationOnClick);
 
                     console.log("Setting destination input fields with address:", address);
                     setDirectionsInputFields(directions.getOrigin().place_name || '', address);
 
-                    updateDestinationMarker(coords);  // Update custom destination marker
+                    updateDestinationMarker(coords); // Update custom destination marker
 
                     if (originSet && destinationSet) {
                         console.log("Both origin and destination are set. Fetching directions...");
@@ -655,7 +652,7 @@ function setDestinationOnClick(e) {
                     console.log("Setting destination input fields with address:", address);
                     setDirectionsInputFields(directions.getOrigin().place_name || '', address);
 
-                    updateDestinationMarker([lng, lat]);  // Update custom destination marker
+                    updateDestinationMarker([lng, lat]); // Update custom destination marker
 
                     if (originSet && destinationSet) {
                         console.log("Both origin and destination are set. Fetching directions...");
