@@ -129,7 +129,7 @@ function initializeDirectionsControl() {
                 geocoderInputs.forEach(input => {
                     input.style.fontSize = '16px';
                 });
-            }, 500);
+            }, 1000);
 
             directions.on('origin', () => {
                 console.log("Origin event triggered.");
