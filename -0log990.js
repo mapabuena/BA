@@ -333,12 +333,15 @@ function getDirections(origin, destination, profile = 'mapbox/driving-traffic') 
             return null;
         });
 }
- function addRoutesToMap(routes, profile) {
+  function addRoutesToMap(routes, profile) {
             console.log("Adding routes to map:", routes);
             if (!routes || routes.length === 0) {
                 console.error("No routes data available:", routes);
                 return;
             }
+
+            // Remove the "mapbox/" prefix from the profile
+            const cleanedProfile = profile.replace('mapbox/', '');
 
             // Remove existing route sources and layers if they exist
             routes.forEach((route, index) => {
@@ -388,8 +391,12 @@ function getDirections(origin, destination, profile = 'mapbox/driving-traffic') 
                 console.log(`Route ${index} data added to map:`, routeData);
             });
 
-            // Create buttons for each route alternative
-            const routeButtonsContainer = document.getElementById(`${profile}-routes`);
+                // Create buttons for each route alternative
+            const routeButtonsContainer = document.getElementById(`${cleanedProfile}-routes`);
+            if (!routeButtonsContainer) {
+                console.error(`Route buttons container not found for profile: ${cleanedProfile}`);
+                return;
+            }
             routeButtonsContainer.innerHTML = ''; // Clear previous buttons
 
             routes.forEach((route, index) => {
@@ -401,7 +408,7 @@ function getDirections(origin, destination, profile = 'mapbox/driving-traffic') 
             });
         }
 
-    function highlightRoute(index, routes) {
+ function highlightRoute(index, routes) {
             routes.forEach((route, routeIndex) => {
                 const routeId = `route${routeIndex}`;
                 map.setPaintProperty(routeId, 'line-color', routeIndex === index ? '#3b9ddd' : '#aaaaaa');
@@ -413,6 +420,7 @@ function getDirections(origin, destination, profile = 'mapbox/driving-traffic') 
                 button.classList.toggle('selected', buttonIndex === index);
             });
         }
+
 // Clear existing route from the map
 function clearRouteFromMap() {
     if (map.getSource('route')) {
