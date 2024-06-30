@@ -123,14 +123,6 @@ function initializeDirectionsControl() {
         if (directionsControlElement) {
             directionsControlElement.appendChild(directions.onAdd(map));
 
-            // Ensure the input font size is set after directions control is added
-            setTimeout(() => {
-                const geocoderInputs = document.querySelectorAll('#directions-control .mapboxgl-ctrl-geocoder--input');
-                geocoderInputs.forEach(input => {
-                    input.style.fontSize = '16px';
-                });
-            }, 1000);
-
             directions.on('origin', () => {
                 console.log("Origin event triggered.");
                 originCoordinates = directions.getOrigin().geometry.coordinates;
