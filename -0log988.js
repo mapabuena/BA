@@ -333,7 +333,13 @@ function getDirections(origin, destination, profile = 'mapbox/driving-traffic') 
             return null;
         });
 }
-  function addRoutesToMap(routes, profile) {
+   function clearAllRouteButtons() {
+            document.getElementById('driving-traffic-routes').innerHTML = '';
+            document.getElementById('cycling-routes').innerHTML = '';
+            document.getElementById('walking-routes').innerHTML = '';
+        }
+
+        function addRoutesToMap(routes, profile) {
             console.log("Adding routes to map:", routes);
             if (!routes || routes.length === 0) {
                 console.error("No routes data available:", routes);
@@ -390,24 +396,33 @@ function getDirections(origin, destination, profile = 'mapbox/driving-traffic') 
 
                 console.log(`Route ${index} data added to map:`, routeData);
             });
-    // Create buttons for each route alternative
+
+            // Clear previous buttons
+            clearAllRouteButtons();
+
+            // Create buttons for each route alternative
             const routeButtonsContainer = document.getElementById(`${cleanedProfile}-routes`);
             if (!routeButtonsContainer) {
                 console.error(`Route buttons container not found for profile: ${cleanedProfile}`);
                 return;
             }
-            routeButtonsContainer.innerHTML = ''; // Clear previous buttons
 
             routes.forEach((route, index) => {
                 const button = document.createElement('button');
                 button.className = 'route-button';
                 button.textContent = `Route ${index + 1}`;
+                if (index === 0) {
+                    button.classList.add('selected');
+                }
                 button.onclick = () => highlightRoute(index, routes);
                 routeButtonsContainer.appendChild(button);
             });
+
+            // Highlight the first route by default
+            highlightRoute(0, routes);
         }
 
- function highlightRoute(index, routes) {
+   function highlightRoute(index, routes) {
             routes.forEach((route, routeIndex) => {
                 const routeId = `route${routeIndex}`;
                 map.setPaintProperty(routeId, 'line-color', routeIndex === index ? '#3b9ddd' : '#aaaaaa');
