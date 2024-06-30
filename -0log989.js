@@ -390,8 +390,7 @@ function getDirections(origin, destination, profile = 'mapbox/driving-traffic') 
 
                 console.log(`Route ${index} data added to map:`, routeData);
             });
-
-                // Create buttons for each route alternative
+    // Create buttons for each route alternative
             const routeButtonsContainer = document.getElementById(`${cleanedProfile}-routes`);
             if (!routeButtonsContainer) {
                 console.error(`Route buttons container not found for profile: ${cleanedProfile}`);
