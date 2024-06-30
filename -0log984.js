@@ -123,11 +123,14 @@ function initializeDirectionsControl() {
         if (directionsControlElement) {
             directionsControlElement.appendChild(directions.onAdd(map));
 
-          map.on('load', function() {
-            const geocoderInputs = document.querySelectorAll('#directions-control .mapboxgl-ctrl-geocoder--input');
-            geocoderInputs.forEach(input => {
-                input.style.fontSize = '16px';
-            });
+            // Ensure the input font size is set after directions control is added
+            setTimeout(() => {
+                const geocoderInputs = document.querySelectorAll('#directions-control .mapboxgl-ctrl-geocoder--input');
+                geocoderInputs.forEach(input => {
+                    input.style.fontSize = '16px';
+                });
+            }, 500);
+
             directions.on('origin', () => {
                 console.log("Origin event triggered.");
                 originCoordinates = directions.getOrigin().geometry.coordinates;
@@ -175,8 +178,10 @@ function initializeDirectionsControl() {
             if (originCloseButton) {
                 originCloseButton.addEventListener('click', function () {
                     originSet = false;
-                    customOriginMarker.remove(); // Optionally remove the marker
-                    customOriginMarker = null;
+                    if (customOriginMarker) {
+                        customOriginMarker.remove(); // Optionally remove the marker
+                        customOriginMarker = null;
+                    }
                     unselectAllMarkers();
                     map.on('click', setOriginOnClick);
                 });
@@ -185,8 +190,10 @@ function initializeDirectionsControl() {
             if (destinationCloseButton) {
                 destinationCloseButton.addEventListener('click', function () {
                     destinationSet = false;
-                    customDestinationMarker.remove(); // Optionally remove the marker
-                    customDestinationMarker = null;
+                    if (customDestinationMarker) {
+                        customDestinationMarker.remove(); // Optionally remove the marker
+                        customDestinationMarker = null;
+                    }
                     unselectAllMarkers();
                     map.on('click', setDestinationOnClick);
                 });
