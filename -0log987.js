@@ -410,7 +410,7 @@ function getDirections(origin, destination, profile = 'mapbox/driving-traffic') 
             routes.forEach((route, index) => {
                 const button = document.createElement('button');
                 button.className = 'route-button';
-                button.textContent = `Route ${index + 1}`;
+                button.textContent = `${index + 1}`;
                 if (index === 0) {
                     button.classList.add('selected');
                 }
