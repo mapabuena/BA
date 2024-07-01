@@ -77,8 +77,7 @@ function updateOriginMarker(coords) {
                 setDirectionsInputFields(address, directions.getDestination().place_name || '');
             });
             if (originSet && destinationSet) {
-                const currentProfile = directions.getProfile();
-                directions.setProfile(currentProfile);
+                console.log('Current profile:', currentProfile);
                 console.log('Calling checkAndRetrieveDirections from origin dragend');
                 checkAndRetrieveDirections();
             }
@@ -103,8 +102,7 @@ function updateDestinationMarker(coords) {
                 setDirectionsInputFields(directions.getOrigin().place_name || '', address);
             });
             if (originSet && destinationSet) {
-                const currentProfile = directions.getProfile();
-                directions.setProfile(currentProfile);
+                console.log('Current profile:', currentProfile);
                 console.log('Calling checkAndRetrieveDirections from destination dragend');
                 checkAndRetrieveDirections();
             }
