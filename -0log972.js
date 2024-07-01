@@ -377,13 +377,17 @@ function addRoutePopup(route, index, profile) {
 
     const popupContent = `
         <div class="route-popup-content" style="width: ${popupSize.width}; height: ${popupSize.height};">
-            <div style="width: 30%; display: flex; justify-content: center; align-items: center; padding-bottom: ${iconPaddingBottom};">
+            <div style="width: 20%; display: flex; justify-content: center; align-items: center; padding-bottom: ${iconPaddingBottom};">
                 <img src="${modeIcon}" alt="Mode" style="width: ${iconSize.width}; height: ${iconSize.height};">
             </div>
-            <div style="width: 70%; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding-left: 5px;">
-                <p style="margin: 0; font-size: 14px; font-weight: bold; color: green;">${formattedTravelTime}</p>
-                <p style="margin: 0; font-size: 12px; font-weight: bold; color: #333;">${formattedDistance}</p>
-            </div>
+          <div style="width: 80%; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding-left: 2px;">
+    <p style="margin: 0; font-size: 14px; font-weight: bold; color: green; line-height: 1;">
+        ${formattedTravelTime}
+    </p>
+    <p style="margin: 0; font-size: 12px; font-weight: bold; color: #333; line-height: 1;">
+        ${formattedDistance}
+    </p>
+</div>
         </div>
     `;
 
