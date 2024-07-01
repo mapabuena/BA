@@ -971,7 +971,12 @@ function changeProfile(profile) {
         return;
     }
 
-    currentProfile = profile; // Update the current profile
+    if (currentProfile === profile) {
+        console.log('Profile unchanged, skipping update');
+        return;
+    }
+
+    currentProfile = profile;
     console.log('Profile set to:', currentProfile);
 
     directions.options.profile = profile;
@@ -979,19 +984,17 @@ function changeProfile(profile) {
     clearAllPopups();
 
     if (originCoordinates && destinationCoordinates) {
-        console.log('Calling checkAndRetrieveDirections');
+        console.log('Fetching new directions');
         checkAndRetrieveDirections();
     } else {
         console.log('Origin or destination not set, skipping route retrieval');
     }
 
+    // Update markers if necessary
     if (originCoordinates) {
-        console.log('Updating origin marker');
         updateOriginMarker(originCoordinates);
     }
-
     if (destinationCoordinates) {
-        console.log('Updating destination marker');
         updateDestinationMarker(destinationCoordinates);
     }
 
