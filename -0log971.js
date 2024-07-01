@@ -353,26 +353,26 @@ function addRoutePopup(route, index, profile) {
         case 'mapbox/driving':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/car.svg';
             iconSize = { width: '16px', height: '16px' };
-            popupSize = { width: '90px', height: '29px' };
-            iconPaddingBottom = '40px';
+            popupSize = { width: '62px', height: '29px' };
+            iconPaddingBottom = '42px';
             break;
         case 'mapbox/walking':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/walking.svg';
             iconSize = { width: '55px', height: '55px' };
-            popupSize = { width: '84px', height: '27px' };
+            popupSize = { width: '42px', height: '12px' };
             iconPaddingBottom = '14px';
             break;
         case 'mapbox/cycling':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/cycling.svg';
             iconSize = { width: '32px', height: '32px' };
-            popupSize = { width: '90px', height: '26px' };
+            popupSize = { width: '54px', height: '16px' };
             iconPaddingBottom = '25px';
             break;
         default:
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/default.svg';
             iconSize = { width: '16px', height: '16px' };
-            popupSize = { width: '90px', height: '29px' };
-            iconPaddingBottom = '24px';
+            popupSize = { width: '62px', height: '18px' };
+            iconPaddingBottom = '27px';
     }
 
     const popupContent = `
@@ -381,10 +381,10 @@ function addRoutePopup(route, index, profile) {
                 <img src="${modeIcon}" alt="Mode" style="width: ${iconSize.width}; height: ${iconSize.height};">
             </div>
           <div style="width: 80%; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding-left: 2px;">
-    <p style="margin: 0; font-size: 14px; font-weight: bold; color: green; line-height: 1;">
+    <p style="margin: 0; font-size: 12px; font-weight: bold; color: black; line-height: 1;">
         ${formattedTravelTime}
     </p>
-    <p style="margin: 0; font-size: 12px; font-weight: bold; color: #333; line-height: 1;">
+    <p style="margin: 0; font-size: 10px; font-weight: bold; color: gray; line-height: 1;">
         ${formattedDistance}
     </p>
 </div>
