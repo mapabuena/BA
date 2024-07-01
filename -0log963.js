@@ -361,25 +361,25 @@ function addRoutePopup(route, index, profile) {
         case 'mapbox/driving':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/car.svg';
             iconSize = { width: '20px', height: '20px' };
-            popupSize = { width: '60px', height: '21px' };
+            popupSize = { width: '60px', height: '16px' };
             iconPaddingBottom = '45px';
             break;
         case 'mapbox/walking':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/walking.svg';
             iconSize = { width: '55px', height: '85px' };
-            popupSize = { width: '65px', height: '15px' };
+            popupSize = { width: '65px', height: '14px' };
             iconPaddingBottom = '18px';
             break;
         case 'mapbox/cycling':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/cycling.svg';
             iconSize = { width: '32px', height: '32px' };
-            popupSize = { width: '85px', height: '14px' };
+            popupSize = { width: '66px', height: '12px' };
             iconPaddingBottom = '32px';
             break;
         default:
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/default.svg';
             iconSize = { width: '16px', height: '16px' };
-            popupSize = { width: '70px', height: '20px' };
+            popupSize = { width: '70px', height: '16px' };
             iconPaddingBottom = '32px';
     }
     const popupContent = `
