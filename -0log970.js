@@ -338,28 +338,28 @@ function addRoutePopup(route, index, profile) {
     const coordinates = route.geometry.coordinates;
     let popupPosition;
     if (index === 0) {
-        popupPosition = Math.floor(coordinates.length * 0.3);
-    } else if (index === 1) {
         popupPosition = Math.floor(coordinates.length * 0.45);
+    } else if (index === 1) {
+        popupPosition = Math.floor(coordinates.length * 0.55);
     } else {
         popupPosition = Math.floor(coordinates.length * 0.6);
     }
     
     const formattedDistance = (route.distance / 1000).toFixed(2) + ' km';
-    const formattedTravelTime = Math.round(route.duration / 60) + ' mins';
+    const formattedTravelTime = Math.round(route.duration / 60) + ' min';
 
     let modeIcon, iconSize, popupSize, iconPaddingBottom;
     switch (profile) {
         case 'mapbox/driving':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/car.svg';
-            iconSize = { width: '16px', height: '16px' };
-            popupSize = { width: '62px', height: '29px' };
-            iconPaddingBottom = '42px';
+            iconSize = { width: '20px', height: '20px' };
+            popupSize = { width: '54px', height: '24px' };
+            iconPaddingBottom = '45px';
             break;
         case 'mapbox/walking':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/walking.svg';
             iconSize = { width: '55px', height: '55px' };
-            popupSize = { width: '42px', height: '12px' };
+            popupSize = { width: '55px', height: '12px' };
             iconPaddingBottom = '14px';
             break;
         case 'mapbox/cycling':
@@ -372,7 +372,7 @@ function addRoutePopup(route, index, profile) {
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/default.svg';
             iconSize = { width: '16px', height: '16px' };
             popupSize = { width: '62px', height: '18px' };
-            iconPaddingBottom = '27px';
+            iconPaddingBottom = '32px';
     }
 
     const popupContent = `
