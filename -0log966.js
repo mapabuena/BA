@@ -346,51 +346,57 @@ function addRoutePopup(route, index, profile) {
     }
     
     const formattedDistance = (route.distance / 1000).toFixed(2) + ' km';
-    const formattedTravelTime = Math.round(route.duration / 60) + ' min';
+    let formattedTravelTime;
+    const minutes = Math.round(route.duration / 60);
+    if (minutes > 60) {
+        const hours = Math.floor(minutes / 60);
+        const remainingMinutes = minutes % 60;
+        formattedTravelTime = `<span class="time-value">${hours}</span><span class="time-unit">h</span> <span class="time-value">${remainingMinutes}</span><span class="time-unit">min</span>`;
+    } else {
+        formattedTravelTime = `<span class="time-value">${minutes}</span><span class="time-unit">min</span>`;
+    }
 
     let modeIcon, iconSize, popupSize, iconPaddingBottom;
     switch (profile) {
         case 'mapbox/driving':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/car.svg';
             iconSize = { width: '20px', height: '20px' };
-            popupSize = { width: '54px', height: '24px' };
+            popupSize = { width: '80px', height: '24px' };
             iconPaddingBottom = '45px';
             break;
         case 'mapbox/walking':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/walking.svg';
             iconSize = { width: '55px', height: '85px' };
-            popupSize = { width: '67px', height: '20px' };
-            iconPaddingBottom = '14px';
+            popupSize = { width: '90px', height: '20px' };
+            iconPaddingBottom = '18px';
             break;
         case 'mapbox/cycling':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/cycling.svg';
             iconSize = { width: '32px', height: '32px' };
-            popupSize = { width: '54px', height: '28px' };
+            popupSize = { width: '85px', height: '24px' };
             iconPaddingBottom = '25px';
             break;
         default:
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/default.svg';
             iconSize = { width: '16px', height: '16px' };
-            popupSize = { width: '62px', height: '18px' };
+            popupSize = { width: '80px', height: '18px' };
             iconPaddingBottom = '32px';
     }
-
     const popupContent = `
         <div class="route-popup-content" style="width: ${popupSize.width}; height: ${popupSize.height};">
             <div style="width: 30%; display: flex; justify-content: center; align-items: center; padding-bottom: ${iconPaddingBottom};">
                 <img src="${modeIcon}" alt="Mode" style="width: ${iconSize.width}; height: ${iconSize.height};">
             </div>
-          <div style="width: 70%; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding-left: 2px;">
-    <p style="margin: 0; font-size: 12px; font-weight: bold; color: black; line-height: 1;">
-        ${formattedTravelTime}
-    </p>
-    <p style="margin: 0; font-size: 10px; font-weight: bold; color: gray; line-height: 1;">
-        ${formattedDistance}
-    </p>
-</div>
+            <div style="width: 70%; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding-left: 2px;">
+                <p style="margin: 0; line-height: 1;">
+                    ${formattedTravelTime}
+                </p>
+                <p style="margin: 0; font-size: 10px; font-weight: bold; color: gray; line-height: 1;">
+                    ${formattedDistance}
+                </p>
+            </div>
         </div>
     `;
-
     const popup = new mapboxgl.Popup({
         closeButton: false,
         closeOnClick: false,
@@ -400,14 +406,12 @@ function addRoutePopup(route, index, profile) {
     .setLngLat(coordinates[popupPosition])
     .setHTML(popupContent)
     .addTo(map);
-
     setTimeout(() => {
         const popupElement = popup.getElement();
         if (popupElement) {
             popupElement.style.zIndex = index === 0 ? '9999' : '9998';
         }
     }, 100);
-
     if (!window.routePopups) {
         window.routePopups = [];
     }
