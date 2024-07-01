@@ -30,6 +30,7 @@ let originCoordinates = null; // Store origin coordinates
 let destinationCoordinates = null; // Store destination coordinates
 let customOriginMarker = null;
 let customDestinationMarker = null;
+let currentProfile = 'mapbox/driving-traffic'; // Default profile
 
   // Function to reset all marker states
 function resetMarkerStates() {
@@ -292,10 +293,9 @@ function checkAndRetrieveDirections() {
     if (originCoordinates && destinationCoordinates) {
         const originCoords = originCoordinates.join(',');
         const destinationCoords = destinationCoordinates.join(',');
-        const profile = directions.getProfile();
-        console.log('Fetching directions with profile:', profile);
+        console.log('Fetching directions with profile:', currentProfile);
 
-        const url = `https://api.mapbox.com/directions/v5/${profile}/${originCoords};${destinationCoords}?access_token=${mapboxgl.accessToken}&alternatives=true&geometries=geojson&steps=true`;
+        const url = `https://api.mapbox.com/directions/v5/${currentProfile}/${originCoords};${destinationCoords}?access_token=${mapboxgl.accessToken}&alternatives=true&geometries=geojson&steps=true`;
 
         console.log('Fetching directions from URL:', url);
         fetch(url)
@@ -303,7 +303,7 @@ function checkAndRetrieveDirections() {
             .then(data => {
                 if (data.routes && data.routes.length > 0) {
                     console.log('Routes received, calling addRoutesToMap');
-                    addRoutesToMap(data.routes, profile);
+                    addRoutesToMap(data.routes, currentProfile);
                     updateDirectionsSteps(data.routes[0]);
                 } else {
                     console.warn("No routes available.");
@@ -973,14 +973,12 @@ function changeProfile(profile) {
         return;
     }
 
+    currentProfile = profile; // Update the current profile
+    console.log('Profile set to:', currentProfile);
+
     directions.options.profile = profile;
-    console.log('Profile set in directions options:', profile);
-
     clearRouteFromMap();
-    console.log('Existing routes cleared');
-
     clearAllPopups();
-    console.log('Existing popups cleared');
 
     if (originCoordinates && destinationCoordinates) {
         console.log('Calling checkAndRetrieveDirections');
