@@ -358,14 +358,14 @@ function addRoutePopup(route, index, profile) {
             break;
         case 'mapbox/walking':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/walking.svg';
-            iconSize = { width: '55px', height: '55px' };
-            popupSize = { width: '55px', height: '12px' };
+            iconSize = { width: '55px', height: '85px' };
+            popupSize = { width: '67px', height: '20px' };
             iconPaddingBottom = '14px';
             break;
         case 'mapbox/cycling':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/cycling.svg';
             iconSize = { width: '32px', height: '32px' };
-            popupSize = { width: '54px', height: '16px' };
+            popupSize = { width: '54px', height: '28px' };
             iconPaddingBottom = '25px';
             break;
         default:
