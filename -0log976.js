@@ -471,18 +471,14 @@ function addRoutesToMap(routes, profile) {
     highlightRoute(0, routes);
 }
 
- function highlightRoute(index, routes) {
+function highlightRoute(index, routes) {
     routes.forEach((route, routeIndex) => {
         const routeId = `route${routeIndex}`;
         map.setPaintProperty(routeId, 'line-color', routeIndex === index ? '#3b9ddd' : '#aaaaaa');
         
-        // Show/hide popups
+        // Ensure all popups remain visible
         if (window.routePopups && window.routePopups[routeIndex]) {
-            if (routeIndex === index) {
-                window.routePopups[routeIndex].addTo(map);
-            } else {
-                window.routePopups[routeIndex].remove();
-            }
+            window.routePopups[routeIndex].addTo(map);
         }
     });
 
