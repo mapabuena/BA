@@ -352,27 +352,27 @@ function addRoutePopup(route, index, profile) {
     switch (profile) {
         case 'mapbox/driving':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/car.svg';
-            iconSize = { width: '25px', height: '25px' };
-            popupSize = { width: '120px', height: '38px' };
-            iconPaddingBottom = '29px';
+            iconSize = { width: '16px', height: '16px' };
+            popupSize = { width: '90px', height: '29px' };
+            iconPaddingBottom = '40px';
             break;
         case 'mapbox/walking':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/walking.svg';
             iconSize = { width: '55px', height: '55px' };
-            popupSize = { width: '95px', height: '55px' };
+            popupSize = { width: '84px', height: '27px' };
             iconPaddingBottom = '14px';
             break;
         case 'mapbox/cycling':
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/cycling.svg';
             iconSize = { width: '32px', height: '32px' };
-            popupSize = { width: '110px', height: '52px' };
+            popupSize = { width: '90px', height: '26px' };
             iconPaddingBottom = '25px';
             break;
         default:
             modeIcon = 'https://raw.githubusercontent.com/mapabuena/BA/main/default.svg';
-            iconSize = { width: '32px', height: '32px' };
-            popupSize = { width: '120px', height: '40px' };
-            iconPaddingBottom = '15px';
+            iconSize = { width: '16px', height: '16px' };
+            popupSize = { width: '90px', height: '29px' };
+            iconPaddingBottom = '24px';
     }
 
     const popupContent = `
