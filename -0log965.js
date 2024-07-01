@@ -345,7 +345,7 @@ function addRoutePopup(route, index, profile) {
         popupPosition = Math.floor(coordinates.length * 0.6);
     }
     
-    const formattedDistance = (route.distance / 1000).toFixed(2) + ' km';
+    const formattedDistance = (route.distance / 1609.344).toFixed(1) + ' mi';
     let formattedTravelTime;
     const minutes = Math.round(route.duration / 60);
     if (minutes > 60) {
