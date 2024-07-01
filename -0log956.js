@@ -71,7 +71,6 @@ function updateOriginMarker(coords) {
             console.log('Origin marker dragend event triggered');
             const newCoords = customOriginMarker.getLngLat();
             originCoordinates = [newCoords.lng, newCoords.lat];
-            directions.setOrigin(originCoordinates);
             console.log('Origin set to:', originCoordinates);
             geocodeCoordinates(originCoordinates, (address) => {
                 setDirectionsInputFields(address, directions.getDestination().place_name || '');
@@ -96,7 +95,6 @@ function updateDestinationMarker(coords) {
             console.log('Destination marker dragend event triggered');
             const newCoords = customDestinationMarker.getLngLat();
             destinationCoordinates = [newCoords.lng, newCoords.lat];
-            directions.setDestination(destinationCoordinates);
             console.log('Destination set to:', destinationCoordinates);
             geocodeCoordinates(destinationCoordinates, (address) => {
                 setDirectionsInputFields(directions.getOrigin().place_name || '', address);
@@ -133,27 +131,27 @@ function initializeDirectionsControl() {
         if (directionsControlElement) {
             directionsControlElement.appendChild(directions.onAdd(map));
 
-            directions.on('origin', () => {
-                console.log("Origin event triggered.");
-                originCoordinates = directions.getOrigin().geometry.coordinates;
-                originSet = true;
-                hideDefaultMarkers();
-                updateOriginMarker(originCoordinates); // Update custom origin marker
-                if (originSet && destinationSet) {
-                    checkAndRetrieveDirections();
-                }
-            });
+  directions.on('origin', () => {
+    console.log("Origin event triggered.");
+    originCoordinates = directions.getOrigin().geometry.coordinates;
+    originSet = true;
+    hideDefaultMarkers();
+    updateOriginMarker(originCoordinates);
+    if (originSet && destinationSet) {
+        checkAndRetrieveDirections();
+    }
+});
 
-            directions.on('destination', () => {
-                console.log("Destination event triggered.");
-                destinationCoordinates = directions.getDestination().geometry.coordinates;
-                destinationSet = true;
-                hideDefaultMarkers();
-                updateDestinationMarker(destinationCoordinates); // Update custom destination marker
-                if (originSet && destinationSet) {
-                    checkAndRetrieveDirections();
-                }
-            });
+directions.on('destination', () => {
+    console.log("Destination event triggered.");
+    destinationCoordinates = directions.getDestination().geometry.coordinates;
+    destinationSet = true;
+    hideDefaultMarkers();
+    updateDestinationMarker(destinationCoordinates);
+    if (originSet && destinationSet) {
+        checkAndRetrieveDirections();
+    }
+});
 
             directions.on('route', (event) => {
                 console.log("Route event triggered.");
