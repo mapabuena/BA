@@ -285,22 +285,20 @@ function hideDefaultMarkers() {
     });
 }
 
-function fitMapToRoute(route) {
-    if (!route || !route.geometry || !route.geometry.coordinates) return;
+function fitMapToRoute(originCoords, destinationCoords) {
+    if (!originCoords || !destinationCoords) return;
 
-    const bounds = new mapboxgl.LngLatBounds();
-    route.geometry.coordinates.forEach(coord => bounds.extend(coord));
+    const bounds = new mapboxgl.LngLatBounds()
+        .extend(originCoords)
+        .extend(destinationCoords);
 
-    const currentBounds = map.getBounds();
-    if (!currentBounds.contains(bounds)) {
-        map.fitBounds(bounds, {
-            padding: {top: 100, bottom: 100, left: 100, right: 100}, // Increased padding
-            duration: 1000, // Animation duration in milliseconds
-            easing: function (t) {
-                return t * (2 - t); // Ease out quadratic function
-            }
-        });
-    }
+    map.fitBounds(bounds, {
+        padding: {top: 100, bottom: 100, left: 100, right: 100},
+        duration: 1000,
+        easing: function (t) {
+            return t * (2 - t); // Ease out quadratic function
+        }
+    });
 }
 function checkAndRetrieveDirections() {
     console.log('checkAndRetrieveDirections called');
@@ -319,7 +317,7 @@ function checkAndRetrieveDirections() {
                     console.log('Routes received, calling addRoutesToMap');
                     addRoutesToMap(data.routes, currentProfile);
                     updateDirectionsSteps(data.routes[0]);
-                    fitMapToRoute(data.routes[0]); // Fit map to the primary route
+                    fitMapToRoute(originCoordinates, destinationCoordinates); // Fit map to origin and destination
                 } else {
                     console.warn("No routes available.");
                 }
