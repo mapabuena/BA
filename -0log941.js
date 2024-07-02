@@ -584,6 +584,7 @@ function addRoutesToMap(routes, profile) {
     highlightRoute(0, routes);
 }
 
+
 function highlightRoute(index, routes) {
     routes.forEach((route, routeIndex) => {
         const routeId = `route${routeIndex}`;
