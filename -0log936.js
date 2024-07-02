@@ -494,13 +494,16 @@ function addRoutesToMap(routes, profile) {
             return;
         }
 
-        // Validate and transform decoded coordinates
+        // Adjust coordinates scale
         const validCoordinates = decodedCoordinates.map(coord => {
             const [lat, lng] = coord;
-            if (lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180) {
-                return [lng, lat]; // Swap to [lng, lat]
+            const adjustedLat = lat / 10; // Adjust the latitude scale
+            const adjustedLng = lng / 10; // Adjust the longitude scale
+
+            if (adjustedLat >= -90 && adjustedLat <= 90 && adjustedLng >= -180 && adjustedLng <= 180) {
+                return [adjustedLng, adjustedLat]; // Swap to [lng, lat]
             } else {
-                console.error("Invalid coordinate found:", coord);
+                console.error("Invalid coordinate found:", [adjustedLat, adjustedLng]);
                 return null;
             }
         }).filter(Boolean); // Filter out invalid coordinates
