@@ -366,7 +366,12 @@ function addRoutePopup(route, index, profile) {
     } else {
         popupPosition = Math.floor(coordinates.length * 0.6);
     }
-    
+
+    if (!coordinates[popupPosition]) {
+        console.error("Invalid popup position:", popupPosition);
+        return;
+    }
+
     const formattedDistance = (route.distance / 1609.344).toFixed(1) + ' mi';
     let formattedTravelTime;
     const minutes = Math.round(route.duration / 60);
@@ -419,15 +424,15 @@ function addRoutePopup(route, index, profile) {
             </div>
         </div>
     `;
-const popup = new mapboxgl.Popup({
-    closeButton: false,
-    closeOnClick: false,
-    offset: [0, -15], // Adjusted offset to account for the tip
-    className: index === 0 ? 'best-route-popup' : 'second-route-popup'
-})
-    .setLngLat(coordinates[popupPosition])
-    .setHTML(popupContent)
-    .addTo(map);
+    const popup = new mapboxgl.Popup({
+        closeButton: false,
+        closeOnClick: false,
+        offset: [0, -15], // Adjusted offset to account for the tip
+        className: index === 0 ? 'best-route-popup' : 'second-route-popup'
+    })
+        .setLngLat(coordinates[popupPosition])
+        .setHTML(popupContent)
+        .addTo(map);
     setTimeout(() => {
         const popupElement = popup.getElement();
         if (popupElement) {
@@ -439,6 +444,7 @@ const popup = new mapboxgl.Popup({
     }
     window.routePopups[index] = popup;
 }
+
 
 function adjustZoomIfNeeded(origin, destination) {
     const bounds = map.getBounds();
@@ -494,16 +500,12 @@ function addRoutesToMap(routes, profile) {
             return;
         }
 
-        // Adjust coordinates scale
         const validCoordinates = decodedCoordinates.map(coord => {
             const [lat, lng] = coord;
-            const adjustedLat = lat / 10; // Adjust the latitude scale
-            const adjustedLng = lng / 10; // Adjust the longitude scale
-
-            if (adjustedLat >= -90 && adjustedLat <= 90 && adjustedLng >= -180 && adjustedLng <= 180) {
-                return [adjustedLng, adjustedLat]; // Swap to [lng, lat]
+            if (lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180) {
+                return [lng, lat]; // Swap to [lng, lat]
             } else {
-                console.error("Invalid coordinate found:", [adjustedLat, adjustedLng]);
+                console.error("Invalid coordinate found:", [lat, lng]);
                 return null;
             }
         }).filter(Boolean); // Filter out invalid coordinates
