@@ -488,11 +488,12 @@ function addRoutesToMap(routes, profile) {
         let decodedCoordinates;
         try {
             decodedCoordinates = polyline.decode(route.geometry);
+            console.log("Decoded coordinates:", decodedCoordinates);
         } catch (error) {
             console.error("Error decoding polyline:", error);
             return;
         }
-  console.log("Decoded coordinates:", decodedCoordinates);
+
         // Validate and transform decoded coordinates
         const validCoordinates = decodedCoordinates.map(coord => {
             const [lat, lng] = coord;
