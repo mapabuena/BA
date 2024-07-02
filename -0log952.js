@@ -294,8 +294,11 @@ function fitMapToRoute(route) {
     const currentBounds = map.getBounds();
     if (!currentBounds.contains(bounds)) {
         map.fitBounds(bounds, {
-            padding: 50,
-            duration: 0
+            padding: {top: 100, bottom: 100, left: 100, right: 100}, // Increased padding
+            duration: 1000, // Animation duration in milliseconds
+            easing: function (t) {
+                return t * (2 - t); // Ease out quadratic function
+            }
         });
     }
 }
