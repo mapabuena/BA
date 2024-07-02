@@ -31,6 +31,7 @@ let destinationCoordinates = null; // Store destination coordinates
 let customOriginMarker = null;
 let customDestinationMarker = null;
 let currentProfile = 'mapbox/driving-traffic'; // Default profile
+const decodedCoordinates = polyline.decode(route.geometry);
 
   // Function to reset all marker states
 function resetMarkerStates() {
@@ -463,6 +464,9 @@ function adjustZoomIfNeeded(origin, destination) {
         });
     }
 }
+// Import the polyline library if using a module system
+import polyline from '@mapbox/polyline';
+
 function addRoutesToMap(routes, profile) {
     console.log("Adding routes to map:", routes);
     if (!routes || routes.length === 0) {
@@ -484,12 +488,27 @@ function addRoutesToMap(routes, profile) {
         }
 
         // Decode the polyline string into coordinates
-        const decodedCoordinates = polyline.decode(route.geometry);
+        let decodedCoordinates;
+        try {
+            decodedCoordinates = polyline.decode(route.geometry);
+        } catch (error) {
+            console.error("Error decoding polyline:", error);
+            return;
+        }
 
-        // Check if the decoded coordinates are valid
-        const validCoordinates = decodedCoordinates.every(coord => coord.length === 2 && coord[0] >= -180 && coord[0] <= 180 && coord[1] >= -90 && coord[1] <= 90);
-        if (!validCoordinates) {
-            console.error("Invalid decoded coordinates:", decodedCoordinates);
+        // Validate and transform decoded coordinates
+        const validCoordinates = decodedCoordinates.map(coord => {
+            const [lat, lng] = coord;
+            if (lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180) {
+                return [lng, lat]; // Swap to [lng, lat]
+            } else {
+                console.error("Invalid coordinate found:", coord);
+                return null;
+            }
+        }).filter(Boolean); // Filter out invalid coordinates
+
+        if (validCoordinates.length === 0) {
+            console.error("No valid coordinates after decoding.");
             return;
         }
 
@@ -498,7 +517,7 @@ function addRoutesToMap(routes, profile) {
             properties: {},
             geometry: {
                 type: 'LineString',
-                coordinates: decodedCoordinates.map(coord => [coord[1], coord[0]]) // Swap the coordinates order
+                coordinates: validCoordinates
             }
         };
 
@@ -527,8 +546,8 @@ function addRoutesToMap(routes, profile) {
         });
 
         // Extend bounds with route coordinates
-        decodedCoordinates.forEach((coord) => {
-            bounds.extend(new mapboxgl.LngLat(coord[1], coord[0])); // Ensure correct order for LngLat
+        validCoordinates.forEach((coord) => {
+            bounds.extend(coord);
         });
 
         console.log(`Route ${index} data added to map:`, routeData);
