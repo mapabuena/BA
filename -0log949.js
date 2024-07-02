@@ -486,12 +486,19 @@ function addRoutesToMap(routes, profile) {
         // Decode the polyline string into coordinates
         const decodedCoordinates = polyline.decode(route.geometry);
 
+        // Check if the decoded coordinates are valid
+        const validCoordinates = decodedCoordinates.every(coord => coord.length === 2 && coord[0] >= -180 && coord[0] <= 180 && coord[1] >= -90 && coord[1] <= 90);
+        if (!validCoordinates) {
+            console.error("Invalid decoded coordinates:", decodedCoordinates);
+            return;
+        }
+
         const routeData = {
             type: 'Feature',
             properties: {},
             geometry: {
                 type: 'LineString',
-                coordinates: decodedCoordinates
+                coordinates: decodedCoordinates.map(coord => [coord[1], coord[0]]) // Swap the coordinates order
             }
         };
 
@@ -521,7 +528,7 @@ function addRoutesToMap(routes, profile) {
 
         // Extend bounds with route coordinates
         decodedCoordinates.forEach((coord) => {
-            bounds.extend(coord);
+            bounds.extend(new mapboxgl.LngLat(coord[1], coord[0])); // Ensure correct order for LngLat
         });
 
         console.log(`Route ${index} data added to map:`, routeData);
@@ -556,7 +563,6 @@ function addRoutesToMap(routes, profile) {
 
     highlightRoute(0, routes);
 }
-
 function highlightRoute(index, routes) {
     routes.forEach((route, routeIndex) => {
         const routeId = `route${routeIndex}`;
