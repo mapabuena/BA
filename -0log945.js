@@ -31,7 +31,6 @@ let destinationCoordinates = null; // Store destination coordinates
 let customOriginMarker = null;
 let customDestinationMarker = null;
 let currentProfile = 'mapbox/driving-traffic'; // Default profile
-const decodedCoordinates = polyline.decode(route.geometry);
 
   // Function to reset all marker states
 function resetMarkerStates() {
@@ -466,120 +465,120 @@ function adjustZoomIfNeeded(origin, destination) {
 }
 
 function addRoutesToMap(routes, profile) {
-            console.log("Adding routes to map:", routes);
-            if (!routes || routes.length === 0) {
-                console.error("No routes data available:", routes);
-                return;
-            }
+    console.log("Adding routes to map:", routes);
+    if (!routes || routes.length === 0) {
+        console.error("No routes data available:", routes);
+        return;
+    }
 
-            const cleanedProfile = profile.replace('mapbox/', '');
+    const cleanedProfile = profile.replace('mapbox/', '');
 
-            clearRouteFromMap();
-            clearAllPopups();
+    clearRouteFromMap();
+    clearAllPopups();
 
-            let bounds = new mapboxgl.LngLatBounds();
+    let bounds = new mapboxgl.LngLatBounds();
 
-            routes.forEach((route, index) => {
-                if (!route || !route.geometry) {
-                    console.error("Invalid route data:", route);
-                    return;
-                }
-
-                // Decode the polyline string into coordinates
-                let decodedCoordinates;
-                try {
-                    decodedCoordinates = polyline.decode(route.geometry);
-                } catch (error) {
-                    console.error("Error decoding polyline:", error);
-                    return;
-                }
-
-                // Validate and transform decoded coordinates
-                const validCoordinates = decodedCoordinates.map(coord => {
-                    const [lat, lng] = coord;
-                    if (lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180) {
-                        return [lng, lat]; // Swap to [lng, lat]
-                    } else {
-                        console.error("Invalid coordinate found:", coord);
-                        return null;
-                    }
-                }).filter(Boolean); // Filter out invalid coordinates
-
-                if (validCoordinates.length === 0) {
-                    console.error("No valid coordinates after decoding.");
-                    return;
-                }
-
-                const routeData = {
-                    type: 'Feature',
-                    properties: {},
-                    geometry: {
-                        type: 'LineString',
-                        coordinates: validCoordinates
-                    }
-                };
-
-                const routeId = `route${index}`;
-                console.log(`Adding new route source and layer to the map for route ${index}.`);
-
-                map.addSource(routeId, {
-                    type: 'geojson',
-                    data: routeData
-                });
-
-                map.addLayer({
-                    id: routeId,
-                    type: 'line',
-                    source: routeId,
-                    layout: {
-                        'line-join': 'round',
-                        'line-cap': 'round'
-                    },
-                    paint: {
-                        'line-color': index === 0 ? '#3b9ddd' : '#aaaaaa',
-                        'line-width': 5,
-                        'line-opacity': 0.75
-                    },
-                    before: index === 0 ? null : `route${index - 1}` // Ensure main route is drawn last
-                });
-
-                // Extend bounds with route coordinates
-                validCoordinates.forEach((coord) => {
-                    bounds.extend(coord);
-                });
-
-                console.log(`Route ${index} data added to map:`, routeData);
-                addRoutePopup(route, index, profile);
-            });
-
-            // Fit the map to the route bounds
-            map.fitBounds(bounds, {
-                padding: 50,
-                maxZoom: map.getZoom(),
-                duration: 0
-            });
-
-            clearAllRouteButtons();
-
-            const routeButtonsContainer = document.getElementById(`${cleanedProfile}-routes`);
-            if (!routeButtonsContainer) {
-                console.error(`Route buttons container not found for profile: ${cleanedProfile}`);
-                return;
-            }
-
-            routes.forEach((route, index) => {
-                const button = document.createElement('button');
-                button.className = 'route-button';
-                button.textContent = `${index + 1}`;
-                if (index === 0) {
-                    button.classList.add('selected');
-                }
-                button.onclick = () => highlightRoute(index, routes);
-                routeButtonsContainer.appendChild(button);
-            });
-
-            highlightRoute(0, routes);
+    routes.forEach((route, index) => {
+        if (!route || !route.geometry) {
+            console.error("Invalid route data:", route);
+            return;
         }
+
+        // Decode the polyline string into coordinates
+        let decodedCoordinates;
+        try {
+            decodedCoordinates = polyline.decode(route.geometry);
+        } catch (error) {
+            console.error("Error decoding polyline:", error);
+            return;
+        }
+
+        // Validate and transform decoded coordinates
+        const validCoordinates = decodedCoordinates.map(coord => {
+            const [lat, lng] = coord;
+            if (lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180) {
+                return [lng, lat]; // Swap to [lng, lat]
+            } else {
+                console.error("Invalid coordinate found:", coord);
+                return null;
+            }
+        }).filter(Boolean); // Filter out invalid coordinates
+
+        if (validCoordinates.length === 0) {
+            console.error("No valid coordinates after decoding.");
+            return;
+        }
+
+        const routeData = {
+            type: 'Feature',
+            properties: {},
+            geometry: {
+                type: 'LineString',
+                coordinates: validCoordinates
+            }
+        };
+
+        const routeId = `route${index}`;
+        console.log(`Adding new route source and layer to the map for route ${index}.`);
+
+        map.addSource(routeId, {
+            type: 'geojson',
+            data: routeData
+        });
+
+        map.addLayer({
+            id: routeId,
+            type: 'line',
+            source: routeId,
+            layout: {
+                'line-join': 'round',
+                'line-cap': 'round'
+            },
+            paint: {
+                'line-color': index === 0 ? '#3b9ddd' : '#aaaaaa',
+                'line-width': 5,
+                'line-opacity': 0.75
+            },
+            before: index === 0 ? null : `route${index - 1}` // Ensure main route is drawn last
+        });
+
+        // Extend bounds with route coordinates
+        validCoordinates.forEach((coord) => {
+            bounds.extend(coord);
+        });
+
+        console.log(`Route ${index} data added to map:`, routeData);
+        addRoutePopup(route, index, profile);
+    });
+
+    // Fit the map to the route bounds
+    map.fitBounds(bounds, {
+        padding: 50,
+        maxZoom: map.getZoom(),
+        duration: 0
+    });
+
+    clearAllRouteButtons();
+
+    const routeButtonsContainer = document.getElementById(`${cleanedProfile}-routes`);
+    if (!routeButtonsContainer) {
+        console.error(`Route buttons container not found for profile: ${cleanedProfile}`);
+        return;
+    }
+
+    routes.forEach((route, index) => {
+        const button = document.createElement('button');
+        button.className = 'route-button';
+        button.textContent = `${index + 1}`;
+        if (index === 0) {
+            button.classList.add('selected');
+        }
+        button.onclick = () => highlightRoute(index, routes);
+        routeButtonsContainer.appendChild(button);
+    });
+
+    highlightRoute(0, routes);
+}
 function highlightRoute(index, routes) {
     routes.forEach((route, routeIndex) => {
         const routeId = `route${routeIndex}`;
