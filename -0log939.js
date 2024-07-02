@@ -492,7 +492,7 @@ function addRoutesToMap(routes, profile) {
             console.error("Error decoding polyline:", error);
             return;
         }
-
+  console.log("Decoded coordinates:", decodedCoordinates);
         // Validate and transform decoded coordinates
         const validCoordinates = decodedCoordinates.map(coord => {
             const [lat, lng] = coord;
@@ -583,7 +583,6 @@ function addRoutesToMap(routes, profile) {
 
     highlightRoute(0, routes);
 }
-
 
 function highlightRoute(index, routes) {
     routes.forEach((route, routeIndex) => {
