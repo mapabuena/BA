@@ -552,11 +552,15 @@ function addRoutesToMap(routes, profile) {
     });
 
     // Fit the map to the route bounds
-    map.fitBounds(bounds, {
-        padding: 50,
-        maxZoom: map.getZoom(),
-        duration: 0
-    });
+    if (bounds.isEmpty()) {
+        console.error("Bounds are empty, cannot fit map to bounds.");
+    } else {
+        map.fitBounds(bounds, {
+            padding: 50,
+            maxZoom: map.getZoom(),
+            duration: 0
+        });
+    }
 
     clearAllRouteButtons();
 
@@ -578,6 +582,8 @@ function addRoutesToMap(routes, profile) {
     });
 
     highlightRoute(0, routes);
+}
+oute(0, routes);
 }
 function highlightRoute(index, routes) {
     routes.forEach((route, routeIndex) => {
